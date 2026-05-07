@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>越（エツ）インドプロジェクト | あんたがおらな</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --g:#5C7A5A; --gd:#3A5A38; --sand:#F5EFE6; --rose:#C4856A; --gold:#D4A843;
+      --txt:#1A1A1A; --tm:#4A4A4A; --ts:#888; --w:#fff;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Noto Sans JP',sans-serif;color:var(--txt);background:linear-gradient(160deg,var(--sand) 0%,#fff 100%);line-height:1.9}
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:900px;margin:0 auto;padding:100px 5% 86px}
+    .back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tm);margin-bottom:22px}
+    .back:hover{color:var(--g)}
+    .hero{background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.06);border-radius:22px;box-shadow:0 16px 48px rgba(0,0,0,.10);overflow:hidden}
+    .hero-top{display:grid;grid-template-columns:1fr;gap:0}
+    .hero-txt{padding:26px 24px 22px}
+    .tag{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.14em;padding:5px 12px;border-radius:999px;background:rgba(92,122,90,.12);color:var(--g)}
+    h1{font-family:'Noto Serif JP',serif;font-size:clamp(22px,4vw,34px);font-weight:900;color:var(--gd);line-height:1.45;margin-top:10px}
+    .catch{font-family:'Noto Serif JP',serif;font-size:clamp(16px,2.4vw,20px);font-weight:700;color:var(--gd);line-height:1.65;margin-top:12px}
+    .lead{margin-top:12px;color:var(--tm);font-size:14px;line-height:2}
+    .hero-img{aspect-ratio:16/10;background:#fff;border-top:1px solid rgba(0,0,0,.06)}
+    .hero-img img{width:100%;height:100%;object-fit:contain;display:block}
+    .hero-btm{padding:18px 24px 24px;border-top:1px solid rgba(0,0,0,.06)}
+    .checklist{font-size:13px;color:var(--tm);line-height:1.95}
+    .checklist li{margin-bottom:6px}
+    .subnav{margin-top:14px}
+    .subnav a{font-size:13px;font-weight:700;color:var(--g);border-bottom:1px solid rgba(92,122,90,.35);padding-bottom:2px}
+    .subnav a:hover{color:var(--gd)}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .panel{border-radius:18px;background:#fff;border:1px solid rgba(0,0,0,.06);padding:16px}
+    .panel h3{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:900;color:var(--gd);margin-bottom:8px;line-height:1.55}
+    .panel .num{font-size:11px;font-weight:900;color:var(--g);letter-spacing:.1em;margin-bottom:4px}
+    .panel p{margin:0;font-size:13px;line-height:1.9}
+    section{margin-top:28px}
+    h2{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:900;color:var(--gd);margin-bottom:12px;padding-left:12px;border-left:4px solid var(--g)}
+    p{font-size:14px;color:var(--tm);margin-bottom:12px}
+    ul{margin:10px 0 10px 1.2em}
+    li{margin-bottom:8px;font-size:14px;color:var(--tm)}
+    .note{font-size:12px;color:rgba(0,0,0,.55);line-height:1.9;margin-top:12px}
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
+    .step{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px 10px;text-align:center}
+    .step .d{font-size:11px;font-weight:800;color:var(--g)}
+    .step .t{font-size:12px;font-weight:700;color:var(--gd);margin-top:6px;line-height:1.45}
+    .price-box{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:18px;padding:20px 22px;margin:14px 0}
+    .price-big{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:900;color:var(--gd)}
+    .spl{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+    .sp{border-radius:16px;background:var(--sand);border:1px solid rgba(0,0,0,.06);padding:16px}
+    .sp h4{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:900;color:var(--gd);margin-bottom:8px}
+    .sp .meta{font-size:12px;color:var(--ts);margin-bottom:10px}
+    .sp ul{margin:0;padding-left:1.1em;font-size:13px}
+    .sp li{margin-bottom:6px}
+    .cta{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 26px;border-radius:999px;font-weight:900;letter-spacing:.06em}
+    .btn.prim{background:linear-gradient(135deg,var(--gold),var(--rose));color:var(--w);box-shadow:0 10px 28px rgba(212,168,67,.22)}
+    .btn.ghost{border:2px solid rgba(42,74,42,.18);color:var(--gd);background:#fff}
+    .closing{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:900;color:var(--gd);line-height:1.7;margin:20px 0 8px}
+    @media(max-width:860px){
+      .two-col{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr 1fr}
+      .spl{grid-template-columns:1fr}
+    }
+    @media(max-width:520px){
+      .steps{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/#services">← 事業一覧に戻る</a>
+
+    <div class="hero">
+      <div class="hero-top">
+        <div class="hero-txt">
+          <span class="tag">海外体験プロジェクト</span>
+          <h1>越（エツ）</h1>
+          <p class="catch">言葉が通じなくても、<br>「ありがとう」は伝わる。</p>
+          <p class="lead">インド・ガンジス川×ブッダガヤ　7泊8日体験プロジェクト。行程・参加費・帰国後フォローまで、こちらでご確認いただけます。</p>
+          <div class="subnav">
+            <a href="/wp-content/themes/education-zone/india-project.html">プロジェクトの詳細（写真・スライド）はこちら →</a>
+          </div>
+        </div>
+        <div class="hero-img" aria-label="越（エツ）のイメージ">
+          <img src="/wp-content/themes/education-zone/lp-assets/india-01.png?v=20260501a" alt="インドでの活動イメージ">
+        </div>
+      </div>
+      <div class="hero-btm">
+        <ul class="checklist" style="list-style:none;padding-left:0;margin:0">
+          <li>✓ 現地専任ガイド常時同行</li>
+          <li>✓ 毎日の安否報告体制</li>
+          <li>✓ 少人数制（教育専門家同行）</li>
+          <li>✓ 事前コーチング完備</li>
+        </ul>
+      </div>
+    </div>
+
+    <section>
+      <h2>日本の「枠組み」に苦しむ子どもへ</h2>
+      <p>人は、今いる場所の常識の中で、自分の価値を決めてしまいます。</p>
+      <ul>
+        <li>学校に行けない自分、周りと違う自分</li>
+        <li>うまく馴染めない自分、「自分には価値がない」</li>
+      </ul>
+      <p>でも、世界はもっと広い。「ここではダメだった」のではなく、「ここじゃなかっただけ」——そう気づける体験が、子どもの人生を変えます。</p>
+    </section>
+
+    <section>
+      <h2>なぜ「インド」なのか</h2>
+      <p>日本の「枠組み」に苦しむ子どもへ——世界はもっと広い。</p>
+      <div class="two-col" style="margin-top:14px">
+        <div class="panel">
+          <p class="num">01</p>
+          <h3>圧倒的な異文化衝突</h3>
+          <p>肌・言語・文化・宗教——何もかもが違う環境に身を置くことで、日本での悩みが「ちっぽけなもの」に思えてくる。「ここではダメだった」ではなく「ここじゃなかっただけ」と気づける。</p>
+        </div>
+        <div class="panel">
+          <p class="num">02</p>
+          <h3>言葉を超えた「ありがとう」</h3>
+          <p>ボランティア活動・文房具配布・遊び場づくりを通じて、言葉は通じなくても「また来てね」が伝わる瞬間がある。それが自己効力感の芽生えになる。</p>
+        </div>
+        <div class="panel" style="grid-column:1/-1">
+          <p class="num">03</p>
+          <h3>「必要とされている」という実感</h3>
+          <p>「自分はここで必要とされている」という強烈な実感が生まれる。この体験が、生きる力の根っこになる。帰国後も、その感覚は消えない。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>7泊8日の行程</h2>
+      <p>少人数制（5〜8名）・現地専任ガイド常時同行・毎日の安否報告体制</p>
+      <div class="steps">
+        <div class="step"><div class="d">1日目</div><div class="t">日本出発<br>バラナシ着</div></div>
+        <div class="step"><div class="d">2〜3日目</div><div class="t">ガンジス川<br>文化体験</div></div>
+        <div class="step"><div class="d">4〜5日目</div><div class="t">ブッダガヤ<br>ボランティア</div></div>
+        <div class="step"><div class="d">6〜7日目</div><div class="t">子どもたちと<br>交流・振り返り</div></div>
+        <div class="step"><div class="d">8日目</div><div class="t">帰国<br>日本着</div></div>
+      </div>
+      <ul class="checklist" style="list-style:none;padding-left:0">
+        <li>✓ 現地専任ガイド常時同行　✓ 毎日の安否報告体制</li>
+        <li>✓ 少人数制（教育専門家同行）　✓ 事前コーチング完備</li>
+      </ul>
+      <p class="note">次回日程はお問い合わせください。</p>
+    </section>
+
+    <section>
+      <h2>国内での社会貢献活動</h2>
+      <p>越（エツ）は「海外体験」だけではありません。国内でも、子どもたちが安心して過ごせる居場所づくりと、学びの機会づくりを続けています。</p>
+      <ul>
+        <li><strong>子ども食堂での活動</strong>（運営・サポート）</li>
+        <li><strong>寄付</strong>（物資・学用品など）</li>
+        <li><strong>授業・学びの機会</strong>（子どもたちへの学習支援・ワークショップ）</li>
+      </ul>
+      <p class="note">※活動内容は時期や連携先により変動します。最新情報はお問い合わせください。</p>
+    </section>
+
+    <section>
+      <h2>参加にあたって</h2>
+      <p>時期・人数・渡航条件などは都度ご案内します。ご関心のある方は、まずはお気軽にご相談ください。</p>
+      <ul>
+        <li>少人数制で、ひとりひとりの体験を大切にします</li>
+        <li>現地では専任ガイドが同行し、安心して過ごせる体制を整えます</li>
+        <li>帰国後も、体験を日常につなぐ伴走を行います</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>なぜ「インドを共にした担当大学生」なのか</h2>
+      <p>この体験をただの「旅の思い出」で終わらせないために。</p>
+      <div class="two-col" style="margin-top:14px">
+        <div class="panel">
+          <p class="num">01</p>
+          <h3>「あの時の体験」が共通言語になる</h3>
+          <p>ガンジス川の朝日、子どもたちとの笑顔、言葉が通じない中での「ありがとう」——それを共有している大学生が訪問するから、「わかってもらえる」という安心感が生まれる。</p>
+        </div>
+        <div class="panel">
+          <p class="num">02</p>
+          <h3>信頼関係がゼロからではない</h3>
+          <p>インドで7泊8日を共にした間柄。帰国後に初めて会う家庭教師とは根本的に違う。インドでの体験を通じて築いた関係がそのまま続く。</p>
+        </div>
+        <div class="panel" style="grid-column:1/-1">
+          <p class="num">03</p>
+          <h3>体験を日常の力に変える伴走者</h3>
+          <p>インドで感じた「自分にもできる」「自分は必要とされている」という感覚を日常の言葉に落とし込み、次の目標へつなげる。体験を「点」ではなく「線」にする。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>帰国後も、日常につなぐ</h2>
+      <p>インドで得た「自分にもできる」「必要とされている」という感覚は、帰国後の関わり方次第で、日常の力になります。体験を“点”で終わらせず、“線”にするために伴走します。</p>
+    </section>
+
+    <!-- 金額の詳細はこのページでは表示しません -->
+
+    <section>
+      <p class="closing">一緒に越えに行きましょう。<br>インドで、お子様の人生は変わります。<br>帰国後も、担当大学生と大久保俊輝が一緒に歩きます。</p>
+      <p>まずはお気軽にお問い合わせください。</p>
+      <ul style="list-style:none;padding-left:0">
+        <li><strong>メール</strong>　<a href="mailto:etsu_pj@antagaorana.com?subject=%E3%80%90%E8%B6%8A%EF%BC%88%E3%82%A8%E3%83%84%EF%BC%89%E3%80%91%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B&body=%E3%80%90%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88%E3%80%91%0D%0A%E6%B0%8F%E5%90%8D%EF%BC%9A%0D%0A%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA%EF%BC%9A%0D%0A%E6%80%A7%E5%88%A5%EF%BC%9A%0D%0A%E5%B9%B4%E9%BD%A2%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E4%BD%8F%E6%89%80%E3%83%BB%E9%80%A3%E7%B5%A1%E3%80%91%0D%0A%E4%BD%8F%E6%89%80%EF%BC%88%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%81%8B%E3%82%89%EF%BC%89%EF%BC%9A%0D%0A%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%EF%BC%88%E6%97%A5%E4%B8%AD%E3%81%A4%E3%81%AA%E3%81%8C%E3%82%8A%E3%82%84%E3%81%99%E3%81%84%E7%95%AA%E5%8F%B7%EF%BC%89%EF%BC%9A%0D%0A%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%EF%BC%88%E8%BF%94%E4%BF%A1%E7%94%A8%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%E3%80%91%0D%0A%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%EF%BC%88%E5%B7%AE%E3%81%97%E6%94%AF%E3%81%88%E3%81%AA%E3%81%91%E3%82%8C%E3%81%B0%E8%A9%B3%E7%B4%B0%E3%81%AB%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%89%E3%81%94%E8%A8%98%E5%85%A5%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%91%0D%0A%E3%81%8A%E5%AD%90%E6%A7%98%E3%81%AE%E5%AD%A6%E5%B9%B4%EF%BC%8F%E7%8A%B6%E6%B3%81%EF%BC%88%E8%A9%B2%E5%BD%93%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%EF%BC%8F%E9%9B%BB%E8%A9%B1%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%99%82%E9%96%93%E5%B8%AF%EF%BC%9A%0D%0A%E3%81%8A%E6%80%A5%E3%81%8E%E3%81%AE%E3%81%94%E4%BA%8B%E6%83%85%EF%BC%88%E3%81%82%E3%82%8C%E3%81%B0%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E3%82%8A%E6%89%B1%E3%81%84%E3%80%91%0D%0A%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AF%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%E5%AF%BE%E5%BF%9C%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E5%88%A9%E7%94%A8%E3%81%97%E3%81%BE%E3%81%99%E3%80%82" style="color:var(--g);font-weight:700;text-decoration:underline">etsu_pj@antagaorana.com</a></li>
+        <li><strong>サイト</strong>　<a href="https://antagaorana.com" style="color:var(--g);font-weight:700;text-decoration:underline" target="_blank" rel="noopener">antagaorana.com</a></li>
+        <li><strong>Instagram</strong>　<a href="https://www.instagram.com/antagaorana" style="color:var(--g);font-weight:700;text-decoration:underline" target="_blank" rel="noopener">@antagaorana</a></li>
+      </ul>
+      <p style="margin-top:18px;font-family:'Noto Serif JP',serif;font-weight:900;color:var(--gd)">「あんたがおらなあかんねん！」</p>
+
+      <div class="cta">
+        <a class="btn prim" href="mailto:etsu_pj@antagaorana.com?subject=%E3%80%90%E8%B6%8A%EF%BC%88%E3%82%A8%E3%83%84%EF%BC%89%E3%80%91%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B&body=%E3%80%90%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88%E3%80%91%0D%0A%E6%B0%8F%E5%90%8D%EF%BC%9A%0D%0A%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA%EF%BC%9A%0D%0A%E6%80%A7%E5%88%A5%EF%BC%9A%0D%0A%E5%B9%B4%E9%BD%A2%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E4%BD%8F%E6%89%80%E3%83%BB%E9%80%A3%E7%B5%A1%E3%80%91%0D%0A%E4%BD%8F%E6%89%80%EF%BC%88%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%81%8B%E3%82%89%EF%BC%89%EF%BC%9A%0D%0A%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%EF%BC%88%E6%97%A5%E4%B8%AD%E3%81%A4%E3%81%AA%E3%81%8C%E3%82%8A%E3%82%84%E3%81%99%E3%81%84%E7%95%AA%E5%8F%B7%EF%BC%89%EF%BC%9A%0D%0A%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%EF%BC%88%E8%BF%94%E4%BF%A1%E7%94%A8%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%E3%80%91%0D%0A%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%EF%BC%88%E5%B7%AE%E3%81%97%E6%94%AF%E3%81%88%E3%81%AA%E3%81%91%E3%82%8C%E3%81%B0%E8%A9%B3%E7%B4%B0%E3%81%AB%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%89%E3%81%94%E8%A8%98%E5%85%A5%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%91%0D%0A%E3%81%8A%E5%AD%90%E6%A7%98%E3%81%AE%E5%AD%A6%E5%B9%B4%EF%BC%8F%E7%8A%B6%E6%B3%81%EF%BC%88%E8%A9%B2%E5%BD%93%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%EF%BC%8F%E9%9B%BB%E8%A9%B1%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%99%82%E9%96%93%E5%B8%AF%EF%BC%9A%0D%0A%E3%81%8A%E6%80%A5%E3%81%8E%E3%81%AE%E3%81%94%E4%BA%8B%E6%83%85%EF%BC%88%E3%81%82%E3%82%8C%E3%81%B0%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E3%82%8A%E6%89%B1%E3%81%84%E3%80%91%0D%0A%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AF%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%E5%AF%BE%E5%BF%9C%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E5%88%A9%E7%94%A8%E3%81%97%E3%81%BE%E3%81%99%E3%80%82">メールで相談する</a>
+        <a class="btn ghost" href="/wp-content/themes/education-zone/india-project.html">プロジェクト詳細（写真・スライド）</a>
+      </div>
+      <p class="note">最新の募集条件・日程は、お問い合わせのうえご確認ください。</p>
+    </section>
+  </div>
+</body>
+</html>

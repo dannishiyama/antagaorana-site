@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 260" width="880" height="260" role="img" aria-label="???????">
+  <defs>
+    <linearGradient id="hcFill" x1="0%" y1="40%" x2="100%" y2="70%">
+      <stop offset="0%" stop-color="#FFF9E8"/>
+      <stop offset="40%" stop-color="#E8C060"/>
+      <stop offset="100%" stop-color="#C9943A"/>
+    </linearGradient>
+    <filter id="hcShadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity=".32"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="18" flood-color="#fff" flood-opacity=".12"/>
+    </filter>
+    <linearGradient id="hcStroke" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity=".5"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <text
+    x="440"
+    y="158"
+    text-anchor="middle"
+    font-family="'Hiragino Mincho ProN','Hiragino Serif','Yu Mincho','Noto Serif JP','MS PMincho',serif"
+    font-size="92"
+    font-weight="900"
+    fill="url(#hcFill)"
+    stroke="url(#hcStroke)"
+    stroke-width="1.2"
+    paint-order="stroke fill"
+    filter="url(#hcShadow)"
+  >???????</text>
+</svg>

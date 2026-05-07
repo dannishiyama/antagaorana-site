@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>あんたがおらな | Community</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:      #5C7A5A;
+  --green-mid:  #4A6349;
+  --green-lt:   #7A9A78;
+  --green-pale: #EEF4ED;
+  --green-pale2:#DCE9DB;
+  --ivory:      #F5EFE6;
+  --ivory2:     #EDE4D8;
+  --ivory3:     #E0D5C8;
+  --gold:       #D4A843;
+  --gold-lt:    #E8C060;
+  --terra:      #C4856A;
+  --terra-lt:   #D8A088;
+  --white:      #FFFFFF;
+  --text:       #1E1E1E;
+  --text-mid:   #4A4A4A;
+  --text-soft:  #8A8A8A;
+  --sh-s: 0 2px 12px rgba(42,74,62,.10);
+  --sh-m: 0 4px 24px rgba(42,74,62,.14);
+  --r: 16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivory);color:var(--text);overflow:hidden}
+.screen{display:none;height:100vh;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+
+/* ═══════════════════════════
+   LOGIN — 習字ロゴ + 深緑
+═══════════════════════════ */
+#loginScreen{
+  background:linear-gradient(170deg,#3A5A38 0%,#2A4A28 55%,#1A3018 100%);
+  align-items:center;justify-content:center;padding:32px 24px;
+  position:relative;overflow:hidden;
+}
+#loginScreen::before{
+  content:'';position:absolute;top:-100px;right:-80px;
+  width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,146,42,.14) 0%,transparent 70%);
+}
+#loginScreen::after{
+  content:'';position:absolute;bottom:-70px;left:-60px;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,98,58,.10) 0%,transparent 70%);
+}
+.login-wrap{
+  width:100%;max-width:360px;position:relative;z-index:1;
+  animation:fadeUp .55s ease both;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+
+/* 習字ロゴ */
+.login-calli{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin-bottom:28px;width:100%;
+}
+.login-calli img{
+  width:200px;height:auto;
+  display:block;margin:0 auto;
+  filter:drop-shadow(0 3px 16px rgba(200,146,42,.3));
+}
+.login-calli .calli-divider{
+  width:60px;height:1px;background:rgba(200,146,42,.4);margin:10px 0;
+}
+.login-calli .calli-sub{
+  font-family:'Noto Serif JP',serif;
+  font-size:12px;color:rgba(247,240,230,.5);letter-spacing:.2em;
+}
+
+.login-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--ivory);text-align:center;margin-bottom:5px;width:100%}
+.login-sub{font-size:13px;color:rgba(247,240,230,.45);text-align:center;margin-bottom:24px;width:100%}
+.fgroup{margin-bottom:13px;width:100%}
+.fgroup label{display:block;font-size:11px;font-weight:500;color:var(--gold-lt);margin-bottom:5px;letter-spacing:.05em}
+.fgroup input{
+  width:100%;padding:13px 15px;
+  background:rgba(247,240,230,.07);
+  border:1px solid rgba(247,240,230,.12);border-radius:10px;
+  color:var(--ivory);font-size:15px;font-family:inherit;outline:none;
+  transition:border-color .2s,background .2s;
+}
+.fgroup input:focus{border-color:var(--gold);background:rgba(247,240,230,.11)}
+.fgroup input::placeholder{color:rgba(247,240,230,.25)}
+.btn-login{
+  width:100%;padding:14px;margin-top:6px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--terra) 100%);
+  border:none;border-radius:10px;color:var(--ivory);
+  font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;
+  cursor:pointer;letter-spacing:.08em;
+  box-shadow:0 4px 20px rgba(200,146,42,.28);
+  transition:transform .14s,box-shadow .14s;display:block;
+}
+.btn-login:active{transform:scale(.98)}
+.login-note{font-size:11px;color:rgba(247,240,230,.28);text-align:center;margin-top:16px;width:100%}
+
+/* ═══════════════════════════
+   APP SHELL
+═══════════════════════════ */
+#appScreen{background:var(--ivory)}
+.topbar{
+  background:var(--green);padding:13px 18px 11px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;box-shadow:0 2px 16px rgba(42,74,62,.22);position:relative;z-index:50;
+}
+.topbar-logo{display:flex;align-items:center;}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-name{font-size:12px;color:rgba(247,240,230,.7)}
+.topbar-av{
+  width:33px;height:33px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--terra));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;color:var(--ivory);
+  border:2px solid rgba(247,240,230,.2);
+}
+.content{flex:1;overflow-y:auto;padding:18px 16px 86px}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:rgba(42,74,62,.18);border-radius:3px}
+
+/* TABBAR */
+.tabbar{
+  position:fixed;bottom:0;left:0;right:0;background:var(--white);
+  display:flex;border-top:1px solid rgba(0,0,0,.06);
+  box-shadow:0 -4px 20px rgba(0,0,0,.07);z-index:100;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:10px 2px 8px;background:none;border:none;cursor:pointer;
+  color:var(--text-soft);transition:color .18s;position:relative;
+}
+.tab.active{color:var(--green)}
+.tab.active::after{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
+  background:var(--green);border-radius:0 0 3px 3px;
+}
+.tab-lbl{font-size:10px;font-weight:600;font-family:inherit;line-height:1.35;text-align:center}
+
+.page{display:none;animation:fadeIn .22s ease}
+.page.active{display:block}
+
+/* SECTION HEADER */
+.sec-hd{display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.sec-hd::before{content:'';width:3px;height:16px;background:linear-gradient(to bottom,var(--gold),var(--terra));border-radius:2px;flex-shrink:0}
+.sec-hd h2{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:700;color:var(--green)}
+
+/* ═══════════════════════════
+   HOME
+═══════════════════════════ */
+.greet-card{
+  background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);
+  border-radius:20px;padding:22px 20px;margin-bottom:18px;
+  position:relative;overflow:hidden;
+}
+.greet-card::after{
+  content:'';position:absolute;right:-20px;bottom:-20px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(200,146,42,.08);
+}
+.greet-tag{font-size:11px;font-weight:600;color:var(--gold-lt);letter-spacing:.1em;margin-bottom:5px}
+.greet-main{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;color:var(--ivory);line-height:1.6}
+.greet-quote{margin-top:10px;font-size:12px;color:rgba(247,240,230,.5);font-style:italic}
+
+.remote-card{
+  background:var(--white);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;
+  display:flex;align-items:center;gap:13px;box-shadow:var(--sh-s);
+  cursor:pointer;text-decoration:none;color:inherit;transition:transform .14s;
+}
+.remote-card:active{transform:scale(.98)}
+.rc-icon{
+  width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;font-size:11px;font-weight:700;flex-shrink:0;
+  background:var(--green-pale);color:var(--green);line-height:1.3;text-align:center;
+}
+.rc-info{flex:1;min-width:0}
+.rc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.rc-sub{font-size:12px;color:var(--text-soft)}
+.rc-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.badge-live{background:rgba(196,98,58,.12);color:var(--terra)}
+.badge-new{background:rgba(200,146,42,.14);color:#9A6E18}
+
+.notice{background:var(--white);border-radius:var(--r);padding:15px 16px;margin-bottom:10px;box-shadow:var(--sh-s)}
+.notice-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.ntag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
+.ntag-green{background:rgba(42,74,62,.1);color:var(--green)}
+.ntag-gold{background:rgba(200,146,42,.13);color:#8A6018}
+.ndate{font-size:11px;color:var(--text-soft)}
+.ntitle{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.nbody{font-size:13px;color:var(--text-mid);line-height:1.65}
+
+/* ═══════════════════════════
+   GOALS
+═══════════════════════════ */
+.goal-hero{
+  background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);
+  border-radius:20px;padding:20px;margin-bottom:18px;
+}
+.goal-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.goal-month{font-size:13px;font-weight:600;color:var(--gold-lt);letter-spacing:.06em}
+.goal-pct{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:900;color:var(--ivory)}
+.goal-pct-lbl{font-size:10px;color:rgba(247,240,230,.5)}
+.goal-bar-bg{height:5px;background:rgba(247,240,230,.15);border-radius:3px;margin-bottom:14px}
+.goal-bar-fill{height:5px;background:linear-gradient(to right,var(--gold),var(--terra));border-radius:3px;transition:width .5s ease}
+.goal-stats{display:flex;gap:10px}
+.gstat{flex:1;background:rgba(247,240,230,.1);border-radius:10px;padding:10px;text-align:center}
+.gstat-num{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:900;color:var(--ivory)}
+.gstat-lbl{font-size:10px;color:rgba(247,240,230,.5);margin-top:2px}
+
+.add-goal-form{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:18px;box-shadow:var(--sh-s)}
+.add-goal-row{display:flex;gap:8px}
+.add-goal-input{
+  flex:1;padding:11px 14px;background:var(--green-pale);
+  border:1.5px solid transparent;border-radius:10px;
+  font-size:14px;font-family:inherit;color:var(--text);outline:none;
+  transition:border-color .2s;
+}
+.add-goal-input:focus{border-color:var(--green)}
+.add-goal-input::placeholder{color:var(--text-soft)}
+.btn-add{
+  padding:11px 16px;background:var(--green);border:none;border-radius:10px;
+  font-family:'Noto Serif JP',serif;color:var(--ivory);font-size:14px;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:background .15s;
+}
+.btn-add:active{background:var(--green-mid)}
+
+/* goal card */
+.goal-card{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh-s)}
+.goal-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.goal-card-title{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;color:var(--text);flex:1;line-height:1.55}
+.goal-card-meta{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.goal-done-badge{font-size:12px;font-weight:700;color:var(--green);background:var(--green-pale);padding:3px 10px;border-radius:20px}
+.btn-del{background:none;border:none;color:var(--text-soft);font-size:15px;cursor:pointer;padding:2px 4px;line-height:1}
+.goal-prog-bar{height:3px;background:rgba(42,74,62,.1);border-radius:2px;margin-bottom:4px}
+.goal-prog-fill{height:3px;background:linear-gradient(to right,var(--gold),var(--terra));border-radius:2px;transition:width .4s ease}
+.goal-prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-soft);margin-bottom:12px}
+
+/* stamp */
+.stamp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.stamp{
+  aspect-ratio:1;border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:var(--green-pale);border:1.5px solid transparent;
+  cursor:pointer;transition:transform .12s,background .15s;
+  position:relative;overflow:hidden;
+}
+.stamp:active{transform:scale(.88)}
+.stamp.done{background:var(--green-pale2);border-color:var(--green-lt)}
+.stamp.today{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,146,42,.2)}
+.stamp.future{opacity:.3;cursor:default;pointer-events:none}
+.stamp-img{width:66%;height:66%;object-fit:contain}
+.stamp-num{font-size:9px;color:var(--text-soft);line-height:1}
+.stamp-msg{font-size:11px;color:var(--text-soft);text-align:center;margin-top:4px}
+.goals-empty{text-align:center;padding:32px 16px;color:var(--text-soft);font-size:14px;line-height:2}
+
+/* ═══════════════════════════
+   SESSIONS
+═══════════════════════════ */
+.sess-tabs{display:flex;gap:8px;margin-bottom:16px}
+.sess-tab{
+  flex:1;padding:10px 4px;
+  background:var(--white);border:1.5px solid var(--green-pale2);border-radius:10px;
+  font-family:'Noto Serif JP',serif;font-size:12px;font-weight:700;
+  color:var(--text-soft);cursor:pointer;text-align:center;transition:all .15s;
+}
+.sess-tab.active{background:var(--green);color:var(--ivory);border-color:var(--green)}
+.sess-page{display:none}
+.sess-page.active{display:block}
+.session-card{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh-s)}
+.sess-top{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.sess-thumb{
+  width:50px;height:50px;border-radius:12px;
+  background:var(--green-pale2);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.sess-thumb-icon{font-family:'Noto Serif JP',serif;font-size:11px;font-weight:700;color:var(--green);text-align:center;line-height:1.4}
+.sess-info{flex:1;min-width:0}
+.sess-title{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.sess-meta{font-size:12px;color:var(--text-soft)}
+.sess-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:4px;background:rgba(42,74,62,.1);color:var(--green)}
+.sess-desc{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:12px}
+.audio-player{background:var(--green-pale);border-radius:10px;padding:12px 14px}
+.ap-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ap-play{
+  width:36px;height:36px;border-radius:50%;background:var(--green);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--ivory);font-size:13px;flex-shrink:0;transition:background .15s,transform .12s;
+}
+.ap-play:active{transform:scale(.92)}
+.ap-track{flex:1}
+.ap-prog{width:100%;height:4px;border-radius:2px;background:rgba(42,74,62,.15);appearance:none;cursor:pointer;outline:none}
+.ap-prog::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:var(--green);cursor:pointer}
+.ap-times{display:flex;justify-content:space-between;font-size:10px;color:var(--text-soft);margin-top:3px}
+.ap-btns{display:flex;gap:6px}
+.ap-btn{
+  flex:1;padding:7px 0;border:1.5px solid rgba(42,74,62,.18);border-radius:8px;
+  background:none;font-size:11px;font-family:inherit;color:var(--green);cursor:pointer;
+  font-weight:500;transition:background .15s;
+}
+.ap-btn:active{background:rgba(42,74,62,.07)}
+
+/* ═══════════════════════════
+   PROFILE
+═══════════════════════════ */
+.profile-hero{
+  background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);
+  border-radius:20px;padding:26px 20px;text-align:center;margin-bottom:18px;
+}
+.p-av{
+  width:70px;height:70px;border-radius:50%;margin:0 auto 12px;
+  background:linear-gradient(135deg,var(--gold),var(--terra));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif JP',serif;font-size:28px;font-weight:700;color:var(--ivory);
+  border:3px solid rgba(247,240,230,.2);
+}
+.p-name{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--ivory);margin-bottom:6px}
+.p-tag{display:inline-block;font-size:12px;padding:4px 14px;background:rgba(200,146,42,.2);color:var(--gold-lt);border-radius:20px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stat-c{background:var(--white);border-radius:14px;padding:14px 8px;text-align:center;box-shadow:var(--sh-s)}
+.stat-n{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:900;color:var(--green)}
+.stat-l{font-size:11px;color:var(--text-soft);margin-top:2px}
+.menu{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-s);margin-bottom:14px}
+.mi{display:flex;align-items:center;gap:14px;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer;transition:background .14s}
+.mi:last-child{border:none}
+.mi:active{background:var(--green-pale)}
+.mi-dot{width:8px;height:8px;border-radius:50%;background:var(--green-pale2);flex-shrink:0}
+.mi-lbl{font-size:14px;font-weight:500;flex:1}
+.mi-arr{font-size:14px;color:var(--text-soft)}
+.btn-logout{width:100%;padding:13px;background:none;border:1.5px solid rgba(196,98,58,.25);border-radius:12px;color:var(--terra);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .14s}
+.btn-logout:active{background:rgba(196,98,58,.05)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* STAMP CELEBRATION BUBBLE */
+.stamp-bubble-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.45);z-index:999;
+  display:flex;align-items:center;justify-content:center;
+  animation:fadeIn .2s ease;
+}
+.stamp-bubble{
+  background:var(--ivory);border-radius:24px;
+  padding:32px 28px;margin:24px;max-width:320px;width:100%;
+  text-align:center;position:relative;
+  box-shadow:0 12px 48px rgba(42,74,62,.25);
+  animation:bubblePop .4s cubic-bezier(.175,.885,.32,1.275) both;
+}
+.stamp-bubble::after{
+  content:'';position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);
+  border:8px solid transparent;border-top-color:var(--ivory);
+}
+.stamp-bubble-emoji{font-size:52px;margin-bottom:12px;display:block;animation:spin .6s ease both}
+.stamp-bubble-streak{
+  font-family:'Noto Serif JP',serif;
+  font-size:32px;font-weight:900;color:var(--green);margin-bottom:6px;
+}
+.stamp-bubble-streak span{color:var(--gold)}
+.stamp-bubble-msg{
+  font-family:'Noto Serif JP',serif;
+  font-size:14px;font-weight:700;color:var(--green);
+  line-height:1.8;margin-bottom:16px;
+}
+.stamp-bubble-quote{
+  font-size:12px;color:var(--text-soft);line-height:1.9;
+  border-top:1px solid var(--ivory3);padding-top:14px;
+}
+.stamp-bubble-close{
+  margin-top:16px;padding:10px 28px;
+  background:linear-gradient(135deg,var(--gold),var(--terra));
+  border:none;border-radius:24px;color:var(--ivory);
+  font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;
+  cursor:pointer;
+}
+@keyframes bubblePop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+@keyframes spin{0%{transform:rotate(-20deg) scale(.5)}60%{transform:rotate(10deg) scale(1.2)}100%{transform:rotate(0) scale(1)}}
+
+/* TOGGLE SWITCH */
+.toggle{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--ivory3);border-radius:26px;transition:.3s}
+.toggle-slider::before{position:absolute;content:'';height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle input:checked+.toggle-slider{background:var(--green)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+/* SESS TAB 4-grid */
+.sess-tabs .sess-tab{
+  font-family:'Noto Serif JP',serif;font-size:18px;font-weight:900;
+  padding:12px 4px;letter-spacing:.05em;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="screen active">
+  <div class="login-wrap">
+    <div class="login-calli">
+      <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='160' viewBox='0 0 320 160'%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='60' font-weight='900' fill='rgba(247,240,230,0.92)' letter-spacing='6'%3Eあんたが%3C/text%3E%3Ctext x='50%25' y='78%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='60' font-weight='900' fill='rgba(247,240,230,0.92)' letter-spacing='6'%3Eおらな%3C/text%3E%3C/svg%3E" alt="あんたがおらな">
+      <div class="calli-divider"></div>
+      <span class="calli-sub">COMMUNITY</span>
+    </div>
+    <h1 class="login-title">おかえりなさい</h1>
+    <p class="login-sub">コミュニティにログイン</p>
+    <div class="fgroup"><label for="eml">メールアドレス</label><input type="email" id="eml" name="email" autocomplete="username" inputmode="email" placeholder="メールアドレスを入力"></div>
+    <div class="fgroup"><label for="pwd">パスワード</label><input type="password" id="pwd" name="password" autocomplete="current-password" placeholder="パスワードを入力"></div>
+    <p id="loginErr" style="display:none;font-size:12px;color:#ffb4a8;margin:-4px 0 8px;text-align:left;width:100%"></p>
+    <button type="button" class="btn-login" onclick="doLogin()">ログイン</button>
+    <p class="login-note">※ 運営が発行したメールアドレス・パスワードでログインしてください。</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo"><img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='44' viewBox='0 0 160 44'%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='17' font-weight='900' fill='%23DFB060' letter-spacing='1'%3Eあんたがおらな%3C/text%3E%3C/svg%3E" alt="あんたがおらな" style="height:36px;width:auto;display:block;filter:drop-shadow(0 1px 4px rgba(0,0,0,.2))"></div>
+    <div class="topbar-right">
+      <span class="topbar-name" id="tName"></span>
+      <div class="topbar-av" id="tAv"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="page active" id="p-home">
+      <div class="greet-card">
+        <div class="greet-tag">TODAY</div>
+        <div class="greet-main" id="greetTxt">おはようございます！<br>今日もそれぞれの場所から。</div>
+        <div class="greet-quote">「あんたがおらなあかんねん！」</div>
+      </div>
+      <div class="sec-hd"><h2>555チャレンジ</h2></div>
+      <a class="remote-card" href="https://meet.google.com/cvr-kkda-mcg" target="_blank">
+        <div class="rc-icon">555<br>チャレンジ</div>
+        <div class="rc-info"><div class="rc-title">555チャレンジ（自由参加）</div><div class="rc-sub">毎朝5時55分スタート ／ リモートで繋がりながら</div></div>
+        <span class="rc-badge badge-live">OPEN</span>
+      </a>
+      <a class="remote-card" href="#" onclick="alert('カレンダーが開きます');return false;">
+        <div class="rc-icon">今月<br>予定</div>
+        <div class="rc-info"><div class="rc-title">今月のスケジュール</div><div class="rc-sub">イベント・セッション予定を確認</div></div>
+        <span class="rc-badge badge-new">NEW</span>
+      </a>
+      <div class="sec-hd" style="margin-top:20px"><h2>お知らせ</h2></div>
+
+      <div class="notice">
+        <div class="notice-top"><span class="ntag ntag-gold">イベント</span><span class="ndate">2025.04.26</span></div>
+        <div class="ntitle">越（エツ）インドプロジェクト 説明会</div>
+        <div class="nbody">5月10日（土）20:00〜 Zoomにて。ご家族での参加もお気軽にどうぞ。</div>
+      </div>
+      <div class="notice">
+        <div class="notice-top"><span class="ntag ntag-green">お知らせ</span><span class="ndate">2025.04.20</span></div>
+        <div class="ntitle">株式会社化のご報告</div>
+        <div class="nbody">あんたがおらなは株式会社として新たなスタートを切ります。引き続きよろしくお願いします。</div>
+      </div>
+    </div>
+
+    <!-- GOALS -->
+    <div class="page" id="p-goals">
+      <div class="goal-hero">
+        <div class="goal-hero-top">
+          <div><div class="goal-month" id="goalMonth"></div><div style="font-size:13px;color:rgba(247,240,230,.65);margin-top:2px">今月の行動目標</div></div>
+          <div style="text-align:right"><div class="goal-pct" id="goalPct">0%</div><div class="goal-pct-lbl">全体達成率</div></div>
+        </div>
+        <div class="goal-bar-bg"><div class="goal-bar-fill" id="goalBar" style="width:0%"></div></div>
+        <div class="goal-stats">
+          <div class="gstat"><div class="gstat-num" id="totalGoals">0</div><div class="gstat-lbl">目標数</div></div>
+          <div class="gstat"><div class="gstat-num" id="totalStamps">0</div><div class="gstat-lbl">総スタンプ</div></div>
+          <div class="gstat"><div class="gstat-num" id="totalDays">31</div><div class="gstat-lbl">今月の日数</div></div>
+        </div>
+      </div>
+      <div class="sec-hd"><h2>目標を追加する</h2></div>
+      <div class="add-goal-form">
+        <div class="add-goal-row">
+          <input class="add-goal-input" id="newGoalInput" type="text" placeholder="例：毎朝6時に起きる、読書30分、運動する…">
+          <button class="btn-add" onclick="addGoal()">追加</button>
+        </div>
+      </div>
+      <div class="sec-hd"><h2>目標ごとのスタンプラリー</h2></div>
+      <div id="goalList"></div>
+    </div>
+
+    <!-- SESSIONS -->
+    <div class="page" id="p-sessions">
+      <p style="font-size:13px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">セッションのカテゴリを選んで、自分の言葉を何度でも聴き返しましょう。</p>
+      <div class="sess-tabs" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px">
+        <button class="sess-tab active" onclick="switchSessTab('me',this)">芽</button>
+        <button class="sess-tab" onclick="switchSessTab('do',this)">導</button>
+        <button class="sess-tab" onclick="switchSessTab('haku',this)">拓</button>
+        <button class="sess-tab" onclick="switchSessTab('etsu',this)">越</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px">
+        <div style="font-size:10px;color:var(--text-soft);text-align:center">可能性の<br>芽吹き</div>
+        <div style="font-size:10px;color:var(--text-soft);text-align:center">自己を<br>導く力</div>
+        <div style="font-size:10px;color:var(--text-soft);text-align:center">未来を<br>拓く行動</div>
+        <div style="font-size:10px;color:var(--text-soft);text-align:center">枠を<br>越える</div>
+      </div>
+      <div class="sess-tab-divider" style="height:1px;background:var(--ivory3);margin-bottom:16px"></div>
+      <div class="sec-hd" style="margin-bottom:10px"><h2>今朝のDanielからのシェア</h2></div>
+      <div id="st-morning-top" style="margin-bottom:20px"></div>
+      <div class="sess-page active" id="st-me"></div>
+      <div class="sess-page" id="st-do"></div>
+      <div class="sess-page" id="st-haku"></div>
+      <div class="sess-page" id="st-etsu"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="p-profile">
+      <div class="profile-hero">
+        <div class="p-av" id="pAv" onclick="changePhoto()" style="cursor:pointer;position:relative"><input type="file" id="photoInput" accept="image/*" style="display:none" onchange="applyPhoto(this)"><span id="pAvText"></span><img id="pAvImg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:none"></div>
+        <div class="p-name" id="pName"></div>
+        <span class="p-tag">あんたがおらな メンバー</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-c"><div class="stat-n" id="statStamps">0</div><div class="stat-l">総スタンプ</div></div>
+        <div class="stat-c"><div class="stat-n" id="statGoals">0</div><div class="stat-l">目標数</div></div>
+        <div class="stat-c"><div class="stat-n" id="statSess">3</div><div class="stat-l">セッション数</div></div>
+      </div>
+      <div class="sec-hd"><h2>メニュー</h2></div>
+      <div class="menu">
+        <div class="mi" onclick="changePhoto()"><div class="mi-dot"></div><span class="mi-lbl">プロフィール写真を変更</span><span class="mi-arr">›</span></div>
+        <div class="mi" onclick="showEmailPage()"><div class="mi-dot"></div><span class="mi-lbl">メールアドレスを変更</span><span class="mi-arr">›</span></div>
+        <div class="mi" onclick="showNotifPage()"><div class="mi-dot"></div><span class="mi-lbl">通知設定</span><span class="mi-arr">›</span></div>
+        <a class="mi" href="mailto:info@antagaorana.com?subject=%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%81%B8%E3%81%AE%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B&body=%E3%80%90%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88%E3%80%91%0D%0A%E6%B0%8F%E5%90%8D%EF%BC%9A%0D%0A%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA%EF%BC%9A%0D%0A%E6%80%A7%E5%88%A5%EF%BC%9A%0D%0A%E5%B9%B4%E9%BD%A2%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E4%BD%8F%E6%89%80%E3%83%BB%E9%80%A3%E7%B5%A1%E3%80%91%0D%0A%E4%BD%8F%E6%89%80%EF%BC%88%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%81%8B%E3%82%89%EF%BC%89%EF%BC%9A%0D%0A%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%EF%BC%88%E6%97%A5%E4%B8%AD%E3%81%A4%E3%81%AA%E3%81%8C%E3%82%8A%E3%82%84%E3%81%99%E3%81%84%E7%95%AA%E5%8F%B7%EF%BC%89%EF%BC%9A%0D%0A%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%EF%BC%88%E8%BF%94%E4%BF%A1%E7%94%A8%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%E3%80%91%0D%0A%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%EF%BC%88%E5%B7%AE%E3%81%97%E6%94%AF%E3%81%88%E3%81%AA%E3%81%91%E3%82%8C%E3%81%B0%E8%A9%B3%E7%B4%B0%E3%81%AB%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%89%E3%81%94%E8%A8%98%E5%85%A5%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%91%0D%0A%E3%81%8A%E5%AD%90%E6%A7%98%E3%81%AE%E5%AD%A6%E5%B9%B4%EF%BC%8F%E7%8A%B6%E6%B3%81%EF%BC%88%E8%A9%B2%E5%BD%93%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%EF%BC%8F%E9%9B%BB%E8%A9%B1%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%99%82%E9%96%93%E5%B8%AF%EF%BC%9A%0D%0A%E3%81%8A%E6%80%A5%E3%81%8E%E3%81%AE%E3%81%94%E4%BA%8B%E6%83%85%EF%BC%88%E3%81%82%E3%82%8C%E3%81%B0%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E3%82%8A%E6%89%B1%E3%81%84%E3%80%91%0D%0A%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AF%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%E5%AF%BE%E5%BF%9C%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E5%88%A9%E7%94%A8%E3%81%97%E3%81%BE%E3%81%99%E3%80%82" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,.05)"><div class="mi-dot"></div><span class="mi-lbl">運営への問い合わせ</span><span class="mi-arr">›</span></a>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">ログアウト</button>
+    </div>
+
+    <!-- EMAIL PAGE -->
+    <div class="page" id="p-email">
+      <div class="sec-hd"><h2>メールアドレスを変更</h2></div>
+      <div style="background:var(--white);border-radius:var(--r);padding:20px;box-shadow:var(--sh-s);margin-bottom:16px">
+        <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">現在のメールアドレス</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:20px" id="currentEmail">未設定</div>
+        <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">新しいメールアドレス</div>
+        <input id="newEmailInput" type="email" placeholder="new@email.com"
+          style="width:100%;padding:12px 14px;background:var(--green-pale);border:1.5px solid transparent;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:14px;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+        <button onclick="saveEmail()" style="width:100%;padding:13px;background:var(--green);border:none;border-radius:10px;color:var(--ivory);font-family:'Noto Serif JP',serif;font-size:15px;font-weight:700;cursor:pointer">保存する</button>
+      </div>
+      <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer">戻る</button>
+    </div>
+
+    <!-- NOTIF PAGE -->
+    <div class="page" id="p-notif">
+      <div class="sec-hd"><h2>通知設定</h2></div>
+      <div style="background:var(--white);border-radius:var(--r);padding:0;box-shadow:var(--sh-s);margin-bottom:16px;overflow:hidden">
+        <div class="notif-row" style="display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid rgba(0,0,0,.05)">
+          <div><div style="font-size:14px;font-weight:600">555チャレンジのリマインダー</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px">毎朝5:50に通知</div></div>
+          <label class="toggle"><input type="checkbox" id="notif1" checked onchange="saveNotif()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-row" style="display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid rgba(0,0,0,.05)">
+          <div><div style="font-size:14px;font-weight:600">新着セッション音声</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px">新しい音声が追加されたとき</div></div>
+          <label class="toggle"><input type="checkbox" id="notif2" checked onchange="saveNotif()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="notif-row" style="display:flex;align-items:center;justify-content:space-between;padding:16px">
+          <div><div style="font-size:14px;font-weight:600">スタンプのリマインダー</div><div style="font-size:12px;color:var(--text-soft);margin-top:2px">毎晩21:00に通知</div></div>
+          <label class="toggle"><input type="checkbox" id="notif3" onchange="saveNotif()"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer">戻る</button>
+    </div>
+  </div>
+
+  <!-- TABBAR -->
+  <div class="tabbar">
+    <button class="tab active" onclick="goTab('home',this)"><span class="tab-lbl">ホーム</span></button>
+    <button class="tab" onclick="goTab('goals',this)"><span class="tab-lbl">行動目標</span></button>
+    <button class="tab" onclick="goTab('sessions',this)"><span class="tab-lbl">セッション<br>振り返り</span></button>
+    <button class="tab" onclick="goTab('profile',this)"><span class="tab-lbl">マイページ</span></button>
+  </div>
+</div>
+
+<script type="module">
+/**
+ * Firebase 本番向け Community アプリ（Authentication + Firestore）
+ * デモログイン（demo@／DEMO_ALLOW／localStorage セッション復元）は一切なし。認証は Firebase のみ。
+ *
+ * 【Firestore セキュリティルール例】未ログインは読み書き不可・本人のみアクセス可:
+ *
+ * rules_version = '2';
+ * service cloud.firestore {
+ *   match /databases/{database}/documents {
+ *     match /users/{uid}/goals/{goalId} {
+ *       allow read, write: if request.auth != null && request.auth.uid == uid;
+ *     }
+ *   }
+ * }
+ *
+ * 【インデックス】 goals に orderBy('createdAt','desc') を使う場合、初回アクセス時に
+ * コンソールに表示されるリンクからインデックスを作成してください。
+ */
+
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  updateEmail,
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  serverTimestamp,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+// --- Firebase 設定（本番プロジェクトの値に差し替え） ---
+const firebaseConfig = {
+  apiKey: "AIzaSyDNJ6Pix3lSNRGzAqJdA9oWPYcXlCo889g",
+  authDomain: "antagaorana-haku.firebaseapp.com",
+  projectId: "antagaorana-haku",
+  storageBucket: "antagaorana-haku.firebasestorage.app",
+  messagingSenderId: "5999305262",
+  appId: "1:5999305262:web:b137b1b13f914c64ccf5bf"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 旧デモ版が保存していたキーを削除（ログイン維持に使わない・Firebase Auth のみでセッション管理）
+try {
+  localStorage.removeItem('ago_community_session_v1');
+  localStorage.removeItem('ago_goals4');
+} catch (e) {}
+
+const IMG_DONE  = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 viewBox=%270 0 80 80%27%3E%3Ctext x=%2750%25%27 y=%2754%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%2752%27 font-weight=%27900%27 fill=%27%232A4A3E%27%3E%E3%81%82%3C/text%3E%3C/svg%3E';
+const IMG_EMPTY = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 viewBox=%270 0 80 80%27%3E%3Ctext x=%2750%25%27 y=%2754%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%2752%27 font-weight=%27900%27 fill=%27%23C8C3BC%27%3E%E3%81%82%3C/text%3E%3C/svg%3E';
+
+/** 画面表示用ユーザー情報 */
+let user = null;
+/** メモリ上の goals（Firestore の users/{uid}/goals と同期） */
+let goals = [];
+let currentUid = null;
+
+function showLoginError(msg) {
+  const el = document.getElementById('loginErr');
+  if (!el) { if (msg) alert(msg); return; }
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+/** Firebase Auth のエラーコードを日本語で表示（原因切り分け用） */
+function authErrorMessage(err) {
+  const c = err && err.code ? err.code : '';
+  if (c === 'auth/invalid-email') return 'メールアドレスの形式が正しくありません。';
+  if (c === 'auth/user-disabled') return 'このアカウントは無効になっています。';
+  if (c === 'auth/user-not-found') return 'このメールアドレスのアカウントが見つかりません。Firebase Console の Authentication でユーザーを作成してください。';
+  if (c === 'auth/wrong-password') return 'パスワードが正しくありません。';
+  if (c === 'auth/invalid-credential' || c === 'auth/invalid-login-credentials')
+    return 'メールアドレスまたはパスワードが正しくありません。';
+  if (c === 'auth/too-many-requests') return 'ログイン試行が多すぎます。しばらくしてから再度お試しください。';
+  if (c === 'auth/network-request-failed') return 'ネットワークエラーです。接続を確認してください。';
+  if (c === 'auth/unauthorized-domain')
+    return 'この URL ではログインできません。Firebase Console → Authentication → 設定 → 承認済みドメインに、このサイトのドメイン（または localhost）を追加してください。';
+  return 'ログインに失敗しました。' + (c ? ' (' + c + ')' : '');
+}
+
+/** Firestore 読み取り失敗時にユーザーへヒントを返す */
+function firestoreLoadHint(err) {
+  const c = err && err.code ? err.code : '';
+  if (c === 'permission-denied')
+    return 'Firestore のセキュリティルールで読み取りが拒否されています。ルールで users/{uid}/goals がログインユーザーの uid のみ許可されているか確認してください。';
+  if (c === 'failed-precondition')
+    return 'クエリ用のインデックスが不足している可能性があります。ブラウザの開発者ツール（コンソール）に表示されるリンクからインデックスを作成してください。';
+  if (c === 'unavailable') return 'Firestore に接続できませんでした。ネットワークを確認してください。';
+  return err && err.message ? String(err.message) : '不明なエラー';
+}
+
+/** Firestore から goals を取得（ログイン後に実行） */
+async function fetchGoals(uid) {
+  const colRef = collection(db, 'users', uid, 'goals');
+  const q = query(colRef, orderBy('createdAt', 'desc'));
+  const snap = await getDocs(q);
+  goals = [];
+  snap.forEach((docSnap) => {
+    const d = docSnap.data();
+    goals.push({
+      id: docSnap.id,
+      text: d.text || '',
+      stamps: Array.isArray(d.stamps) ? d.stamps : [],
+    });
+  });
+}
+
+function enterAppAfterAuth(fbUser) {
+  const email = fbUser.email || '';
+  const displayName =
+    fbUser.displayName || (email.indexOf('@') > 0 ? email.split('@')[0] : 'メンバー');
+  const initial = displayName.trim() ? displayName.trim().charAt(0) : 'メ';
+  user = { name: displayName, initial, email };
+  ['tName','pName'].forEach((id) => {
+    const ne = document.getElementById(id);
+    if (ne) ne.textContent = user.name;
+  });
+  document.getElementById('tAv').textContent = user.initial;
+  document.getElementById('pAvText').textContent = user.initial;
+  const h = new Date().getHours();
+  const greet =
+    h < 10
+      ? 'おはようございます！\n今日もそれぞれの場所から。'
+      : h < 17
+        ? 'こんにちは！\nいい調子ですか？'
+        : 'お疲れさまです！\nゆっくり休んでください。';
+  document.getElementById('greetTxt').textContent = greet;
+  initGoals();
+  initSessions();
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('appScreen').classList.add('active');
+  showLoginError('');
+}
+
+// file:// で開くと auth/unauthorized-domain になりログインできないことがある
+if (typeof location !== 'undefined' && location.protocol === 'file:') {
+  showLoginError(
+    'ファイルを直接開いているとログインできない場合があります。ターミナルでフォルダに移動し「python3 -m http.server」などで http://localhost:8000 から開くか、ウェブに公開した URL で開いてください（Firebase の承認済みドメインに localhost を追加）。'
+  );
+}
+
+// 認証の唯一のガード：ログイン成功・失敗の画面反映はここだけ（デモパス・localStorage ログインなし）
+// 未ログイン時は #appScreen に .active を付けず非表示（.screen は display:none）
+onAuthStateChanged(auth, async (fbUser) => {
+  if (!fbUser) {
+    currentUid = null;
+    user = null;
+    goals = [];
+    document.getElementById('appScreen').classList.remove('active');
+    document.getElementById('loginScreen').classList.add('active');
+    const eml = document.getElementById('eml');
+    const pwd = document.getElementById('pwd');
+    if (eml) eml.value = '';
+    if (pwd) pwd.value = '';
+    showLoginError('');
+    return;
+  }
+  currentUid = fbUser.uid;
+  let goalLoadError = null;
+  try {
+    await fetchGoals(fbUser.uid);
+  } catch (err) {
+    // 認証は成功しているが Firestore だけ失敗するケース（ルール未設定・インデックス・オフライン等）
+    // 以前はここで signOut していたため「ログインできない」ように見えていた
+    console.error(err);
+    goals = [];
+    goalLoadError = err;
+  }
+  enterAppAfterAuth(fbUser);
+  if (goalLoadError) {
+    alert('目標データの読み込みに失敗しました。\n\n' + firestoreLoadHint(goalLoadError));
+  }
+});
+
+/**
+ * ログイン開始のみ（Firebase Authentication）。
+ * アプリ表示・ユーザー確定は onAuthStateChanged のみ（本関数内では enterApp しない）。
+ */
+async function doLogin() {
+  const email = document.getElementById('eml').value.trim();
+  const password = document.getElementById('pwd').value;
+  showLoginError('');
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (e) {
+    console.error(e);
+    showLoginError(authErrorMessage(e));
+  }
+}
+
+async function doLogout() {
+  if (!confirm('ログアウトしますか？')) return;
+  try {
+    await signOut(auth);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+document.addEventListener('keydown', function (ev) {
+  const loginScreen = document.getElementById('loginScreen');
+  if (loginScreen && loginScreen.classList.contains('active')) {
+    if (ev.key === 'Enter' && (ev.target.id === 'eml' || ev.target.id === 'pwd')) {
+      ev.preventDefault();
+      doLogin();
+    }
+  }
+});
+
+function goTab(name, btn) {
+  document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+  document.getElementById('p-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* GOALS — Firestore: users/{uid}/goals/{goalId} … text, createdAt, stamps（スタンプ日付は月内日にちの配列） */
+function initGoals() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const days = new Date(y, m + 1, 0).getDate();
+  const today = now.getDate();
+  document.getElementById('goalMonth').textContent = `${y}年${m + 1}月`;
+  document.getElementById('totalDays').textContent = days;
+  renderGoals(days, today, y, m);
+  updateSummary(days, today);
+}
+
+function renderGoals(days, today, y, m) {
+  const list = document.getElementById('goalList');
+  if (goals.length === 0) {
+    list.innerHTML =
+      '<div class="goals-empty">まだ目標が登録されていません。<br>上のフォームから追加してみましょう。</div>';
+    return;
+  }
+  list.innerHTML = goals
+    .map((g) => {
+      const done = g.stamps.length;
+      const pct = today > 0 ? Math.round((done / today) * 100) : 0;
+      const streak = calcStreak(g.stamps, today);
+      const stamps = Array.from({ length: days }, (_, i) => {
+        const d = i + 1;
+        const isDone = g.stamps.includes(d);
+        const isToday = d === today;
+        const isFuture = d > today;
+        let cls =
+          'stamp' +
+          (isDone ? ' done' : '') +
+          (isToday ? ' today' : '') +
+          (isFuture ? ' future' : '');
+        return `<div class="${cls}" onclick="window.toggleStamp('${g.id}',${d},${days},${today},${y},${m})" title="${m + 1}月${d}日">
+        <img class="stamp-img" src="${isDone ? IMG_DONE : IMG_EMPTY}" alt="${isDone ? 'あ' : ''}">
+        <span class="stamp-num">${d}</span>
+      </div>`;
+      }).join('');
+      return `<div class="goal-card" id="gc-${g.id}">
+      <div class="goal-card-top">
+        <div class="goal-card-title">${g.text}</div>
+        <div class="goal-card-meta">
+          <span class="goal-done-badge">${done}/${today}日</span>
+          <button class="btn-del" onclick="window.deleteGoal('${g.id}')">×</button>
+        </div>
+      </div>
+      <div class="goal-prog-bar"><div class="goal-prog-fill" style="width:${pct}%"></div></div>
+      <div class="goal-prog-label"><span>達成率 ${pct}%</span><span>連続 ${streak}日</span></div>
+      <div class="stamp-grid">${stamps}</div>
+      <div class="stamp-msg">${stampMsg(done, today)}</div>
+    </div>`;
+    })
+    .join('');
+}
+
+function calcStreak(stamps, today) {
+  let s = 0;
+  for (let d = today; d >= 1; d--) {
+    if (stamps.includes(d)) s++;
+    else break;
+  }
+  return s;
+}
+
+function stampMsg(done, today) {
+  if (done === 0) return '最初のスタンプを押してみよう';
+  if (done === today) return '今日まで全部達成！すごい！';
+  if (done >= today * 0.8) return 'とても順調です。この調子で！';
+  if (done >= today * 0.5) return '半分以上達成。引き続き頑張ろう';
+  return `${done}日達成。少しずつ積み重ねていこう`;
+}
+
+async function toggleStamp(gid, d, days, today, y, m) {
+  if (!currentUid) return;
+  if (d > today) return;
+  const g = goals.find((x) => x.id === gid);
+  if (!g) return;
+  const idx = g.stamps.indexOf(d);
+  const wasNew = idx < 0;
+  const newStamps = [...g.stamps];
+  if (idx >= 0) newStamps.splice(idx, 1);
+  else newStamps.push(d);
+  try {
+    await updateDoc(doc(db, 'users', currentUid, 'goals', gid), { stamps: newStamps });
+    g.stamps = newStamps;
+    renderGoals(days, today, y, m);
+    updateSummary(days, today);
+    if (wasNew) {
+      const streak = calcStreak(g.stamps, today);
+      if (streak >= 1) showStampBubble(streak);
+    }
+  } catch (e) {
+    console.error(e);
+    alert('スタンプの保存に失敗しました。');
+  }
+}
+
+/** 新規 goal を addDoc で追加 */
+async function addGoal() {
+  if (!currentUid) return;
+  const inp = document.getElementById('newGoalInput');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  try {
+    await addDoc(collection(db, 'users', currentUid, 'goals'), {
+      text: txt,
+      createdAt: serverTimestamp(),
+      stamps: [],
+    });
+    inp.value = '';
+    await fetchGoals(currentUid);
+    initGoals();
+  } catch (e) {
+    console.error(e);
+    alert('目標の追加に失敗しました。');
+  }
+}
+
+async function deleteGoal(gid) {
+  if (!confirm('この目標を削除しますか？')) return;
+  if (!currentUid) return;
+  try {
+    await deleteDoc(doc(db, 'users', currentUid, 'goals', gid));
+    await fetchGoals(currentUid);
+    initGoals();
+  } catch (e) {
+    console.error(e);
+    alert('削除に失敗しました。');
+  }
+}
+
+function updateSummary(days, today) {
+  const totalS = goals.reduce((a, g) => a + g.stamps.length, 0);
+  const possible = goals.length * today;
+  const pct = possible > 0 ? Math.round((totalS / possible) * 100) : 0;
+  document.getElementById('totalGoals').textContent = goals.length;
+  document.getElementById('totalStamps').textContent = totalS;
+  document.getElementById('goalPct').textContent = pct + '%';
+  document.getElementById('goalBar').style.width = pct + '%';
+  document.getElementById('statStamps').textContent = totalS;
+  document.getElementById('statGoals').textContent = goals.length;
+}
+
+/* SESSIONS */
+const sessionsData = {
+  me: [
+    { id: 101, title: '自己肯定感を高める', date: '2025年4月15日', dur: '38:24', tag: '芽 — 可能性の芽吹き', desc: '自分の良さを認めるための具体的なワークについてお話ししました。' },
+    { id: 102, title: '「自分らしさ」を見つける', date: '2025年3月20日', dur: '44:10', tag: '芽 — 可能性の芽吹き', desc: 'どんな小さな光も、あなたの中には眠っています。そこを一緒に掘り起こしました。' },
+  ],
+  do: [
+    { id: 201, title: '目標設定の本質', date: '2025年3月28日', dur: '42:10', tag: '導 — 自己を導く力', desc: 'ワクワクする目標の立て方と、継続するための仕組みについて深掘りしました。' },
+    { id: 202, title: '感情を味方にする', date: '2025年3月5日', dur: '36:55', tag: '導 — 自己を導く力', desc: '感情は敵ではなく、大切なメッセージ。自分を導くための感情との付き合い方。' },
+  ],
+  haku: [
+    { id: 301, title: '行動を変える習慣設計', date: '2025年4月10日', dur: '50:33', tag: '拓 — 未来を拓く行動', desc: '思いが行動を変え、行動が習慣を変える。具体的な設計方法をお伝えしました。' },
+    { id: 302, title: '一歩踏み出す勇気', date: '2025年3月15日', dur: '40:12', tag: '拓 — 未来を拓く行動', desc: '完璧じゃなくていい。まず0.1歩でいい。行動の本質について話しました。' },
+  ],
+  etsu: [
+    { id: 401, title: '人間関係の悩みを解消する', date: '2025年3月10日', dur: '55:03', tag: '越 — 枠を越える', desc: '職場や家族との関係性をどう変えていくか、心理学的アプローチで解説しました。' },
+    { id: 402, title: '枠を越えた先にあるもの', date: '2025年2月20日', dur: '48:30', tag: '越 — 枠を越える', desc: '「こんなもんだ」という思い込みを外したとき、何が見えるか。インドの体験も交えて。' },
+  ],
+};
+const morningSessions = [
+  { id: 10, title: '今朝のDanielからのシェア', date: '2025年4月26日', dur: '5:12', tag: '朝のメッセージ', desc: '「続けることの意味」について今朝西山がシェアした音声です。' },
+  { id: 11, title: '昨日の朝シェア', date: '2025年4月25日', dur: '4:48', tag: '朝のメッセージ', desc: '「焦らなくていい」をテーマにした大久保からの朝のメッセージです。' },
+];
+const allSessions = [...Object.values(sessionsData).flat(), ...morningSessions];
+let progVals = {};
+let intervals = {};
+let playingId = null;
+
+function initSessions() {
+  ['me', 'do', 'haku', 'etsu'].forEach((k) => renderSessList('st-' + k, sessionsData[k]));
+  renderSessList('st-morning-top', morningSessions);
+}
+
+function switchSessTab(name, btn) {
+  document.querySelectorAll('.sess-tab').forEach((b) => b.classList.remove('active'));
+  document.querySelectorAll('.sess-page').forEach((p) => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('st-' + name).classList.add('active');
+}
+
+function renderSessList(cid, sessions) {
+  const el = document.getElementById(cid);
+  if (!el) return;
+  el.innerHTML = sessions
+    .map(
+      (s) => `
+    <div class="session-card">
+      <div class="sess-top">
+        <div class="sess-thumb"><div class="sess-thumb-icon">${s.tag.split('—')[0].trim()}</div></div>
+        <div class="sess-info">
+          <div class="sess-title">${s.title}</div>
+          <div class="sess-meta">${s.date} ／ ${s.dur}</div>
+          <span class="sess-tag">${s.tag}</span>
+        </div>
+      </div>
+      <div class="sess-desc">${s.desc}</div>
+      <div class="audio-player">
+        <div class="ap-row">
+          <button class="ap-play" id="play-${s.id}" onclick="window.togglePlay(${s.id})">▶</button>
+          <div class="ap-track">
+            <input type="range" class="ap-prog" id="prog-${s.id}" value="0" min="0" max="100" oninput="window.seekAudio(${s.id},this.value)">
+            <div class="ap-times"><span id="cur-${s.id}">0:00</span><span>${s.dur}</span></div>
+          </div>
+        </div>
+        <div class="ap-btns">
+          <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒戻る</button>
+          <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒進む ▶▶</button>
+          <button class="ap-btn" onclick="alert('メモ機能（実装予定）')">メモを取る</button>
+        </div>
+      </div>
+    </div>`
+    )
+    .join('');
+}
+
+function togglePlay(id) {
+  const btn = document.getElementById('play-' + id);
+  if (playingId && playingId !== id) {
+    clearInterval(intervals[playingId]);
+    const pb = document.getElementById('play-' + playingId);
+    if (pb) {
+      pb.textContent = '▶';
+      pb.style.background = 'var(--green)';
+    }
+    playingId = null;
+  }
+  if (!progVals[id]) progVals[id] = 0;
+  if (playingId === id) {
+    clearInterval(intervals[id]);
+    btn.textContent = '▶';
+    btn.style.background = 'var(--green)';
+    playingId = null;
+  } else {
+    btn.textContent = '⏸';
+    btn.style.background = 'var(--green-mid)';
+    playingId = id;
+    const sess = allSessions.find((s) => s.id === id);
+    const parts = sess.dur.split(':');
+    const total = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    intervals[id] = setInterval(() => {
+      progVals[id] = Math.min(100, (progVals[id] || 0) + 0.12);
+      document.getElementById('prog-' + id).value = progVals[id];
+      const cur = Math.floor((total * progVals[id]) / 100);
+      document.getElementById('cur-' + id).textContent =
+        `${Math.floor(cur / 60)}:${String(cur % 60).padStart(2, '0')}`;
+      if (progVals[id] >= 100) {
+        clearInterval(intervals[id]);
+        btn.textContent = '▶';
+        btn.style.background = 'var(--green)';
+        playingId = null;
+        progVals[id] = 0;
+        document.getElementById('prog-' + id).value = 0;
+        document.getElementById('cur-' + id).textContent = '0:00';
+      }
+    }, 300);
+  }
+}
+
+function seekAudio(id, v) {
+  progVals[id] = parseFloat(v);
+}
+
+function skipBack(id) {
+  progVals[id] = Math.max(0, (progVals[id] || 0) - 6.6);
+  document.getElementById('prog-' + id).value = progVals[id];
+}
+
+function skipFwd(id) {
+  progVals[id] = Math.min(100, (progVals[id] || 0) + 6.6);
+  document.getElementById('prog-' + id).value = progVals[id];
+}
+
+/* PROFILE */
+function showEmailPage() {
+  const u = auth.currentUser;
+  document.getElementById('currentEmail').textContent = u && u.email ? u.email : '未設定';
+  document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+  document.getElementById('p-email').classList.add('active');
+  document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+}
+
+function showNotifPage() {
+  document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+  document.getElementById('p-notif').classList.add('active');
+  document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+}
+
+function backToProfile() {
+  document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+  document.getElementById('p-profile').classList.add('active');
+  document.querySelectorAll('.tab').forEach((b) => {
+    if (b.onclick && b.onclick.toString().includes('profile')) b.classList.add('active');
+  });
+  document.querySelectorAll('.tab').forEach((b) => {
+    if (b.textContent.includes('マイページ')) b.classList.add('active');
+  });
+}
+
+/** メール変更は Firebase Auth の updateEmail（再ログインが必要な場合あり） */
+async function saveEmail() {
+  const val = document.getElementById('newEmailInput').value.trim();
+  if (!val) {
+    alert('メールアドレスを入力してください');
+    return;
+  }
+  const u = auth.currentUser;
+  if (!u) return;
+  try {
+    await updateEmail(u, val);
+    document.getElementById('currentEmail').textContent = val;
+    document.getElementById('newEmailInput').value = '';
+    alert('メールアドレスを更新しました！');
+  } catch (e) {
+    console.error(e);
+    alert('更新できませんでした。最近ログインしていない場合は再ログイン後にお試しください。');
+  }
+}
+
+function saveNotif() {
+  const s = {
+    n1: document.getElementById('notif1').checked,
+    n2: document.getElementById('notif2').checked,
+    n3: document.getElementById('notif3').checked,
+  };
+  try {
+    localStorage.setItem('ago_notif', JSON.stringify(s));
+  } catch (e) {}
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.activeElement.id === 'newGoalInput') addGoal();
+});
+
+function changePhoto() {
+  document.getElementById('photoInput').click();
+}
+
+function applyPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('pAvImg');
+    const txt = document.getElementById('pAvText');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    txt.style.display = 'none';
+    const tav = document.getElementById('tAv');
+    tav.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function changeEmail() {
+  const u = auth.currentUser;
+  const current = u && u.email ? u.email : '未設定';
+  const val = prompt(`現在のメールアドレス: ${current}\n新しいメールアドレスを入力してください:`);
+  if (!val || !val.trim()) return;
+  if (!auth.currentUser) return;
+  updateEmail(auth.currentUser, val.trim())
+    .then(() => alert('メールアドレスを更新しました！'))
+    .catch(() => alert('更新に失敗しました。再ログイン後にお試しください。'));
+}
+
+function showStampBubble(streak) {
+  const msgs = [
+    { streak: 1, emoji: '🌱', title: '1日目スタート！', msg: '素晴らしい一歩です。' },
+    { streak: 3, emoji: '🔥', title: '3日連続！', msg: 'リズムが生まれてきた！' },
+    { streak: 5, emoji: '⭐', title: '5日連続！', msg: '習慣の芽が出てきました。' },
+    { streak: 7, emoji: '🏆', title: '7日連続！', msg: '1週間完走、本当にすごい！' },
+    { streak: 10, emoji: '✨', title: '10日連続！', msg: 'あなたの継続力は本物です！' },
+    { streak: 14, emoji: '🎖', title: '2週間連続！', msg: 'もう習慣になっていますね！' },
+    { streak: 21, emoji: '👑', title: '21日連続！', msg: '習慣化の証明、達成！' },
+    { streak: 30, emoji: '🎊', title: '1ヶ月連続！', msg: '圧倒的な継続力に拍手！' },
+  ];
+  let best = msgs[0];
+  for (const x of msgs) {
+    if (streak >= x.streak) best = x;
+  }
+  const overlay = document.createElement('div');
+  overlay.className = 'stamp-bubble-overlay';
+  overlay.innerHTML = `
+    <div class="stamp-bubble">
+      <span class="stamp-bubble-emoji">${best.emoji}</span>
+      <div class="stamp-bubble-streak">${streak}<span>日連続！</span></div>
+      <div class="stamp-bubble-msg">${best.msg}</div>
+      <div class="stamp-bubble-quote">
+        思いが行動を変え、<br>
+        行動が習慣を変え、<br>
+        習慣が在り方を変え、<br>
+        在り方が自他を変える。
+      </div>
+      <button class="stamp-bubble-close" onclick="this.closest('.stamp-bubble-overlay').remove()">
+        続ける！
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+}
+
+// インライン onclick 用に window に公開（type="module" は自動ではグローバルにならない）
+window.doLogin = doLogin;
+window.doLogout = doLogout;
+window.goTab = goTab;
+window.toggleStamp = toggleStamp;
+window.addGoal = addGoal;
+window.deleteGoal = deleteGoal;
+window.switchSessTab = switchSessTab;
+window.togglePlay = togglePlay;
+window.seekAudio = seekAudio;
+window.skipBack = skipBack;
+window.skipFwd = skipFwd;
+window.showEmailPage = showEmailPage;
+window.showNotifPage = showNotifPage;
+window.backToProfile = backToProfile;
+window.saveEmail = saveEmail;
+window.saveNotif = saveNotif;
+window.changePhoto = changePhoto;
+window.applyPhoto = applyPhoto;
+window.changeEmail = changeEmail;
+window.showStampBubble = showStampBubble;
+</script>
+
+</body>
+</html>

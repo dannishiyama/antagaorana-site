@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>芽（メイ）— 家庭教師 | あんたがおらな</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --g:#5C7A5A; --gd:#3A5A38; --sand:#F5EFE6; --rose:#C4856A; --gold:#D4A843;
+      --txt:#1A1A1A; --tm:#4A4A4A; --ts:#888; --w:#fff;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Noto Sans JP',sans-serif;color:var(--txt);background:linear-gradient(160deg,var(--sand) 0%,#fff 100%);line-height:1.9}
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:900px;margin:0 auto;padding:100px 5% 86px}
+    .back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tm);margin-bottom:22px}
+    .back:hover{color:var(--g)}
+    .hero{background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.06);border-radius:22px;box-shadow:0 16px 48px rgba(0,0,0,.10);overflow:hidden}
+    .hero-top{display:grid;grid-template-columns:1fr;gap:0}
+    .hero-txt{padding:26px 24px 22px}
+    .tag{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.14em;padding:5px 12px;border-radius:999px;background:rgba(92,122,90,.12);color:var(--g)}
+    h1{font-family:'Noto Serif JP',serif;font-size:clamp(22px,4vw,34px);font-weight:900;color:var(--gd);line-height:1.45;margin-top:10px}
+    .lead{margin-top:10px;color:var(--tm);font-size:14px;line-height:2}
+    .hero-img{aspect-ratio:16/10;background:#fff;border-top:1px solid rgba(0,0,0,.06)}
+    .hero-img img{width:100%;height:100%;object-fit:contain;display:block}
+    .hero-btm{padding:18px 24px 24px;border-top:1px solid rgba(0,0,0,.06)}
+    .points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+    .pt{border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,.06);padding:14px}
+    .pt b{display:block;font-size:11px;letter-spacing:.12em;color:rgba(58,90,56,.82)}
+    .pt span{display:block;margin-top:6px;font-size:13px;color:var(--tm);line-height:1.85}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .panel{border-radius:18px;background:#fff;border:1px solid rgba(0,0,0,.06);padding:16px}
+    .panel h3{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:900;color:var(--gd);margin-bottom:8px;line-height:1.55}
+    .panel p{margin:0;font-size:13px;line-height:1.9}
+    .stance{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .st{border-radius:18px;background:#fff;border:1px solid rgba(0,0,0,.06);padding:16px}
+    .st .k{font-size:11px;font-weight:900;letter-spacing:.14em;color:rgba(58,90,56,.82)}
+    .st .t{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:900;color:var(--gd);margin-top:8px;line-height:1.55}
+    .st .b{font-size:13px;color:var(--tm);line-height:1.9;margin-top:8px}
+    section{margin-top:26px}
+    h2{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:900;color:var(--gd);margin-bottom:12px;padding-left:12px;border-left:4px solid var(--g)}
+    p{font-size:14px;color:var(--tm);margin-bottom:12px}
+    ul{margin:10px 0 10px 1.2em}
+    li{margin-bottom:8px;font-size:14px;color:var(--tm)}
+    .cta{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 26px;border-radius:999px;font-weight:900;letter-spacing:.06em}
+    .btn.prim{background:linear-gradient(135deg,var(--gold),var(--rose));color:var(--w);box-shadow:0 10px 28px rgba(212,168,67,.22)}
+    .btn.ghost{border:2px solid rgba(42,74,42,.18);color:var(--gd);background:#fff}
+    .note{margin-top:14px;font-size:12px;color:rgba(0,0,0,.55);line-height:1.9}
+    @media(max-width:860px){
+      .points{grid-template-columns:1fr}
+      .two-col{grid-template-columns:1fr}
+      .stance{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/#services">← 事業一覧に戻る</a>
+
+    <div class="hero">
+      <div class="hero-top">
+        <div class="hero-txt">
+          <span class="tag">TUTORING</span>
+          <h1>芽（メイ）— 家庭教師</h1>
+          <p class="lead">不登校・引きこもり・発達特性のお子様へ。勉強を教えるだけでなく、生きる力・自己肯定感・「自分にもできる」という確信を育てます。</p>
+        </div>
+        <div class="hero-img" aria-label="芽（メイ）のイメージ">
+          <img src="/wp-content/themes/education-zone/lp-assets/service-mei-20260502.jpg?v=20260502a" alt="芽（メイ）の支援イメージ">
+        </div>
+      </div>
+
+      <div class="hero-btm">
+        <p style="margin:0;color:var(--tm);font-size:13px;line-height:1.9">“できない理由探し”をやめて、<b style="color:var(--gd)">できる土台</b>を一緒に作ります。</p>
+        <div class="points" aria-label="特徴">
+          <div class="pt"><b>POINT 01</b><span>学習だけでなく、生活リズムと心の土台から整える</span></div>
+          <div class="pt"><b>POINT 02</b><span>「できた」を積み重ね、自己肯定感と意欲を回復させる</span></div>
+          <div class="pt"><b>POINT 03</b><span>お子様の特性に合わせて、無理のないペースで伴走する</span></div>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <h2>込めた想い</h2>
+      <p>子どもたちは、最初から何かが足りないわけではありません。ただ、まだ芽吹いていないだけ。</p>
+      <p>不登校・引きこもり・発達特性——そうした悩みの中で、<br>「この子はもうダメかもしれない」と感じてしまう瞬間があるかもしれない。<br>でも本当は違う。まだ見つけられていない才能や、可能性の<strong>「芽」</strong>が必ずあります。</p>
+      <p>大切なのは、無理やり引っ張ることではなく、安心できる土壌をつくり、その芽が自然と伸びていく環境を整えることです。</p>
+    </section>
+
+    <section>
+      <h2>勉強を教えるだけではない</h2>
+      <p>自己肯定感と「自分にもできるかもしれない」を育てる。<br>その子の人生が、もう一度動き出すための始まりです。</p>
+      <p><strong>可能性の芽吹きを、共に。</strong>それが「芽（メイ）」です。</p>
+    </section>
+
+    <section>
+      <h2>なぜ、巷のサポートは結果が出ないのか</h2>
+      <div class="two-col" aria-label="よくある課題">
+        <div class="panel">
+          <h3>01 一般論で終わる</h3>
+          <p>書籍・セミナー・一般的な支援は万人向け。ご家庭の状況に合わせた“個別具体”まで落とし込めず、解決まで至りにくい。</p>
+        </div>
+        <div class="panel">
+          <h3>02 聴くだけで終わる</h3>
+          <p>傾聴は大切ですが、「次に何をするか」まで責任を持って提示しないと、現実は動きません。</p>
+        </div>
+        <div class="panel">
+          <h3>03 コミットがない</h3>
+          <p>「様子を見ましょう」で止まると、誰も責任を取れない構造になります。私たちは結果に向き合います。</p>
+        </div>
+        <div class="panel">
+          <h3>だから、丸ごと支える</h3>
+          <p>お子様への直接支援と、親御様の関わり方の設計をセットで行い、家庭全体が前に進む土台をつくります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3つの姿勢（削除） -->
+    <section>
+      <h2>「芽」のサービス内容</h2>
+      <p>2つのアプローチで、ご家庭を丸ごとサポートします。</p>
+      <div class="two-col" aria-label="サポート内容">
+        <div class="panel">
+          <h3>SUPPORT A：月1回の親御様コンサルティング</h3>
+          <p>関わり方・言葉かけ・家庭環境の改善。月ごとの状態確認と、次の打ち手の設計。「自分だけじゃない」という安心感を届けます。</p>
+        </div>
+        <div class="panel">
+          <h3>SUPPORT B：週1回の家庭教師による家庭訪問</h3>
+          <p>独自研修を経た家庭教師が担当。お子様と直接向き合い、信頼関係を構築し、自己肯定感・生きる力・学習習慣を育みます。</p>
+        </div>
+      </div>
+      <p class="note">※金額の提示はこのページでは行いません。ご家庭の状況を伺い、必要な支援の形を一緒に整理します。</p>
+    </section>
+
+    <section>
+      <h2>担当について</h2>
+      <p>親御様の伴走（コンサルティング）は、<strong>大久保 俊輝（おおくぼ としき）</strong>が担当します。安心できる土壌をつくり、その芽が自然と伸びていく環境を整えること——それが私たちの使命です。</p>
+    </section>
+
+    <section>
+      <h2>まずは無料相談から（40分）</h2>
+      <ul>
+        <li>現状のヒアリング（お子様の状況・親御様のお気持ち・これまでの経緯）</li>
+        <li>方向性の見立て（まず整えるべき土台・最初の一歩）</li>
+        <li>「話してよかった」と思っていただける40分をお約束します</li>
+      </ul>
+      <p class="note">金額の提示はこのページでは行いません。まずは状況を伺い、必要な支援の形を一緒に整理します。</p>
+      <div class="cta">
+        <a class="btn prim" href="mailto:mei_pj@antagaorana.com?subject=%E3%80%90%E8%8A%BD%EF%BC%88%E3%83%A1%E3%82%A4%EF%BC%89%E3%80%91%E7%84%A1%E6%96%99%E7%9B%B8%E8%AB%87%E3%81%AE%E3%81%8A%E9%A1%98%E3%81%84&body=%E3%80%90%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88%E3%80%91%0D%0A%E6%B0%8F%E5%90%8D%EF%BC%9A%0D%0A%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA%EF%BC%9A%0D%0A%E6%80%A7%E5%88%A5%EF%BC%9A%0D%0A%E5%B9%B4%E9%BD%A2%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E4%BD%8F%E6%89%80%E3%83%BB%E9%80%A3%E7%B5%A1%E3%80%91%0D%0A%E4%BD%8F%E6%89%80%EF%BC%88%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%81%8B%E3%82%89%EF%BC%89%EF%BC%9A%0D%0A%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%EF%BC%88%E6%97%A5%E4%B8%AD%E3%81%A4%E3%81%AA%E3%81%8C%E3%82%8A%E3%82%84%E3%81%99%E3%81%84%E7%95%AA%E5%8F%B7%EF%BC%89%EF%BC%9A%0D%0A%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%EF%BC%88%E8%BF%94%E4%BF%A1%E7%94%A8%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%E3%80%91%0D%0A%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%EF%BC%88%E5%B7%AE%E3%81%97%E6%94%AF%E3%81%88%E3%81%AA%E3%81%91%E3%82%8C%E3%81%B0%E8%A9%B3%E7%B4%B0%E3%81%AB%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%89%E3%81%94%E8%A8%98%E5%85%A5%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%91%0D%0A%E3%81%8A%E5%AD%90%E6%A7%98%E3%81%AE%E5%AD%A6%E5%B9%B4%EF%BC%8F%E7%8A%B6%E6%B3%81%EF%BC%88%E8%A9%B2%E5%BD%93%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%EF%BC%8F%E9%9B%BB%E8%A9%B1%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%99%82%E9%96%93%E5%B8%AF%EF%BC%9A%0D%0A%E3%81%8A%E6%80%A5%E3%81%8E%E3%81%AE%E3%81%94%E4%BA%8B%E6%83%85%EF%BC%88%E3%81%82%E3%82%8C%E3%81%B0%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E3%82%8A%E6%89%B1%E3%81%84%E3%80%91%0D%0A%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AF%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%E5%AF%BE%E5%BF%9C%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E5%88%A9%E7%94%A8%E3%81%97%E3%81%BE%E3%81%99%E3%80%82">メールで相談する</a>
+        <a class="btn ghost" href="/#message">挨拶を見る</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
