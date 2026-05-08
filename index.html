@@ -239,6 +239,8 @@ section{padding:88px 5%}
 .message{background:linear-gradient(180deg,#faf9f7 0%,var(--w) 22%,var(--w) 100%)}
 .message{padding:128px 5%}
 .msg-grid{display:grid;grid-template-columns:minmax(240px,280px) 1fr;gap:56px 72px;align-items:start;margin-top:44px}
+.msg-people{display:grid;gap:18px}
+.msg-person{text-align:center}
 .msg-col-photo{text-align:center}
 .msg-photo-wrap{border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.14)}
 .msg-photo-wrap img{width:100%;aspect-ratio:3/4;object-fit:cover}
@@ -867,15 +869,30 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <h2 class="stitle">挨拶</h2>
     <div class="msg-grid">
       <div class="msg-col-photo">
-        <div class="msg-photo-wrap"><img src="./lp-assets/founder-portrait.png" alt="西山 弾"></div>
-        <div class="msg-name">西山 弾（にしやま だん）</div>
-        <div class="msg-title">創設者</div>
-        <div class="msg-tags">
-          <span class="msg-tag">心理学修士</span>
-          <span class="msg-tag">元大学教員</span>
-          <span class="msg-tag">インド渡航経験</span>
-          <span class="msg-tag">不登校支援</span>
-          <span class="msg-tag">発達障害支援</span>
+        <div class="msg-people">
+          <div class="msg-person">
+            <div class="msg-photo-wrap" style="display:none"></div>
+            <div class="msg-name">大久保 俊輝（おおくぼ としき）</div>
+            <div class="msg-title">代表</div>
+            <div class="msg-tags">
+              <span class="msg-tag">元校長</span>
+              <span class="msg-tag">元大学教授</span>
+              <span class="msg-tag">教育相談三万件</span>
+              <span class="msg-tag">心理カウンセラー指導員</span>
+            </div>
+          </div>
+
+          <div class="msg-person">
+            <div class="msg-photo-wrap" style="display:none"></div>
+            <div class="msg-name">西山 弾（にしやま だん）</div>
+            <div class="msg-title">創設者</div>
+            <div class="msg-tags">
+              <span class="msg-tag">教育心理学修士</span>
+              <span class="msg-tag">元大学教員</span>
+              <span class="msg-tag">不登校支援</span>
+              <span class="msg-tag">発達障害支援</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="msg-col-main">
