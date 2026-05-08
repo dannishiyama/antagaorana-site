@@ -54,50 +54,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   gap:84px;
   align-items:center;
 }
-.hero-visual{
-  position:relative;
-  min-height:520px;
-}
-.hero-visual::before{
-  content:'';
-  position:absolute;
-  inset:-40px -80px -40px -40px;
-  background:url('./lp-assets/hero-calligraphy-ink.jpg?v=20260508a') no-repeat 64% 48%;
-  background-size:min(920px,76vw);
-  opacity:.22;
-  filter:invert(1) brightness(1.05) contrast(1.08) blur(.6px);
-  -webkit-mask-image:radial-gradient(closest-side at 46% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 40%, rgba(0,0,0,0) 78%);
-  mask-image:radial-gradient(closest-side at 46% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 40%, rgba(0,0,0,0) 78%);
-  pointer-events:none;
+.hero-visual{position:relative;min-height:520px;display:flex;align-items:center}
+.hero-calligraphy{
+  width:min(560px,44vw);
+  height:auto;
+  object-fit:contain;
+  display:block;
+  transform:translateX(2vw);
 }
 .hero-inner::after{content:none}
 .hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
 .hero-h1{font-family:'Noto Serif JP',serif;font-size:clamp(32px,4vw,54px);font-weight:900;color:var(--w);line-height:1.35;margin-bottom:18px}
 .hero-h1 em{color:var(--goldl);font-style:normal}
-.hero-message{
-  max-width:640px;
-}
-.hero-message-h{
-  font-family:'Noto Serif JP',serif;
-  font-weight:900;
-  color:var(--w);
-  line-height:1.06;
-  letter-spacing:.02em;
-  text-shadow:0 2px 30px rgba(0,0,0,.32);
-  margin:0;
-  font-size:clamp(38px,5.6vw,72px);
-  white-space:nowrap;
-}
-.hero-message-h .line{display:block}
-.hero-message-h .brand{color:var(--w)}
-.hero-message-kicker{
-  margin-top:14px;
-  font-size:13px;
-  font-weight:700;
-  letter-spacing:.16em;
-  color:rgba(232,192,96,.78);
-  opacity:.78;
-}
+.hero-message{max-width:640px}
+.hero-text{display:none}
 .hero-message-sub{
   margin-top:26px;
   font-size:14px;
@@ -131,12 +101,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 
 /* PC: 右に文章、左は余白と筆文字を主役に */
 @media(min-width:901px){
-  .hero-inner{grid-template-rows:auto auto}
-  .hero-visual{grid-column:1;grid-row:1 / span 2}
-  .hero-text{grid-column:2;grid-row:1}
-  .hero-desc{grid-column:2;grid-row:2}
-  .hero-text{align-self:end}
-  .hero-desc{align-self:start}
+  .hero-inner{grid-template-rows:auto;grid-template-columns:1.05fr .95fr;gap:64px}
+  .hero-visual{grid-column:1;grid-row:auto}
+  .hero-desc{grid-column:2;grid-row:auto}
+  .hero-desc-k{margin-bottom:10px}
+  .hero-desc-lead{max-width:38ch}
   .hero-kometa p:not(.hero-kometa-closing):not(.hero-kometa-more){display:none}
   .hero-kometa{max-width:46ch}
   .hero-kometa-closing{letter-spacing:.06em;opacity:.92}
@@ -641,7 +610,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-inner,.creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
   .hero-message{max-width:none}
   .hero-inner{gap:46px}
-  .hero-visual{display:none}
+  .hero-visual{display:flex;min-height:auto;justify-content:center}
+  .hero-calligraphy{width:min(520px,78vw);transform:none;margin:0 auto 8px}
   .hero-message-sub{max-width:54ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
@@ -649,8 +619,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
   .hero{padding:112px 5% 76px}
-  .hero-message-h{font-size:clamp(36px,9.2vw,54px)}
-  .hero-message-h{white-space:normal}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -769,15 +737,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <div class="hero-overlay"></div>
   </div>
   <div class="hero-inner">
-    <div class="hero-visual" aria-hidden="true"></div>
-    <div class="hero-text">
-      <div class="hero-message">
-        <div class="hero-tag">生きる力を育む家庭教師</div>
-        <h1 class="hero-message-h"><span class="line brand">「あんたがおらな」</span></h1>
-        <div class="hero-message-kicker">に込めたメッセージ</div>
-      </div>
+    <div class="hero-visual">
+      <img class="hero-calligraphy" src="./lp-assets/hero-calligraphy-white.png?v=20260509a" alt="あんたがおらな">
     </div>
     <div class="hero-desc">
+      <div class="hero-tag">生きる力を育む家庭教師</div>
       <div class="hero-desc-k">ABOUT</div>
       <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br><span style="display:block;margin-top:10px">信頼と希望を、もう一度届けたい。</span></p>
       <div class="hero-kometa">
