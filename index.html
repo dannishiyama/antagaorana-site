@@ -79,19 +79,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 }
 .hero-overlay{display:none}
 .hero-right{display:flex;align-items:center;justify-content:center}
-/* カード無し：ヒーロー背景とブレンドし、筆致だけが浮いて見える */
-.hero-calligraphy{
-  max-width:560px;width:100%;
-  padding:0 4px;
-  text-align:center;
-  background:none;
-  box-shadow:none;
-  border-radius:0;
+.hero-quiet{
+  width:100%;
+  max-width:560px;
+  min-height:320px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 6px;
 }
-.hero-calligraphy picture{display:block;width:100%;max-width:580px;margin:0 auto}
-.hero-cal-svg{
-  display:block;width:100%;max-width:580px;height:auto;margin:0 auto;
-  filter:drop-shadow(0 4px 30px rgba(0,0,0,.35)) drop-shadow(0 0 40px rgba(232,192,96,.12));
+.hero-quiet-word{
+  font-family:'Noto Serif JP',serif;
+  font-weight:900;
+  font-size:clamp(44px,6.4vw,76px);
+  line-height:1.06;
+  letter-spacing:.03em;
+  color:rgba(232,192,96,.11);
+  text-shadow:0 1px 0 rgba(0,0,0,.12);
+  text-align:center;
+  user-select:none;
+  pointer-events:none;
+  transform:rotate(-2deg);
+}
+.hero-kometa-closing{
+  font-size:clamp(18px,2.8vw,26px);
+  letter-spacing:.06em;
 }
 
 .stats{background:var(--gd);padding:36px 5%}
@@ -481,7 +493,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   nav .nav-links{display:none}
   .hero-inner,.creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
   .hero-right{display:flex;margin-top:8px;width:100%;justify-content:center}
-  .hero-calligraphy{max-width:min(560px,100%);margin:0 auto}
+  .hero-quiet{max-width:min(560px,100%);min-height:220px}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
@@ -577,22 +589,24 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <nav>
   <div class="nav-logo"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
   <div class="nav-links">
-    <a href="#message">想い</a>
-    <a href="#services">支援について</a>
+    <a href="#creed">理念</a>
+    <a href="#services">支援内容</a>
+    <a href="#message">挨拶</a>
     <a href="#voice">実際の声</a>
-    <a href="#faq">FAQ</a>
+    <a href="#faq">よくあるご質問</a>
     <a href="#contact">お問い合わせ</a>
   </div>
   <button class="nav-burger" type="button" aria-label="メニューを開く" aria-expanded="false"><span></span></button>
-  <a href="#contact" class="nav-cta">無料相談を予約する</a>
+  <a href="#contact" class="nav-cta">一度お話ししてみる</a>
 </nav>
 
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="sub">MENU</div>
-  <a href="#message">想い</a>
-  <a href="#services">支援について</a>
+  <a href="#creed">理念</a>
+  <a href="#services">支援内容</a>
+  <a href="#message">挨拶</a>
   <a href="#voice">実際の声</a>
-  <a href="#faq">FAQ</a>
+  <a href="#faq">よくあるご質問</a>
   <a href="#contact">お問い合わせ</a>
 </div>
 
@@ -614,25 +628,13 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <p class="hero-kometa-more"><a href="#creed">理念（想いの土台）を読む →</a></p>
       </div>
       <div class="hero-btns">
-        <a href="#contact" class="btn-prim">無料相談を予約する</a>
+        <a href="#contact" class="btn-prim">一度お話ししてみる</a>
         <a href="#services" class="btn-out">事業内容を見る</a>
       </div>
     </div>
     <div class="hero-right">
-      <div class="hero-calligraphy">
-        <picture>
-          <img
-            class="hero-cal-svg"
-            src="./lp-assets/hero-calligraphy-w720.png?v=20260508"
-            srcset="./lp-assets/hero-calligraphy-w480.png?v=20260508 480w, ./lp-assets/hero-calligraphy-w720.png?v=20260508 720w, ./lp-assets/hero-calligraphy-20260501.png?v=20260508 880w"
-            sizes="(max-width: 480px) 92vw, (max-width: 900px) min(92vw, 560px), min(45vw, 580px)"
-            width="880"
-            height="260"
-            alt="あんたがおらな"
-            decoding="async"
-            fetchpriority="high"
-          />
-        </picture>
+      <div class="hero-quiet" aria-hidden="true">
+        <div class="hero-quiet-word">あんたがおらなあかんねん！</div>
       </div>
     </div>
   </div>
