@@ -39,11 +39,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .nav-drawer a:last-child{border-bottom:none}
 .nav-drawer .sub{font-size:12px;font-weight:600;color:var(--tm);padding:10px 6px 6px}
 
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:122px 5% 78px}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:122px 4% 78px}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.3}
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(42,74,42,.92) 0%,rgba(42,74,42,.6) 60%,transparent 100%)}
-.hero-inner{position:relative;z-index:2;max-width:1060px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.05fr .95fr;gap:72px;align-items:center}
+.hero-inner{position:relative;z-index:2;max-width:1160px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.05fr .95fr;gap:86px;align-items:center}
 .hero-inner::after{
   content:'';
   position:absolute;
@@ -97,18 +97,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .hero-desc-k{font-size:11px;font-weight:800;letter-spacing:.18em;color:rgba(232,192,96,.72);margin:0 0 14px}
 .hero-desc-lead{
   font-family:'Noto Serif JP',serif;
-  font-size:16px;
+  font-size:clamp(18px,2.2vw,24px);
   font-weight:800;
-  line-height:1.9;
+  line-height:1.85;
   color:rgba(255,255,255,.92);
   letter-spacing:.01em;
   margin:0 0 16px;
-  max-width:44ch;
+  max-width:40ch;
 }
 .hero-kometa-h{font-size:11px;font-weight:800;color:var(--goldl);letter-spacing:.16em;margin-bottom:12px}
 .hero-kometa p{font-size:14px;color:rgba(255,255,255,.82);line-height:2.06;margin-bottom:14px;max-width:46ch}
 .hero-kometa .hero-em{font-weight:800;color:rgba(255,255,255,.92)}
-.hero-kometa-closing{font-family:'Noto Serif JP',serif;font-size:clamp(17px,2.4vw,22px);font-weight:900;color:var(--goldl);line-height:1.4;margin:12px 0 6px;letter-spacing:.02em}
+.hero-kometa-closing{font-family:'Noto Serif JP',serif;font-size:clamp(20px,2.9vw,30px);font-weight:900;color:var(--goldl);line-height:1.35;margin:18px 0 8px;letter-spacing:.03em}
 .hero-kometa-more{margin-top:4px}
 .hero-kometa-more a{font-size:13px;font-weight:600;color:var(--goldl);border-bottom:1px solid rgba(232,192,96,.45);padding-bottom:1px}
 .hero-btns{margin-top:22px}
@@ -176,7 +176,7 @@ section{padding:88px 5%}
 .creed-phil p:last-child{margin-bottom:0}
 .creed-phil strong{font-weight:800;color:var(--gd);font-size:1.06em}
 .creed-sub{font-size:clamp(18px,2.4vw,24px);font-weight:800;color:var(--gd);margin:10px 0 22px;font-family:'Noto Serif JP',serif;line-height:1.5}
-.creed-yell{display:block;font-weight:900;font-family:'Noto Serif JP',serif;color:var(--gd);font-size:clamp(17px,2.2vw,22px);margin:14px 0 24px;padding:16px 0 16px 20px;border-left:4px solid var(--goldl);line-height:1.55}
+.creed-yell{display:block;font-weight:900;font-family:'Noto Serif JP',serif;color:var(--gd);font-size:clamp(19px,2.5vw,26px);margin:14px 0 24px;padding:16px 0 16px 20px;border-left:4px solid var(--goldl);line-height:1.5}
 .creed-yell strong{font-size:1.12em;font-weight:900;color:var(--gd)}
 
 .kunxun{background:var(--w)}
@@ -697,7 +697,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     </div>
     <div class="hero-desc">
       <div class="hero-desc-k">ABOUT</div>
-      <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br>信頼と希望を、もう一度届けたい。</p>
+      <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br><span style="display:block;margin-top:10px">信頼と希望を、もう一度届けたい。</span></p>
       <div class="hero-kometa">
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
         <p>教育とは、<strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
