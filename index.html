@@ -44,21 +44,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.3}
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(42,74,42,.92) 0%,rgba(42,74,42,.6) 60%,transparent 100%)}
 .hero-inner{position:relative;z-index:2;max-width:1160px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.05fr .95fr;gap:86px;align-items:center}
-.hero-inner::after{
-  content:'';
-  position:absolute;
-  inset:-60px -40px -60px -40px;
-  background:url('./lp-assets/hero-calligraphy-ink.jpg?v=20260508a') no-repeat 72% 38%;
-  background-size:min(760px,72vw);
-  opacity:.075;
-  filter:blur(1.4px);
-  mix-blend-mode:soft-light;
-  border-radius:48px;
-  -webkit-mask-image:radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,.82) 44%, rgba(0,0,0,0) 78%);
-  mask-image:radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,.82) 44%, rgba(0,0,0,0) 78%);
-  pointer-events:none;
-}
-.hero-tag{font-size:11px;font-weight:800;color:rgba(255,255,255,.74);letter-spacing:.18em;margin-bottom:18px}
+.hero-inner::after{content:none}
+.hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
 .hero-h1{font-family:'Noto Serif JP',serif;font-size:clamp(32px,4vw,54px);font-weight:900;color:var(--w);line-height:1.35;margin-bottom:18px}
 .hero-h1 em{color:var(--goldl);font-style:normal}
 .hero-message{
@@ -79,7 +66,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .hero-message-h .brand{color:var(--w)}
 .hero-message-kicker{
   margin-top:14px;
-  font-size:12px;
+  font-size:13px;
   font-weight:700;
   letter-spacing:.16em;
   color:rgba(232,192,96,.78);
@@ -106,7 +93,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   max-width:40ch;
 }
 .hero-kometa-h{font-size:11px;font-weight:800;color:var(--goldl);letter-spacing:.16em;margin-bottom:12px}
-.hero-kometa p{font-size:14px;color:rgba(255,255,255,.82);line-height:2.06;margin-bottom:14px;max-width:46ch}
+.hero-kometa p{font-size:14px;color:rgba(255,255,255,.82);line-height:2.06;margin-bottom:14px;max-width:56ch}
 .hero-kometa .hero-em{font-weight:800;color:rgba(255,255,255,.92)}
 .hero-kometa-closing{font-family:'Noto Serif JP',serif;font-size:clamp(20px,2.9vw,30px);font-weight:900;color:var(--goldl);line-height:1.35;margin:18px 0 8px;letter-spacing:.03em}
 .hero-kometa-more{margin-top:4px}
@@ -746,8 +733,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="hero-desc-k">ABOUT</div>
       <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br><span style="display:block;margin-top:10px">信頼と希望を、もう一度届けたい。</span></p>
       <div class="hero-kometa">
-        <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
-        <p>教育とは、<strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
+        <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><br><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
+        <p>教育とは、<br><strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
         <p class="hero-kometa-closing">「あんたがおらなあかんねん！」</p>
         <p class="hero-kometa-more"><a href="#creed">理念（想いの土台）を読む →</a></p>
       </div>
@@ -862,8 +849,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <p class="slead">言葉が通じなくても「ありがとう」は伝わる。その体験が、人生を変える。<br><a href="./etsu.html" style="color:var(--goldl);font-weight:700;text-decoration:underline;text-underline-offset:3px">越（エツ）の概要・プロジェクトの詳細はこちら →</a></p>
     <div class="india-grid">
       <div class="india-imgs">
-        <div class="india-img"><img src="./lp-assets/india-slide-06.png?v=20260501" alt="インド 子どもたちとの交流"></div>
         <div class="india-img"><img src="./lp-assets/india-slide-04.png?v=20260501" alt="学校での交流のひとコマ"></div>
+        <div class="india-img"><img src="./lp-assets/india-slide-06.png?v=20260501" alt="インド 子どもたちとの交流"></div>
         <div class="india-img"><img src="./lp-assets/india-slide-03.png?v=20260501" alt="教室での学びと交流"></div>
         <div class="india-img"><img src="./lp-assets/india-slide-02.png?v=20260501" alt="ガンジス川沿いの夕景"></div>
       </div>
