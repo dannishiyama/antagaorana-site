@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>不登校・発達特性に寄り添う教育支援｜あんたがおらな</title>
-<link rel="preload" as="image" href="./lp-assets/hero-calligraphy-ink.jpg?v=20260508a" />
+<!-- hero calligraphy removed -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -43,24 +43,39 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.3}
 .hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(42,74,42,.92) 0%,rgba(42,74,42,.6) 60%,transparent 100%)}
-.hero-inner{position:relative;z-index:2;max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.hero-tag{font-size:11px;font-weight:700;color:var(--goldl);letter-spacing:.2em;margin-bottom:16px}
+.hero-inner{position:relative;z-index:2;max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.hero-tag{font-size:11px;font-weight:800;color:rgba(255,255,255,.82);letter-spacing:.18em;margin-bottom:14px}
 .hero-h1{font-family:'Noto Serif JP',serif;font-size:clamp(32px,4vw,54px);font-weight:900;color:var(--w);line-height:1.35;margin-bottom:18px}
 .hero-h1 em{color:var(--goldl);font-style:normal}
-.hero-h1-brand{
-  font-size:clamp(34px,4.6vw,62px);
-  line-height:1.18;
-  margin-bottom:10px;
-  letter-spacing:.01em;
-  color:var(--w);
-  text-shadow:0 2px 28px rgba(0,0,0,.35);
-  white-space:nowrap;
-  word-break:keep-all;
+.hero-message{
+  max-width:640px;
 }
-.hero-kometa-label{font-size:12px;font-weight:800;color:var(--goldl);letter-spacing:.22em;margin:0 0 18px}
-.hero-kometa{margin-top:0;padding-top:18px;border-top:1px solid rgba(255,255,255,.22);max-width:540px}
+.hero-message-h{
+  font-family:'Noto Serif JP',serif;
+  font-weight:900;
+  color:var(--w);
+  line-height:1.18;
+  letter-spacing:.01em;
+  text-shadow:0 2px 30px rgba(0,0,0,.32);
+  margin:0 0 10px;
+  font-size:clamp(36px,5.2vw,66px);
+}
+.hero-message-h .line{display:block}
+.hero-message-h .brand{color:var(--w)}
+.hero-message-h .label{color:rgba(232,192,96,.88)}
+.hero-message-sub{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.20);
+  font-size:14px;
+  color:rgba(255,255,255,.82);
+  line-height:1.95;
+  max-width:50ch;
+}
+
+.hero-kometa{margin-top:0;max-width:520px}
 .hero-kometa-h{font-size:11px;font-weight:800;color:var(--goldl);letter-spacing:.16em;margin-bottom:12px}
-.hero-kometa p{font-size:14px;color:rgba(255,255,255,.86);line-height:1.82;margin-bottom:10px}
+.hero-kometa p{font-size:14px;color:rgba(255,255,255,.86);line-height:1.9;margin-bottom:10px}
 .hero-kometa .hero-em{font-weight:800;color:#fff}
 .hero-kometa-closing{font-family:'Noto Serif JP',serif;font-size:clamp(17px,2.4vw,22px);font-weight:900;color:var(--goldl);line-height:1.4;margin:12px 0 6px;letter-spacing:.02em}
 .hero-kometa-more{margin-top:4px}
@@ -70,7 +85,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .btn-prim{padding:15px 34px;background:linear-gradient(135deg,var(--gold),var(--rose));color:var(--w);border-radius:32px;font-size:15px;font-weight:700;font-family:'Noto Serif JP',serif;letter-spacing:.06em;box-shadow:0 6px 24px rgba(212,168,67,.35);transition:transform .15s}
 .btn-prim:hover{transform:translateY(-2px)}
 .btn-out{padding:15px 28px;border:2px solid rgba(255,255,255,.38);color:rgba(255,255,255,.9);border-radius:32px;font-size:15px;font-weight:500}
-.hero-right{position:relative}
+.hero-right{display:none}
 .hero-bg img{display:none}
 .hero-bg{
   background:
@@ -78,38 +93,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
     linear-gradient(105deg,rgba(42,74,42,.96) 0%,rgba(42,74,42,.78) 45%,rgba(42,74,42,.45) 100%);
 }
 .hero-overlay{display:none}
-.hero-right{display:flex;align-items:center;justify-content:center}
-.hero-quiet{
-  width:100%;
-  max-width:560px;
-  min-height:320px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 6px;
-  position:relative;
-}
-.hero-quiet-ink{
-  width:min(720px,100%);
-  aspect-ratio:16/9;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  user-select:none;
-  pointer-events:none;
-  transform:rotate(-2deg) scale(1.03);
-  filter:blur(.6px);
-  opacity:.16;
-  mix-blend-mode:soft-light;
-}
-.hero-quiet-ink img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  object-position:center;
-  display:block;
-  filter:contrast(.88) brightness(1.35) saturate(.92);
-}
 .hero-kometa-closing{
   font-size:clamp(18px,2.8vw,26px);
   letter-spacing:.06em;
@@ -526,15 +509,15 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 @media(max-width:900px){
   nav .nav-links{display:none}
   .hero-inner,.creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
-  .hero-right{display:flex;margin-top:8px;width:100%;justify-content:center}
-  .hero-quiet{max-width:min(560px,100%);min-height:220px}
+  .hero-message{max-width:none}
+  .hero-message-sub{max-width:60ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
   .hero-inner{gap:36px}
-  .hero-h1-brand{font-size:clamp(30px,7.6vw,44px);letter-spacing:.01em}
+  .hero-message-h{font-size:clamp(34px,8.3vw,52px)}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -651,9 +634,16 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   </div>
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-tag">生きる力を育む家庭教師</div>
-      <h1 class="hero-h1 hero-h1-brand">「あんたがおらな」</h1>
-      <p class="hero-kometa-label">に込めたメッセージ</p>
+      <div class="hero-message">
+        <div class="hero-tag">生きる力を育む家庭教師</div>
+        <h1 class="hero-message-h">
+          <span class="line brand">「あんたがおらな」</span>
+          <span class="line label">に込めたメッセージ</span>
+        </h1>
+        <p class="hero-message-sub">比べられ、責められ、閉じこもってしまう子どもたちへ。信頼と希望を、もう一度。</p>
+      </div>
+    </div>
+    <div class="hero-desc">
       <div class="hero-kometa">
         <p>比べられ、責められ、閉じこもってしまう子どもたちへ。<strong class="hero-em">信頼</strong>と<strong class="hero-em">希望</strong>をもう一度届けたい。</p>
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
@@ -663,14 +653,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       </div>
       <div class="hero-btns">
         <a href="#contact" class="btn-prim">一度お話ししてみる</a>
-        <a href="#services" class="btn-out">事業内容を見る</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="hero-quiet" aria-hidden="true">
-        <div class="hero-quiet-ink">
-          <img src="./lp-assets/hero-calligraphy-ink.jpg?v=20260508a" alt="" decoding="async" loading="eager">
-        </div>
+        <a href="#services" class="btn-out">支援内容を見る</a>
       </div>
     </div>
   </div>
@@ -712,8 +695,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <section class="services" id="services">
   <div class="si">
     <div class="stag">OUR SERVICES</div>
-    <h2 class="stitle">4つの事業</h2>
-    <p class="slead">私たちは多角的な教育支援の体制で、子どもとご家族の未来をつくります。</p>
+    <h2 class="stitle">支援内容</h2>
+    <p class="slead">私たちは多角的な支援の体制で、子どもとご家族の未来をつくります。</p>
     <div class="sv-grid">
       <div class="sv">
         <div class="sv-img"><img src="./lp-assets/service-mei-20260502.jpg?v=20260502a" alt="家庭教師 子どもとの関わり"></div>
