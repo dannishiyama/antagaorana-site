@@ -3,118 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>お知らせ・活動の記録｜あんたがおらな</title>
-  <meta name="description" content="現地での様子やメディア掲載、発信を静かに記録しています。インドでの交流、学校教育、メディア、動画まで、積み重ねのログとしてご覧いただけます。">
+  <title>お知らせ・活動報告｜あんたがおらな</title>
+  <meta name="description" content="あんたがおらなの活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。">
   <link rel="canonical" href="https://antagaorana.com/news.html">
   <meta property="og:site_name" content="あんたがおらな">
   <meta property="og:locale" content="ja_JP">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="お知らせ・活動の記録｜あんたがおらな">
-  <meta property="og:description" content="現地での様子やメディア掲載、発信を静かに記録しています。">
+  <meta property="og:title" content="お知らせ・活動報告｜あんたがおらな">
+  <meta property="og:description" content="活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。">
   <meta property="og:url" content="https://antagaorana.com/news.html">
-  <meta property="og:image" content="https://antagaorana.com/lp-assets/founder-portrait.png">
+  <meta property="og:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="お知らせ・活動の記録｜あんたがおらな">
-  <meta name="twitter:description" content="現地での様子やメディア掲載、発信を静かに記録しています。">
-  <meta name="twitter:image" content="https://antagaorana.com/lp-assets/founder-portrait.png">
+  <meta name="twitter:title" content="お知らせ・活動報告｜あんたがおらな">
+  <meta name="twitter:description" content="活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。">
+  <meta name="twitter:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
   <link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
   <link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
+    "@type": "WebPage",
     "@id": "https://antagaorana.com/news.html#webpage",
     "url": "https://antagaorana.com/news.html",
-    "name": "お知らせ・活動の記録｜あんたがおらな",
-    "description": "活動のアーカイブ。メディア掲載、現地の写真、発信をまとめています。",
+    "name": "お知らせ・活動報告｜あんたがおらな",
+    "description": "あんたがおらなの活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。",
     "inLanguage": "ja"
   }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./lp-assets/news-archive.css?v=20260508">
+  <style>
+    :root{--g:#5C7A5A;--gd:#3A5A38;--sand:#F5EFE6;--sand2:#EDE4D8;--txt:#1A1A1A;--tm:#4A4A4A;--w:#fff;--goldl:#E8C060}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(160deg,var(--sand) 0%,#fff 100%);color:var(--txt);line-height:1.85}
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:980px;margin:0 auto;padding:92px 5% 84px}
+    .back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tm);margin-bottom:18px}
+    .back:hover{color:var(--g)}
+    h1{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3.2vw,34px);font-weight:900;color:var(--gd);line-height:1.45;margin-bottom:10px}
+    .lead{font-size:14px;color:var(--tm);margin-bottom:10px;max-width:56em}
+    .lede-sub{font-size:12px;color:rgba(74,74,74,.72);margin-bottom:30px;max-width:64em;line-height:1.9}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{
+      background:var(--w);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+      will-change:transform;
+    }
+    .card:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(0,0,0,.075);border-color:rgba(0,0,0,.08)}
+    .thumb{aspect-ratio:16/10;overflow:hidden;background:#1a3018}
+    .thumb img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;transform:scale(1.01)}
+    /* サムネ個別調整（紙面タイトル/人物が見切れないように） */
+    .thumb img.pos-delhi-1{object-position:50% 18%}
+    .thumb img.pos-delhi-2{object-position:50% 20%}
+    .thumb img.pos-youtube{object-position:50% 32%}
+
+    .body{padding:16px 16px 18px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      color:rgba(58,90,56,.92);
+      background:rgba(92,122,90,.11);
+      border:1px solid rgba(92,122,90,.18);
+      padding:5px 10px;
+      border-radius:999px;
+    }
+    .title{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:900;color:var(--gd);line-height:1.6}
+    .desc{font-size:13px;color:rgba(74,74,74,.84);line-height:1.9;margin-top:10px}
+    .meta{font-size:12px;color:rgba(74,74,74,.64);margin-top:10px}
+
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    @media(max-width:560px){
+      .wrap{padding:78px 5% 74px}
+      .grid{gap:14px}
+      .thumb{aspect-ratio:16/11}
+      .body{padding:16px 14px 18px}
+      .title{font-size:15px}
+      .desc{font-size:13px}
+    }
+  </style>
 </head>
-<body class="na-page">
-  <div class="na-wrap" id="list">
-    <a class="na-back" href="./index.html">← トップに戻る</a>
-    <p class="na-kicker">ARCHIVE</p>
-    <h1 class="na-h1">お知らせ</h1>
-    <p class="na-lead">ニュース速報ではなく、現場での出来事や言葉の背後にある空気を、少しずつ残していくための一覧です。スライドでは写真を左右にめくったり、指でなぞって切り替えたりできます。</p>
+<body>
+  <div class="wrap" id="list">
+    <a class="back" href="/">← トップに戻る</a>
+    <h1>お知らせ・活動アーカイブ</h1>
+    <p class="lead">単なるニュースではなく、現場の空気と「積み重ね」が伝わる記録として。</p>
+    <p class="lede-sub">活動の現場／メディア掲載／動画／文章。ひとつひとつは小さくても、確かに進んだ足あとを残していきます。</p>
 
-    <div class="na-grid">
-      <a class="na-card" href="./news-note.html">
-        <div class="na-card__thumb na-card__thumb--note">
-          <img src="./lp-assets/founder-portrait.png?v=20260508" alt="西山弾" width="640" height="800" loading="eager">
-        </div>
-        <div class="na-card__body">
-          <div class="na-card__labs">
-            <span class="na-card__lab">NOTE</span>
+    <div class="grid">
+      <a class="card" href="https://note.com/dan_antagaorana/n/n3749f464ac4c?sub_rt=share_sb" target="_blank" rel="noopener noreferrer">
+        <div class="thumb"><img class="pos-youtube" src="./lp-assets/logo-hero.png?v=20260501a" alt="西山弾 Note"></div>
+        <div class="body">
+          <div class="tags">
+            <span class="tag">NOTE</span>
           </div>
-          <h2 class="na-card__title">西山弾 Note</h2>
-          <p class="na-card__excerpt">子育てや不登校、いじめなどについて、西山弾自身の考えや想いを発信しています。今回の記事は当団体設立の思いについてです。</p>
-          <time class="na-card__date" datetime="2026">2026</time>
+          <div class="title">西山弾 Note</div>
+          <div class="desc">子育てや不登校、いじめなどについて、西山弾自身の考えや想いを発信しています。今回の記事は当団体設立の思いについてです。</div>
+          <div class="meta">更新</div>
         </div>
       </a>
 
-      <a class="na-card" href="./news-lotus.html">
-        <div class="na-card__thumb na-card__thumb--lotus">
-          <img src="./lp-assets/news-01.png?v=20260508" alt="Lotus Free School での交流の様子" width="1600" height="1000" loading="lazy">
-        </div>
-        <div class="na-card__body">
-          <div class="na-card__labs">
-            <span class="na-card__lab">INDIA</span>
-            <span class="na-card__lab">EDUCATION</span>
+      <a class="card" href="./news-delhi-1.html">
+        <div class="thumb"><img class="pos-delhi-1" src="./lp-assets/news-03.png?v=20260501" alt="デリー新聞掲載（1回目）"></div>
+        <div class="body">
+          <div class="tags">
+            <span class="tag">MEDIA</span>
+            <span class="tag">INDIA</span>
           </div>
-          <h2 class="na-card__title">Lotus Free School を訪れて</h2>
-          <p class="na-card__excerpt">言葉や文化が違っても通じ合える瞬間。学校で子どもたちと過ごした日の空気と、そこから見えてきたものを記録にまとめました。</p>
-          <time class="na-card__date" datetime="2026">2026</time>
+          <div class="title">インドのデリー新聞で掲載されました（1回目）</div>
+          <div class="desc">現地の紙面に、活動の一部が記録されました。言葉だけではない「現場の証拠」として。</div>
+          <div class="meta">2026</div>
         </div>
       </a>
 
-      <a class="na-card" href="./news-delhi-1.html">
-        <div class="na-card__thumb na-card__thumb--delhi1">
-          <img src="./lp-assets/news-03.png?v=20260508" alt="デリー新聞の紙面（1回目）" width="1600" height="1000" loading="lazy">
-        </div>
-        <div class="na-card__body">
-          <div class="na-card__labs">
-            <span class="na-card__lab">INDIA</span>
-            <span class="na-card__lab">MEDIA</span>
+      <a class="card" href="./news-delhi-2.html">
+        <div class="thumb"><img class="pos-delhi-2" src="./lp-assets/news-04.png?v=20260501" alt="デリー新聞掲載（2回目）"></div>
+        <div class="body">
+          <div class="tags">
+            <span class="tag">MEDIA</span>
+            <span class="tag">INDIA</span>
           </div>
-          <h2 class="na-card__title">インドのデリー新聞で掲載（1回目）</h2>
-          <p class="na-card__excerpt">越（エツ）インドプロジェクトの活動が、現地紙の特集で紹介されました。紙面の英記事と、現地の写真をあわせてご覧いただけます。</p>
-          <time class="na-card__date" datetime="2026">2026</time>
+          <div class="title">インドのデリー新聞で掲載されました（2回目）</div>
+          <div class="desc">継続して掲載されたこと自体が、活動の積み重ねを示してくれました。</div>
+          <div class="meta">2026</div>
         </div>
       </a>
 
-      <a class="na-card" href="./news-delhi-2.html">
-        <div class="na-card__thumb na-card__thumb--delhi2">
-          <img src="./lp-assets/news-04.png?v=20260508" alt="デリー新聞の紙面（2回目）" width="1600" height="1000" loading="lazy">
-        </div>
-        <div class="na-card__body">
-          <div class="na-card__labs">
-            <span class="na-card__lab">INDIA</span>
-            <span class="na-card__lab">MEDIA</span>
+      <a class="card" href="./news-youtube.html">
+        <div class="thumb"><img class="pos-youtube" src="./lp-assets/news-02.png?v=20260501" alt="YouTube動画の紹介"></div>
+        <div class="body">
+          <div class="tags">
+            <span class="tag">VIDEO</span>
           </div>
-          <h2 class="na-card__title">インドのデリー新聞で掲載（2回目）</h2>
-          <p class="na-card__excerpt">継続的な交流と、地域の学びの場への関わりが、二度目の記事となりました。海外での活動の社会的な文脈を、英日でたどれます。</p>
-          <time class="na-card__date" datetime="2026">2026</time>
-        </div>
-      </a>
-
-      <a class="na-card" href="./news-youtube.html">
-        <div class="na-card__thumb na-card__thumb--video">
-          <img src="./lp-assets/news-02.png?v=20260508" alt="YouTube 動画サムネイル" width="1600" height="1000" loading="lazy">
-        </div>
-        <div class="na-card__body">
-          <div class="na-card__labs">
-            <span class="na-card__lab">VIDEO</span>
-            <span class="na-card__lab">EDUCATION</span>
-          </div>
-          <h2 class="na-card__title">YouTube 動画を公開しました</h2>
-          <p class="na-card__excerpt">活動の背景や、現場の断片を動画でもお渡ししています。スチルだけでは伝わらないリズム感を、少しでも。</p>
-          <time class="na-card__date" datetime="2026">2026</time>
+          <div class="title">YouTube動画を公開しました</div>
+          <div class="desc">活動の様子や想いを、映像でも。文章だけでは伝わらない温度感を残しています。</div>
+          <div class="meta">2026</div>
         </div>
       </a>
     </div>
   </div>
 </body>
 </html>
+
