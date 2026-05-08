@@ -403,19 +403,40 @@ details[open] .t-more{opacity:.74}
 }
 
 .news{background:var(--w)}
-.news-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start;margin-top:36px}
-.news-rail{display:block;text-decoration:none;color:inherit;border-radius:22px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.10);border:1px solid rgba(0,0,0,.06);background:#1a3018;cursor:pointer}
+.news .slead{max-width:46em;line-height:1.95}
+.news-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start;margin-top:38px}
+.news-rail{
+  display:block;text-decoration:none;color:inherit;border-radius:22px;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.09);border:1px solid rgba(224,213,200,.85);background:#1a3018;cursor:pointer;
+  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+}
+.news-rail:hover{transform:translateY(-4px);box-shadow:0 22px 52px rgba(58,90,56,.14);border-color:rgba(218,207,188,.98)}
 .news-rail .frame{position:relative;width:100%;aspect-ratio:16/10;min-height:180px;overflow:hidden;background:#2a4030}
-.news-rail .frame img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}
-.news-rail .cap{padding:14px 16px;background:rgba(255,255,255,.92);font-size:13px;font-weight:800;color:var(--gd)}
-.news-list{display:grid;gap:10px}
-.news-item{background:var(--sand);border:1px solid rgba(0,0,0,.06);border-radius:16px;padding:14px 16px;transition:transform .2s}
-.news-item:hover{transform:translateY(-2px)}
-.news-item .k{display:block;font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--g);margin-bottom:6px}
-.news-item .t{font-size:14px;font-weight:900;color:var(--gd);line-height:1.55}
-.news-item .m{font-size:12px;color:var(--ts);margin-top:6px}
-.news-more{margin-top:10px}
-.news-more a{font-size:13px;font-weight:800;color:var(--g);border-bottom:1px solid rgba(92,122,90,.35);padding-bottom:2px}
+.news-rail .frame img{
+  position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block;
+  transition:transform .45s ease;
+}
+.news-rail:hover .frame img{transform:scale(1.025)}
+.news-rail .cap{padding:14px 16px;background:rgba(253,251,247,.94);font-size:13px;font-weight:800;color:var(--gd);letter-spacing:.02em;line-height:1.55}
+.news-list{display:grid;gap:12px}
+.news-item{
+  background:var(--sand);border:1px solid rgba(224,213,200,.82);border-radius:16px;padding:15px 17px;
+  transition:transform .26s ease,box-shadow .26s ease,border-color .26s ease;
+}
+.news-item:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(58,90,56,.08);border-color:rgba(208,196,180,.95)}
+.news-tags{display:flex;flex-wrap:wrap;gap:6px 0;align-items:center;margin-bottom:7px}
+.news-tags .k{
+  display:inline;font-size:10px;font-weight:800;letter-spacing:.14em;color:rgba(58,90,56,.88);margin:0;padding:0;background:none;
+}
+.news-tags .k + .k{margin-left:10px;padding-left:10px;border-left:1px solid rgba(58,90,56,.22)}
+.news-item .t{font-size:14px;font-weight:900;color:var(--gd);line-height:1.62;letter-spacing:.01em}
+.news-item .m{font-size:12px;color:var(--ts);margin-top:7px;line-height:1.65}
+.news-more{margin-top:12px}
+.news-more a{font-size:13px;font-weight:800;color:var(--g);border-bottom:1px solid rgba(92,122,90,.38);padding-bottom:2px}
+@media (prefers-reduced-motion:reduce){
+  .news-rail:hover,.news-item:hover{transform:none}
+  .news-rail:hover .frame img{transform:none}
+}
 
 .faq{background:var(--w)}
 .faq .slead{max-width:46em}
@@ -1030,33 +1051,38 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="si">
     <div class="stag">NEWS</div>
     <h2 class="stitle">お知らせ</h2>
-    <p class="slead">活動報告・メディア掲載・動画のご紹介をまとめています。</p>
+    <p class="slead">速報ではなく、現場の空気や言葉の背景を少しずつ残すための記録です。メディア掲載、インドでの交流、動画、note まで一覧からたどれます。</p>
     <div class="news-grid">
       <a class="news-rail" href="./news.html" aria-label="お知らせ一覧を見る">
         <div class="frame">
-          <img id="newsRailImg" src="./lp-assets/news-01.png?v=20260502c" width="1600" height="1000" alt="お知らせ画像" loading="eager" decoding="async">
+          <img id="newsRailImg" src="./lp-assets/founder-portrait.png?v=20260508" width="640" height="800" alt="活動・発信の記録" loading="eager" decoding="async">
         </div>
-        <div class="cap">クリックで一覧を見る →</div>
+        <div class="cap">活動アーカイブを開く →</div>
       </a>
       <div>
         <div class="news-list">
-          <a class="news-item" href="./news-delhi-1.html">
-            <span class="k">MEDIA</span>
-            <div class="t">インドのデリー新聞で掲載（1回目）</div>
-            <div class="m">2026</div>
+          <a class="news-item" href="./news-note.html">
+            <div class="news-tags"><span class="k">NOTE</span></div>
+            <div class="t">西山弾 Note</div>
+            <div class="m">設立の思いなど、想いを綴る発信。2026</div>
           </a>
-          <a class="news-item" href="./news-delhi-2.html">
-            <span class="k">MEDIA</span>
-            <div class="t">インドのデリー新聞で掲載（2回目）</div>
-            <div class="m">2026</div>
+          <a class="news-item" href="./news-lotus.html">
+            <div class="news-tags"><span class="k">INDIA</span><span class="k">EDUCATION</span></div>
+            <div class="t">Lotus Free School を訪れて</div>
+            <div class="m">学校での交流の記録。2026</div>
+          </a>
+          <a class="news-item" href="./news-delhi-1.html">
+            <div class="news-tags"><span class="k">INDIA</span><span class="k">MEDIA</span></div>
+            <div class="t">インドのデリー新聞で掲載（1回目）</div>
+            <div class="m">英日の記事整理と写真。2026</div>
           </a>
           <a class="news-item" href="./news-youtube.html">
-            <span class="k">VIDEO</span>
-            <div class="t">YouTube動画の紹介</div>
-            <div class="m">2026</div>
+            <div class="news-tags"><span class="k">VIDEO</span></div>
+            <div class="t">YouTube 動画の紹介</div>
+            <div class="m">現場のリズム感を動画でも。2026</div>
           </a>
         </div>
-        <div class="news-more"><a href="./news.html">お知らせ一覧へ →</a></div>
+        <div class="news-more"><a href="./news.html">ほかの記事（デリー新聞2回目ほか）→</a></div>
       </div>
     </div>
   </div>
@@ -1360,10 +1386,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   var img=document.getElementById('newsRailImg');
   if(!img) return;
   var imgs=[
-    './lp-assets/news-01.png?v=20260502c',
-    './lp-assets/news-02.png?v=20260502c',
-    './lp-assets/news-03.png?v=20260502c',
-    './lp-assets/news-04.png?v=20260502c'
+    './lp-assets/founder-portrait.png?v=20260508',
+    './lp-assets/news-01.png?v=20260508',
+    './lp-assets/news-03.png?v=20260508',
+    './lp-assets/india-slide-04.png?v=20260508',
+    './lp-assets/news-02.png?v=20260508'
   ];
   for(var j=imgs.length-1;j>0;j--){
     var k=Math.floor(Math.random()*(j+1));
