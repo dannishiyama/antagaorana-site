@@ -243,8 +243,9 @@ section{padding:88px 5%}
 .msg-grid{display:grid;grid-template-columns:1fr;gap:44px;align-items:start;margin-top:44px}
 .msg-people{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
+  grid-template-columns:repeat(2,minmax(0,340px));
+  gap:42px;
+  justify-content:center;
   align-items:start;
 }
 .msg-person{text-align:left}
@@ -291,7 +292,7 @@ section{padding:88px 5%}
   .msg-person .msg-tags{justify-content:center}
 }
 .msg-col-photo{text-align:center}
-.msg-photo-wrap{border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.14)}
+.msg-photo-wrap{border-radius:22px;overflow:hidden;box-shadow:0 10px 34px rgba(0,0,0,.12)}
 .msg-photo-wrap img{width:100%;aspect-ratio:3/4;object-fit:cover}
 .msg-name{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:900;color:var(--txt);margin:22px 0 4px}
 .msg-title{font-size:12px;font-weight:700;color:var(--g);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
@@ -951,79 +952,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         </div>
       </div>
 
-      <div class="msg-col-main">
-        <div class="msg-top fade-up">
-          <div class="msg-head">
-            <p class="msg-lede">
-              <span class="line">ダメな子なんて、</span>
-              <span class="line">いない。</span>
-            </p>
-            <p class="msg-kicker">「どうしてあなたはできないの？」<br>「周りはできているのに」<br>そんな言葉が、子どもの心を少しずつ削っていく。<br>その苦しさを、ここでは置き去りにしません。</p>
-          </div>
-        </div>
-
-        <div class="msg-prose">
-          <div class="msg-flow">
-            <div class="msg-block fade-up">
-              <p class="msg-line">「どうしてあなたはできないの？」</p>
-              <p class="msg-line">「周りはできているのに」</p>
-              <p class="msg-line">そんな言葉を、</p>
-              <p class="msg-line">何度も浴びながら、</p>
-              <p class="msg-line">子どもたちは少しずつ“自分はダメなんだ”と思い込んでいきます。</p>
-            </div>
-
-            <div class="msg-block fade-up">
-              <p class="msg-line">でも、本当にそうでしょうか。</p>
-              <p class="msg-line">私たちは、“ダメな子”を見てきたのではありません。</p>
-              <p class="msg-line">本来持っている力や優しさ、その子らしさを発揮できずに、苦しんでいる子どもたちを見てきました。</p>
-            </div>
-
-            <div class="msg-block soft fade-up">
-              <p class="msg-line">今の社会には、</p>
-              <p class="msg-line">「みんなと同じようにできること」が良いことだとされる空気があります。</p>
-              <p class="msg-line">うまく適応できる子は「良い子」と呼ばれ、そうでない子は、「問題がある」と見られてしまう。</p>
-              <p class="msg-line" style="margin-top:14px">その空気は、子どもだけでなく、親御さん自身も苦しめていきます。</p>
-            </div>
-
-            <div class="msg-block fade-up">
-              <p class="msg-line">本当は、</p>
-              <p class="msg-line">誰かと同じになるためではなく、</p>
-              <p class="msg-line">“その子らしく生きる”ために教育があるはずです。</p>
-            </div>
-
-            <div class="msg-block deep fade-up">
-              <p class="msg-subhead">「あんたがおらな」の原点</p>
-              <p class="msg-line">私たちは、</p>
-              <p class="msg-line">「ダメ」のレッテルを貼られた子どもたちの味方であり続けたい。</p>
-              <p class="msg-line">そう思って、この活動を始めました。</p>
-              <p class="msg-line" style="margin-top:14px">子どもを変える前に、</p>
-              <p class="msg-line">まず、子どもが安心して「自分でいていい」と思えること。</p>
-              <p class="msg-line" style="margin-top:14px">そして、</p>
-              <p class="msg-line">親御さん自身も、“自分を責め続ける状態”から少しずつ抜け出していくこと。</p>
-              <p class="msg-line" style="margin-top:14px">その先に初めて、</p>
-              <p class="msg-line">子どもの可能性はもう一度動き始めると考えています。</p>
-            </div>
-          </div>
-
-          <div class="msg-end fade-up">
-            <p class="msg-subhead">私たちが目指しているもの</p>
-            <p class="msg-line">私たちは、</p>
-            <p class="msg-line">ただ勉強を教える団体ではありません。</p>
-            <p class="msg-line" style="margin-top:14px">子どもたちが、</p>
-            <p class="msg-line">これからの社会を自分らしく生き抜いていくための</p>
-            <ul class="msg-values" aria-label="育てていきたい力">
-              <li>「<span>人との信頼</span>」</li>
-              <li>「<span>自分を信じる力</span>」</li>
-              <li>「<span>社会で生きる力</span>」</li>
-            </ul>
-            <p class="msg-line" style="margin-top:14px">を育てていく場所でありたいと思っています。</p>
-            <p class="msg-line" style="margin-top:14px">そして、</p>
-            <p class="msg-line">お子様と親御様にとって、</p>
-            <p class="msg-line">「本当に味方でいてくれた」</p>
-            <p class="msg-line">そう思っていただける存在を、本気で目指しています。</p>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1194,12 +1122,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <a class="news-item" href="./news-delhi-1.html">
             <div class="news-tags"><span class="k">INDIA</span><span class="k">MEDIA</span></div>
             <div class="t">インドのデリー新聞で掲載（1回目）</div>
-            <div class="m">英日の記事整理と写真。2026</div>
+            <div class="m">日本の高校生が Lotus Free School を訪れ、子どもたちと交流した様子。2025.03.21</div>
           </a>
           <a class="news-item" href="./news-youtube.html">
             <div class="news-tags"><span class="k">VIDEO</span></div>
             <div class="t">YouTube 動画の紹介</div>
-            <div class="m">現場のリズム感を動画でも。2026</div>
+            <div class="m">代表の大久保と創設者の西山が、想いや教育観、実体験を台本なしで対談しています。2024.09.13</div>
           </a>
         </div>
         <div class="news-more"><a href="./news.html">ほかの記事（デリー新聞2回目ほか）→</a></div>
