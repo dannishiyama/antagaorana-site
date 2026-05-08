@@ -12,11 +12,11 @@
   <meta property="og:title" content="YouTube動画の紹介｜活動の様子と想い｜あんたがおらな">
   <meta property="og:description" content="あんたがおらなの活動の様子や想いを、YouTube動画でお届けします。取り組みの背景や現場の空気感を知りたい方へ。">
   <meta property="og:url" content="https://antagaorana.com/news-youtube.html">
-  <meta property="og:image" content="https://antagaorana.com/lp-assets/news-src-02.png?v=20260501">
+  <meta property="og:image" content="https://antagaorana.com/lp-assets/news-02.png?v=20260501">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="YouTube動画の紹介｜活動の様子と想い｜あんたがおらな">
   <meta name="twitter:description" content="あんたがおらなの活動の様子や想いを、YouTube動画でお届けします。取り組みの背景や現場の空気感を知りたい方へ。">
-  <meta name="twitter:image" content="https://antagaorana.com/lp-assets/news-src-02.png?v=20260501">
+  <meta name="twitter:image" content="https://antagaorana.com/lp-assets/news-02.png?v=20260501">
   <link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
   <link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
   <script type="application/ld+json">
@@ -51,13 +51,7 @@
     .g-slide{flex:0 0 100%;scroll-snap-align:center;position:relative;background:#fff}
     .g-slide img{width:100%;height:clamp(240px,44vw,520px);display:block;object-fit:cover;object-position:50% 32%;background:#fff}
     .g-cap{position:absolute;left:12px;bottom:12px;font-size:12px;color:rgba(26,26,26,.78);background:rgba(255,255,255,.82);border:1px solid rgba(0,0,0,.06);border-radius:999px;padding:6px 10px;backdrop-filter:blur(6px)}
-    .g-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:999px;border:1px solid rgba(0,0,0,.10);background:rgba(255,255,255,.86);color:rgba(26,26,26,.86);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:transform .18s ease,opacity .18s ease}
-    .g-btn:hover{transform:translateY(-50%) scale(1.02)}
-    .g-btn.prev{left:10px}
-    .g-btn.next{right:10px}
-    .g-dots{display:flex;justify-content:center;gap:7px;margin-top:10px}
-    .g-dot{width:6px;height:6px;border-radius:50%;background:rgba(58,90,56,.18)}
-    .g-dot.is-on{background:rgba(58,90,56,.55)}
+    .g-btn,.g-dots{display:none !important}
 
     p{font-size:14px;color:var(--tm);margin:16px 0;line-height:2}
     .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 26px;border-radius:999px;font-weight:900;letter-spacing:.06em;background:linear-gradient(135deg,var(--goldl),#C4856A);color:#fff}
@@ -76,29 +70,20 @@
       <span class="tag">VIDEO</span>
     </div>
     <h1>YouTube動画を公開しました</h1>
-    <div class="meta">2026</div>
+    <div class="meta">2024.09.13</div>
 
     <div class="gallery" aria-label="動画・活動の写真ギャラリー">
       <div class="g-shell" data-gallery>
         <div class="g-track">
           <figure class="g-slide">
-            <img src="./lp-assets/news-src-02.png?v=20260501" alt="YouTube動画のサムネイル">
+            <img src="./lp-assets/news-02.png?v=20260501" alt="YouTube動画の一覧サムネイル">
             <figcaption class="g-cap">YouTube</figcaption>
           </figure>
-          <figure class="g-slide">
-            <img src="./lp-assets/news-02.png?v=20260501" alt="YouTube動画の一覧サムネイル">
-            <figcaption class="g-cap">サムネイル</figcaption>
-          </figure>
         </div>
-        <button class="g-btn prev" type="button" aria-label="前の写真へ">←</button>
-        <button class="g-btn next" type="button" aria-label="次の写真へ">→</button>
-      </div>
-      <div class="g-dots" aria-hidden="true">
-        <span class="g-dot is-on"></span><span class="g-dot"></span>
       </div>
     </div>
 
-    <p>活動の様子や想いを、動画でもお届けします。</p>
+    <p>代表の大久保と創設者の西山が、当団体についての想いや教育観、実体験を台本なしで対談しています。ぜひお話をご覧ください。</p>
     <div class="cta">
       <a class="btn" href="https://youtu.be/Q6o7dEmq3Ds?si=Vgf-OPfZBmHyB3Z6" target="_blank" rel="noopener noreferrer">YouTubeで見る →</a>
     </div>
@@ -110,26 +95,18 @@
       if(!shell) return;
       const track = shell.querySelector('.g-track');
       const slides = Array.from(shell.querySelectorAll('.g-slide'));
-      const dots = Array.from(document.querySelectorAll('.g-dot'));
-      const btnPrev = shell.querySelector('.g-btn.prev');
-      const btnNext = shell.querySelector('.g-btn.next');
 
       function indexFromScroll(){
         const w = track.clientWidth || 1;
         return Math.round(track.scrollLeft / w);
       }
-      function setDot(i){
-        dots.forEach((d,idx)=>d.classList.toggle('is-on', idx===i));
-      }
       function go(i){
         const w = track.clientWidth || 1;
         const clamped = Math.max(0, Math.min(slides.length-1, i));
         track.scrollTo({left: w*clamped, behavior: 'smooth'});
-        setDot(clamped);
       }
-      btnPrev && btnPrev.addEventListener('click', ()=>go(indexFromScroll()-1));
-      btnNext && btnNext.addEventListener('click', ()=>go(indexFromScroll()+1));
-      track.addEventListener('scroll', ()=>setDot(indexFromScroll()), {passive:true});
+      // 1枚構成のため操作UIは非表示（保険としてスクロール位置は維持）
+      track.addEventListener('scroll', ()=>indexFromScroll(), {passive:true});
     })();
   </script>
 </body>

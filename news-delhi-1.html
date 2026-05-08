@@ -59,20 +59,7 @@
     .g-slide img{width:100%;height:clamp(240px,44vw,520px);display:block;object-fit:cover;object-position:50% 24%;background:#fff}
     .g-slide.fit-contain img{object-fit:contain;object-position:50% 50%}
     .g-cap{position:absolute;left:12px;bottom:12px;font-size:12px;color:rgba(26,26,26,.78);background:rgba(255,255,255,.82);border:1px solid rgba(0,0,0,.06);border-radius:999px;padding:6px 10px;backdrop-filter:blur(6px)}
-    .g-btn{
-      position:absolute;top:50%;transform:translateY(-50%);
-      width:40px;height:40px;border-radius:999px;border:1px solid rgba(0,0,0,.10);
-      background:rgba(255,255,255,.86);color:rgba(26,26,26,.86);
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;user-select:none;
-      transition:transform .18s ease,opacity .18s ease;
-    }
-    .g-btn:hover{transform:translateY(-50%) scale(1.02)}
-    .g-btn.prev{left:10px}
-    .g-btn.next{right:10px}
-    .g-dots{display:flex;justify-content:center;gap:7px;margin-top:10px}
-    .g-dot{width:6px;height:6px;border-radius:50%;background:rgba(58,90,56,.18)}
-    .g-dot.is-on{background:rgba(58,90,56,.55)}
+    .g-btn,.g-dots{display:none !important}
 
     p{font-size:14px;color:var(--tm);margin:16px 0;line-height:2}
     .note{font-size:13px;color:#666;background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:16px 18px;line-height:1.9}
@@ -116,12 +103,9 @@
             <figcaption class="g-cap">紙面（該当箇所）</figcaption>
           </figure>
         </div>
-        <button class="g-btn prev" type="button" aria-label="前の写真へ">←</button>
-        <button class="g-btn next" type="button" aria-label="次の写真へ">→</button>
+        
       </div>
-      <div class="g-dots" aria-hidden="true">
-        <span class="g-dot is-on"></span>
-      </div>
+      
     </div>
 
     <p>日本の高校生が Lotus Free School を訪れ、子どもたちと交流した記録が、現地の新聞に掲載されました。</p>
@@ -153,26 +137,18 @@
       if(!shell) return;
       const track = shell.querySelector('.g-track');
       const slides = Array.from(shell.querySelectorAll('.g-slide'));
-      const dots = Array.from(document.querySelectorAll('.g-dot'));
-      const btnPrev = shell.querySelector('.g-btn.prev');
-      const btnNext = shell.querySelector('.g-btn.next');
 
       function indexFromScroll(){
         const w = track.clientWidth || 1;
         return Math.round(track.scrollLeft / w);
       }
-      function setDot(i){
-        dots.forEach((d,idx)=>d.classList.toggle('is-on', idx===i));
-      }
       function go(i){
         const w = track.clientWidth || 1;
         const clamped = Math.max(0, Math.min(slides.length-1, i));
         track.scrollTo({left: w*clamped, behavior: 'smooth'});
-        setDot(clamped);
       }
-      btnPrev && btnPrev.addEventListener('click', ()=>go(indexFromScroll()-1));
-      btnNext && btnNext.addEventListener('click', ()=>go(indexFromScroll()+1));
-      track.addEventListener('scroll', ()=>setDot(indexFromScroll()), {passive:true});
+      // 1枚構成のため操作UIは非表示
+      track.addEventListener('scroll', ()=>indexFromScroll(), {passive:true});
     })();
   </script>
 </body>
