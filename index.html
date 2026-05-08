@@ -316,12 +316,49 @@ section{padding:88px 5%}
 .news-more a{font-size:13px;font-weight:800;color:var(--g);border-bottom:1px solid rgba(92,122,90,.35);padding-bottom:2px}
 
 .faq{background:var(--w)}
-.faq-list{margin-top:48px;max-width:780px}
-.faq-item{border-bottom:1px solid var(--sand3);padding:20px 0}
-.faq-q{display:flex;align-items:flex-start;gap:12px;font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--txt)}
-.faq-q::before{content:'Q';width:26px;height:26px;border-radius:50%;background:var(--g);color:var(--w);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.faq-a{display:flex;align-items:flex-start;gap:12px;margin-top:12px;font-size:14px;color:var(--tm);line-height:1.9}
-.faq-a::before{content:'A';width:26px;height:26px;border-radius:50%;background:var(--sand2);color:var(--tm);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.faq .slead{max-width:46em}
+.faq-list{margin-top:48px;max-width:820px}
+.faq-item{border-bottom:1px solid rgba(224,213,200,.75);padding:26px 0}
+.faq-q{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  font-family:'Noto Serif JP',serif;
+  font-size:16px;
+  font-weight:900;
+  color:var(--txt);
+  line-height:1.7;
+}
+.faq-q::before{
+  content:'';
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(92,122,90,.22);
+  border:1px solid rgba(92,122,90,.18);
+  flex-shrink:0;
+  margin-top:10px;
+}
+.faq-a{
+  margin-top:12px;
+  padding-left:24px;
+  font-size:14px;
+  color:var(--tm);
+  line-height:2.05;
+  max-width:58em;
+}
+.faq-a::before{content:none}
+.faq-a p{margin:0}
+.faq-a p + p{margin-top:12px}
+.faq-a strong{color:var(--gd);font-weight:900}
+
+@media(max-width:560px){
+  .faq-list{margin-top:34px}
+  .faq-item{padding:22px 0}
+  .faq-q{font-size:15px;gap:12px}
+  .faq-q::before{margin-top:9px}
+  .faq-a{padding-left:22px;font-size:14px;line-height:2.08}
+}
 
 .cta{background:linear-gradient(160deg,var(--gd) 0%,var(--g) 100%);text-align:center;padding:88px 5%;position:relative}
 .cta-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
@@ -833,31 +870,51 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="si">
     <div class="stag">FAQ</div>
     <h2 class="stitle">よくあるご質問</h2>
-    <p class="slead">まずはここでご確認ください。ご不明な点はお気軽にお問い合わせください。</p>
+    <p class="slead">いちばん大切にしたいのは、親御さんが「相談していい」と思えること。<br>ここでは、よくいただく不安に、できるだけ静かにお答えします。</p>
     <div class="faq-list">
       <div class="faq-item">
-        <div class="faq-q">うちの子は本当に変われるのでしょうか？</div>
-        <div class="faq-a">はい、変われます。正しい環境と関わり方が整えば、お子様は自分のペースで必ず動き出します。私たちはその確信のもとで、すべてのご家庭に向き合っています。</div>
+        <div class="faq-q">うちの子は、本当に動き出せるのでしょうか。</div>
+        <div class="faq-a">
+          <p>はい。時間はそれぞれでも、環境と関わり方が整えば、お子様は自分のペースで少しずつ動き出します。</p>
+          <p>私たちは「急がせる」より先に、安心して息ができる土台をつくることを大切にしています。</p>
+        </div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">初回の無料相談では何をするのですか？</div>
-        <div class="faq-a">40分間、お子様の現状・これまでの経緯・親御様のお気持ちを丁寧にヒアリングします。その場で方向性の見立てもお伝えします。お話を伺うことを大切にし、ご不安やご質問にはできるだけ正直にお答えします。まず「話してよかった」と思っていただける時間にします。</div>
+        <div class="faq-q">初回の無料相談では、どんなことを話しますか。</div>
+        <div class="faq-a">
+          <p>40分ほど、いまの状況とこれまでの経緯、そして親御さんのお気持ちを丁寧に伺います。</p>
+          <p>そのうえで、無理のない一歩目（関わり方・進め方の見立て）をお伝えします。言いにくいことも含め、できるだけ正直にお話しします。</p>
+          <p>「話してよかった」と思っていただける時間を目指します。</p>
+        </div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">発達障害と診断されていますが、対応できますか？</div>
-        <div class="faq-a">はい、対応しています。発達の特性は、治すものではなく理解して活かすものです。創設者は大学院で非定型発達の研究を行っており、特性に合わせた関わり方の設計が専門です。</div>
+        <div class="faq-q">発達の特性があるのですが、対応できますか。</div>
+        <div class="faq-a">
+          <p>はい、対応しています。発達の特性は「直すもの」ではなく、理解して活かしていくものだと考えています。</p>
+          <p>創設者は大学院で非定型発達の研究を行っており、特性に合わせた関わり方の設計を大切にしています。</p>
+        </div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">子どもが相談自体を嫌がっています。それでも申し込めますか？</div>
-        <div class="faq-a">まずは親御様だけでお越しいただいて大丈夫です。お子様への直接的な関わりは、信頼関係ができてから。最初のステップは親御様の関わり方を変えることです。それだけで家庭の空気が変わり、お子様が動き出すケースが多くあります。</div>
+        <div class="faq-q">子どもが相談自体を嫌がっています。それでも大丈夫ですか。</div>
+        <div class="faq-a">
+          <p>はい。最初は親御さんだけで大丈夫です。</p>
+          <p>お子様への直接的な関わりは、信頼関係ができてから。まずは家庭の空気を整えるところから始めます。</p>
+          <p>親御さんの関わり方が変わったことで、お子様が少しずつ動き出すケースは多くあります。</p>
+        </div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">インドプロジェクトは、一人での参加でも大丈夫ですか？</div>
-        <div class="faq-a">はい、大丈夫です。現地専任ガイドが常時同行し、毎日の安否報告と緊急連絡体制を整えています。事前コーチングで心の準備もしっかり行います。</div>
+        <div class="faq-q">インドプロジェクトは、一人参加でも大丈夫ですか。</div>
+        <div class="faq-a">
+          <p>はい、大丈夫です。現地では専任ガイドが常時同行し、毎日の安否報告と緊急連絡体制を整えています。</p>
+          <p>事前コーチングで心の準備も一緒に進めます。</p>
+        </div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">継続サポートはどのくらいの期間が必要ですか？</div>
-        <div class="faq-a">ご家庭の状況によって異なりますが、3ヶ月で土台を作り、6ヶ月〜1年で本質的な変化が生まれるケースが多いです。プロが継続的に伴走することで、確実な変化を生み出します。</div>
+        <div class="faq-q">どれくらいの期間、伴走してもらう方が多いですか。</div>
+        <div class="faq-a">
+          <p>ご家庭の状況によって異なりますが、目安として<strong>3ヶ月で土台</strong>を整え、<strong>6ヶ月〜1年</strong>で本質的な変化が生まれるケースが多いです。</p>
+          <p>無理のないペースで、必要な期間だけ伴走します。</p>
+        </div>
       </div>
     </div>
   </div>
