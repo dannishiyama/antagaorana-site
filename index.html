@@ -241,6 +241,25 @@ section{padding:88px 5%}
 .msg-grid{display:grid;grid-template-columns:minmax(240px,280px) 1fr;gap:56px 72px;align-items:start;margin-top:44px}
 .msg-people{display:grid;gap:18px}
 .msg-person{text-align:center}
+.msg-person .msg-photo-wrap{box-shadow:0 10px 34px rgba(0,0,0,.10)}
+.msg-photo-wrap.placeholder{
+  background:linear-gradient(165deg,rgba(58,90,56,.08) 0%,rgba(224,213,200,.35) 55%,rgba(255,255,255,.65) 100%);
+  border:1px solid rgba(0,0,0,.06);
+}
+.msg-photo-wrap.placeholder::after{
+  content:'PHOTO';
+  position:absolute;
+  inset:auto 14px 12px auto;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.14em;
+  color:rgba(26,26,26,.45);
+  background:rgba(255,255,255,.55);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:999px;
+  padding:6px 10px;
+}
+.msg-photo-wrap{position:relative}
 .msg-col-photo{text-align:center}
 .msg-photo-wrap{border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.14)}
 .msg-photo-wrap img{width:100%;aspect-ratio:3/4;object-fit:cover}
@@ -871,7 +890,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="msg-col-photo">
         <div class="msg-people">
           <div class="msg-person">
-            <div class="msg-photo-wrap" style="display:none"></div>
+            <div class="msg-photo-wrap placeholder">
+              <img src="./lp-assets/okubo-portrait.jpg?v=20260508a" alt="大久保 俊輝" loading="lazy" decoding="async" onerror="this.style.display='none'; this.closest('.msg-photo-wrap').classList.add('placeholder');">
+            </div>
             <div class="msg-name">大久保 俊輝（おおくぼ としき）</div>
             <div class="msg-title">代表</div>
             <div class="msg-tags">
@@ -883,7 +904,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           </div>
 
           <div class="msg-person">
-            <div class="msg-photo-wrap" style="display:none"></div>
+            <div class="msg-photo-wrap">
+              <img src="./lp-assets/founder-portrait.png" alt="西山 弾" loading="lazy" decoding="async">
+            </div>
             <div class="msg-name">西山 弾（にしやま だん）</div>
             <div class="msg-title">創設者</div>
             <div class="msg-tags">
