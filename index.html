@@ -304,6 +304,36 @@ section{padding:88px 5%}
 }
 .t-card:first-child{border-top:none;padding-top:0}
 .t-stars{display:none}
+.t-summary{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:14px;
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+}
+.t-summary::-webkit-details-marker{display:none}
+.t-frag{
+  font-family:'Noto Serif JP',serif;
+  font-size:15px;
+  color:var(--tm);
+  line-height:2.05;
+  margin:0;
+  letter-spacing:.01em;
+}
+.t-more{
+  flex-shrink:0;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:rgba(58,90,56,.72);
+  border-bottom:1px solid rgba(58,90,56,.22);
+  padding-bottom:1px;
+  margin-top:6px;
+}
+details[open] .t-more{opacity:.65}
+.t-body{margin-top:14px}
 .t-txt{
   font-family:'Noto Serif JP',serif;
   font-size:15px;
@@ -312,12 +342,16 @@ section{padding:88px 5%}
   margin:0;
   letter-spacing:.01em;
 }
+.t-txt + .t-txt{margin-top:12px}
 .t-name{margin-top:14px;font-size:13px;font-weight:900;color:var(--gd);letter-spacing:.02em}
 .t-meta{margin-top:4px;font-size:12px;color:var(--ts);line-height:1.7}
 
 @media(max-width:560px){
   .t-grid{margin-top:34px}
   .t-card{padding:22px 0}
+  .t-summary{flex-direction:column;align-items:flex-start;gap:8px}
+  .t-frag{font-size:14px;line-height:2.02}
+  .t-body{margin-top:12px}
   .t-txt{font-size:14px;line-height:2.05}
 }
 
@@ -823,21 +857,44 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <h2 class="stitle">実際の声</h2>
     <p class="slead">派手な言葉より、日々のなかで「少し楽になった」と感じた瞬間。<br>そんな記憶の断片を、いくつかだけ。</p>
     <div class="t-grid">
-      <div class="t-card">
-        <p class="t-txt">「どうせ無理」が口癖だった息子が、「やってみたい」と言い始めた日、涙が止まりませんでした。先生は押しつけずに、ただ息子の隣に座り続けてくれました。</p>
-        <div class="t-name">40代 お母様</div>
-        <div class="t-meta">不登校のお子様をお持ちのご家庭</div>
-      </div>
-      <div class="t-card">
-        <p class="t-txt">正直、最初は半信半疑でした。でも、自分の関わり方が変わった瞬間に、子どもの反応が変わった。「親が変われば子が変わる」は本当でした。</p>
-        <div class="t-name">30代 お父様</div>
-        <div class="t-meta">発達特性のあるお子様をお持ちのご家庭</div>
-      </div>
-      <div class="t-card">
-        <p class="t-txt">インドから帰ってきた息子は、別人のようでした。「お母さん、また日本でがんばるためにもう一度インドに行きたい」と笑顔で言ってくれた瞬間を忘れません。</p>
-        <div class="t-name">40代 お母様</div>
-        <div class="t-meta">越（エツ）インドプロジェクト参加ご家庭</div>
-      </div>
+      <details class="t-card">
+        <summary class="t-summary">
+          <p class="t-frag">押しつけずに、ただ隣にいてくれた。</p>
+          <span class="t-more">読む</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">「どうせ無理」が口癖だった息子が、「やってみたい」と言い始めた日、涙が止まりませんでした。</p>
+          <p class="t-txt">先生は押しつけずに、ただ息子の隣に座り続けてくれました。</p>
+          <div class="t-name">40代 お母様</div>
+          <div class="t-meta">不登校のお子様をお持ちのご家庭</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <p class="t-frag">家の空気が、少し変わった。</p>
+          <span class="t-more">読む</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">正直、最初は半信半疑でした。</p>
+          <p class="t-txt">でも、自分の関わり方が変わった瞬間に、子どもの反応が変わった。「親が変われば子が変わる」は本当でした。</p>
+          <div class="t-name">30代 お父様</div>
+          <div class="t-meta">発達特性のあるお子様をお持ちのご家庭</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <p class="t-frag">帰ってきた顔つきが、少し違った。</p>
+          <span class="t-more">読む</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">インドから帰ってきた息子は、別人のようでした。</p>
+          <p class="t-txt">「お母さん、また日本でがんばるためにもう一度インドに行きたい」と笑顔で言ってくれた瞬間を忘れません。</p>
+          <div class="t-name">40代 お母様</div>
+          <div class="t-meta">越（エツ）インドプロジェクト参加ご家庭</div>
+        </div>
+      </details>
     </div>
   </div>
 </section>
