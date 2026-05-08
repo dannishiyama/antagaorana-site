@@ -292,13 +292,34 @@ section{padding:88px 5%}
 .fade-up{opacity:0;transform:translateY(10px);transition:opacity .9s ease,transform .9s ease}
 .fade-up.is-in{opacity:1;transform:none}
 
-.testi{background:var(--sand)}
-.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.t-card{background:var(--w);border-radius:20px;padding:26px;box-shadow:0 2px 16px rgba(92,122,90,.08)}
-.t-stars{color:var(--gold);font-size:15px;margin-bottom:12px;letter-spacing:2px}
-.t-txt{font-size:14px;color:var(--tm);line-height:1.9;margin-bottom:16px;font-style:italic}
-.t-name{font-size:13px;font-weight:600;color:var(--g)}
-.t-meta{font-size:12px;color:var(--ts)}
+.testi{background:linear-gradient(180deg,var(--w) 0%,#faf9f7 100%)}
+.testi .slead{max-width:48em}
+.t-grid{display:grid;grid-template-columns:1fr;gap:0;margin-top:52px;max-width:820px}
+.t-card{
+  background:transparent;
+  border-radius:0;
+  padding:26px 0;
+  box-shadow:none;
+  border-top:1px solid rgba(224,213,200,.75);
+}
+.t-card:first-child{border-top:none;padding-top:0}
+.t-stars{display:none}
+.t-txt{
+  font-family:'Noto Serif JP',serif;
+  font-size:15px;
+  color:var(--tm);
+  line-height:2.08;
+  margin:0;
+  letter-spacing:.01em;
+}
+.t-name{margin-top:14px;font-size:13px;font-weight:900;color:var(--gd);letter-spacing:.02em}
+.t-meta{margin-top:4px;font-size:12px;color:var(--ts);line-height:1.7}
+
+@media(max-width:560px){
+  .t-grid{margin-top:34px}
+  .t-card{padding:22px 0}
+  .t-txt{font-size:14px;line-height:2.05}
+}
 
 .news{background:var(--w)}
 .news-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start;margin-top:36px}
@@ -491,13 +512,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <nav>
   <div class="nav-logo"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
   <div class="nav-links">
-    <a href="#creed">理念</a>
-    <a href="#services">事業</a>
-    <a href="#message">挨拶</a>
-    <a href="./etsu.html">社会貢献活動</a>
-    <a href="./taku-login.html">コミュニティ</a>
-    <a href="#news">NEWS</a>
+    <a href="#message">想い</a>
+    <a href="#services">支援について</a>
+    <a href="#voice">実際の声</a>
     <a href="#faq">FAQ</a>
+    <a href="#contact">お問い合わせ</a>
   </div>
   <button class="nav-burger" type="button" aria-label="メニューを開く" aria-expanded="false"><span></span></button>
   <a href="#contact" class="nav-cta">無料相談を予約する</a>
@@ -505,13 +524,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="sub">MENU</div>
-  <a href="#creed">理念</a>
-  <a href="#services">事業</a>
-  <a href="#message">挨拶</a>
-  <a href="./taku-login.html">コミュニティ</a>
-  <a href="#news">NEWS</a>
+  <a href="#message">想い</a>
+  <a href="#services">支援について</a>
+  <a href="#voice">実際の声</a>
   <a href="#faq">FAQ</a>
-  <a href="#contact">無料相談</a>
+  <a href="#contact">お問い合わせ</a>
 </div>
 
 <!-- HERO -->
@@ -802,24 +819,21 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- TESTIMONIALS -->
 <section class="testi" id="voice">
   <div class="si">
-    <div class="stag">TESTIMONIALS</div>
-    <h2 class="stitle">親御様の声</h2>
-    <p class="slead">実際にサポートを受けた親御様からいただいたメッセージをご紹介します。</p>
+    <div class="stag">VOICES</div>
+    <h2 class="stitle">実際の声</h2>
+    <p class="slead">派手な言葉より、日々のなかで「少し楽になった」と感じた瞬間。<br>そんな記憶の断片を、いくつかだけ。</p>
     <div class="t-grid">
       <div class="t-card">
-        <div class="t-stars">★★★★★</div>
         <p class="t-txt">「どうせ無理」が口癖だった息子が、「やってみたい」と言い始めた日、涙が止まりませんでした。先生は押しつけずに、ただ息子の隣に座り続けてくれました。</p>
         <div class="t-name">40代 お母様</div>
         <div class="t-meta">不登校のお子様をお持ちのご家庭</div>
       </div>
       <div class="t-card">
-        <div class="t-stars">★★★★★</div>
         <p class="t-txt">正直、最初は半信半疑でした。でも、自分の関わり方が変わった瞬間に、子どもの反応が変わった。「親が変われば子が変わる」は本当でした。</p>
         <div class="t-name">30代 お父様</div>
         <div class="t-meta">発達特性のあるお子様をお持ちのご家庭</div>
       </div>
       <div class="t-card">
-        <div class="t-stars">★★★★★</div>
         <p class="t-txt">インドから帰ってきた息子は、別人のようでした。「お母さん、また日本でがんばるためにもう一度インドに行きたい」と笑顔で言ってくれた瞬間を忘れません。</p>
         <div class="t-name">40代 お母様</div>
         <div class="t-meta">越（エツ）インドプロジェクト参加ご家庭</div>
@@ -873,6 +887,13 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <p class="slead">いちばん大切にしたいのは、親御さんが「相談していい」と思えること。<br>ここでは、よくいただく不安に、できるだけ静かにお答えします。</p>
     <div class="faq-list">
       <div class="faq-item">
+        <div class="faq-q">まだ相談するほどか分からない段階でも、大丈夫ですか。</div>
+        <div class="faq-a">
+          <p>はい。むしろ「どうしたらいいか分からない」という段階で来られる方が多いです。</p>
+          <p>状況を整理しながら、いまのご家庭にとって無理のない一歩を一緒に考えます。</p>
+        </div>
+      </div>
+      <div class="faq-item">
         <div class="faq-q">うちの子は、本当に動き出せるのでしょうか。</div>
         <div class="faq-a">
           <p>はい。時間はそれぞれでも、環境と関わり方が整えば、お子様は自分のペースで少しずつ動き出します。</p>
@@ -900,6 +921,40 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <p>はい。最初は親御さんだけで大丈夫です。</p>
           <p>お子様への直接的な関わりは、信頼関係ができてから。まずは家庭の空気を整えるところから始めます。</p>
           <p>親御さんの関わり方が変わったことで、お子様が少しずつ動き出すケースは多くあります。</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">無理に変えようとされたり、急かされたりしませんか。</div>
+        <div class="faq-a">
+          <p>無理に変えることはしません。いま守るべきもの（安心・信頼）を優先し、必要なときにだけ背中をそっと支えます。</p>
+          <p>「いまは動けない」も大切なサインとして扱います。</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">相性が合わないと感じた場合は、どうなりますか。</div>
+        <div class="faq-a">
+          <p>無理に続ける必要はありません。状況を伺ったうえで、担当の調整や別の進め方をご提案します。</p>
+          <p>「合わないかもしれない」を言える関係も、大切にしています。</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">相談だけでも可能ですか。強い営業が不安です。</div>
+        <div class="faq-a">
+          <p>ご相談だけでも大丈夫です。こちらから無理に契約を迫ることはしません。</p>
+          <p>必要な方に、必要な分だけ届けばいい——その考えでお話しています。</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">オンラインでの相談はできますか。</div>
+        <div class="faq-a">
+          <p>はい、可能です。ご家庭の状況に合わせて、オンライン／対面の方法をご案内します。</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">どのようなご家庭が相談していますか。</div>
+        <div class="faq-a">
+          <p>不登校・引きこもり・発達の特性など、状況はさまざまです。</p>
+          <p>共通しているのは、「否定せずに話を聞いてほしい」「家庭の空気を整えたい」という願いです。</p>
         </div>
       </div>
       <div class="faq-item">
@@ -1042,7 +1097,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <a class="ft-a" href="#creed">理念</a>
       <a class="ft-a" href="#philosophy">社訓</a>
       <a class="ft-a" href="#message">挨拶</a>
-      <a class="ft-a" href="#voice">親御様の声</a>
+      <a class="ft-a" href="#voice">実際の声</a>
     </div>
     <div>
       <div class="ft-h">お問い合わせ</div>
