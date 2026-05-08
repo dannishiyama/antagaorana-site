@@ -53,6 +53,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   opacity:.075;
   filter:blur(1.4px);
   mix-blend-mode:soft-light;
+  border-radius:48px;
+  -webkit-mask-image:radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,.82) 44%, rgba(0,0,0,0) 78%);
+  mask-image:radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,.82) 44%, rgba(0,0,0,0) 78%);
   pointer-events:none;
 }
 .hero-tag{font-size:11px;font-weight:800;color:rgba(255,255,255,.74);letter-spacing:.18em;margin-bottom:18px}
@@ -70,16 +73,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   text-shadow:0 2px 30px rgba(0,0,0,.32);
   margin:0;
   font-size:clamp(38px,5.6vw,72px);
+  white-space:nowrap;
 }
 .hero-message-h .line{display:block}
 .hero-message-h .brand{color:var(--w)}
-.hero-message-h .label{
-  font-size:.44em;
+.hero-message-kicker{
+  margin-top:14px;
+  font-size:12px;
   font-weight:700;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin-top:12px;
-  opacity:.72;
+  letter-spacing:.16em;
+  color:rgba(232,192,96,.78);
+  opacity:.78;
 }
 .hero-message-sub{
   margin-top:26px;
@@ -90,6 +94,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 }
 
 .hero-kometa{margin-top:0;max-width:520px}
+.hero-desc-k{font-size:11px;font-weight:800;letter-spacing:.18em;color:rgba(232,192,96,.72);margin:0 0 14px}
+.hero-desc-lead{
+  font-family:'Noto Serif JP',serif;
+  font-size:16px;
+  font-weight:800;
+  line-height:1.9;
+  color:rgba(255,255,255,.92);
+  letter-spacing:.01em;
+  margin:0 0 16px;
+  max-width:44ch;
+}
 .hero-kometa-h{font-size:11px;font-weight:800;color:var(--goldl);letter-spacing:.16em;margin-bottom:12px}
 .hero-kometa p{font-size:14px;color:rgba(255,255,255,.82);line-height:2.06;margin-bottom:14px;max-width:46ch}
 .hero-kometa .hero-em{font-weight:800;color:rgba(255,255,255,.92)}
@@ -557,6 +572,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .msg-col-photo{max-width:320px;margin:0 auto}
   .hero{padding:112px 5% 72px}
   .hero-message-h{font-size:clamp(36px,9.2vw,54px)}
+  .hero-message-h{white-space:normal}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -676,13 +692,15 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="hero-message">
         <div class="hero-tag">生きる力を育む家庭教師</div>
         <h1 class="hero-message-h"><span class="line brand">「あんたがおらな」</span></h1>
-        <div class="hero-message-sub">比べられ、責められ、閉じこもってしまう子どもたちへ。信頼と希望を、もう一度。</div>
+        <div class="hero-message-kicker">に込めたメッセージ</div>
       </div>
     </div>
     <div class="hero-desc">
+      <div class="hero-desc-k">ABOUT</div>
+      <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br>信頼と希望を、もう一度届けたい。</p>
       <div class="hero-kometa">
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
-        <p>子どもを変える前に、まずは<strong class="hero-em">安心して「自分でいていい」</strong>と思えること。そこから、家庭の空気が少しずつ動き始めます。</p>
+        <p>教育とは、<strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
         <p class="hero-kometa-closing">「あんたがおらなあかんねん！」</p>
         <p class="hero-kometa-more"><a href="#creed">理念（想いの土台）を読む →</a></p>
       </div>
