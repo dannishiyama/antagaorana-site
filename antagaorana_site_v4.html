@@ -205,13 +205,100 @@ section{padding:88px 5%}
 .msg-prose .msg-body strong{color:var(--gd);font-weight:800}
 .msg-quote{background:var(--sand);border-left:4px solid var(--g);padding:18px 22px;border-radius:0 12px 12px 0;font-family:'Noto Serif JP',serif;font-size:15px;color:var(--gd);font-weight:700;line-height:1.8;margin-bottom:22px}
 
-.testi{background:var(--sand)}
-.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.t-card{background:var(--w);border-radius:20px;padding:26px;box-shadow:0 2px 16px rgba(92,122,90,.08)}
-.t-stars{color:var(--gold);font-size:15px;margin-bottom:12px;letter-spacing:2px}
-.t-txt{font-size:14px;color:var(--tm);line-height:1.9;margin-bottom:16px;font-style:italic}
-.t-name{font-size:13px;font-weight:600;color:var(--g)}
-.t-meta{font-size:12px;color:var(--ts)}
+.testi{background:linear-gradient(180deg,var(--w) 0%,#faf9f7 100%)}
+.testi .slead{max-width:48em}
+.t-grid{display:grid;grid-template-columns:1fr;gap:17px;margin-top:52px;max-width:820px}
+.t-card{
+  background:transparent;
+  border-radius:18px;
+  padding:21px 19px;
+  box-shadow:none;
+  border:1px solid rgba(224,213,200,.85);
+  transition:background .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.t-card:first-child{margin-top:0}
+.t-stars{display:none}
+.t-summary{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+  padding:6px 4px;
+  border-radius:14px;
+  width:100%;
+}
+.t-summary::-webkit-details-marker{display:none}
+.t-head{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.t-head::before{content:'【';color:rgba(74,74,74,.62)}
+.t-head::after{content:'】';color:rgba(74,74,74,.62)}
+.t-attr::before{content:' / ';color:rgba(74,74,74,.62);font-weight:700}
+.t-cat{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.14em;
+  color:rgba(58,90,56,.92);
+  text-transform:uppercase;
+}
+.t-attr{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  color:rgba(74,74,74,.82);
+}
+.t-frag{
+  font-family:'Noto Serif JP',serif;
+  font-size:16px;
+  color:rgba(26,26,26,.92);
+  line-height:1.85;
+  margin:0;
+  letter-spacing:.01em;
+}
+.t-more{
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.07em;
+  color:rgba(44,74,42,.96);
+  border-bottom:2px solid rgba(58,90,56,.42);
+  padding-bottom:3px;
+}
+details[open] .t-more{opacity:.74}
+.t-body{margin-top:14px}
+.t-txt{
+  font-family:'Noto Serif JP',serif;
+  font-size:15px;
+  color:rgba(74,74,74,.94);
+  line-height:2.26;
+  margin:0;
+  letter-spacing:.01em;
+}
+.t-txt + .t-txt{margin-top:13px}
+.t-name{margin-top:14px;font-size:13px;font-weight:900;color:var(--gd);letter-spacing:.02em}
+.t-meta{margin-top:4px;font-size:12px;color:var(--ts);line-height:1.7}
+.t-card:hover{background:rgba(234,242,229,.52);border-color:rgba(218,207,188,.94);box-shadow:0 1px 0 rgba(58,90,56,.06)}
+.t-card:hover .t-frag{color:rgba(26,26,26,.94)}
+.t-card:hover .t-more{color:rgba(36,64,34,.98);border-bottom-color:rgba(58,90,56,.46)}
+.t-card:hover .t-summary{transform:translateY(-1px)}
+@media (prefers-reduced-motion: reduce){
+  .t-summary{transition:none}
+}
+.t-summary{transition:transform .18s ease}
+@media(max-width:560px){
+  .t-grid{margin-top:36px;gap:14px}
+  .t-card{padding:20px 16px;border-radius:16px}
+  .t-summary{gap:9px;padding:4px 2px}
+  .t-frag{font-size:15px;line-height:1.92}
+  .t-body{margin-top:14px}
+  .t-txt{font-size:14px;line-height:2.14}
+  .t-txt + .t-txt{margin-top:12px}
+}
 
 .news{background:var(--w)}
 .news-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start;margin-top:36px}
@@ -540,28 +627,137 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- TESTIMONIALS -->
 <section class="testi" id="voice">
   <div class="si">
-    <div class="stag">TESTIMONIALS</div>
-    <h2 class="stitle">親御様の声</h2>
-    <p class="slead">実際にサポートを受けた親御様からいただいたメッセージをご紹介します。</p>
+    <div class="stag">VOICES</div>
+    <h2 class="stitle">実際の声</h2>
+    <p class="slead">派手な言葉より、日々のなかで「少し楽になった」と感じた瞬間。<br>そんな記憶の断片を、いくつかだけ。</p>
     <div class="t-grid">
-      <div class="t-card">
-        <div class="t-stars">★★★★★</div>
-        <p class="t-txt">「どうせ無理」が口癖だった息子が、「やってみたい」と言い始めた日、涙が止まりませんでした。先生は押しつけずに、ただ息子の隣に座り続けてくれました。</p>
-        <div class="t-name">40代 お母様</div>
-        <div class="t-meta">不登校のお子様をお持ちのご家庭</div>
-      </div>
-      <div class="t-card">
-        <div class="t-stars">★★★★★</div>
-        <p class="t-txt">正直、最初は半信半疑でした。でも、自分の関わり方が変わった瞬間に、子どもの反応が変わった。「親が変われば子が変わる」は本当でした。</p>
-        <div class="t-name">30代 お父様</div>
-        <div class="t-meta">発達特性のあるお子様をお持ちのご家庭</div>
-      </div>
-      <div class="t-card">
-        <div class="t-stars">★★★★★</div>
-        <p class="t-txt">インドから帰ってきた息子は、別人のようでした。「お母さん、また日本でがんばるためにもう一度インドに行きたい」と笑顔で言ってくれた瞬間を忘れません。</p>
-        <div class="t-name">40代 お母様</div>
-        <div class="t-meta">越（エツ）インドプロジェクト参加ご家庭</div>
-      </div>
+      <details class="t-card">
+        <summary class="t-summary">
+          <div class="t-head">
+            <span class="t-cat">家庭教師</span>
+            <span class="t-attr">40代 母</span>
+          </div>
+          <p class="t-frag">4年ぶりに、あの子が自分からペンを握った。</p>
+          <span class="t-more">ストーリーを読む →</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">「もうこの子は変わらないのかもしれない」</p>
+          <p class="t-txt">正直、そう思い詰めていました。</p>
+          <p class="t-txt">私自身も2年間カウンセリングに通い続け、本や講演会、いろんな相談も受けました。</p>
+          <p class="t-txt">でも、その場では少し安心しても、現実は何も変わらなかったんです。</p>
+          <p class="t-txt">気づけば私自身も鬱状態になり、夫婦関係も悪くなっていました。</p>
+          <p class="t-txt">そんな中、初めて先生と出会って3回目の日、</p>
+          <p class="t-txt">あの子が自分から教科書を持ってきて、4年ぶりにペンを握りました。</p>
+          <p class="t-txt">あの瞬間は今でも忘れられません。</p>
+          <p class="t-txt">“ただ話を聞く”ではなく、本当に子どもと家庭を見て関わってくれている。</p>
+          <p class="t-txt">今まで受けてきたものとは、根本的に違うと感じました。</p>
+          <div class="t-name">40代 お母様</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <div class="t-head">
+            <span class="t-cat">教育コンサル</span>
+            <span class="t-attr">50代 女性</span>
+          </div>
+          <p class="t-frag">「聞くだけ」で終わらなかった。</p>
+          <span class="t-more">ストーリーを読む →</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">これまで、本や講演会、相談機関など、本当にいろいろ試してきました。</p>
+          <p class="t-txt">でも、“話は聞いてくれるけど、具体的にどうすればいいのか分からない”</p>
+          <p class="t-txt">そう感じることが多かったです。</p>
+          <p class="t-txt">こちらは違いました。</p>
+          <p class="t-txt">常に、「じゃあ具体的にどうするか」を一緒に考えてくれる。</p>
+          <p class="t-txt">しかも、結果が出るまで寄り添い続けてくれるんです。</p>
+          <p class="t-txt">ここまで本気で向き合ってくれる方には、初めて出会いました。</p>
+          <div class="t-name">50代 女性</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <div class="t-head">
+            <span class="t-cat">教育コンサル</span>
+            <span class="t-attr">50代 男性</span>
+          </div>
+          <p class="t-frag">家庭の空気が、少しずつ戻ってきた。</p>
+          <span class="t-more">ストーリーを読む →</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">学校でのいじめをきっかけに、子どもが不登校になりました。</p>
+          <p class="t-txt">気づけば、家庭全体が暗くなっていました。</p>
+          <p class="t-txt">私たち親も、どう接していいか分からず、本当に苦しかったです。</p>
+          <p class="t-txt">これまでにも相談はしてきましたが、正直、“聞いて終わり”のことが多かったです。</p>
+          <p class="t-txt">でも先生は違いました。</p>
+          <p class="t-txt">優しく寄り添いながらも、必要なことは現実的に伝えてくれる。</p>
+          <p class="t-txt">「親としてどう振る舞うべきか」を具体的に教えてくれました。</p>
+          <p class="t-txt">そのおかげで、少しずつ家庭の空気が変わっていったと思います。</p>
+          <div class="t-name">50代 男性</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <div class="t-head">
+            <span class="t-cat">インド研修</span>
+            <span class="t-attr">40代 女性</span>
+          </div>
+          <p class="t-frag">帰ってきた息子の「ありがとう」が増えた。</p>
+          <span class="t-more">ストーリーを読む →</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">正直、最初は参加をかなり迷いました。</p>
+          <p class="t-txt">ただ、日本でいろいろ経験しても変わらなかった部分があったので、思い切って送り出しました。</p>
+          <p class="t-txt">帰国後、子どもの表情が本当に変わりました。</p>
+          <p class="t-txt">家での会話や笑顔が増えて、「ありがとう」と言ってくれることも増えました。</p>
+          <p class="t-txt">以前よりも、“自分で頑張ろう”という気持ちが強くなったように感じます。</p>
+          <div class="t-name">40代 女性</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <div class="t-head">
+            <span class="t-cat">社会人コーチング</span>
+            <span class="t-attr">20代 男性</span>
+          </div>
+          <p class="t-frag">自分でも知らなかった自分に出会えた。</p>
+          <span class="t-more">ストーリーを読む →</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">これまで自己分析や本、いろんなサービスを受けてきました。</p>
+          <p class="t-txt">でも、「結局自分はどうしたいのか」が分からないままでした。</p>
+          <p class="t-txt">こちらでは、自分でも気づいていなかった魅力や可能性を、一緒に言語化してくれました。</p>
+          <p class="t-txt">ただ励ますだけではなく、</p>
+          <p class="t-txt">「どこに向かうのか」</p>
+          <p class="t-txt">を具体的に整理してくれる。</p>
+          <p class="t-txt">ここまで深く向き合ってくれる場所は、初めてでした。</p>
+          <div class="t-name">20代 男性</div>
+        </div>
+      </details>
+
+      <details class="t-card">
+        <summary class="t-summary">
+          <div class="t-head">
+            <span class="t-cat">社会人コーチング</span>
+            <span class="t-attr">30代 女性</span>
+          </div>
+          <p class="t-frag">“どこへ向かうのか”が初めて見えた。</p>
+          <span class="t-more">ストーリーを読む →</span>
+        </summary>
+        <div class="t-body">
+          <p class="t-txt">ずっと、過去の経験に縛られて、前に進めない感覚がありました。</p>
+          <p class="t-txt">いろんな本も読みましたし、他のサービスも受けました。</p>
+          <p class="t-txt">でも、その時だけ前向きになって、また戻ってしまう。</p>
+          <p class="t-txt">そんな状態でした。</p>
+          <p class="t-txt">ここでは、「本当は自分がどう生きたいのか」を一緒に整理してくれて、</p>
+          <p class="t-txt">少しずつ、自分の思考や行動が変わっていきました。</p>
+          <p class="t-txt">今は以前より、毎日がかなり充実しています。</p>
+          <div class="t-name">30代 女性</div>
+        </div>
+      </details>
     </div>
   </div>
 </section>
