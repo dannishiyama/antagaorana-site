@@ -55,14 +55,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   align-items:center;
 }
 .hero{isolation:isolate}
-.hero-visual{position:relative;min-height:520px;display:flex;align-items:center;justify-content:center}
+.hero-visual{
+  position:relative;
+  min-height:520px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  overflow:visible;
+}
 .hero-calligraphy{
-  width:min(420px,32vw);
+  width:min(560px,46vw);
   height:auto;
   object-fit:contain;
   display:block;
-  transform:translateX(4vw);
+  transform:translateX(-10vw);
   mix-blend-mode:normal;
+  opacity:.82;
 }
 .hero-inner::after{content:none}
 .hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
@@ -103,7 +111,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 
 /* PC: 右に文章、左は余白と筆文字を主役に */
 @media(min-width:901px){
-  .hero-inner{grid-template-rows:auto;grid-template-columns:1fr 1fr;gap:56px}
+  .hero-inner{grid-template-rows:auto;grid-template-columns:1.12fr .88fr;gap:72px}
   .hero-visual{grid-column:1;grid-row:auto}
   .hero-desc{grid-column:2;grid-row:auto}
   .hero-desc-k{margin-bottom:10px}
@@ -613,7 +621,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-message{max-width:none}
   .hero-inner{gap:46px}
   .hero-visual{display:flex;min-height:auto;justify-content:center}
-  .hero-calligraphy{width:min(460px,72vw);transform:none;margin:0 auto 8px}
+  .hero-calligraphy{width:min(520px,82vw);transform:translateX(-6vw);margin:0 auto 8px;opacity:.76}
   .hero-message-sub{max-width:54ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
@@ -740,7 +748,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   </div>
   <div class="hero-inner">
     <div class="hero-visual">
-      <img class="hero-calligraphy" src="./lp-assets/hero-calligraphy-transparent.png?v=20260509a" alt="あんたがおらな">
+      <img class="hero-calligraphy" src="./lp-assets/hero-calligraphy-transparent.png?v=20260509b" alt="あんたがおらな">
     </div>
     <div class="hero-desc">
       <div class="hero-tag">生きる力を育む家庭教師</div>
