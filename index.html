@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>不登校・発達特性に寄り添う教育支援｜あんたがおらな</title>
 <!-- hero calligraphy removed -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho+B1:wght@400;600;700&family=Yuji+Syuku&display=swap" rel="stylesheet">
 <style>
 :root{
   --g:#5C7A5A; --gd:#3A5A38; --gm:#4A6349; --gl:#7A9A78;
@@ -60,48 +60,51 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   min-height:520px;
   display:flex;
   align-items:center;
-  justify-content:flex-end;
+  justify-content:center;
   overflow:visible;
 }
 .hero-mark{
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
-  gap:16px;
+  align-items:center;
+  gap:14px;
   transform:translateX(0);
   max-width:min(540px,100%);
 }
 .hero-mark-top{
-  font-size:clamp(13px,1.35vw,15px);
-  font-weight:800;
-  letter-spacing:.18em;
-  color:rgba(255,255,255,.82);
-  text-align:left;
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(12px,1.25vw,14px);
+  font-weight:600;
+  letter-spacing:.22em;
+  color:rgba(255,255,255,.78);
+  text-align:center;
   line-height:1.55;
   width:100%;
 }
 .hero-mark-bottom{
-  font-size:clamp(13px,1.3vw,15px);
-  font-weight:700;
-  letter-spacing:.14em;
-  color:rgba(232,192,96,.88);
-  text-align:left;
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(12px,1.2vw,14px);
+  font-weight:600;
+  letter-spacing:.20em;
+  color:rgba(232,192,96,.82);
+  text-align:center;
   line-height:1.55;
   width:100%;
 }
 .hero-shuji{
-  align-self:flex-start;
-  text-align:left;
-  font-family:'Noto Serif JP',serif;
-  font-weight:900;
-  color:rgba(255,255,255,.94);
-  letter-spacing:.08em;
-  line-height:1.14;
-  text-shadow:0 2px 24px rgba(0,0,0,.14);
+  align-self:center;
+  text-align:center;
+  font-family:'Yuji Syuku','Shippori Mincho B1','Noto Serif JP',serif;
+  font-weight:400;
+  color:rgba(255,255,255,.92);
+  letter-spacing:.06em;
+  line-height:1.05;
+  text-shadow:0 2px 22px rgba(0,0,0,.16);
+  white-space:nowrap;
 }
 .hero-shuji-line{
-  display:block;
-  font-size:clamp(40px,7.2vw,76px);
+  display:inline;
+  font-size:clamp(34px,6.2vw,66px);
   font-feature-settings:'palt' 1;
 }
 .hero-inner::after{content:none}
@@ -653,11 +656,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-message{max-width:none}
   .hero-inner{gap:46px}
   .hero-visual{display:flex;min-height:auto;justify-content:center}
-  .hero-visual{justify-content:center}
   .hero-mark{align-items:center;max-width:100%}
   .hero-mark-top,.hero-mark-bottom{text-align:center;width:100%}
-  .hero-shuji{align-self:center;text-align:center}
-  .hero-shuji-line{font-size:clamp(36px,10vw,56px)}
+  .hero-shuji{align-self:center;text-align:center;letter-spacing:.03em}
+  .hero-shuji-line{font-size:clamp(28px,9.4vw,52px)}
   .hero-message-sub{max-width:54ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
@@ -787,8 +789,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="hero-mark" aria-label="ヒーローの書とメッセージ">
         <div class="hero-mark-top">生きる力を育む家庭教師</div>
         <div class="hero-shuji" role="img" aria-label="あんたがおらな">
-          <span class="hero-shuji-line">「あんたが</span>
-          <span class="hero-shuji-line">おらな」</span>
+          <span class="hero-shuji-line">あんたがおらな</span>
         </div>
         <div class="hero-mark-bottom">に込めたメッセージ</div>
       </div>
