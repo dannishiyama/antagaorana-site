@@ -96,15 +96,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   flex:1 1 50%;
   line-height:1.55;
 }
-.hero-calligraphy{
-  width:min(560px,46vw);
-  height:auto;
-  object-fit:contain;
-  display:block;
+.hero-shuji{
   align-self:center;
   transform:translateX(-3vw);
-  mix-blend-mode:normal;
-  opacity:.88;
+  text-align:center;
+  font-family:'Noto Serif JP',serif;
+  font-weight:900;
+  color:rgba(255,255,255,.94);
+  letter-spacing:.08em;
+  line-height:1.18;
+  text-shadow:0 2px 24px rgba(0,0,0,.14);
+}
+.hero-shuji-line{
+  display:block;
+  font-size:clamp(40px,7.2vw,76px);
+  font-feature-settings:'palt' 1;
 }
 .hero-inner::after{content:none}
 .hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
@@ -659,7 +665,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-mark-bar{flex-direction:column;align-items:stretch;gap:10px}
   .hero-mark-top,.hero-mark-bottom{text-align:left;flex:none}
   .hero-mark-bottom{text-align:right}
-  .hero-calligraphy{width:min(520px,82vw);transform:none;margin:0 auto 8px;opacity:.82}
+  .hero-shuji{transform:none}
+  .hero-shuji-line{font-size:clamp(36px,10vw,56px)}
   .hero-message-sub{max-width:54ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
@@ -791,7 +798,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <div class="hero-mark-top">生きる力を育む家庭教師</div>
           <div class="hero-mark-bottom">にこめられたメッセージ</div>
         </div>
-        <img class="hero-calligraphy" src="./lp-assets/hero-calligraphy-washi.jpg?v=20260509f" alt="あんたがおらな" width="1024" height="585" decoding="async">
+        <div class="hero-shuji" role="img" aria-label="あんたがおらな">
+          <span class="hero-shuji-line">あんたが</span>
+          <span class="hero-shuji-line">おらな</span>
+        </div>
       </div>
     </div>
     <div class="hero-desc">
