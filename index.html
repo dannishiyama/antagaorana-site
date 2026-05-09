@@ -66,31 +66,45 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .hero-mark{
   display:flex;
   flex-direction:column;
-  align-items:center;
-  gap:14px;
+  align-items:stretch;
+  gap:18px;
   transform:translateX(-3vw);
+  max-width:min(620px,92%);
+}
+.hero-mark-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:20px;
+  width:100%;
 }
 .hero-mark-top{
-  font-size:12px;
+  font-size:clamp(13px,1.35vw,15px);
   font-weight:800;
   letter-spacing:.18em;
-  color:rgba(255,255,255,.78);
+  color:rgba(255,255,255,.82);
+  text-align:left;
+  flex:1 1 50%;
+  line-height:1.55;
 }
 .hero-mark-bottom{
-  font-size:12px;
+  font-size:clamp(13px,1.3vw,15px);
   font-weight:700;
-  letter-spacing:.16em;
-  color:rgba(232,192,96,.78);
-  opacity:.78;
+  letter-spacing:.14em;
+  color:rgba(232,192,96,.82);
+  text-align:right;
+  flex:1 1 50%;
+  line-height:1.55;
 }
 .hero-calligraphy{
   width:min(560px,46vw);
   height:auto;
   object-fit:contain;
   display:block;
+  align-self:center;
   transform:translateX(-3vw);
   mix-blend-mode:normal;
-  opacity:.82;
+  opacity:.88;
 }
 .hero-inner::after{content:none}
 .hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
@@ -641,8 +655,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-message{max-width:none}
   .hero-inner{gap:46px}
   .hero-visual{display:flex;min-height:auto;justify-content:center}
-  .hero-mark{transform:none}
-  .hero-calligraphy{width:min(520px,82vw);transform:translateX(-4vw);margin:0 auto 8px;opacity:.76}
+  .hero-mark{transform:none;max-width:100%}
+  .hero-mark-bar{flex-direction:column;align-items:stretch;gap:10px}
+  .hero-mark-top,.hero-mark-bottom{text-align:left;flex:none}
+  .hero-mark-bottom{text-align:right}
+  .hero-calligraphy{width:min(520px,82vw);transform:none;margin:0 auto 8px;opacity:.82}
   .hero-message-sub{max-width:54ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
@@ -770,13 +787,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="hero-inner">
     <div class="hero-visual">
       <div class="hero-mark" aria-label="ヒーローの書とメッセージ">
-        <div class="hero-mark-top">生きる力を育む家庭教師</div>
-        <img class="hero-calligraphy" src="./lp-assets/hero-calligraphy-transparent.png?v=20260509e" alt="あんたがおらな">
-        <div class="hero-mark-bottom">にこめられたメッセージ</div>
+        <div class="hero-mark-bar">
+          <div class="hero-mark-top">生きる力を育む家庭教師</div>
+          <div class="hero-mark-bottom">にこめられたメッセージ</div>
+        </div>
+        <img class="hero-calligraphy" src="./lp-assets/hero-calligraphy-washi.jpg?v=20260509f" alt="あんたがおらな" width="1024" height="585" decoding="async">
       </div>
     </div>
     <div class="hero-desc">
-      <div class="hero-tag">生きる力を育む家庭教師</div>
       <div class="hero-desc-k">ABOUT</div>
       <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br><span style="display:block;margin-top:10px">信頼と希望を、もう一度届けたい。</span></p>
       <div class="hero-kometa">
