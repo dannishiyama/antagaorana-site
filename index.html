@@ -57,14 +57,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .nav-drawer .sub{font-size:12px;font-weight:600;color:var(--tm);padding:10px 6px 6px}
 
 .hero{
-  min-height:100vh;
+  min-height:82vh;
   display:flex;
   align-items:center;
+  justify-content:center;
   position:relative;
   overflow-x:clip;
   overflow-y:visible;
   isolation:isolate;
-  padding:120px 8vw;
+  padding:100px 7vw 80px;
   box-sizing:border-box;
   background-color:var(--hero-bg-fallback) !important;
   background-image:var(--hero-bg-gradient) !important;
@@ -85,22 +86,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   position:relative;
   z-index:2;
   width:100%;
-  max-width:1320px;
+  max-width:1400px;
   margin:0 auto;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:clamp(28px,4vw,56px);
+  justify-content:center;
+  gap:120px;
 }
 .hero-visual{
-  flex:0 1 48%;
+  flex:0 1 46%;
   min-width:0;
   position:relative;
   display:flex;
   align-items:center;
-  justify-content:flex-start;
+  justify-content:center;
   overflow:visible;
-  padding-right:clamp(8px,2vw,24px);
 }
 .hero-mark{
   display:flex;
@@ -112,21 +112,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:22px;
+  font-size:20px;
   font-weight:500;
-  letter-spacing:.18em;
-  color:rgba(255,255,255,.92);
-  margin:0 0 34px;
+  letter-spacing:.22em;
+  color:rgba(255,255,255,.88);
+  margin:0 0 38px;
   line-height:1.5;
   width:100%;
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:24px;
+  font-size:22px;
   font-weight:600;
   letter-spacing:.12em;
   color:#d8b15a;
-  margin:24px 0 0;
+  margin:18px 0 0;
   line-height:1.5;
   width:100%;
 }
@@ -144,13 +144,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-logo-img.logo-calligraphy{
   display:block;
-  width:460px;
-  max-width:38vw;
+  width:520px;
+  max-width:42vw;
   height:auto;
-  opacity:.9;
+  opacity:.92;
   position:relative;
-  left:-28px;
-  top:4px;
+  transform:translate(20px,-30px);
   filter:brightness(.97);
   background:transparent;
 }
@@ -169,38 +168,48 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 
 .hero-desc{
-  flex:0 1 52%;
+  flex:0 1 54%;
   min-width:0;
-  max-width:480px;
-  transform:translateX(-8px);
+  max-width:none;
   padding-top:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+.hero-desc-head{
+  width:100%;
+  max-width:620px;
 }
 .hero-kometa{margin-top:0;max-width:520px}
 .hero-desc-k{
-  font-size:11px;
+  display:block;
+  font-size:14px;
   font-weight:600;
-  letter-spacing:.34em;
-  color:rgba(255,255,255,.45);
-  margin:0 0 22px;
+  letter-spacing:.25em;
+  color:rgba(255,255,255,.92);
+  opacity:.55;
+  margin:0 0 12px;
+  line-height:1.3;
 }
 .hero-desc-heading{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:clamp(42px,4vw,68px);
-  line-height:1.7;
+  font-size:clamp(34px,3vw,58px);
+  line-height:1.65;
   font-weight:700;
   color:rgba(255,255,255,.94);
-  margin:0 0 22px;
+  margin:0 0 20px;
   letter-spacing:.04em;
-  max-width:540px;
+  max-width:620px;
 }
 .hero-desc-body{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:21px;
-  line-height:2;
+  font-size:20px;
+  line-height:2.1;
   font-weight:500;
   color:rgba(255,255,255,.92);
   margin:0 0 36px;
-  max-width:540px;
+  max-width:520px;
+  opacity:.92;
 }
 .hero-kometa-h{font-size:11px;font-weight:800;color:rgba(216,177,90,.95);letter-spacing:.16em;margin-bottom:12px}
 .hero-kometa p{font-size:17px;color:rgba(255,255,255,.78);line-height:2.08;margin-bottom:18px;max-width:56ch}
@@ -732,7 +741,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   nav .nav-links{display:none}
   .creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
   .hero-message{max-width:none}
-  .hero-content{flex-direction:column;align-items:center;gap:44px}
+  .hero-content{flex-direction:column;align-items:center;justify-content:center;gap:48px}
   .hero-visual{
     flex:none;
     display:flex;
@@ -743,21 +752,56 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     align-items:center;
     padding:0;
   }
-  .hero-desc{flex:none;width:100%;max-width:100%;transform:none;padding:0 4%}
-  .hero-desc-heading{font-size:clamp(30px,7vw,52px);max-width:100%}
-  .hero-desc-body{font-size:17px;line-height:2}
+  .hero-desc{
+    flex:none;
+    width:100%;
+    max-width:36rem;
+    padding:0 3%;
+    align-items:center;
+    text-align:center;
+  }
+  .hero-desc-head{
+    max-width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .hero-desc-k{margin-bottom:10px}
+  .hero-desc-heading{
+    font-size:clamp(22px,5.2vw,30px);
+    line-height:1.58;
+    letter-spacing:.035em;
+    max-width:22em;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .hero-desc-body{
+    font-size:17px;
+    line-height:2.05;
+    max-width:32em;
+    margin-left:auto;
+    margin-right:auto;
+  }
   .hero-mark{align-items:center;max-width:100%}
-  .hero-mark-top{margin-bottom:20px}
-  .hero-mark-bottom{margin-top:14px}
+  .hero-mark-top{margin-bottom:28px;font-size:18px;letter-spacing:.2em}
+  .hero-mark-bottom{margin-top:16px;font-size:19px}
   .hero-logo-block{align-self:center}
-  .hero-logo-img.logo-calligraphy{width:100%;max-width:min(360px,82vw);left:-12px;top:-4px;opacity:.9}
+  .hero-logo-img.logo-calligraphy{
+    width:100%;
+    max-width:min(400px,88vw);
+    transform:translate(0,-16px);
+    opacity:.92;
+  }
   .hero-message-sub{max-width:54ch}
+  .hero-kometa{margin-left:auto;margin-right:auto;text-align:left}
+  .hero-btns{justify-content:center}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
-  .hero{padding:96px 6vw 88px;padding-top:max(96px,12vh)}
+  .hero{min-height:auto;padding:88px 6vw 64px;padding-top:max(88px,10vh)}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -886,8 +930,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       </div>
     </div>
     <div class="hero-desc">
-      <div class="hero-desc-k">ABOUT</div>
-      <h1 class="hero-desc-heading">比べられ、責められ、閉じこもってしまう子どもたちへ。</h1>
+      <div class="hero-desc-head">
+        <span class="hero-desc-k">ABOUT</span>
+        <h1 class="hero-desc-heading">比べられ、責められ、閉じこもってしまう子どもたちへ。</h1>
+      </div>
       <p class="hero-desc-body">信頼と希望を、もう一度届けたい。</p>
       <div class="hero-kometa">
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><br><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
