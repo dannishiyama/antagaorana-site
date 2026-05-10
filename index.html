@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&family=Shippori+Mincho+B1:wght@400;600;700&family=Zen+Old+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
+  --hero-bg-gradient:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%);
+  --hero-bg-fallback:#466246;
   /* 青アクセント（安心・信頼）— 旧 --g / --gd をブルーへ */
   --g:#4A6FA5;
   --gd:#2E4A73;
@@ -52,107 +54,104 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
 .nav-drawer a:last-child{border-bottom:none}
 .nav-drawer .sub{font-size:12px;font-weight:600;color:var(--tm);padding:10px 6px 6px}
 
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:clamp(132px,20vh,176px) clamp(24px,7vw,104px) clamp(112px,16vh,152px)}
-.hero-bg{position:absolute;inset:0;z-index:0}
-.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.3}
-.hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to right,rgba(250,248,245,.97) 0%,rgba(242,245,251,.88) 52%,transparent 100%)}
-.hero-inner{
-  position:relative;
-  z-index:2;
-  max-width:1320px;
-  margin:0 auto;
-  width:100%;
-  display:grid;
-  grid-template-columns:1.12fr .88fr;
-  gap:clamp(40px,5.5vw,80px);
-  align-items:center;
-}
-.hero{isolation:isolate}
-.hero-visual{
-  position:relative;
-  min-height:clamp(440px,52vh,580px);
+.hero{
+  min-height:100vh;
   display:flex;
   align-items:center;
-  justify-content:flex-start;
+  position:relative;
+  overflow-x:clip;
+  overflow-y:visible;
+  isolation:isolate;
+  padding:120px 8vw;
+  box-sizing:border-box;
+  background-color:var(--hero-bg-fallback) !important;
+  background-image:var(--hero-bg-gradient) !important;
+  background-repeat:no-repeat !important;
+  background-size:100% 100% !important;
+}
+.hero-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-color:var(--hero-bg-fallback) !important;
+  background-image:var(--hero-bg-gradient) !important;
+  background-repeat:no-repeat !important;
+  background-size:100% 100% !important;
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:1320px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(28px,4vw,56px);
+}
+.hero-visual{
+  flex:0 1 45%;
+  min-width:0;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   overflow:visible;
-  padding-top:0;
-  padding-left:clamp(12px,3vw,28px);
-  padding-right:clamp(16px,3vw,40px);
 }
 .hero-mark{
   display:flex;
   flex-direction:column;
-  align-items:flex-start;
-  gap:clamp(14px,2vw,22px);
-  transform:none;
-  max-width:min(720px,100%);
+  align-items:center;
+  text-align:center;
+  width:100%;
+  max-width:100%;
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:clamp(11px,1.05vw,13px);
-  font-weight:600;
-  letter-spacing:.36em;
-  color:rgba(46,74,115,.72);
-  text-align:left;
-  line-height:1.55;
+  font-size:18px;
+  font-weight:500;
+  letter-spacing:.18em;
+  color:rgba(255,255,255,.9);
+  margin:0 0 26px;
+  line-height:1.5;
   width:100%;
-  margin-bottom:clamp(2px,.4vw,6px);
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:clamp(11px,1vw,13px);
+  font-size:18px;
   font-weight:600;
-  letter-spacing:.32em;
-  color:rgba(74,111,165,.58);
-  text-align:left;
-  line-height:1.55;
+  letter-spacing:.12em;
+  color:#d8b15a;
+  margin:18px 0 0;
+  line-height:1.5;
   width:100%;
-  margin-top:clamp(2px,.35vw,6px);
 }
-/* 筆ロゴ：透過PNG — 「貼った感」を消し、空気の中に置く */
 .hero-logo-block{
   position:relative;
   display:inline-block;
-  align-self:flex-start;
-  margin:4px 0 2px;
-  isolation:isolate;
+  margin:0;
   background:transparent;
-}
-.hero-logo-atmosphere{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:132%;
-  height:138%;
-  z-index:0;
-  pointer-events:none;
-  border-radius:50%;
-  background:radial-gradient(ellipse 72% 68% at 48% 46%,rgba(252,251,247,.42) 0%,rgba(236,242,252,.22) 48%,transparent 74%);
-  filter:blur(22px);
-  opacity:.4;
 }
 .hero-logo-frame{
   position:relative;
-  z-index:1;
   display:block;
   line-height:0;
   background:transparent;
 }
-.hero-logo-img{
+.hero-logo-img.logo-calligraphy{
   display:block;
-  width:100%;
-  max-width:min(378px,36vw);
+  width:480px;
+  max-width:42vw;
   height:auto;
-  opacity:.88;
+  opacity:.92;
+  position:relative;
+  left:-60px;
+  top:10px;
+  filter:brightness(.97);
   background:transparent;
-  filter:
-    sepia(0.06)
-    saturate(0.94)
-    drop-shadow(0 1px 10px rgba(46,74,115,.05))
-    drop-shadow(0 0 0.5px rgba(246,244,238,.45));
 }
-.hero-inner::after{content:none}
+.hero-content::after{content:none}
 .hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
 .hero-h1{font-family:'Noto Serif JP',serif;font-size:clamp(32px,4vw,54px);font-weight:900;color:var(--w);line-height:1.35;margin-bottom:18px}
 .hero-h1 em{color:var(--goldl);font-style:normal}
@@ -166,50 +165,82 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   max-width:44ch;
 }
 
+.hero-desc{
+  flex:0 1 55%;
+  min-width:0;
+  max-width:520px;
+  transform:translateX(-20px);
+  padding-top:0;
+}
 .hero-kometa{margin-top:0;max-width:520px}
-.hero-desc-k{font-size:10px;font-weight:500;letter-spacing:.34em;color:rgba(74,111,165,.38);margin:0 0 16px}
-.hero-desc-lead{
-  font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:clamp(16px,1.85vw,20px);
+.hero-desc-k{
+  font-size:11px;
   font-weight:600;
-  line-height:1.88;
-  color:rgba(46,74,115,.9);
-  letter-spacing:.05em;
+  letter-spacing:.34em;
+  color:rgba(255,255,255,.45);
   margin:0 0 22px;
-  max-width:38ch;
 }
-.hero-kometa-h{font-size:11px;font-weight:800;color:var(--g);letter-spacing:.16em;margin-bottom:12px}
-.hero-kometa p{font-size:14px;color:rgba(46,74,115,.78);line-height:2.06;margin-bottom:14px;max-width:56ch}
-.hero-kometa .hero-em{font-weight:700;color:var(--gd)}
-.hero-kometa-closing{font-family:'Zen Old Mincho','Shippori Mincho','Noto Serif JP',serif;font-size:clamp(15px,2.05vw,19px);font-weight:600;color:rgba(74,111,165,.78);line-height:1.62;margin:24px 0 12px;letter-spacing:.1em}
-.hero-kometa-more{margin-top:10px}
-.hero-kometa-more a{font-size:12px;font-weight:500;color:rgba(74,111,165,.62);border-bottom:1px solid rgba(74,111,165,.22);padding-bottom:2px;letter-spacing:.08em}
-.hero-btns{margin-top:22px}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
-.hero-btns{margin-top:34px}
-.hero-btns{opacity:1}
+.hero-desc-heading{
+  font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
+  font-size:clamp(26px,5vw,54px);
+  line-height:1.6;
+  font-weight:700;
+  color:rgba(255,255,255,.94);
+  margin:0 0 28px;
+  letter-spacing:.02em;
+}
+.hero-desc-body{
+  font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
+  font-size:20px;
+  line-height:2.1;
+  font-weight:500;
+  color:rgba(255,255,255,.82);
+  margin:0 0 36px;
+  max-width:52ch;
+}
+.hero-kometa-h{font-size:11px;font-weight:800;color:rgba(216,177,90,.95);letter-spacing:.16em;margin-bottom:12px}
+.hero-kometa p{font-size:17px;color:rgba(255,255,255,.78);line-height:2.08;margin-bottom:18px;max-width:56ch}
+.hero-kometa .hero-em{font-weight:700;color:rgba(255,255,255,.92)}
+.hero-kometa-closing{font-family:'Zen Old Mincho','Shippori Mincho','Noto Serif JP',serif;font-size:clamp(17px,2vw,21px);font-weight:600;color:#d8b15a;line-height:1.62;margin:28px 0 14px;letter-spacing:.1em}
+.hero-kometa-more{margin-top:14px}
+.hero-kometa-more a{font-size:13px;font-weight:500;color:rgba(255,255,255,.55);border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px;letter-spacing:.08em}
+.hero-kometa-more a:hover{color:rgba(255,255,255,.75)}
+.hero-btns{margin-top:36px;display:flex;gap:18px;flex-wrap:wrap}
 
-/* PC: 右に説明を主役、左は余白とロゴで空気 */
 @media(min-width:901px){
-  .hero-inner{grid-template-rows:auto;grid-template-columns:1.05fr .95fr;gap:clamp(52px,5.5vw,76px)}
-  .hero-visual{
-    grid-column:1;
-    grid-row:auto;
-    align-items:center;
-    padding-top:clamp(4px,2vh,24px);
-    padding-left:clamp(11vw,13.5vw,16vw);
-    padding-right:clamp(12px,2vw,32px);
-  }
-  .hero-desc{grid-column:2;grid-row:auto;padding-top:clamp(8px,1.8vh,28px)}
-  .hero-desc-k{margin-bottom:14px}
-  .hero-desc-lead{max-width:34ch;margin-bottom:26px}
+  .hero-desc-heading{font-size:54px}
   .hero-kometa p:not(.hero-kometa-closing):not(.hero-kometa-more){display:none}
-  .hero-kometa{max-width:40ch}
-  .hero-kometa-closing{letter-spacing:.12em;margin-top:28px}
-  .hero-btns{margin-top:26px}
-  .btn-prim{padding:10px 22px;font-weight:500}
-  .btn-out{padding:10px 22px;font-weight:500}
+  .hero-kometa{max-width:44ch}
 }
+
+.hero .btn-prim{
+  padding:18px 36px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  color:rgba(255,255,255,.92);
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  font-family:'Noto Sans JP',sans-serif;
+  letter-spacing:.08em;
+  box-shadow:none;
+  transition:background .18s ease,border-color .18s ease;
+}
+.hero .btn-prim:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.32)}
+.hero .btn-out{
+  padding:18px 36px;
+  border:1px solid rgba(255,255,255,.28);
+  color:rgba(255,255,255,.85);
+  border-radius:999px;
+  font-size:14px;
+  font-weight:500;
+  background:transparent;
+  letter-spacing:.06em;
+  box-shadow:none;
+}
+.hero .btn-out:hover{background:rgba(0,0,0,.08);border-color:rgba(255,255,255,.4)}
+.hero-right{display:none}
+
 .btn-prim{
   padding:14px 28px;
   background:var(--g);
@@ -220,10 +251,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   font-weight:600;
   font-family:'Noto Sans JP',sans-serif;
   letter-spacing:.08em;
-  box-shadow:0 2px 14px rgba(46,74,115,.15);
+  box-shadow:0 2px 14px rgba(46,74,115,.12);
   transition:background .18s ease,border-color .18s ease,box-shadow .18s ease;
 }
-.btn-prim:hover{background:var(--gd);border-color:transparent;box-shadow:0 4px 18px rgba(46,74,115,.2)}
+.btn-prim:hover{background:var(--gd);border-color:transparent;box-shadow:0 4px 18px rgba(46,74,115,.18)}
 .btn-out{
   padding:14px 24px;
   border:1px solid rgba(46,74,115,.2);
@@ -235,15 +266,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,
   letter-spacing:.06em;
 }
 .btn-out:hover{background:rgba(255,255,255,.92);border-color:rgba(46,74,115,.28)}
-.hero-right{display:none}
-.hero-bg img{display:none}
-.hero-bg{
-  background:
-    radial-gradient(900px 520px at 18% 28%, rgba(140,176,232,.12) 0%, transparent 58%),
-    radial-gradient(760px 480px at 88% 18%, rgba(250,232,214,.45) 0%, transparent 55%),
-    linear-gradient(165deg,#FDFCFA 0%,#F5F7FC 44%,#FAF8F5 100%);
-}
-.hero-overlay{display:none}
 
 .stats{background:linear-gradient(180deg,var(--w) 0%,var(--gp) 100%);padding:40px 5%;border-top:1px solid rgba(46,74,115,.06);border-bottom:1px solid rgba(46,74,115,.06)}
 .stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -703,22 +725,34 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 @media(max-width:900px){
   nav .nav-links{display:none}
-  .hero-inner,.creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
+  .creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
   .hero-message{max-width:none}
-  .hero-inner{gap:52px}
-  .hero-visual{display:flex;min-height:auto;justify-content:center;padding-left:0;padding-right:0;padding-top:0;align-items:center}
-  .hero-mark{align-items:center;max-width:100%;gap:clamp(12px,3.5vw,18px);transform:none}
-  .hero-mark-top,.hero-mark-bottom{text-align:center;width:100%;letter-spacing:.28em;margin-bottom:0;margin-top:0}
+  .hero-content{flex-direction:column;align-items:center;gap:44px}
+  .hero-visual{
+    flex:none;
+    display:flex;
+    width:100%;
+    max-width:100%;
+    min-height:auto;
+    justify-content:center;
+    align-items:center;
+    padding:0;
+  }
+  .hero-desc{flex:none;width:100%;max-width:100%;transform:none;padding:0 4%}
+  .hero-desc-heading{font-size:clamp(26px,7vw,38px)}
+  .hero-desc-body{font-size:17px;line-height:2}
+  .hero-mark{align-items:center;max-width:100%}
+  .hero-mark-top{margin-bottom:20px}
+  .hero-mark-bottom{margin-top:14px}
   .hero-logo-block{align-self:center}
-  .hero-logo-atmosphere{opacity:.34;filter:blur(16px);width:124%;height:132%}
-  .hero-logo-img{max-width:min(300px,70vw);opacity:.85}
+  .hero-logo-img.logo-calligraphy{width:100%;max-width:min(380px,82vw);left:0;top:0;opacity:.9}
   .hero-message-sub{max-width:54ch}
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
-  .hero{padding:118px clamp(16px,5vw,40px) 88px}
+  .hero{padding:96px 6vw 88px;padding-top:max(96px,12vh)}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -831,19 +865,16 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <a href="#contact">お問い合わせ</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg">
-    <div class="hero-overlay"></div>
-  </div>
-  <div class="hero-inner">
+<!-- HERO（背景は .hero / .hero-bg 二重指定＋インラインで本番テーマ上書き対策） -->
+<section class="hero" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important">
+  <div class="hero-bg" aria-hidden="true" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important"></div>
+  <div class="hero-content">
     <div class="hero-visual">
       <div class="hero-mark" aria-label="ヒーローの書とメッセージ">
         <div class="hero-mark-top">生きる力を育む家庭教師</div>
         <div class="hero-logo-block">
-          <div class="hero-logo-atmosphere" aria-hidden="true"></div>
           <div class="hero-logo-frame">
-            <img class="hero-logo-img" src="./lp-assets/hero-logo-antagaorana.png?v=20260510d" width="1024" height="682" alt="あんたがおらな" decoding="async" fetchpriority="high">
+            <img class="hero-logo-img logo-calligraphy" src="./lp-assets/hero-logo-antagaorana.png?v=20260510e" width="1024" height="682" alt="あんたがおらな" decoding="async" fetchpriority="high">
           </div>
         </div>
         <div class="hero-mark-bottom">に込めたメッセージ</div>
@@ -851,7 +882,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     </div>
     <div class="hero-desc">
       <div class="hero-desc-k">ABOUT</div>
-      <p class="hero-desc-lead">比べられ、責められ、閉じこもってしまう子どもたちへ。<br><span style="display:block;margin-top:10px">信頼と希望を、もう一度届けたい。</span></p>
+      <h1 class="hero-desc-heading">比べられ、責められ、閉じこもってしまう子どもたちへ。</h1>
+      <p class="hero-desc-body">信頼と希望を、もう一度届けたい。</p>
       <div class="hero-kometa">
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><br><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
         <p>教育とは、<br><strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
