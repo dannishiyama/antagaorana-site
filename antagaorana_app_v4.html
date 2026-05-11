@@ -31,6 +31,10 @@
 }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Firebase SDK (compat v10系) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 :root {
   --green:      #5C7A5A;
@@ -431,7 +435,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
     </div>
     <h1 class="login-title">おかえりなさい</h1>
     <p class="login-sub">コミュニティにログイン</p>
-    <div class="fgroup"><label for="eml">メールアドレス</label><input type="email" id="eml" name="email" autocomplete="username" inputmode="email" placeholder="メールアドレスを入力"></div>
+    <div class="fgroup"><label for="eml">メールアドレス</label><input type="email" id="eml" name="email" autocomplete="username" inputmode="email" placeholder="your@email.com"></div>
     <div class="fgroup"><label for="pwd">パスワード</label><input type="password" id="pwd" name="password" autocomplete="current-password" placeholder="パスワードを入力"></div>
     <p id="loginErr" style="display:none;font-size:12px;color:#ffb4a8;margin:-4px 0 8px;text-align:left;width:100%"></p>
     <button type="button" class="btn-login" onclick="doLogin()">ログイン</button>
@@ -599,60 +603,30 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
   </div>
 </div>
 
-<script type="module">
+<script>
 /**
- * Firebase 本番向け Community アプリ（Authentication + Firestore）
- * デモログイン（demo@／DEMO_ALLOW／localStorage セッション復元）は一切なし。認証は Firebase のみ。
- *
- * 【Firestore セキュリティルール例】未ログインは読み書き不可・本人のみアクセス可:
- *
- * rules_version = '2';
- * service cloud.firestore {
- *   match /databases/{database}/documents {
- *     match /users/{uid}/goals/{goalId} {
- *       allow read, write: if request.auth != null && request.auth.uid == uid;
- *     }
- *   }
- * }
- *
- * 【インデックス】 goals に orderBy('createdAt','desc') を使う場合、初回アクセス時に
- * コンソールに表示されるリンクからインデックスを作成してください。
+ * Firebase 対応（compat v10系 / CDN）
+ * - Auth: onAuthStateChanged で自動ログイン維持
+ * - Firestore: users/{uid} と users/{uid}/goals を使用
+ * - デザイン/CSSは変更しない
  */
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  updateEmail,
-} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  serverTimestamp,
-  doc,
-  updateDoc,
-  deleteDoc,
-} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-
-// --- Firebase 設定（本番プロジェクトの値に差し替え） ---
+// ━━━━━━━━━━━━━━━━━━━━
+// Firebase設定値（そのまま使用）
+// ━━━━━━━━━━━━━━━━━━━━
 const firebaseConfig = {
   apiKey: "AIzaSyDNJ6Pix3lSNRGzAqJdA9oWPYcXlCo889g",
   authDomain: "antagaorana-haku.firebaseapp.com",
   projectId: "antagaorana-haku",
   storageBucket: "antagaorana-haku.firebasestorage.app",
   messagingSenderId: "5999305262",
-  appId: "1:5999305262:web:b137b1b13f914c64ccf5bf"
+  appId: "1:5999305262:web:b137b1b13f914c64ccf5bf",
+  measurementId: "G-4YPMF030CG"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
 // 旧デモ版が保存していたキーを削除（ログイン維持に使わない・Firebase Auth のみでセッション管理）
 try {
@@ -668,6 +642,8 @@ let user = null;
 /** メモリ上の goals（Firestore の users/{uid}/goals と同期） */
 let goals = [];
 let currentUid = null;
+let currentMonth = null;
+let goalsUnsub = null;
 
 function showLoginError(msg) {
   const el = document.getElementById('loginErr');
@@ -676,58 +652,37 @@ function showLoginError(msg) {
   el.style.display = msg ? 'block' : 'none';
 }
 
-/** Firebase Auth のエラーコードを日本語で表示（原因切り分け用） */
-function authErrorMessage(err) {
-  const c = err && err.code ? err.code : '';
-  if (c === 'auth/invalid-email') return 'メールアドレスの形式が正しくありません。';
-  if (c === 'auth/user-disabled') return 'このアカウントは無効になっています。';
-  if (c === 'auth/user-not-found') return 'このメールアドレスのアカウントが見つかりません。Firebase Console の Authentication でユーザーを作成してください。';
-  if (c === 'auth/wrong-password') return 'パスワードが正しくありません。';
-  if (c === 'auth/invalid-credential' || c === 'auth/invalid-login-credentials')
-    return 'メールアドレスまたはパスワードが正しくありません。';
-  if (c === 'auth/too-many-requests') return 'ログイン試行が多すぎます。しばらくしてから再度お試しください。';
-  if (c === 'auth/network-request-failed') return 'ネットワークエラーです。接続を確認してください。';
-  if (c === 'auth/unauthorized-domain')
-    return 'この URL ではログインできません。Firebase Console → Authentication → 設定 → 承認済みドメインに、このサイトのドメイン（または localhost）を追加してください。';
-  return 'ログインに失敗しました。' + (c ? ' (' + c + ')' : '');
+function formatMonthYYYYMM(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}`;
 }
 
-/** Firestore 読み取り失敗時にユーザーへヒントを返す */
-function firestoreLoadHint(err) {
-  const c = err && err.code ? err.code : '';
-  if (c === 'permission-denied')
-    return 'Firestore のセキュリティルールで読み取りが拒否されています。ルールで users/{uid}/goals がログインユーザーの uid のみ許可されているか確認してください。';
-  if (c === 'failed-precondition')
-    return 'クエリ用のインデックスが不足している可能性があります。ブラウザの開発者ツール（コンソール）に表示されるリンクからインデックスを作成してください。';
-  if (c === 'unavailable') return 'Firestore に接続できませんでした。ネットワークを確認してください。';
-  return err && err.message ? String(err.message) : '不明なエラー';
-}
-
-/** Firestore から goals を取得（ログイン後に実行） */
-async function fetchGoals(uid) {
-  const colRef = collection(db, 'users', uid, 'goals');
-  const q = query(colRef, orderBy('createdAt', 'desc'));
-  const snap = await getDocs(q);
-  goals = [];
-  snap.forEach((docSnap) => {
-    const d = docSnap.data();
-    goals.push({
-      id: docSnap.id,
-      text: d.text || '',
-      stamps: Array.isArray(d.stamps) ? d.stamps : [],
+async function ensureUserDoc(fbUser) {
+  const uid = fbUser.uid;
+  const email = fbUser.email || '';
+  const uref = db.collection('users').doc(uid);
+  const snap = await uref.get();
+  if (!snap.exists) {
+    console.log('[users] create', uid);
+    await uref.set({
+      name: 'メンバー',
+      role: 'member',
+      email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
-  });
+    return { name: 'メンバー', email };
+  }
+  const data = snap.data() || {};
+  return { name: data.name || 'メンバー', email: data.email || email };
 }
 
 function enterAppAfterAuth(fbUser) {
-  const email = fbUser.email || '';
-  const displayName =
-    fbUser.displayName || (email.indexOf('@') > 0 ? email.split('@')[0] : 'メンバー');
-  const initial = displayName.trim() ? displayName.trim().charAt(0) : 'メ';
-  user = { name: displayName, initial, email };
+  const initial = user && user.name && user.name.trim() ? user.name.trim().charAt(0) : 'メ';
+  user.initial = initial;
   ['tName','pName'].forEach((id) => {
     const ne = document.getElementById(id);
-    if (ne) ne.textContent = user.name;
+    if (ne) ne.textContent = user.name || 'メンバー';
   });
   document.getElementById('tAv').textContent = user.initial;
   document.getElementById('pAvText').textContent = user.initial;
@@ -753,13 +708,13 @@ if (typeof location !== 'undefined' && location.protocol === 'file:') {
   );
 }
 
-// 認証の唯一のガード：ログイン成功・失敗の画面反映はここだけ（デモパス・localStorage ログインなし）
-// 未ログイン時は #appScreen に .active を付けず非表示（.screen は display:none）
-onAuthStateChanged(auth, async (fbUser) => {
+// 自動ログイン維持：ログイン済みならアプリ、未ログインならログイン画面
+auth.onAuthStateChanged(async (fbUser) => {
   if (!fbUser) {
     currentUid = null;
     user = null;
     goals = [];
+    if (goalsUnsub) { try { goalsUnsub(); } catch (e) {} goalsUnsub = null; }
     document.getElementById('appScreen').classList.remove('active');
     document.getElementById('loginScreen').classList.add('active');
     const eml = document.getElementById('eml');
@@ -770,20 +725,15 @@ onAuthStateChanged(auth, async (fbUser) => {
     return;
   }
   currentUid = fbUser.uid;
-  let goalLoadError = null;
   try {
-    await fetchGoals(fbUser.uid);
-  } catch (err) {
-    // 認証は成功しているが Firestore だけ失敗するケース（ルール未設定・インデックス・オフライン等）
-    // 以前はここで signOut していたため「ログインできない」ように見えていた
-    console.error(err);
-    goals = [];
-    goalLoadError = err;
+    const u = await ensureUserDoc(fbUser);
+    user = { name: u.name || 'メンバー', email: u.email || fbUser.email || '' };
+    console.log('[auth] signed in', currentUid);
+  } catch (e) {
+    console.error(e);
+    alert('ユーザー情報の読み込みに失敗しました。');
   }
   enterAppAfterAuth(fbUser);
-  if (goalLoadError) {
-    alert('目標データの読み込みに失敗しました。\n\n' + firestoreLoadHint(goalLoadError));
-  }
 });
 
 /**
@@ -791,21 +741,27 @@ onAuthStateChanged(auth, async (fbUser) => {
  * アプリ表示・ユーザー確定は onAuthStateChanged のみ（本関数内では enterApp しない）。
  */
 async function doLogin() {
-  const email = document.getElementById('eml').value.trim();
-  const password = document.getElementById('pwd').value;
-  showLoginError('');
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const email = document.getElementById('eml').value.trim();
+    const password = document.getElementById('pwd').value;
+    showLoginError('');
+    console.log('[auth] login attempt', email);
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    const fbUser = cred.user;
+    if (fbUser) {
+      // onAuthStateChanged 側でも呼ぶが、ここで先に users を用意しておく
+      await ensureUserDoc(fbUser);
+    }
   } catch (e) {
     console.error(e);
-    showLoginError(authErrorMessage(e));
+    alert('メールアドレスまたはパスワードが違います');
   }
 }
 
 async function doLogout() {
   if (!confirm('ログアウトしますか？')) return;
   try {
-    await signOut(auth);
+    await auth.signOut();
   } catch (e) {
     console.error(e);
   }
@@ -828,17 +784,63 @@ function goTab(name, btn) {
   btn.classList.add('active');
 }
 
-/* GOALS — Firestore: users/{uid}/goals/{goalId} … text, createdAt, stamps（スタンプ日付は月内日にちの配列） */
+/* GOALS — Firestore: users/{uid}/goals/{goalId}
+  フィールド: id, text, stamps[], month(YYYY-MM), createdAt */
 function initGoals() {
   const now = new Date();
   const y = now.getFullYear();
   const m = now.getMonth();
   const days = new Date(y, m + 1, 0).getDate();
   const today = now.getDate();
+  currentMonth = formatMonthYYYYMM(now);
   document.getElementById('goalMonth').textContent = `${y}年${m + 1}月`;
   document.getElementById('totalDays').textContent = days;
-  renderGoals(days, today, y, m);
-  updateSummary(days, today);
+  if (!currentUid) {
+    goals = [];
+    renderGoals(days, today, y, m);
+    updateSummary(days, today);
+    return;
+  }
+
+  if (goalsUnsub) { try { goalsUnsub(); } catch (e) {} goalsUnsub = null; }
+  console.log('[goals] subscribe month', currentMonth);
+
+  const q = db
+    .collection('users')
+    .doc(currentUid)
+    .collection('goals')
+    .where('month', '==', currentMonth);
+
+  goalsUnsub = q.onSnapshot(
+    (snap) => {
+      const arr = [];
+      snap.forEach((docSnap) => {
+        const d = docSnap.data() || {};
+        arr.push({
+          id: d.id || docSnap.id,
+          text: d.text || '',
+          stamps: Array.isArray(d.stamps) ? d.stamps : [],
+          createdAt: d.createdAt || null,
+        });
+      });
+      // createdAt があるものを優先して並べる（index不要）
+      arr.sort((a, b) => {
+        const at = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
+        const bt = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
+        return bt - at;
+      });
+      goals = arr;
+      renderGoals(days, today, y, m);
+      updateSummary(days, today);
+    },
+    (err) => {
+      console.error(err);
+      alert('目標データの読み込みに失敗しました。');
+      goals = [];
+      renderGoals(days, today, y, m);
+      updateSummary(days, today);
+    }
+  );
 }
 
 function renderGoals(days, today, y, m) {
@@ -913,12 +915,11 @@ async function toggleStamp(gid, d, days, today, y, m) {
   if (idx >= 0) newStamps.splice(idx, 1);
   else newStamps.push(d);
   try {
-    await updateDoc(doc(db, 'users', currentUid, 'goals', gid), { stamps: newStamps });
+    await db.collection('users').doc(currentUid).collection('goals').doc(gid).update({ stamps: newStamps });
+    // onSnapshot で反映されるが、連続記録の演出のためローカルも先に更新
     g.stamps = newStamps;
-    renderGoals(days, today, y, m);
-    updateSummary(days, today);
     if (wasNew) {
-      const streak = calcStreak(g.stamps, today);
+      const streak = calcStreak(newStamps, today);
       if (streak >= 1) showStampBubble(streak);
     }
   } catch (e) {
@@ -934,14 +935,16 @@ async function addGoal() {
   const txt = inp.value.trim();
   if (!txt) return;
   try {
-    await addDoc(collection(db, 'users', currentUid, 'goals'), {
+    const col = db.collection('users').doc(currentUid).collection('goals');
+    const ref = await col.add({
+      id: '', // add後に確定
       text: txt,
-      createdAt: serverTimestamp(),
       stamps: [],
+      month: currentMonth || formatMonthYYYYMM(new Date()),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
+    await ref.set({ id: ref.id }, { merge: true });
     inp.value = '';
-    await fetchGoals(currentUid);
-    initGoals();
   } catch (e) {
     console.error(e);
     alert('目標の追加に失敗しました。');
@@ -952,9 +955,7 @@ async function deleteGoal(gid) {
   if (!confirm('この目標を削除しますか？')) return;
   if (!currentUid) return;
   try {
-    await deleteDoc(doc(db, 'users', currentUid, 'goals', gid));
-    await fetchGoals(currentUid);
-    initGoals();
+    await db.collection('users').doc(currentUid).collection('goals').doc(gid).delete();
   } catch (e) {
     console.error(e);
     alert('削除に失敗しました。');
@@ -1141,7 +1142,7 @@ async function saveEmail() {
   const u = auth.currentUser;
   if (!u) return;
   try {
-    await updateEmail(u, val);
+    await u.updateEmail(val);
     document.getElementById('currentEmail').textContent = val;
     document.getElementById('newEmailInput').value = '';
     alert('メールアドレスを更新しました！');
@@ -1191,7 +1192,8 @@ function changeEmail() {
   const val = prompt(`現在のメールアドレス: ${current}\n新しいメールアドレスを入力してください:`);
   if (!val || !val.trim()) return;
   if (!auth.currentUser) return;
-  updateEmail(auth.currentUser, val.trim())
+  auth.currentUser
+    .updateEmail(val.trim())
     .then(() => alert('メールアドレスを更新しました！'))
     .catch(() => alert('更新に失敗しました。再ログイン後にお試しください。'));
 }
