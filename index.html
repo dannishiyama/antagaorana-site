@@ -32,6 +32,15 @@
   --line-soft:rgba(70,98,70,.12);
   --btn-outline:rgba(70,98,70,.25);
   --bd:#354835;
+
+  /* Tune mode (local preview only; values saved in localStorage) */
+  --tune-hero-pad-top:0px;
+  --tune-hero-pad-bottom:0px;
+  --tune-hero-gap:0px;
+  --tune-logo-x:0px;
+  --tune-logo-y:0px;
+  --tune-desc-x:0px;
+  --tune-desc-y:0px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;background:#f4f1ea}
@@ -65,8 +74,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   overflow-x:clip;
   overflow-y:visible;
   isolation:isolate;
-  padding-top:160px;
-  padding-bottom:120px;
+  padding-top:calc(160px + var(--tune-hero-pad-top));
+  padding-bottom:calc(120px + var(--tune-hero-pad-bottom));
   padding-left:7vw;
   padding-right:7vw;
   box-sizing:border-box;
@@ -94,7 +103,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:72px;
+  gap:calc(72px + var(--tune-hero-gap));
 }
 .hero-visual{
   flex:0 1 46%;
@@ -155,7 +164,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   height:auto;
   opacity:.92;
   position:relative;
-  transform:translateX(-38px);
+  transform:
+    translateX(calc(-38px + var(--tune-logo-x)))
+    translateY(var(--tune-logo-y));
   filter:brightness(.98) saturate(.92);
   background:transparent;
 }
@@ -181,6 +192,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   display:flex;
   flex-direction:column;
   align-items:flex-start;
+  transform:
+    translateX(var(--tune-desc-x))
+    translateY(var(--tune-desc-y));
 }
 .hero-desc-head{
   width:100%;
@@ -424,6 +438,91 @@ section{padding:88px 5%}
   .msg-person{text-align:center}
   .msg-person .msg-tags{justify-content:center}
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Tune Mode UI (dev-only)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+body.tune-mode .hero-visual,
+body.tune-mode .hero-desc{outline:1px dashed rgba(255,255,255,.32);outline-offset:10px}
+body.tune-mode .hero-logo-img.logo-calligraphy{outline:1px dashed rgba(216,177,90,.55);outline-offset:12px}
+
+.tune-fab{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:9999;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(47,58,47,.92);
+  color:rgba(255,255,255,.92);
+  border:1px solid rgba(255,255,255,.16);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.tune-panel{
+  position:fixed;
+  right:14px;
+  bottom:62px;
+  z-index:9999;
+  width:min(360px,92vw);
+  background:rgba(244,241,234,.98);
+  border:1px solid rgba(70,98,70,.18);
+  border-radius:16px;
+  box-shadow:0 18px 50px rgba(47,58,47,.22);
+  padding:14px 14px 12px;
+  display:none;
+}
+.tune-panel.active{display:block}
+.tune-h{
+  font-size:12px;
+  font-weight:900;
+  color:var(--gd);
+  letter-spacing:.12em;
+  margin-bottom:10px;
+}
+.tune-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}
+.tune-row label{font-size:11px;font-weight:700;color:var(--tm);letter-spacing:.06em}
+.tune-row input[type="range"]{flex:1}
+.tune-val{width:64px;text-align:right;font-size:11px;color:var(--tm);font-variant-numeric:tabular-nums}
+.tune-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.tune-btn{
+  flex:1;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(70,98,70,.22);
+  background:#fff;
+  color:var(--gd);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.06em;
+  cursor:pointer;
+}
+.tune-btn.primary{background:var(--g);border-color:transparent;color:#fff}
+.tune-note{margin-top:10px;font-size:11px;color:var(--ts);line-height:1.6}
+.tune-drag{
+  position:absolute;
+  inset:auto auto 10px 10px;
+  z-index:5;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.88);
+  background:rgba(47,58,47,.45);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  padding:6px 10px;
+  display:none;
+  user-select:none;
+  cursor:grab;
+}
+body.tune-mode .hero-visual .tune-drag,
+body.tune-mode .hero-desc .tune-drag{display:inline-flex}
 .msg-col-photo{text-align:center}
 .msg-photo-wrap{border-radius:26px;overflow:hidden;box-shadow:0 6px 22px rgba(47,58,47,.12)}
 .msg-photo-wrap img{width:100%;aspect-ratio:3/4;object-fit:cover}
@@ -927,6 +1026,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="hero-bg" aria-hidden="true" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important"></div>
   <div class="hero-content">
     <div class="hero-visual">
+      <div class="tune-drag" data-tune-drag="logo">ドラッグで位置調整</div>
       <div class="hero-mark" aria-label="ヒーローの書とメッセージ">
         <div class="hero-mark-top">生きる力を育む家庭教師</div>
         <div class="hero-logo-block">
@@ -938,6 +1038,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       </div>
     </div>
     <div class="hero-desc">
+      <div class="tune-drag" data-tune-drag="desc">ドラッグで位置調整</div>
       <div class="hero-desc-head">
         <span class="hero-desc-k">ABOUT</span>
         <h1 class="hero-desc-heading">比べられ、<br>責められ、<br><br>閉じこもってしまう<br>子どもたちへ</h1>
@@ -956,6 +1057,57 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     </div>
   </div>
 </section>
+
+<!-- Tune Mode UI -->
+<button class="tune-fab" id="tuneFab" type="button" aria-pressed="false">調整モード</button>
+<div class="tune-panel" id="tunePanel" aria-hidden="true">
+  <div class="tune-h">ヒーロー微調整（ドラッグ＋保存）</div>
+
+  <div class="tune-row">
+    <label for="tunePadTop">上余白</label>
+    <input id="tunePadTop" type="range" min="-120" max="240" step="2">
+    <div class="tune-val" id="tunePadTopVal"></div>
+  </div>
+  <div class="tune-row">
+    <label for="tunePadBottom">下余白</label>
+    <input id="tunePadBottom" type="range" min="-120" max="240" step="2">
+    <div class="tune-val" id="tunePadBottomVal"></div>
+  </div>
+  <div class="tune-row">
+    <label for="tuneGap">左右の間</label>
+    <input id="tuneGap" type="range" min="-80" max="160" step="2">
+    <div class="tune-val" id="tuneGapVal"></div>
+  </div>
+  <div class="tune-row">
+    <label for="tuneLogoX">ロゴX</label>
+    <input id="tuneLogoX" type="range" min="-160" max="160" step="1">
+    <div class="tune-val" id="tuneLogoXVal"></div>
+  </div>
+  <div class="tune-row">
+    <label for="tuneLogoY">ロゴY</label>
+    <input id="tuneLogoY" type="range" min="-160" max="160" step="1">
+    <div class="tune-val" id="tuneLogoYVal"></div>
+  </div>
+  <div class="tune-row">
+    <label for="tuneDescX">右X</label>
+    <input id="tuneDescX" type="range" min="-160" max="160" step="1">
+    <div class="tune-val" id="tuneDescXVal"></div>
+  </div>
+  <div class="tune-row">
+    <label for="tuneDescY">右Y</label>
+    <input id="tuneDescY" type="range" min="-160" max="160" step="1">
+    <div class="tune-val" id="tuneDescYVal"></div>
+  </div>
+
+  <div class="tune-btns">
+    <button class="tune-btn" id="tuneReset" type="button">リセット</button>
+    <button class="tune-btn primary" id="tuneCopy" type="button">CSSをコピー</button>
+  </div>
+  <div class="tune-note">
+    - 調整値はこのブラウザに保存されます（本番には影響しません）。<br>
+    - ロゴ/右ブロックは「ドラッグ」でも動かせます。
+  </div>
+</div>
 
 <!-- STATS -->
 <div class="stats">
@@ -1670,6 +1822,187 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   });
   drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
   window.addEventListener('resize',function(){ if(window.innerWidth>900) close(); });
+})();
+</script>
+
+<script>
+(function(){
+  var STORAGE_KEY='ago_tune_hero_v1';
+  var root=document.documentElement;
+
+  var props={
+    padTop:'--tune-hero-pad-top',
+    padBottom:'--tune-hero-pad-bottom',
+    gap:'--tune-hero-gap',
+    logoX:'--tune-logo-x',
+    logoY:'--tune-logo-y',
+    descX:'--tune-desc-x',
+    descY:'--tune-desc-y'
+  };
+
+  function el(id){ return document.getElementById(id); }
+  function setPx(k,n){ root.style.setProperty(k,String(Math.round(n))+'px'); }
+  function getPx(k){
+    var v=getComputedStyle(root).getPropertyValue(k);
+    var m=(v||'').match(/-?\d+/);
+    return m?parseInt(m[0],10):0;
+  }
+
+  function readState(){
+    try{
+      var raw=localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      var obj=JSON.parse(raw);
+      return obj&&typeof obj==='object'?obj:null;
+    }catch(e){ return null; }
+  }
+  function saveState(){
+    var st={
+      padTop:getPx(props.padTop),
+      padBottom:getPx(props.padBottom),
+      gap:getPx(props.gap),
+      logoX:getPx(props.logoX),
+      logoY:getPx(props.logoY),
+      descX:getPx(props.descX),
+      descY:getPx(props.descY)
+    };
+    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(st)); }catch(e){}
+    console.log('[tune] saved',st);
+  }
+  function applyState(st){
+    if(!st) return;
+    setPx(props.padTop,st.padTop||0);
+    setPx(props.padBottom,st.padBottom||0);
+    setPx(props.gap,st.gap||0);
+    setPx(props.logoX,st.logoX||0);
+    setPx(props.logoY,st.logoY||0);
+    setPx(props.descX,st.descX||0);
+    setPx(props.descY,st.descY||0);
+  }
+
+  function bindRange(rangeId,valId,cssVar){
+    var r=el(rangeId), v=el(valId);
+    if(!r||!v) return;
+    var cur=getPx(cssVar);
+    r.value=String(cur);
+    v.textContent=String(cur)+'px';
+    r.addEventListener('input',function(){
+      var n=parseInt(r.value,10)||0;
+      setPx(cssVar,n);
+      v.textContent=String(n)+'px';
+    });
+    r.addEventListener('change',saveState);
+  }
+
+  function cssSnippet(){
+    var st={
+      padTop:getPx(props.padTop),
+      padBottom:getPx(props.padBottom),
+      gap:getPx(props.gap),
+      logoX:getPx(props.logoX),
+      logoY:getPx(props.logoY),
+      descX:getPx(props.descX),
+      descY:getPx(props.descY)
+    };
+    return "/* tune export */\n:root{\n"
+      +"  --tune-hero-pad-top:"+st.padTop+"px;\n"
+      +"  --tune-hero-pad-bottom:"+st.padBottom+"px;\n"
+      +"  --tune-hero-gap:"+st.gap+"px;\n"
+      +"  --tune-logo-x:"+st.logoX+"px;\n"
+      +"  --tune-logo-y:"+st.logoY+"px;\n"
+      +"  --tune-desc-x:"+st.descX+"px;\n"
+      +"  --tune-desc-y:"+st.descY+"px;\n"
+      +"}\n";
+  }
+  function copyText(s){
+    if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(s);
+    var ta=document.createElement('textarea');
+    ta.value=s;
+    ta.style.position='fixed';
+    ta.style.left='-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    return Promise.resolve();
+  }
+
+  var fab=el('tuneFab');
+  var panel=el('tunePanel');
+  if(!fab||!panel) return;
+
+  function setMode(on){
+    document.body.classList.toggle('tune-mode',!!on);
+    panel.classList.toggle('active',!!on);
+    panel.setAttribute('aria-hidden',on?'false':'true');
+    fab.setAttribute('aria-pressed',on?'true':'false');
+  }
+
+  fab.addEventListener('click',function(){
+    var on=!document.body.classList.contains('tune-mode');
+    setMode(on);
+    if(on) saveState();
+  });
+
+  applyState(readState());
+  bindRange('tunePadTop','tunePadTopVal',props.padTop);
+  bindRange('tunePadBottom','tunePadBottomVal',props.padBottom);
+  bindRange('tuneGap','tuneGapVal',props.gap);
+  bindRange('tuneLogoX','tuneLogoXVal',props.logoX);
+  bindRange('tuneLogoY','tuneLogoYVal',props.logoY);
+  bindRange('tuneDescX','tuneDescXVal',props.descX);
+  bindRange('tuneDescY','tuneDescYVal',props.descY);
+
+  var reset=el('tuneReset');
+  if(reset) reset.addEventListener('click',function(){
+    applyState({padTop:0,padBottom:0,gap:0,logoX:0,logoY:0,descX:0,descY:0});
+    saveState();
+    ['tunePadTop','tunePadBottom','tuneGap','tuneLogoX','tuneLogoY','tuneDescX','tuneDescY'].forEach(function(id){
+      var input=el(id);
+      if(input) input.dispatchEvent(new Event('input',{bubbles:true}));
+    });
+  });
+  var copy=el('tuneCopy');
+  if(copy) copy.addEventListener('click',function(){
+    copyText(cssSnippet()).then(function(){
+      alert('CSSをコピーしました（貼り付けて保存できます）');
+    });
+  });
+
+  function makeDraggable(handleSel,xVar,yVar,xInputId,yInputId){
+    var h=document.querySelector(handleSel);
+    if(!h) return;
+    var startX=0,startY=0,baseX=0,baseY=0,active=false;
+
+    h.addEventListener('pointerdown',function(e){
+      if(!document.body.classList.contains('tune-mode')) return;
+      active=true;
+      h.style.cursor='grabbing';
+      if(h.setPointerCapture) h.setPointerCapture(e.pointerId);
+      startX=e.clientX; startY=e.clientY;
+      baseX=getPx(xVar); baseY=getPx(yVar);
+      e.preventDefault();
+    });
+    window.addEventListener('pointermove',function(e){
+      if(!active) return;
+      var dx=e.clientX-startX;
+      var dy=e.clientY-startY;
+      setPx(xVar,baseX+dx);
+      setPx(yVar,baseY+dy);
+      var xi=el(xInputId), yi=el(yInputId);
+      if(xi){ xi.value=String(getPx(xVar)); xi.dispatchEvent(new Event('input',{bubbles:true})); }
+      if(yi){ yi.value=String(getPx(yVar)); yi.dispatchEvent(new Event('input',{bubbles:true})); }
+    });
+    window.addEventListener('pointerup',function(){
+      if(!active) return;
+      active=false;
+      h.style.cursor='grab';
+      saveState();
+    });
+  }
+
+  makeDraggable('[data-tune-drag=\"logo\"]',props.logoX,props.logoY,'tuneLogoX','tuneLogoY');
+  makeDraggable('[data-tune-drag=\"desc\"]',props.descX,props.descY,'tuneDescX','tuneDescY');
 })();
 </script>
 
