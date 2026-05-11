@@ -444,6 +444,7 @@ section{padding:88px 5%}
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 body.design-mode *{caret-color:auto}
 body.design-mode [data-dm-id]{outline:1px dashed rgba(216,177,90,.25);outline-offset:6px}
+body.design-mode [data-dm-id]:hover{outline-color:rgba(216,177,90,.55)}
 body.design-mode [data-dm-id].dm-selected{outline:2px solid rgba(216,177,90,.85);outline-offset:8px}
 
 .dm-fab{
@@ -1052,12 +1053,20 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="dm-row"><label for="dmLineHeight">line-height</label><input id="dmLineHeight" type="range" min="10" max="320" step="1"><div class="dm-num" id="dmLineHeightVal"></div></div>
   <div class="dm-row"><label for="dmLetterSpacing">letter-spacing</label><input id="dmLetterSpacing" type="range" min="-2" max="20" step="0.1"><div class="dm-num" id="dmLetterSpacingVal"></div></div>
   <div class="dm-row"><label for="dmColor">color</label><input id="dmColor" type="color"><div class="dm-num" id="dmColorVal"></div></div>
+  <div class="dm-row"><label for="dmBg">background</label><input id="dmBg" type="color"><div class="dm-num" id="dmBgVal"></div></div>
+  <div class="dm-row"><label for="dmBorder">border</label><input id="dmBorder" type="color"><div class="dm-num" id="dmBorderVal"></div></div>
 
   <div class="dm-btns">
     <button class="dm-btn" id="dmEditable" type="button">テキストを直接編集</button>
     <button class="dm-btn" id="dmReset" type="button">リセット</button>
+    <button class="dm-btn" id="dmExportJson" type="button">export JSON</button>
+    <label class="dm-btn" style="text-align:center">
+      import JSON
+      <input id="dmImportJson" type="file" accept="application/json" style="display:none">
+    </label>
     <button class="dm-btn primary" id="dmCopyCss" type="button">CSS書き出し</button>
     <button class="dm-btn primary" id="dmApplyProd" type="button">本番へ反映</button>
+    <button class="dm-btn primary" id="dmConfirm" type="button">確定</button>
   </div>
   <div class="dm-note">
     - Design Mode中は、クリックで要素を選択できます。<br>
@@ -1784,54 +1793,139 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <script>
 (function(){
-  var STORAGE_KEY='ago_design_mode_v1';
+  var STORAGE_KEY='ago_design_mode_v2';
   var root=document.documentElement;
 
   function el(id){ return document.getElementById(id); }
   function clamp(n,min,max){ return Math.max(min,Math.min(max,n)); }
   function toNum(v,fallback){ var n=parseFloat(v); return isFinite(n)?n:fallback; }
+  function kebab(s){ return s.replace(/[A-Z]/g,function(m){return '-'+m.toLowerCase();}); }
+  function dmVar(id,prop){ return '--dm-'+id+'-'+prop; }
 
   function readState(){
     try{
       var raw=localStorage.getItem(STORAGE_KEY);
-      if(!raw) return { styles:{}, html:{}, meta:{} };
+      if(!raw) return { tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
       var obj=JSON.parse(raw);
-      if(!obj||typeof obj!=='object') return { styles:{}, html:{}, meta:{} };
-      obj.styles=obj.styles||{};
+      if(!obj||typeof obj!=='object') return { tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
+      obj.tokens=obj.tokens||{};
       obj.html=obj.html||{};
-      obj.meta=obj.meta||{};
+      obj.rules=obj.rules||{};
+      obj.meta=obj.meta||{version:2};
+      obj.meta.version=2;
       return obj;
     }catch(e){
-      return { styles:{}, html:{}, meta:{} };
+      return { tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
     }
   }
-  function saveState(st){
-    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(st)); }catch(e){}
-    console.log('[design-mode] saved',st);
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }catch(e){}
+    console.log('[design-mode] saved',state);
+  }
+
+  // Auto-tagging: make whole site selectable in design mode
+  function stableAutoId(node){
+    var parts=[];
+    var n=node;
+    for(var depth=0; n && depth<6; depth++){
+      var p=n.parentElement;
+      if(!p) break;
+      var idx=Array.prototype.indexOf.call(p.children,n);
+      parts.push(n.tagName.toLowerCase()+':'+idx);
+      n=p;
+    }
+    var key=parts.reverse().join('/');
+    var h=0;
+    for(var i=0;i<key.length;i++){ h=((h<<5)-h)+key.charCodeAt(i); h|=0; }
+    return 'AUTO_'+Math.abs(h);
+  }
+  function ensureAutoDmIds(){
+    // only tags that users want to edit frequently
+    var sel='h1,h2,h3,p,span,a,button,section,footer,header,nav,div,li,details,summary,input,textarea';
+    document.querySelectorAll(sel).forEach(function(n){
+      if(n.closest('#dmPanel')) return;
+      if(n.id==='dmFab') return;
+      if(n.id==='dmPanel') return;
+      if(n.hasAttribute('data-dm-id')) return;
+      // skip tiny wrappers
+      if(n.tagName==='DIV' && n.children.length===1 && (n.textContent||'').trim()==='') return;
+      n.setAttribute('data-dm-id', stableAutoId(n));
+      n.setAttribute('data-dm-auto','1');
+    });
   }
 
   var state=readState();
 
-  // Apply saved changes
-  function applyAll(){
-    Object.keys(state.styles).forEach(function(id){
-      var node=document.querySelector('[data-dm-id=\"'+CSS.escape(id)+'\"]');
-      if(!node) return;
-      var s=state.styles[id]||{};
-      Object.keys(s).forEach(function(k){
-        if(k==='translateX' || k==='translateY') return;
-        node.style[k]=s[k];
+  // Rules style element (token-based, no inline styles)
+  var liveRules=document.getElementById('dmRulesLive');
+  if(!liveRules){
+    liveRules=document.createElement('style');
+    liveRules.id='dmRulesLive';
+    document.head.appendChild(liveRules);
+  }
+
+  var SUPPORTED_PROPS=[
+    // layout
+    'margin-top','margin-bottom','padding-top','padding-bottom','gap','width','max-width','border-radius',
+    // text
+    'font-size','line-height','letter-spacing','opacity',
+    // colors
+    'color','background','border-color'
+  ];
+
+  function setToken(id, prop, value){
+    var vname=dmVar(id,prop);
+    if(value===null || value===undefined || value===''){
+      delete state.tokens[vname];
+      root.style.removeProperty(vname);
+    }else{
+      state.tokens[vname]=String(value);
+      root.style.setProperty(vname,String(value));
+    }
+    if(!state.rules[id]) state.rules[id]={};
+    state.rules[id][prop]=true;
+  }
+  function getToken(id, prop){
+    var vname=dmVar(id,prop);
+    var v=state.tokens[vname];
+    return typeof v==='string'?v:'';
+  }
+
+  function rebuildRulesCss(){
+    var lines=['/* Design Mode rules (generated) */'];
+    Object.keys(state.rules).forEach(function(id){
+      var props=state.rules[id]||{};
+      var decl=[];
+      Object.keys(props).forEach(function(prop){
+        if(!props[prop]) return;
+        if(SUPPORTED_PROPS.indexOf(prop)<0) return;
+        var cssProp=prop;
+        var v='var('+dmVar(id,prop)+')';
+        if(prop==='border-color') decl.push('  border-color: '+v+';');
+        else decl.push('  '+cssProp+': '+v+';');
       });
-      if(typeof s.translateX==='number' || typeof s.translateY==='number'){
-        var tx=toNum(s.translateX,0), ty=toNum(s.translateY,0);
-        node.style.translate=tx+'px '+ty+'px';
+      // drag translate tokens
+      if(props['translate-x'] || props['translate-y']){
+        decl.push('  translate: var('+dmVar(id,'translate-x')+') var('+dmVar(id,'translate-y')+');');
       }
+      if(!decl.length) return;
+      lines.push('[data-dm-id=\"'+id+'\"]{');
+      lines=lines.concat(decl);
+      lines.push('}');
+      lines.push('');
+    });
+    liveRules.textContent=lines.join('\n');
+  }
+
+  function applyAll(){
+    Object.keys(state.tokens).forEach(function(k){
+      root.style.setProperty(k,state.tokens[k]);
     });
     Object.keys(state.html).forEach(function(id){
       var node=document.querySelector('[data-dm-id=\"'+CSS.escape(id)+'\"]');
-      if(!node) return;
-      node.innerHTML=String(state.html[id]);
+      if(node) node.innerHTML=String(state.html[id]);
     });
+    rebuildRulesCss();
   }
   applyAll();
 
@@ -1849,7 +1943,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     panel.classList.toggle('active',!!on);
     panel.setAttribute('aria-hidden',on?'false':'true');
     fab.setAttribute('aria-pressed',on?'true':'false');
-    if(!on) clearSelection();
+    if(on){
+      ensureAutoDmIds();
+    }else{
+      clearSelection();
+    }
   }
   fab.addEventListener('click',function(){
     var on=!document.body.classList.contains('design-mode');
@@ -1862,6 +1960,16 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     selectedId=null;
     selectedIdEl.textContent='なし';
   }
+  function ensureHandle(node){
+    if(!node) return;
+    var h=node.querySelector(':scope > .dm-handle');
+    if(h) return;
+    h=document.createElement('div');
+    h.className='dm-handle';
+    h.textContent='ドラッグで移動';
+    if(!node.style.position) node.style.position='relative';
+    node.insertBefore(h,node.firstChild);
+  }
   function selectNode(node){
     if(selected) selected.classList.remove('dm-selected');
     selected=node;
@@ -1870,17 +1978,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     selectedIdEl.textContent=selectedId||'なし';
     ensureHandle(selected);
     syncControlsFromSelected();
-  }
-
-  function ensureHandle(node){
-    if(!node) return;
-    var h=node.querySelector(':scope > .dm-handle');
-    if(h) return;
-    h=document.createElement('div');
-    h.className='dm-handle';
-    h.textContent='ドラッグで移動';
-    node.style.position=node.style.position||'relative';
-    node.insertBefore(h,node.firstChild);
   }
 
   // Click-to-select
@@ -1894,99 +1991,105 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     selectNode(n);
   },true);
 
-  // Controls mapping (style property keys)
-  var controls=[
-    { id:'dmMarginTop',     val:'dmMarginTopVal',     key:'marginTop',      unit:'px' },
-    { id:'dmMarginBottom',  val:'dmMarginBottomVal',  key:'marginBottom',   unit:'px' },
-    { id:'dmPaddingTop',    val:'dmPaddingTopVal',    key:'paddingTop',     unit:'px' },
-    { id:'dmPaddingBottom', val:'dmPaddingBottomVal', key:'paddingBottom',  unit:'px' },
-    { id:'dmGap',           val:'dmGapVal',           key:'gap',            unit:'px' },
-    { id:'dmWidth',         val:'dmWidthVal',         key:'width',          unit:'px0' },      // 0 => ''
-    { id:'dmMaxWidth',      val:'dmMaxWidthVal',      key:'maxWidth',       unit:'px0' },
-    { id:'dmRadius',        val:'dmRadiusVal',        key:'borderRadius',   unit:'px' },
-    { id:'dmOpacity',       val:'dmOpacityVal',       key:'opacity',        unit:'pct01' },    // 0-100 -> 0-1
-    { id:'dmFontSize',      val:'dmFontSizeVal',      key:'fontSize',       unit:'px' },
-    { id:'dmLineHeight',    val:'dmLineHeightVal',    key:'lineHeight',     unit:'pct100' },  // 10-320 -> 0.10-3.20
-    { id:'dmLetterSpacing', val:'dmLetterSpacingVal', key:'letterSpacing',  unit:'px' },
-  ];
-
-  function getSavedForSelected(){
-    if(!selectedId) return null;
-    if(!state.styles[selectedId]) state.styles[selectedId]={};
-    return state.styles[selectedId];
+  function parseRgbToHex(col){
+    var m=String(col).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if(!m) return '';
+    var r=parseInt(m[1],10), g=parseInt(m[2],10), b=parseInt(m[3],10);
+    return '#'+[r,g,b].map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
   }
 
-  function readComputedAsNumber(node,key){
+  // Controls
+  var controls=[
+    { id:'dmMarginTop',     val:'dmMarginTopVal',     prop:'margin-top',      unit:'px' },
+    { id:'dmMarginBottom',  val:'dmMarginBottomVal',  prop:'margin-bottom',   unit:'px' },
+    { id:'dmPaddingTop',    val:'dmPaddingTopVal',    prop:'padding-top',     unit:'px' },
+    { id:'dmPaddingBottom', val:'dmPaddingBottomVal', prop:'padding-bottom',  unit:'px' },
+    { id:'dmGap',           val:'dmGapVal',           prop:'gap',             unit:'px' },
+    { id:'dmWidth',         val:'dmWidthVal',         prop:'width',           unit:'px0' }, // 0=>unset
+    { id:'dmMaxWidth',      val:'dmMaxWidthVal',      prop:'max-width',       unit:'px0' },
+    { id:'dmRadius',        val:'dmRadiusVal',        prop:'border-radius',   unit:'px' },
+    { id:'dmOpacity',       val:'dmOpacityVal',       prop:'opacity',         unit:'pct01' },
+    { id:'dmFontSize',      val:'dmFontSizeVal',      prop:'font-size',       unit:'px' },
+    { id:'dmLineHeight',    val:'dmLineHeightVal',    prop:'line-height',     unit:'pct100' },
+    { id:'dmLetterSpacing', val:'dmLetterSpacingVal', prop:'letter-spacing',  unit:'px' }
+  ];
+
+  function readComputedAsNumber(node, cssProp){
     var cs=getComputedStyle(node);
-    var v=cs[key];
-    if(!v) return 0;
-    if(key==='opacity') return Math.round(parseFloat(v)*100);
-    if(key==='lineHeight'){
-      // if "normal" fallback to 1.7
+    if(cssProp==='opacity') return Math.round(parseFloat(cs.opacity||'1')*100);
+    if(cssProp==='line-height'){
+      var v=cs.lineHeight;
       if(v==='normal') return 170;
       var n=parseFloat(v);
       if(String(v).indexOf('px')>0){
-        // px to ratio-ish (%*100) using font-size
         var fs=parseFloat(cs.fontSize)||16;
         return Math.round((n/fs)*100);
       }
       return Math.round(n*100);
     }
-    if(String(v).endsWith('px')) return Math.round(parseFloat(v));
-    return Math.round(parseFloat(v));
+    var v2=cs.getPropertyValue(cssProp);
+    var n2=parseFloat(v2);
+    if(!isFinite(n2)) return 0;
+    return Math.round(n2);
   }
 
   function syncControlsFromSelected(){
-    if(!selected) return;
-    var saved=getSavedForSelected()||{};
+    if(!selected||!selectedId) return;
     controls.forEach(function(c){
       var r=el(c.id), v=el(c.val);
       if(!r||!v) return;
-      var key=c.key;
-      var raw=saved[key];
+      var tok=getToken(selectedId,c.prop);
       var n;
-      if(typeof raw==='string' && raw.endsWith('px')) n=parseFloat(raw);
-      else if(typeof raw==='string' && raw!=='' && !isNaN(parseFloat(raw))) n=parseFloat(raw);
-      else n=readComputedAsNumber(selected,key);
+      if(tok){
+        if(c.unit==='pct01') n=Math.round(parseFloat(tok)*100);
+        else if(c.unit==='pct100') n=Math.round(parseFloat(tok)*100);
+        else n=parseFloat(tok);
+      }else{
+        n=readComputedAsNumber(selected,c.prop);
+      }
       r.value=String(n);
       v.textContent=String(n)+(c.unit==='pct01'?'%':c.unit==='pct100'?'%':'px');
     });
-    // color
-    var colorInput=el('dmColor');
-    var colorVal=el('dmColorVal');
-    if(colorInput&&colorVal){
-      var s=getSavedForSelected()||{};
-      var col=s.color || getComputedStyle(selected).color;
-      colorVal.textContent=col;
-      // try set to hex if possible
-      var m=String(col).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      if(m){
-        var r=parseInt(m[1],10), g=parseInt(m[2],10), b=parseInt(m[3],10);
-        var hex='#'+[r,g,b].map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
-        colorInput.value=hex;
-      }
+
+    var colInput=el('dmColor'), colVal=el('dmColorVal');
+    if(colInput&&colVal){
+      var colTok=getToken(selectedId,'color');
+      var col=colTok || getComputedStyle(selected).color;
+      colVal.textContent=colTok?colTok:col;
+      var hex=colTok && colTok[0]==='#'?colTok:parseRgbToHex(col);
+      if(hex) colInput.value=hex;
+    }
+    var bgInput=el('dmBg'), bgVal=el('dmBgVal');
+    if(bgInput&&bgVal){
+      var bgTok=getToken(selectedId,'background');
+      var bg=bgTok || getComputedStyle(selected).backgroundColor;
+      bgVal.textContent=bgTok?bgTok:bg;
+      var hex2=bgTok && bgTok[0]==='#'?bgTok:parseRgbToHex(bg);
+      if(hex2) bgInput.value=hex2;
+    }
+    var bdInput=el('dmBorder'), bdVal=el('dmBorderVal');
+    if(bdInput&&bdVal){
+      var bdTok=getToken(selectedId,'border-color');
+      var bd=bdTok || getComputedStyle(selected).borderColor;
+      bdVal.textContent=bdTok?bdTok:bd;
+      var hex3=bdTok && bdTok[0]==='#'?bdTok:parseRgbToHex(bd);
+      if(hex3) bdInput.value=hex3;
     }
   }
 
-  function applyControl(c, num){
-    if(!selected || !selectedId) return;
-    var s=getSavedForSelected();
-    var key=c.key;
+  function applyControl(c, n){
+    if(!selectedId) return;
     if(c.unit==='pct01'){
-      selected.style[key]=String(clamp(num,0,100)/100);
-      s[key]=selected.style[key];
+      setToken(selectedId,c.prop,String(clamp(n,0,100)/100));
     }else if(c.unit==='pct100'){
-      selected.style[key]=String(clamp(num,10,320)/100);
-      s[key]=selected.style[key];
+      setToken(selectedId,c.prop,String(clamp(n,10,320)/100));
     }else if(c.unit==='px0'){
-      if(num<=0){ selected.style[key]=''; delete s[key]; }
-      else { selected.style[key]=Math.round(num)+'px'; s[key]=selected.style[key]; }
+      if(n<=0) setToken(selectedId,c.prop,''); else setToken(selectedId,c.prop,Math.round(n)+'px');
     }else{
-      selected.style[key]=String(num)+(c.unit||'');
-      if(c.unit==='px') s[key]=Math.round(num)+'px';
-      else s[key]=selected.style[key];
+      setToken(selectedId,c.prop,Math.round(n)+(c.unit||''));
     }
-    saveState(state);
+    rebuildRulesCss();
+    saveState();
   }
 
   controls.forEach(function(c){
@@ -1999,26 +2102,28 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     });
   });
 
-  // Color
-  var colorInput=el('dmColor');
-  if(colorInput){
-    colorInput.addEventListener('input',function(){
-      if(!selected||!selectedId) return;
-      selected.style.color=colorInput.value;
-      var s=getSavedForSelected();
-      s.color=colorInput.value;
-      var cv=el('dmColorVal'); if(cv) cv.textContent=colorInput.value;
-      saveState(state);
+  // color pickers
+  function bindColor(inputId,valId,prop){
+    var inp=el(inputId), val=el(valId);
+    if(!inp||!val) return;
+    inp.addEventListener('input',function(){
+      if(!selectedId) return;
+      setToken(selectedId,prop,inp.value);
+      val.textContent=inp.value;
+      rebuildRulesCss();
+      saveState();
     });
   }
+  bindColor('dmColor','dmColorVal','color');
+  bindColor('dmBg','dmBgVal','background');
+  bindColor('dmBorder','dmBorderVal','border-color');
 
-  // contenteditable toggle
+  // contenteditable
   var editableBtn=el('dmEditable');
   if(editableBtn){
     editableBtn.addEventListener('click',function(){
       if(!selected||!selectedId) return;
-      var tag=(selected.tagName||'').toLowerCase();
-      var isText=/(h1|h2|h3|p|span|a|div)/.test(tag);
+      var isText=/^(h1|h2|h3|p|span|a|button|summary|div)$/.test((selected.tagName||'').toLowerCase());
       if(!isText){
         alert('この要素は直接編集できません（テキスト要素を選択してください）');
         return;
@@ -2026,87 +2131,97 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       var on=selected.getAttribute('contenteditable')==='true';
       if(on){
         selected.setAttribute('contenteditable','false');
-        selected.classList.remove('dm-editing');
         state.html[selectedId]=selected.innerHTML;
-        saveState(state);
+        saveState();
         alert('保存しました');
       }else{
         selected.setAttribute('contenteditable','true');
         selected.focus();
-        alert('編集後はもう一度「テキストを直接編集」を押して保存してください');
+        alert('編集後はもう一度押して保存してください');
       }
     });
   }
 
-  // Drag selected (translate)
+  // drag translate (token-based)
   var dragActive=false, startX=0, startY=0, baseX=0, baseY=0;
   window.addEventListener('pointerdown',function(e){
     if(!document.body.classList.contains('design-mode')) return;
-    if(!selected) return;
+    if(!selectedId) return;
     var h=e.target.closest('.dm-handle');
     if(!h) return;
     dragActive=true;
     startX=e.clientX; startY=e.clientY;
-    var s=getSavedForSelected();
-    baseX=toNum(s.translateX,0);
-    baseY=toNum(s.translateY,0);
-    h.style.cursor='grabbing';
+    baseX=toNum(getToken(selectedId,'translate-x'),0);
+    baseY=toNum(getToken(selectedId,'translate-y'),0);
     if(h.setPointerCapture) h.setPointerCapture(e.pointerId);
     e.preventDefault();
   },true);
   window.addEventListener('pointermove',function(e){
-    if(!dragActive||!selected||!selectedId) return;
+    if(!dragActive||!selectedId) return;
     var dx=e.clientX-startX;
     var dy=e.clientY-startY;
     var nx=Math.round(baseX+dx);
     var ny=Math.round(baseY+dy);
-    selected.style.translate=nx+'px '+ny+'px';
-    var s=getSavedForSelected();
-    s.translateX=nx; s.translateY=ny;
+    setToken(selectedId,'translate-x',nx+'px');
+    setToken(selectedId,'translate-y',ny+'px');
+    if(!state.rules[selectedId]) state.rules[selectedId]={};
+    state.rules[selectedId]['translate-x']=true;
+    state.rules[selectedId]['translate-y']=true;
+    rebuildRulesCss();
   },true);
   window.addEventListener('pointerup',function(){
     if(!dragActive) return;
     dragActive=false;
-    saveState(state);
+    saveState();
   },true);
 
-  // Reset selected
+  // reset selected
   var resetBtn=el('dmReset');
   if(resetBtn){
     resetBtn.addEventListener('click',function(){
-      if(!selected||!selectedId) return;
-      selected.removeAttribute('style');
-      selected.style.translate='';
-      delete state.styles[selectedId];
+      if(!selectedId) return;
+      // remove tokens for selected id
+      Object.keys(state.tokens).forEach(function(k){
+        if(k.indexOf('--dm-'+selectedId+'-')===0){
+          root.style.removeProperty(k);
+          delete state.tokens[k];
+        }
+      });
       delete state.html[selectedId];
-      saveState(state);
+      delete state.rules[selectedId];
+      rebuildRulesCss();
+      saveState();
       syncControlsFromSelected();
       alert('リセットしました');
     });
   }
 
-  function exportCss(){
-    var lines=[];
-    Object.keys(state.styles).forEach(function(id){
-      var s=state.styles[id]||{};
-      var decl=[];
-      Object.keys(s).forEach(function(k){
-        if(k==='translateX' || k==='translateY') return;
-        decl.push('  '+k.replace(/[A-Z]/g,function(m){return '-'+m.toLowerCase();})+': '+s[k]+';');
-      });
-      if(typeof s.translateX==='number' || typeof s.translateY==='number'){
-        var tx=toNum(s.translateX,0), ty=toNum(s.translateY,0);
-        decl.push('  translate: '+tx+'px '+ty+'px;');
-      }
-      if(!decl.length) return;
-      lines.push('[data-dm-id=\"'+id+'\"]{');
-      lines=lines.concat(decl);
-      lines.push('}');
-      lines.push('');
+  function exportCssTokens(){
+    var lines=['/* Design Mode export (tokens + rules) */',''];
+    lines.push(':root{');
+    Object.keys(state.tokens).sort().forEach(function(k){
+      lines.push('  '+k+': '+state.tokens[k]+';');
     });
-    return '/* Design Mode export */\n'+lines.join('\n');
+    lines.push('}');
+    lines.push('');
+    lines.push(liveRules.textContent||'');
+    return lines.join('\n');
   }
 
+  function exportJson(){
+    return JSON.stringify(state,null,2);
+  }
+  function downloadFile(filename, content, mime){
+    var blob=new Blob([content],{type:mime||'text/plain'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;
+    a.download=filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); },500);
+  }
   function copyText(s){
     if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(s);
     var ta=document.createElement('textarea');
@@ -2120,40 +2235,85 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return Promise.resolve();
   }
 
-  var copyCssBtn=el('dmCopyCss');
-  if(copyCssBtn){
-    copyCssBtn.addEventListener('click',function(){
-      var css=exportCss();
-      copyText(css).then(function(){ alert('CSSを書き出してコピーしました'); });
+  // export/import
+  el('dmExportJson')&&el('dmExportJson').addEventListener('click',function(){
+    downloadFile('design-mode-export.json',exportJson(),'application/json');
+    alert('JSONを書き出しました');
+  });
+  var importEl=el('dmImportJson');
+  if(importEl){
+    importEl.addEventListener('change',function(){
+      var f=importEl.files&&importEl.files[0];
+      if(!f) return;
+      var reader=new FileReader();
+      reader.onload=function(){
+        try{
+          var obj=JSON.parse(String(reader.result||'{}'));
+          if(!obj||typeof obj!=='object') throw new Error('invalid');
+          if(!obj.tokens) throw new Error('tokens missing');
+          state=obj;
+          saveState();
+          applyAll();
+          alert('import完了');
+        }catch(e){
+          alert('JSONの読み込みに失敗しました');
+        }
+        importEl.value='';
+      };
+      reader.readAsText(f);
     });
   }
 
-  // "本番へ反映" = overrides styleタグを注入 + CSSコピー（Cursorに貼り付けられる）
-  var applyBtn=el('dmApplyProd');
-  if(applyBtn){
-    applyBtn.addEventListener('click',function(){
-      var css=exportCss();
-      var stEl=document.getElementById('dmOverrides');
-      if(!stEl){
-        stEl=document.createElement('style');
-        stEl.id='dmOverrides';
-        document.head.appendChild(stEl);
-      }
-      stEl.textContent=css;
-      copyText(css).then(function(){
-        alert('本番反映用CSSを適用しました（このブラウザ内）\n同じCSSをコピーしたので、index.htmlにも貼り付けて確定できます。');
-      });
-    });
-  }
+  // css export/copy
+  el('dmCopyCss')&&el('dmCopyCss').addEventListener('click',function(){
+    var css=exportCssTokens();
+    copyText(css).then(function(){ alert('CSSを書き出してコピーしました'); });
+  });
 
-  // Auto-select hero logo first when mode is enabled (helps beginners)
+  // apply (browser-only) by injecting persisted styles
+  el('dmApplyProd')&&el('dmApplyProd').addEventListener('click',function(){
+    var css=exportCssTokens();
+    var stEl=document.getElementById('dmOverrides');
+    if(!stEl){
+      stEl=document.createElement('style');
+      stEl.id='dmOverrides';
+      document.head.appendChild(stEl);
+    }
+    stEl.textContent=css;
+    copyText(css).then(function(){
+      alert('このブラウザ内で本番相当の見た目に適用しました。\n同じCSSもコピーしました。');
+    });
+  });
+
+  // confirm: download updated html with embedded css
+  el('dmConfirm')&&el('dmConfirm').addEventListener('click',function(){
+    var css=exportCssTokens();
+    // ensure persisted style blocks exist in DOM for downloaded html
+    var t=document.getElementById('dmPersisted');
+    if(!t){
+      t=document.createElement('style');
+      t.id='dmPersisted';
+      t.textContent=css;
+      document.head.appendChild(t);
+    }else{
+      t.textContent=css;
+    }
+    var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+    downloadFile('index.designmode.html',html,'text/html');
+    downloadFile('design-mode.css',css,'text/css');
+    downloadFile('design-mode-export.json',exportJson(),'application/json');
+    alert('確定用ファイルを書き出しました（ダウンロード）\nindex.designmode.html を index.html に置き換えると本番反映できます。');
+  });
+
+  // Auto-pick hero logo first when mode enabled
   var autoPickDone=false;
   fab.addEventListener('click',function(){
     if(autoPickDone) return;
     autoPickDone=true;
     setTimeout(function(){
       if(!document.body.classList.contains('design-mode')) return;
-      var n=document.querySelector('[data-dm-id=\"HERO_LOGO\"]');
+      ensureAutoDmIds();
+      var n=document.querySelector('[data-dm-id=\"HERO_LOGO\"]') || document.querySelector('[data-dm-id]');
       if(n) selectNode(n);
     },0);
   });
