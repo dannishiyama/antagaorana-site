@@ -465,7 +465,7 @@ body.design-mode [data-dm-id]:hover{outline-color:rgba(216,177,90,.55)}
 body.design-mode [data-dm-id].dm-selected{outline:2px solid rgba(216,177,90,.85);outline-offset:8px}
 
 .dm-fab{
-  position:fixed;right:14px;bottom:14px;z-index:9999;
+  position:fixed;left:16px;bottom:16px;z-index:999999;
   display:inline-flex;align-items:center;justify-content:center;
   gap:8px;padding:10px 14px;border-radius:999px;
   background:rgba(47,58,47,.92);color:rgba(255,255,255,.92);
@@ -473,46 +473,89 @@ body.design-mode [data-dm-id].dm-selected{outline:2px solid rgba(216,177,90,.85)
   font-size:12px;font-weight:800;letter-spacing:.08em;
   cursor:pointer;
 }
-.dm-panel{
-  position:fixed;right:14px;bottom:62px;z-index:9999;
-  width:min(420px,92vw);
+.dm-panel.design-mode-panel,
+.design-mode-panel.dm-panel{
+  position:fixed;top:16px;right:16px;bottom:auto;left:auto;
+  width:340px;max-width:calc(100vw - 32px);
+  max-height:90vh;
+  overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;
+  z-index:999999;
   background:rgba(244,241,234,.98);
   border:1px solid rgba(70,98,70,.18);
-  border-radius:16px;
+  border-radius:20px;
   box-shadow:0 18px 50px rgba(47,58,47,.22);
-  padding:14px 14px 12px;
+  padding:18px;
   display:none;
 }
 .dm-panel.active{display:block}
-.dm-h{font-size:12px;font-weight:900;color:var(--gd);letter-spacing:.12em;margin-bottom:10px}
-.dm-sub{font-size:11px;font-weight:800;color:var(--tm);letter-spacing:.06em;margin:10px 0 6px}
-.dm-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}
-.dm-row label{font-size:11px;font-weight:700;color:var(--tm);letter-spacing:.06em;min-width:88px}
-.dm-row input[type="range"]{flex:1}
-.dm-row input[type="color"]{width:38px;height:30px;border:none;background:none;padding:0}
-.dm-row .dm-num{width:72px;text-align:right;font-size:11px;color:var(--tm);font-variant-numeric:tabular-nums}
-.dm-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.dm-h{font-size:12px;font-weight:900;color:var(--gd);letter-spacing:.12em;margin-bottom:8px}
+.dm-status{
+  font-size:11px;font-weight:700;color:var(--tm);letter-spacing:.04em;
+  padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.65);
+  border:1px solid rgba(70,98,70,.12);margin-bottom:10px;line-height:1.45;
+}
+.dm-vp-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.dm-vp-btn{
+  flex:1;min-width:72px;padding:7px 8px;border-radius:10px;border:1px solid rgba(70,98,70,.22);
+  background:#fff;color:var(--gd);font-size:11px;font-weight:800;letter-spacing:.04em;cursor:pointer;
+}
+.dm-vp-btn.on{background:var(--g);border-color:transparent;color:#fff}
+.dm-empty{
+  font-size:12px;font-weight:700;color:var(--tm);line-height:1.7;padding:12px 4px;text-align:center;
+}
+.dm-acc{margin:6px 0;border:1px solid rgba(70,98,70,.14);border-radius:12px;background:rgba(255,255,255,.45)}
+.dm-acc>summary{
+  list-style:none;cursor:pointer;font-size:11px;font-weight:900;color:var(--gd);letter-spacing:.08em;
+  padding:10px 12px;user-select:none;
+}
+.dm-acc>summary::-webkit-details-marker{display:none}
+.dm-acc>summary::after{content:'＋';float:right;font-weight:900;opacity:.55}
+.dm-acc[open]>summary::after{content:'－'}
+.dm-acc .dm-acc-body{padding:0 10px 10px}
+.dm-sub{font-size:11px;font-weight:800;color:var(--tm);letter-spacing:.06em;margin:8px 0 4px}
+.dm-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0}
+.dm-row label{font-size:10px;font-weight:700;color:var(--tm);letter-spacing:.05em;min-width:76px}
+.dm-row input[type="range"]{flex:1;min-width:0}
+.dm-row input[type="color"]{width:36px;height:28px;border:none;background:none;padding:0;flex-shrink:0}
+.dm-row .dm-num{
+  flex:0 0 118px;max-width:118px;text-align:right;font-size:10px;color:var(--tm);
+  font-variant-numeric:tabular-nums;line-height:1.35;word-break:break-all;
+}
+.dm-swatch-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.dm-swatch{
+  width:26px;height:26px;border-radius:8px;border:1px solid rgba(47,58,47,.2);cursor:pointer;padding:0;
+}
+.dm-preset-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.dm-preset-row select{flex:1;min-width:0;font-size:11px;padding:6px;border-radius:8px;border:1px solid rgba(70,98,70,.22)}
+.dm-hero-quick{border-top:1px solid rgba(70,98,70,.12);margin-top:8px;padding-top:8px}
+.dm-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .dm-btn{
-  flex:1;padding:10px 12px;border-radius:12px;
+  flex:1;min-width:120px;padding:9px 10px;border-radius:12px;
   border:1px solid rgba(70,98,70,.22);
   background:#fff;color:var(--gd);
-  font-size:12px;font-weight:800;letter-spacing:.06em;cursor:pointer;
+  font-size:11px;font-weight:800;letter-spacing:.05em;cursor:pointer;
 }
 .dm-btn.primary{background:var(--g);border-color:transparent;color:#fff}
-.dm-note{margin-top:10px;font-size:11px;color:var(--ts);line-height:1.6}
-.dm-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;color:var(--gd)}
+.dm-note{margin-top:8px;font-size:10px;color:var(--ts);line-height:1.55}
+.dm-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;color:var(--gd);margin-bottom:6px}
 .dm-tag code{font-size:11px;font-weight:800;color:var(--tm)}
 .dm-handle{
-  position:absolute;inset:auto auto 10px 10px;z-index:6;
-  font-size:11px;font-weight:900;letter-spacing:.08em;
-  color:rgba(255,255,255,.92);
-  background:rgba(47,58,47,.52);
-  border:1px solid rgba(255,255,255,.18);
+  position:absolute;inset:auto auto 8px 8px;z-index:8;
+  font-size:10px;font-weight:900;letter-spacing:.06em;
+  color:rgba(255,255,255,.95);
+  background:rgba(47,58,47,.72);
+  border:1px solid rgba(255,255,255,.22);
   border-radius:999px;padding:6px 10px;
-  user-select:none;cursor:grab;
-  display:none;
+  user-select:none;cursor:grab;touch-action:none;
+  display:none;pointer-events:auto;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
 }
+.dm-handle:active{cursor:grabbing}
 body.design-mode .dm-selected > .dm-handle{display:inline-flex}
+body.design-mode.dm-dragging .dm-selected{transition:none !important}
+body.design-mode.dm-dragging .dm-selected *{transition:none !important}
+body.design-mode [data-dm-id][contenteditable="true"]{outline:2px solid rgba(216,177,90,.55);outline-offset:4px}
 .msg-col-photo{text-align:center}
 .msg-photo-wrap{border-radius:26px;overflow:hidden;box-shadow:0 6px 22px rgba(47,58,47,.12)}
 .msg-photo-wrap img{width:100%;aspect-ratio:3/4;object-fit:cover}
@@ -1012,7 +1055,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </div>
 
 <!-- HERO（背景は .hero / .hero-bg 二重指定＋インラインで本番テーマ上書き対策） -->
-<section class="hero" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important">
+<section class="hero" data-dm-id="HERO_SECTION" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important">
   <div class="hero-bg" aria-hidden="true" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important"></div>
   <div class="hero-content">
     <div class="hero-visual" data-dm-id="HERO_LEFT">
@@ -1032,13 +1075,13 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、<br>責められ、<br><br>閉じこもってしまう<br>子どもたちへ</h1>
       </div>
       <p class="hero-desc-body" data-dm-id="HERO_BODY">信頼と希望を、もう一度届けたい。</p>
-      <div class="hero-kometa">
+      <div class="hero-kometa" data-dm-id="HERO_KOMETA">
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><br><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
         <p>教育とは、<br><strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
         <p class="hero-kometa-closing">「あんたがおらなあかんねん！」</p>
         <p class="hero-kometa-more"><a href="#creed">理念（想いの土台）を読む →</a></p>
       </div>
-      <div class="hero-btns">
+      <div class="hero-btns" data-dm-id="HERO_BTNS">
         <a href="#contact" class="btn-prim">一度お話ししてみる</a>
         <a href="#services" class="btn-out">支援内容を見る</a>
       </div>
@@ -1048,49 +1091,100 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <!-- Design Mode UI -->
 <button class="dm-fab" id="dmFab" type="button" aria-pressed="false">Design Mode</button>
-<div class="dm-panel" id="dmPanel" aria-hidden="true">
-  <div class="dm-h">Design Mode（全体微調整）</div>
-  <div class="dm-tag">選択中: <code id="dmSelectedId">なし</code></div>
-
-  <div class="dm-sub">レイアウト</div>
-  <div class="dm-row"><label for="dmMarginTop">margin-top</label><input id="dmMarginTop" type="range" min="-200" max="240" step="1"><div class="dm-num" id="dmMarginTopVal"></div></div>
-  <div class="dm-row"><label for="dmMarginBottom">margin-bottom</label><input id="dmMarginBottom" type="range" min="-200" max="240" step="1"><div class="dm-num" id="dmMarginBottomVal"></div></div>
-  <div class="dm-row"><label for="dmPaddingTop">padding-top</label><input id="dmPaddingTop" type="range" min="-200" max="320" step="1"><div class="dm-num" id="dmPaddingTopVal"></div></div>
-  <div class="dm-row"><label for="dmPaddingBottom">padding-bottom</label><input id="dmPaddingBottom" type="range" min="-200" max="320" step="1"><div class="dm-num" id="dmPaddingBottomVal"></div></div>
-  <div class="dm-row"><label for="dmGap">gap</label><input id="dmGap" type="range" min="-120" max="240" step="1"><div class="dm-num" id="dmGapVal"></div></div>
-
-  <div class="dm-sub">サイズ</div>
-  <div class="dm-row"><label for="dmWidth">width</label><input id="dmWidth" type="range" min="0" max="1200" step="2"><div class="dm-num" id="dmWidthVal"></div></div>
-  <div class="dm-row"><label for="dmMaxWidth">max-width</label><input id="dmMaxWidth" type="range" min="0" max="1400" step="2"><div class="dm-num" id="dmMaxWidthVal"></div></div>
-  <div class="dm-row"><label for="dmRadius">radius</label><input id="dmRadius" type="range" min="0" max="64" step="1"><div class="dm-num" id="dmRadiusVal"></div></div>
-  <div class="dm-row"><label for="dmOpacity">opacity</label><input id="dmOpacity" type="range" min="0" max="100" step="1"><div class="dm-num" id="dmOpacityVal"></div></div>
-
-  <div class="dm-sub">テキスト</div>
-  <div class="dm-row"><label for="dmFontSize">font-size</label><input id="dmFontSize" type="range" min="8" max="64" step="1"><div class="dm-num" id="dmFontSizeVal"></div></div>
-  <div class="dm-row"><label for="dmLineHeight">line-height</label><input id="dmLineHeight" type="range" min="10" max="320" step="1"><div class="dm-num" id="dmLineHeightVal"></div></div>
-  <div class="dm-row"><label for="dmLetterSpacing">letter-spacing</label><input id="dmLetterSpacing" type="range" min="-2" max="20" step="0.1"><div class="dm-num" id="dmLetterSpacingVal"></div></div>
-  <div class="dm-row"><label for="dmColor">color</label><input id="dmColor" type="color"><div class="dm-num" id="dmColorVal"></div></div>
-  <div class="dm-row"><label for="dmBg">background</label><input id="dmBg" type="color"><div class="dm-num" id="dmBgVal"></div></div>
-  <div class="dm-row"><label for="dmBorder">border</label><input id="dmBorder" type="color"><div class="dm-num" id="dmBorderVal"></div></div>
-
-  <div class="dm-btns">
-    <button class="dm-btn" id="dmEditable" type="button">テキストを直接編集</button>
-    <button class="dm-btn" id="dmReset" type="button">リセット</button>
-    <button class="dm-btn" id="dmExportJson" type="button">export JSON</button>
-    <label class="dm-btn" style="text-align:center">
-      import JSON
-      <input id="dmImportJson" type="file" accept="application/json" style="display:none">
-    </label>
-    <button class="dm-btn primary" id="dmCopyCss" type="button">CSS書き出し</button>
-    <button class="dm-btn primary" id="dmApplyProd" type="button">本番へ反映</button>
-    <button class="dm-btn primary" id="dmConfirm" type="button">確定</button>
+<div class="dm-panel design-mode-panel" id="dmPanel" aria-hidden="true">
+  <div class="dm-h">Design Mode</div>
+  <div class="dm-status" id="dmStatus" aria-live="polite">● 未保存</div>
+  <div class="dm-vp-row" role="group" aria-label="プレビュー幅">
+    <button type="button" class="dm-vp-btn on" id="dmVpD" data-dm-vp="d">Desktop</button>
+    <button type="button" class="dm-vp-btn" id="dmVpT" data-dm-vp="t">Tablet</button>
+    <button type="button" class="dm-vp-btn" id="dmVpM" data-dm-vp="m">Mobile</button>
   </div>
+  <div class="dm-tag">選択: <code id="dmSelectedId">なし</code></div>
+
+  <div id="dmEmptyHint" class="dm-empty">編集したい要素をクリックしてください</div>
+
+  <div id="dmEditorBody" hidden>
+    <p class="dm-note" style="margin:0 0 8px">テキストは<strong>ダブルクリック</strong>で編集。Escで取消 / ⌘+Enterで保存。ドラッグは左下ハンドル（5px単位）。</p>
+
+    <details class="dm-acc" id="dmAccLayout"><summary>Layout</summary><div class="dm-acc-body">
+      <div class="dm-row"><label for="dmWidth">width</label><input id="dmWidth" type="range" min="0" max="1200" step="2"><div class="dm-num" id="dmWidthVal"></div></div>
+      <div class="dm-row"><label for="dmMaxWidth">max-width</label><input id="dmMaxWidth" type="range" min="0" max="1400" step="2"><div class="dm-num" id="dmMaxWidthVal"></div></div>
+      <div class="dm-row"><label for="dmRadius">radius</label><input id="dmRadius" type="range" min="0" max="64" step="1"><div class="dm-num" id="dmRadiusVal"></div></div>
+      <div class="dm-row"><label for="dmOpacity">opacity</label><input id="dmOpacity" type="range" min="0" max="100" step="1"><div class="dm-num" id="dmOpacityVal"></div></div>
+    </div></details>
+
+    <details class="dm-acc" id="dmAccTypography" open><summary>Typography</summary><div class="dm-acc-body">
+      <div class="dm-row"><label for="dmFontSize">font-size</label><input id="dmFontSize" type="range" min="8" max="96" step="1"><div class="dm-num" id="dmFontSizeVal"></div></div>
+      <div class="dm-row"><label for="dmLineHeight">line-height</label><input id="dmLineHeight" type="range" min="10" max="320" step="1"><div class="dm-num" id="dmLineHeightVal"></div></div>
+      <div class="dm-row"><label for="dmLetterSpacing">letter-spacing</label><input id="dmLetterSpacing" type="range" min="-2" max="20" step="0.1"><div class="dm-num" id="dmLetterSpacingVal"></div></div>
+    </div></details>
+
+    <details class="dm-acc" id="dmAccSpacing"><summary>Spacing</summary><div class="dm-acc-body">
+      <div class="dm-row"><label for="dmMarginTop">margin-top</label><input id="dmMarginTop" type="range" min="-200" max="240" step="1"><div class="dm-num" id="dmMarginTopVal"></div></div>
+      <div class="dm-row"><label for="dmMarginBottom">margin-bottom</label><input id="dmMarginBottom" type="range" min="-200" max="240" step="1"><div class="dm-num" id="dmMarginBottomVal"></div></div>
+      <div class="dm-row"><label for="dmPaddingTop">padding-top</label><input id="dmPaddingTop" type="range" min="-200" max="320" step="1"><div class="dm-num" id="dmPaddingTopVal"></div></div>
+      <div class="dm-row"><label for="dmPaddingBottom">padding-bottom</label><input id="dmPaddingBottom" type="range" min="-200" max="320" step="1"><div class="dm-num" id="dmPaddingBottomVal"></div></div>
+      <div class="dm-row"><label for="dmGap">gap</label><input id="dmGap" type="range" min="-120" max="240" step="1"><div class="dm-num" id="dmGapVal"></div></div>
+    </div></details>
+
+    <details class="dm-acc" id="dmAccColors"><summary>Colors</summary><div class="dm-acc-body">
+      <div class="dm-row"><label for="dmColor">color</label><input id="dmColor" type="color"><div class="dm-num" id="dmColorVal"></div></div>
+      <div class="dm-row"><label for="dmBg">background</label><input id="dmBg" type="color"><div class="dm-num" id="dmBgVal"></div></div>
+      <div class="dm-row"><label for="dmBorder">border</label><input id="dmBorder" type="color"><div class="dm-num" id="dmBorderVal"></div></div>
+      <div class="dm-sub">ブランド</div>
+      <div class="dm-swatch-row" id="dmBrandSwatches"></div>
+      <div class="dm-sub">最近使った色</div>
+      <div class="dm-swatch-row" id="dmRecentSwatches"></div>
+    </div></details>
+
+    <details class="dm-acc" id="dmAccAdvanced"><summary>Advanced</summary><div class="dm-acc-body">
+      <div class="dm-hero-quick" id="dmHeroQuick">
+        <div class="dm-sub">HERO クイック</div>
+        <div class="dm-row"><label for="dmHqLogoW">ロゴ幅</label><input id="dmHqLogoW" type="range" min="80" max="920" step="4"><div class="dm-num" id="dmHqLogoWVal"></div></div>
+        <div class="dm-row"><label for="dmHqLogoX">ロゴX</label><input id="dmHqLogoX" type="range" min="-120" max="120" step="1"><div class="dm-num" id="dmHqLogoXVal"></div></div>
+        <div class="dm-row"><label for="dmHqLogoY">ロゴY</label><input id="dmHqLogoY" type="range" min="-120" max="120" step="1"><div class="dm-num" id="dmHqLogoYVal"></div></div>
+        <div class="dm-row"><label for="dmHqTopY">上コピーY</label><input id="dmHqTopY" type="range" min="-80" max="80" step="1"><div class="dm-num" id="dmHqTopYVal"></div></div>
+        <div class="dm-row"><label for="dmHqBotY">下コピーY</label><input id="dmHqBotY" type="range" min="-80" max="80" step="1"><div class="dm-num" id="dmHqBotYVal"></div></div>
+        <div class="dm-row"><label for="dmHqRightW">右欄max-w</label><input id="dmHqRightW" type="range" min="280" max="900" step="4"><div class="dm-num" id="dmHqRightWVal"></div></div>
+        <div class="dm-row"><label for="dmHqH1Size">H1 size</label><input id="dmHqH1Size" type="range" min="12" max="72" step="1"><div class="dm-num" id="dmHqH1SizeVal"></div></div>
+        <div class="dm-row"><label for="dmHqH1Lh">H1行間</label><input id="dmHqH1Lh" type="range" min="100" max="220" step="1"><div class="dm-num" id="dmHqH1LhVal"></div></div>
+        <div class="dm-row"><label for="dmHqCtaY">CTA Y</label><input id="dmHqCtaY" type="range" min="-80" max="120" step="1"><div class="dm-num" id="dmHqCtaYVal"></div></div>
+        <div class="dm-row"><label for="dmHqSecMinH">ヒーロー高さ</label><input id="dmHqSecMinH" type="range" min="0" max="1200" step="8"><div class="dm-num" id="dmHqSecMinHVal"></div></div>
+        <p class="dm-note">H1の改行位置は本文をダブルクリック編集で &lt;br&gt; を調整してください。</p>
+      </div>
+      <div class="dm-sub">プリセット比較</div>
+      <div class="dm-preset-row">
+        <select id="dmPresetSelect" aria-label="プリセット"><option value="">（プリセットを選択）</option><option value="Hero-v1">Hero-v1</option><option value="Hero-v2">Hero-v2</option><option value="Hero-clean">Hero-clean</option><option value="Hero-minimal">Hero-minimal</option></select>
+        <button type="button" class="dm-btn" id="dmPresetLoad" style="flex:0">読込</button>
+      </div>
+      <div class="dm-preset-row">
+        <input id="dmPresetName" type="text" placeholder="名前" style="flex:1;min-width:0;padding:6px 8px;border-radius:8px;border:1px solid rgba(70,98,70,.22);font-size:11px">
+        <button type="button" class="dm-btn" id="dmPresetSave" style="flex:0">保存</button>
+      </div>
+      <div class="dm-btns" style="margin-top:8px">
+        <button class="dm-btn" id="dmReset" type="button">選択をリセット</button>
+        <button class="dm-btn" id="dmEditable" type="button" style="display:none" aria-hidden="true">編集補助</button>
+      </div>
+      <div class="dm-btns">
+        <button class="dm-btn" id="dmExportJson" type="button">JSON保存</button>
+        <label class="dm-btn" style="text-align:center;display:flex;align-items:center;justify-content:center">
+          import JSON
+          <input id="dmImportJson" type="file" accept="application/json" style="display:none">
+        </label>
+      </div>
+      <div class="dm-btns">
+        <button class="dm-btn primary" id="dmCopyCss" type="button">CSSコピー</button>
+        <button class="dm-btn primary" id="dmApplyProd" type="button">プレビュー適用</button>
+      </div>
+      <div class="dm-btns">
+        <button class="dm-btn primary" id="dmFinalCss" type="button">確定CSSを書き出す</button>
+        <button class="dm-btn primary" id="dmConfirm" type="button">HTML確定DL</button>
+      </div>
+    </div></details>
+  </div>
+
   <div class="dm-note">
-    - Design Mode中は、クリックで要素を選択できます。<br>
-    - 選択要素はドラッグで移動できます（translate）。<br>
-    - 変更はlocalStorageに保存され、通常時は一切表示されません。<br>
-    - export JSON は変更のある項目のみをセクション別（design-diff-v1）で出力します。import は従来の全量JSONにも対応します。
-  </div>
+    変更は自動で localStorage（ago_design_mode_v2）に保存されます。JSON保存は差分のみ（design-diff-v2・セクション内に d/t/m）。⌘Z / ⌘⇧Z で元に戻せます（最大20手）。</div>
 </div>
 
 <!-- STATS -->
@@ -1259,15 +1353,15 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </section>
 
 <!-- MESSAGE 挨拶 -->
-<section class="message" id="message">
+<section class="message" id="message" data-dm-id="MSG_SECTION">
   <div class="si">
-    <div class="stag">GREETING</div>
-    <h2 class="stitle">挨拶</h2>
-    <div class="msg-grid">
-      <div class="msg-people">
-        <div class="msg-person">
+    <div class="stag" data-dm-id="MSG_STAG">GREETING</div>
+    <h2 class="stitle" data-dm-id="MSG_TITLE">挨拶</h2>
+    <div class="msg-grid" data-dm-id="MSG_GRID">
+      <div class="msg-people" data-dm-id="MSG_PEOPLE">
+        <div class="msg-person" data-dm-id="MSG_PERSON_OKUBO">
           <a class="msg-photo-link" href="./okubo.html" aria-label="大久保 俊輝のメッセージへ">
-          <div class="msg-photo-wrap placeholder">
+          <div class="msg-photo-wrap placeholder" data-dm-id="MSG_PHOTO_OKUBO">
             <img src="./lp-assets/okubo-portrait.jpg?v=20260508a" alt="大久保 俊輝" loading="lazy" decoding="async" onerror="this.style.display='none'; this.closest('.msg-photo-wrap').classList.add('placeholder');">
           </div>
           </a>
@@ -1282,9 +1376,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <a class="msg-message-link" href="./okubo.html"><span class="sub">メッセージ</span>子どもと家庭に、静かな羅針盤を。</a>
         </div>
 
-        <div class="msg-person">
+        <div class="msg-person" data-dm-id="MSG_PERSON_NISHI">
           <a class="msg-photo-link" href="./nishiyama.html" aria-label="西山 弾のメッセージへ">
-          <div class="msg-photo-wrap">
+          <div class="msg-photo-wrap" data-dm-id="MSG_PHOTO_NISHI">
             <img src="./lp-assets/founder-portrait.png" alt="西山 弾" loading="lazy" decoding="async">
           </div>
           </a>
@@ -1305,13 +1399,13 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="testi" id="voice">
+<section class="testi" id="voice" data-dm-id="VOICE_SECTION">
   <div class="si">
-    <div class="stag">VOICES</div>
-    <h2 class="stitle">実際の声</h2>
-    <p class="slead">派手な言葉より、日々のなかで「少し楽になった」と感じた瞬間。<br>そんな記憶の断片を、いくつかだけ。</p>
-    <div class="t-grid">
-      <details class="t-card">
+    <div class="stag" data-dm-id="VOICE_STAG">VOICES</div>
+    <h2 class="stitle" data-dm-id="VOICE_TITLE">実際の声</h2>
+    <p class="slead" data-dm-id="VOICE_LEAD">派手な言葉より、日々のなかで「少し楽になった」と感じた瞬間。<br>そんな記憶の断片を、いくつかだけ。</p>
+    <div class="t-grid" data-dm-id="VOICE_GRID">
+      <details class="t-card" data-dm-id="VOICE_CARD_1">
         <summary class="t-summary">
           <div class="t-head">
             <span class="t-cat">家庭教師</span>
@@ -1335,7 +1429,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         </div>
       </details>
 
-      <details class="t-card">
+      <details class="t-card" data-dm-id="VOICE_CARD_2">
         <summary class="t-summary">
           <div class="t-head">
             <span class="t-cat">教育コンサル</span>
@@ -1356,7 +1450,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         </div>
       </details>
 
-      <details class="t-card">
+      <details class="t-card" data-dm-id="VOICE_CARD_3">
         <summary class="t-summary">
           <div class="t-head">
             <span class="t-cat">教育コンサル</span>
@@ -1485,12 +1579,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </section>
 
 <!-- FAQ -->
-<section class="faq" id="faq">
+<section class="faq" id="faq" data-dm-id="FAQ_SECTION">
   <div class="si">
-    <div class="stag">FAQ</div>
-    <h2 class="stitle">よくあるご質問</h2>
-    <p class="slead">いちばん大切にしたいのは、親御さんが「相談していい」と思えること。<br>ここでは、よくいただく不安に、できるだけ静かにお答えします。</p>
-    <div class="faq-list">
+    <div class="stag" data-dm-id="FAQ_STAG">FAQ</div>
+    <h2 class="stitle" data-dm-id="FAQ_TITLE">よくあるご質問</h2>
+    <p class="slead" data-dm-id="FAQ_LEAD">いちばん大切にしたいのは、親御さんが「相談していい」と思えること。<br>ここでは、よくいただく不安に、できるだけ静かにお答えします。</p>
+    <div class="faq-list" data-dm-id="FAQ_LIST">
       <div class="faq-item">
         <div class="faq-q">まだ相談するほどか分からない段階でも、大丈夫ですか。</div>
         <div class="faq-a">
@@ -1581,12 +1675,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </section>
 
 <!-- CTA -->
-<section class="cta" id="contact">
-  <div class="cta-inner">
-    <h2 class="cta-h">一緒に始めましょう。<br>お子様の可能性を、私たちと拓きませんか。</h2>
-    <p class="cta-lead">まずは無料相談から。「もう少し様子を見ようか」と思っているなら、まず話してみてください。<br>「話してよかった」と思っていただける40分を約束します。</p>
+<section class="cta" id="contact" data-dm-id="CTA_SECTION">
+  <div class="cta-inner" data-dm-id="CTA_INNER">
+    <h2 class="cta-h" data-dm-id="CTA_H">一緒に始めましょう。<br>お子様の可能性を、私たちと拓きませんか。</h2>
+    <p class="cta-lead" data-dm-id="CTA_LEAD">まずは無料相談から。「もう少し様子を見ようか」と思っているなら、まず話してみてください。<br>「話してよかった」と思っていただける40分を約束します。</p>
     <!-- 送信: FormSubmit（初回のみ info@ に届く確認メールで有効化が必要） -->
-    <div class="cta-form-wrap">
+    <div class="cta-form-wrap" data-dm-id="CTA_FORM_WRAP">
       <form id="contactForm" class="cta-form" action="https://formsubmit.co/info@antagaorana.com" method="POST">
         <input type="hidden" name="_subject" id="formSubject" value="【サイトフォーム】無料相談・お問い合わせ｜あんたがおらな">
         <input type="hidden" name="_next" value="/">
@@ -1672,32 +1766,32 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <span><a href="https://antagaorana.com/privacy-policy/" target="_blank" rel="noopener">プライバシーポリシー</a>に基づき、お問い合わせ対応のために個人情報を利用することに同意します。</span>
         </label>
 
-        <button type="submit" class="cta-submit">この内容で送信する</button>
+        <button type="submit" class="cta-submit" data-dm-id="CTA_SUBMIT">この内容で送信する</button>
         <p class="cta-form-note">送信後、初回のみ FormSubmit から info@antagaorana.com に確認メールが届きます（迷惑メールフォルダもご確認ください）。届いたメール内のリンクで有効化すると、その後フォーム送信がメールで届きます。</p>
       </form>
     </div>
-    <div class="cta-btns">
+    <div class="cta-btns" data-dm-id="CTA_SOCIAL_ROW">
       <a href="https://www.instagram.com/antagaorana" target="_blank" rel="noopener" class="btn-out" style="color:rgba(255,255,255,.9)">Instagramを見る</a>
     </div>
-    <p class="cta-sub">info@antagaorana.com ｜ antagaorana.com</p>
+    <p class="cta-sub" data-dm-id="CTA_SUB">info@antagaorana.com ｜ antagaorana.com</p>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer>
-  <div class="ft-inner">
-    <div>
-      <div class="ft-logo"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
-      <p class="ft-brand-b">理念「子どもの人生に味方を。」<br>© 2026 あんたがおらな株式会社</p>
+<footer data-dm-id="FT_SECTION">
+  <div class="ft-inner" data-dm-id="FT_INNER">
+    <div data-dm-id="FT_COL_BRAND">
+      <div class="ft-logo" data-dm-id="FT_LOGO"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
+      <p class="ft-brand-b" data-dm-id="FT_BRAND">理念「子どもの人生に味方を。」<br>© 2026 あんたがおらな株式会社</p>
     </div>
-    <div>
+    <div data-dm-id="FT_COL_SVC">
       <div class="ft-h">支援内容</div>
       <a class="ft-a" href="/?consult=mei#contact">芽（メイ）— 家庭教師</a>
       <a class="ft-a" href="/?consult=shirube#contact">導（シルべ）— 教育コンサル</a>
       <a class="ft-a" href="/?consult=haku#contact">拓（ハク）— コーチング</a>
       <a class="ft-a" href="/?consult=etsu#contact">越（エツ）— 社会貢献・海外体験</a>
     </div>
-    <div>
+    <div data-dm-id="FT_COL_CO">
       <div class="ft-h">会社情報</div>
       <a class="ft-a" href="#creed">理念</a>
       <a class="ft-a" href="#philosophy">社訓</a>
@@ -1828,70 +1922,128 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <script>
 (function(){
   var STORAGE_KEY='ago_design_mode_v2';
+  var PRESET_KEY='ago_dm_presets_v1';
+  var BRAND_COLORS=['#466246','#6f7f67','#a3ab97','#d8b15a','#f7f5ef','#2f3a2f'];
+  var HIST_MAX=20;
   var root=document.documentElement;
 
   function el(id){ return document.getElementById(id); }
   function clamp(n,min,max){ return Math.max(min,Math.min(max,n)); }
-  function toNum(v,fallback){ var n=parseFloat(v); return isFinite(n)?n:fallback; }
-  function kebab(s){ return s.replace(/[A-Z]/g,function(m){return '-'+m.toLowerCase();}); }
-  function dmVar(id,prop){ return '--dm-'+id+'-'+prop; }
+  function toNum(v,f){ var n=parseFloat(v); return isFinite(n)?n:f; }
+  function snap5(n){ return Math.round(n/5)*5; }
+
+  function dmVar(vp,id,prop){ return '--dm-'+vp+'-'+id+'-'+prop; }
+  function currentVp(){ return (state.meta&&state.meta.viewport)||'d'; }
+
+  var KNOWN_DM_PROPS=[
+    'margin-top','margin-bottom','padding-top','padding-bottom','gap','width','max-width','min-height','border-radius',
+    'font-size','line-height','letter-spacing','opacity','color','background','border-color','translate-x','translate-y'
+  ].sort(function(a,b){ return b.length-a.length; });
+
+  function parseTokenVarName(fullKey){
+    if(typeof fullKey!=='string' || fullKey.indexOf('--dm-')!==0) return null;
+    var rest=fullKey.slice(5);
+    var vp='d';
+    if(rest.length>2 && (rest[0]==='d'||rest[0]==='t'||rest[0]==='m') && rest[1]==='-'){
+      vp=rest[0];
+      rest=rest.slice(2);
+    }
+    for(var i=0;i<KNOWN_DM_PROPS.length;i++){
+      var p=KNOWN_DM_PROPS[i];
+      var suf='-'+p;
+      if(rest.length>suf.length && rest.slice(-suf.length)===suf){
+        return { vp:vp, id:rest.slice(0,-suf.length), prop:p };
+      }
+    }
+    return null;
+  }
+
+  function migrateLegacyTokenKey(k){
+    if(/^--dm-[dmt]-/.test(k)) return k;
+    if(k.indexOf('--dm-')!==0) return k;
+    var rest=k.slice(5);
+    for(var i=0;i<KNOWN_DM_PROPS.length;i++){
+      var p=KNOWN_DM_PROPS[i];
+      var suf='-'+p;
+      if(rest.length>suf.length && rest.slice(-suf.length)===suf){
+        return '--dm-d-'+rest;
+      }
+    }
+    return k;
+  }
+
+  function emptyLayer(){ return { tokens:{}, html:{}, rules:{} }; }
 
   function readState(){
     try{
       var raw=localStorage.getItem(STORAGE_KEY);
-      if(!raw) return { tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
+      if(!raw) return freshState();
       var obj=JSON.parse(raw);
-      if(!obj||typeof obj!=='object') return { tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
-      obj.tokens=obj.tokens||{};
-      obj.html=obj.html||{};
-      obj.rules=obj.rules||{};
-      obj.meta=obj.meta||{version:2};
-      obj.meta.version=2;
-      return obj;
-    }catch(e){
-      return { tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
-    }
-  }
-  function saveState(){
-    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }catch(e){}
-    console.log('[design-mode] saved',state);
+      if(!obj||typeof obj!=='object') return freshState();
+      if(obj.cache&&obj.cache.d&&obj.cache.t&&obj.cache.m){
+        obj.meta=obj.meta||{};
+        obj.meta.version=4;
+        obj.meta.viewport=obj.meta.viewport||'d';
+        obj.meta.recentColors=Array.isArray(obj.meta.recentColors)?obj.meta.recentColors:[];
+        obj.meta.saveStatus=obj.meta.saveStatus||'local';
+        return obj;
+      }
+      var ns=freshState();
+      ns.meta.recentColors=(obj.meta&&obj.meta.recentColors)||[];
+      var tk=obj.tokens||{};
+      Object.keys(tk).forEach(function(k){
+        var nk=migrateLegacyTokenKey(k);
+        ns.cache.d.tokens[nk]=tk[k];
+      });
+      ns.cache.d.html=obj.html||{};
+      ns.cache.d.rules=obj.rules||{};
+      rebuildRulesFromTokens(ns.cache.d);
+      return ns;
+    }catch(e){ return freshState(); }
   }
 
-  // Auto-tagging: make whole site selectable in design mode
-  function stableAutoId(node){
-    var parts=[];
-    var n=node;
-    for(var depth=0; n && depth<6; depth++){
-      var p=n.parentElement;
-      if(!p) break;
-      var idx=Array.prototype.indexOf.call(p.children,n);
-      parts.push(n.tagName.toLowerCase()+':'+idx);
-      n=p;
-    }
-    var key=parts.reverse().join('/');
-    var h=0;
-    for(var i=0;i<key.length;i++){ h=((h<<5)-h)+key.charCodeAt(i); h|=0; }
-    return 'AUTO_'+Math.abs(h);
+  function freshState(){
+    return{
+      meta:{ version:4, viewport:'d', saveStatus:'dirty', recentColors:[] },
+      cache:{ d:emptyLayer(), t:emptyLayer(), m:emptyLayer() }
+    };
   }
-  function ensureAutoDmIds(){
-    // only tags that users want to edit frequently
-    var sel='h1,h2,h3,p,span,a,button,section,footer,header,nav,div,li,details,summary,input,textarea';
-    document.querySelectorAll(sel).forEach(function(n){
-      if(n.closest('#dmPanel')) return;
-      if(n.id==='dmFab') return;
-      if(n.id==='dmPanel') return;
-      if(n.hasAttribute('data-dm-id')) return;
-      // skip tiny wrappers
-      if(n.tagName==='DIV' && n.children.length===1 && (n.textContent||'').trim()==='') return;
-      n.setAttribute('data-dm-id', stableAutoId(n));
-      n.setAttribute('data-dm-auto','1');
+
+  function rebuildRulesFromTokens(layer){
+    layer.rules=layer.rules||{};
+    Object.keys(layer.tokens).forEach(function(k){
+      var p=parseTokenVarName(k);
+      if(!p||p.vp!=='d'&&p.vp!=='t'&&p.vp!=='m') return;
+      if(!layer.rules[p.id]) layer.rules[p.id]={};
+      layer.rules[p.id][p.prop]=true;
     });
   }
 
   var state=readState();
+  bindActiveLayerRefs();
 
-  // Rules style element (token-based, no inline styles)
-  var liveRules=document.getElementById('dmRulesLive');
+  function bindActiveLayerRefs(){
+    var vp=currentVp();
+    var L=state.cache[vp];
+    state.tokens=L.tokens;
+    state.html=L.html;
+    state.rules=L.rules;
+  }
+
+  function flushVp(){
+    var vp=currentVp();
+    state.cache[vp].tokens=state.tokens;
+    state.cache[vp].html=state.html;
+    state.cache[vp].rules=state.rules;
+  }
+
+  function freshStateForImport(){
+    var s=freshState();
+    s.meta.viewport=state.meta.viewport||'d';
+    return s;
+  }
+
+  var liveRules=el('dmRulesLive');
   if(!liveRules){
     liveRules=document.createElement('style');
     liveRules.id='dmRulesLive';
@@ -1899,16 +2051,57 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
 
   var SUPPORTED_PROPS=[
-    // layout
-    'margin-top','margin-bottom','padding-top','padding-bottom','gap','width','max-width','border-radius',
-    // text
-    'font-size','line-height','letter-spacing','opacity',
-    // colors
-    'color','background','border-color'
+    'margin-top','margin-bottom','padding-top','padding-bottom','gap','width','max-width','min-height','border-radius',
+    'font-size','line-height','letter-spacing','opacity','color','background','border-color'
   ];
 
+  var hist=[], histIdx=-1;
+  var historySuspended=false;
+
+  function snapshotCache(){
+    flushVp();
+    return JSON.parse(JSON.stringify(state.cache));
+  }
+
+  function pushHistory(){
+    if(historySuspended) return;
+    var snap=snapshotCache();
+    hist=hist.slice(0,histIdx+1);
+    hist.push(snap);
+    if(hist.length>HIST_MAX) hist.shift();
+    histIdx=hist.length-1;
+  }
+
+  function applyHistorySnap(snap){
+    historySuspended=true;
+    state.cache=snap;
+    bindActiveLayerRefs();
+    applyAll();
+    syncVpButtons();
+    syncHeroQuick();
+    if(selectedId) syncControlsFromSelected();
+    updateSaveStatus(state.meta.saveStatus||'local');
+    historySuspended=false;
+  }
+
+  function undo(){
+    if(histIdx<=0) return;
+    histIdx--;
+    applyHistorySnap(JSON.parse(JSON.stringify(hist[histIdx])));
+    saveStateQuiet();
+    updateSaveStatus('local');
+  }
+  function redo(){
+    if(histIdx>=hist.length-1) return;
+    histIdx++;
+    applyHistorySnap(JSON.parse(JSON.stringify(hist[histIdx])));
+    saveStateQuiet();
+    updateSaveStatus('local');
+  }
+
   function setToken(id, prop, value){
-    var vname=dmVar(id,prop);
+    var vp=currentVp();
+    var vname=dmVar(vp,id,prop);
     if(value===null || value===undefined || value===''){
       delete state.tokens[vname];
       root.style.removeProperty(vname);
@@ -1919,58 +2112,104 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     if(!state.rules[id]) state.rules[id]={};
     state.rules[id][prop]=true;
   }
+
   function getToken(id, prop){
-    var vname=dmVar(id,prop);
+    var vname=dmVar(currentVp(),id,prop);
     var v=state.tokens[vname];
     return typeof v==='string'?v:'';
   }
 
   function rebuildRulesCss(){
-    var lines=['/* Design Mode rules (generated) */'];
-    Object.keys(state.rules).forEach(function(id){
-      var props=state.rules[id]||{};
-      var decl=[];
-      Object.keys(props).forEach(function(prop){
-        if(!props[prop]) return;
-        if(SUPPORTED_PROPS.indexOf(prop)<0) return;
-        var cssProp=prop;
-        var v='var('+dmVar(id,prop)+')';
-        if(prop==='border-color') decl.push('  border-color: '+v+';');
-        else decl.push('  '+cssProp+': '+v+';');
+    function blockFromLayer(layer,vp){
+      var lines=[];
+      Object.keys(layer.rules||{}).forEach(function(id){
+        var props=layer.rules[id]||{};
+        var decl=[];
+        Object.keys(props).forEach(function(prop){
+          if(!props[prop]) return;
+          if(SUPPORTED_PROPS.indexOf(prop)<0) return;
+          var v='var('+dmVar(vp,id,prop)+')';
+          if(prop==='border-color') decl.push('  border-color: '+v+';');
+          else decl.push('  '+prop+': '+v+';');
+        });
+        if(props['translate-x']||props['translate-y']){
+          decl.push('  translate: var('+dmVar(vp,id,'translate-x')+') var('+dmVar(vp,id,'translate-y')+');');
+        }
+        if(!decl.length) return;
+        lines.push('[data-dm-id="'+id+'"]{');
+        lines=lines.concat(decl);
+        lines.push('}');
+        lines.push('');
       });
-      // drag translate tokens
-      if(props['translate-x'] || props['translate-y']){
-        decl.push('  translate: var('+dmVar(id,'translate-x')+') var('+dmVar(id,'translate-y')+');');
-      }
-      if(!decl.length) return;
-      lines.push('[data-dm-id=\"'+id+'\"]{');
-      lines=lines.concat(decl);
-      lines.push('}');
-      lines.push('');
-    });
-    liveRules.textContent=lines.join('\n');
+      return lines.join('\n');
+    }
+    var parts=[];
+    var bD=blockFromLayer(state.cache.d,'d');
+    if(bD.trim()) parts.push(bD);
+    var bT=blockFromLayer(state.cache.t,'t');
+    if(bT.trim()) parts.push('@media (max-width:900px){\n'+bT+'}');
+    var bM=blockFromLayer(state.cache.m,'m');
+    if(bM.trim()) parts.push('@media (max-width:600px){\n'+bM+'}');
+    liveRules.textContent=parts.join('\n');
   }
 
   function applyAll(){
-    Object.keys(state.tokens).forEach(function(k){
-      root.style.setProperty(k,state.tokens[k]);
+    ['d','t','m'].forEach(function(vp){
+      var tk=state.cache[vp].tokens;
+      Object.keys(tk).forEach(function(k){
+        root.style.setProperty(k,tk[k]);
+      });
     });
-    Object.keys(state.html).forEach(function(id){
-      var node=document.querySelector('[data-dm-id=\"'+CSS.escape(id)+'\"]');
-      if(node) node.innerHTML=String(state.html[id]);
+    ['d','t','m'].forEach(function(vp){
+      var hm=state.cache[vp].html||{};
+      Object.keys(hm).forEach(function(id){
+        var node=document.querySelector('[data-dm-id="'+CSS.escape(id)+'"]');
+        if(node) node.innerHTML=String(hm[id]);
+      });
     });
     rebuildRulesCss();
   }
+
   applyAll();
 
-  // UI
+  function saveState(){
+    flushVp();
+    try{
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+    }catch(e){}
+    state.meta.saveStatus='local';
+    updateSaveStatus('local');
+  }
+  function saveStateQuiet(){
+    flushVp();
+    try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }catch(e){}
+  }
+
+  function updateSaveStatus(st){
+    var n=el('dmStatus');
+    if(!n) return;
+    if(st==='cssCopied') n.textContent='● CSSコピー済み';
+    else if(st==='local') n.textContent='● ローカル保存済み';
+    else n.textContent='● 未保存';
+  }
+
   var fab=el('dmFab');
   var panel=el('dmPanel');
   var selectedIdEl=el('dmSelectedId');
+  var dmEmptyHint=el('dmEmptyHint');
+  var dmEditorBody=el('dmEditorBody');
   if(!fab||!panel||!selectedIdEl) return;
 
   var selected=null;
   var selectedId=null;
+  var dragActive=false;
+  var editingNode=null;
+  var editSnapshotHtml=null;
+
+  function setUiEditorVisible(on){
+    if(dmEmptyHint) dmEmptyHint.style.display=on?'none':'';
+    if(dmEditorBody) dmEditorBody.hidden=!on;
+  }
 
   function setMode(on){
     document.body.classList.toggle('design-mode',!!on);
@@ -1979,42 +2218,54 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     fab.setAttribute('aria-pressed',on?'true':'false');
     if(on){
       ensureAutoDmIds();
+      buildSwatches();
+      if(!hist.length){ hist=[snapshotCache()]; histIdx=0; }
     }else{
+      endTextEdit(true);
       clearSelection();
     }
   }
+
   fab.addEventListener('click',function(){
     var on=!document.body.classList.contains('design-mode');
     setMode(on);
   });
 
+  panel.addEventListener('wheel',function(e){ e.stopPropagation(); },{passive:true});
+
   function clearSelection(){
+    endTextEdit(true);
     if(selected) selected.classList.remove('dm-selected');
     selected=null;
     selectedId=null;
     selectedIdEl.textContent='なし';
+    setUiEditorVisible(false);
   }
+
   function ensureHandle(node){
     if(!node) return;
     var h=node.querySelector(':scope > .dm-handle');
     if(h) return;
     h=document.createElement('div');
     h.className='dm-handle';
-    h.textContent='ドラッグで移動';
+    h.textContent='移動';
     if(!node.style.position) node.style.position='relative';
     node.insertBefore(h,node.firstChild);
   }
+
   function selectNode(node){
+    endTextEdit(true);
     if(selected) selected.classList.remove('dm-selected');
     selected=node;
     selectedId=node.getAttribute('data-dm-id');
     selected.classList.add('dm-selected');
     selectedIdEl.textContent=selectedId||'なし';
     ensureHandle(selected);
+    setUiEditorVisible(!!selectedId);
     syncControlsFromSelected();
+    syncHeroQuick();
   }
 
-  // Click-to-select
   document.addEventListener('click',function(ev){
     if(!document.body.classList.contains('design-mode')) return;
     if(panel.contains(ev.target) || fab.contains(ev.target)) return;
@@ -2025,6 +2276,82 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     selectNode(n);
   },true);
 
+  function isTextEditableNode(n){
+    return n && /^(h1|h2|h3|p|span|a|button|summary|div|li)$/.test((n.tagName||'').toLowerCase());
+  }
+
+  document.addEventListener('dblclick',function(ev){
+    if(!document.body.classList.contains('design-mode')) return;
+    if(panel.contains(ev.target) || fab.contains(ev.target)) return;
+    var n=ev.target.closest('[data-dm-id]');
+    if(!n||!isTextEditableNode(n)) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    selectNode(n);
+    beginTextEdit(n);
+  },true);
+
+  function beginTextEdit(node){
+    if(!node||!node.getAttribute('data-dm-id')) return;
+    endTextEdit(true);
+    editingNode=node;
+    editSnapshotHtml=node.innerHTML;
+    node.setAttribute('contenteditable','true');
+    node.focus();
+    updateSaveStatus('dirty');
+  }
+
+  function endTextEdit(revert){
+    if(!editingNode) return;
+    var id=editingNode.getAttribute('data-dm-id');
+    if(revert && editSnapshotHtml!=null) editingNode.innerHTML=editSnapshotHtml;
+    editingNode.setAttribute('contenteditable','false');
+    editingNode=null;
+    editSnapshotHtml=null;
+    if(id) delete state.html[id];
+  }
+
+  function commitTextEdit(){
+    if(!editingNode) return;
+    var id=editingNode.getAttribute('data-dm-id');
+    pushHistory();
+    state.html[id]=editingNode.innerHTML;
+    editingNode.setAttribute('contenteditable','false');
+    editingNode=null;
+    editSnapshotHtml=null;
+    saveState();
+  }
+
+  document.addEventListener('keydown',function(ev){
+    if(!document.body.classList.contains('design-mode')) return;
+    var meta=ev.metaKey||ev.ctrlKey;
+    if(meta && ev.key.toLowerCase()==='z' && !ev.shiftKey){
+      if(editingNode) return;
+      ev.preventDefault();
+      undo();
+      return;
+    }
+    if(meta && (ev.key.toLowerCase()==='z' && ev.shiftKey || ev.key.toLowerCase()==='y')){
+      if(editingNode) return;
+      ev.preventDefault();
+      redo();
+      return;
+    }
+    if(editingNode){
+      if(ev.key==='Escape'){
+        ev.preventDefault();
+        endTextEdit(true);
+        if(selectedId) syncControlsFromSelected();
+        return;
+      }
+      if(meta && ev.key==='Enter'){
+        ev.preventDefault();
+        commitTextEdit();
+        return;
+      }
+    }
+  },true);
+
   function parseRgbToHex(col){
     var m=String(col).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
     if(!m) return '';
@@ -2032,14 +2359,64 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return '#'+[r,g,b].map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
   }
 
-  // Controls
+  function pushRecentColor(hex){
+    if(!hex||hex[0]!=='#') return;
+    var a=state.meta.recentColors||[];
+    a=a.filter(function(x){ return x!==hex; });
+    a.unshift(hex);
+    state.meta.recentColors=a.slice(0,8);
+  }
+
+  function buildSwatches(){
+    var br=el('dmBrandSwatches'), rc=el('dmRecentSwatches');
+    if(br){
+      br.innerHTML='';
+      BRAND_COLORS.forEach(function(hex){
+        var b=document.createElement('button');
+        b.type='button';
+        b.className='dm-swatch';
+        b.style.background=hex;
+        b.title=hex;
+        b.addEventListener('click',function(){ applySwatch(hex,'color'); });
+        br.appendChild(b);
+      });
+    }
+    if(rc){
+      rc.innerHTML='';
+      (state.meta.recentColors||[]).forEach(function(hex){
+        var b=document.createElement('button');
+        b.type='button';
+        b.className='dm-swatch';
+        b.style.background=hex;
+        b.title=hex;
+        b.addEventListener('click',function(){ applySwatch(hex,'color'); });
+        rc.appendChild(b);
+      });
+    }
+  }
+
+  function applySwatch(hex, prop){
+    if(!selectedId) return;
+    pushHistory();
+    setToken(selectedId,prop,hex);
+    var inp=el(prop==='color'?'dmColor':'dmBg');
+    var v=el(prop==='color'?'dmColorVal':'dmBgVal');
+    if(inp) inp.value=hex;
+    if(v) v.textContent=hex;
+    rebuildRulesCss();
+    pushRecentColor(hex);
+    buildSwatches();
+    saveState();
+    syncControlsFromSelected();
+  }
+
   var controls=[
     { id:'dmMarginTop',     val:'dmMarginTopVal',     prop:'margin-top',      unit:'px' },
     { id:'dmMarginBottom',  val:'dmMarginBottomVal',  prop:'margin-bottom',   unit:'px' },
     { id:'dmPaddingTop',    val:'dmPaddingTopVal',    prop:'padding-top',     unit:'px' },
     { id:'dmPaddingBottom', val:'dmPaddingBottomVal', prop:'padding-bottom',  unit:'px' },
     { id:'dmGap',           val:'dmGapVal',           prop:'gap',             unit:'px' },
-    { id:'dmWidth',         val:'dmWidthVal',         prop:'width',           unit:'px0' }, // 0=>unset
+    { id:'dmWidth',         val:'dmWidthVal',         prop:'width',           unit:'px0' },
     { id:'dmMaxWidth',      val:'dmMaxWidthVal',      prop:'max-width',       unit:'px0' },
     { id:'dmRadius',        val:'dmRadiusVal',        prop:'border-radius',   unit:'px' },
     { id:'dmOpacity',       val:'dmOpacityVal',       prop:'opacity',         unit:'pct01' },
@@ -2067,6 +2444,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return Math.round(n2);
   }
 
+  function formatLiveCssLabel(prop, displayVal, unitHint){
+    if(prop==='font-size') return 'font-size: '+displayVal+'px';
+    if(prop==='line-height') return 'line-height: '+(parseInt(displayVal,10)/100).toFixed(2);
+    if(prop==='letter-spacing') return 'letter-spacing: '+displayVal+'px';
+    if(prop==='opacity') return 'opacity: '+(parseInt(displayVal,10)/100).toFixed(2);
+    return prop+': '+displayVal+(unitHint||'');
+  }
+
   function syncControlsFromSelected(){
     if(!selected||!selectedId) return;
     controls.forEach(function(c){
@@ -2078,18 +2463,20 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         if(c.unit==='pct01') n=Math.round(parseFloat(tok)*100);
         else if(c.unit==='pct100') n=Math.round(parseFloat(tok)*100);
         else n=parseFloat(tok);
-      }else{
-        n=readComputedAsNumber(selected,c.prop);
-      }
+      }else n=readComputedAsNumber(selected,c.prop);
       r.value=String(n);
-      v.textContent=String(n)+(c.unit==='pct01'?'%':c.unit==='pct100'?'%':'px');
+      var disp=String(n);
+      if(c.unit==='pct01') v.textContent=formatLiveCssLabel('opacity',disp);
+      else if(c.unit==='pct100') v.textContent=formatLiveCssLabel('line-height',disp);
+      else if(c.prop==='letter-spacing') v.textContent=formatLiveCssLabel('letter-spacing',disp);
+      else if(c.prop==='font-size') v.textContent=formatLiveCssLabel('font-size',disp);
+      else v.textContent=c.prop+': '+disp+(c.unit==='pct01'?'%':c.unit==='pct100'?'%':'px');
     });
-
     var colInput=el('dmColor'), colVal=el('dmColorVal');
     if(colInput&&colVal){
       var colTok=getToken(selectedId,'color');
       var col=colTok || getComputedStyle(selected).color;
-      colVal.textContent=colTok?colTok:col;
+      colVal.textContent=colTok?('color: '+colTok):('color: '+col);
       var hex=colTok && colTok[0]==='#'?colTok:parseRgbToHex(col);
       if(hex) colInput.value=hex;
     }
@@ -2097,7 +2484,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     if(bgInput&&bgVal){
       var bgTok=getToken(selectedId,'background');
       var bg=bgTok || getComputedStyle(selected).backgroundColor;
-      bgVal.textContent=bgTok?bgTok:bg;
+      bgVal.textContent=bgTok?('background: '+bgTok):('background: '+bg);
       var hex2=bgTok && bgTok[0]==='#'?bgTok:parseRgbToHex(bg);
       if(hex2) bgInput.value=hex2;
     }
@@ -2105,7 +2492,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     if(bdInput&&bdVal){
       var bdTok=getToken(selectedId,'border-color');
       var bd=bdTok || getComputedStyle(selected).borderColor;
-      bdVal.textContent=bdTok?bdTok:bd;
+      bdVal.textContent=bdTok?('border-color: '+bdTok):('border-color: '+bd);
       var hex3=bdTok && bdTok[0]==='#'?bdTok:parseRgbToHex(bd);
       if(hex3) bdInput.value=hex3;
     }
@@ -2113,15 +2500,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
   function applyControl(c, n){
     if(!selectedId) return;
-    if(c.unit==='pct01'){
-      setToken(selectedId,c.prop,String(clamp(n,0,100)/100));
-    }else if(c.unit==='pct100'){
-      setToken(selectedId,c.prop,String(clamp(n,10,320)/100));
-    }else if(c.unit==='px0'){
+    if(c.unit==='pct01') setToken(selectedId,c.prop,String(clamp(n,0,100)/100));
+    else if(c.unit==='pct100') setToken(selectedId,c.prop,String(clamp(n,10,320)/100));
+    else if(c.unit==='px0'){
       if(n<=0) setToken(selectedId,c.prop,''); else setToken(selectedId,c.prop,Math.round(n)+'px');
-    }else{
-      setToken(selectedId,c.prop,Math.round(n)+(c.unit||''));
-    }
+    }else setToken(selectedId,c.prop,Math.round(n)+(c.unit||''));
     rebuildRulesCss();
     saveState();
   }
@@ -2131,20 +2514,36 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     if(!r||!v) return;
     r.addEventListener('input',function(){
       var n=parseFloat(r.value);
-      v.textContent=String(n)+(c.unit==='pct01'?'%':c.unit==='pct100'?'%':'px');
+      if(c.unit==='pct01') v.textContent=formatLiveCssLabel('opacity',String(Math.round(n)));
+      else if(c.unit==='pct100') v.textContent=formatLiveCssLabel('line-height',String(Math.round(n)));
+      else if(c.prop==='letter-spacing') v.textContent=formatLiveCssLabel('letter-spacing',String(n));
+      else if(c.prop==='font-size') v.textContent=formatLiveCssLabel('font-size',String(Math.round(n)));
+      else v.textContent=c.prop+': '+String(Math.round(n))+'px';
       applyControl(c,n);
+      updateSaveStatus('dirty');
+    });
+    r.addEventListener('change',function(){
+      pushHistory();
+      saveState();
     });
   });
 
-  // color pickers
   function bindColor(inputId,valId,prop){
     var inp=el(inputId), val=el(valId);
     if(!inp||!val) return;
     inp.addEventListener('input',function(){
       if(!selectedId) return;
       setToken(selectedId,prop,inp.value);
-      val.textContent=inp.value;
+      val.textContent=prop+': '+inp.value;
       rebuildRulesCss();
+      pushRecentColor(inp.value);
+      buildSwatches();
+      saveState();
+      updateSaveStatus('dirty');
+    });
+    inp.addEventListener('change',function(){
+      if(!selectedId) return;
+      pushHistory();
       saveState();
     });
   }
@@ -2152,89 +2551,180 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   bindColor('dmBg','dmBgVal','background');
   bindColor('dmBorder','dmBorderVal','border-color');
 
-  // contenteditable
-  var editableBtn=el('dmEditable');
-  if(editableBtn){
-    editableBtn.addEventListener('click',function(){
-      if(!selected||!selectedId) return;
-      var isText=/^(h1|h2|h3|p|span|a|button|summary|div)$/.test((selected.tagName||'').toLowerCase());
-      if(!isText){
-        alert('この要素は直接編集できません（テキスト要素を選択してください）');
-        return;
-      }
-      var on=selected.getAttribute('contenteditable')==='true';
-      if(on){
-        selected.setAttribute('contenteditable','false');
-        state.html[selectedId]=selected.innerHTML;
-        saveState();
-        alert('保存しました');
+  function wireHeroQuick(id, prop, elId, valId, min, max, step, usePct100){
+    var r=el(elId), v=el(valId);
+    if(!r||!v) return;
+    function sync(){
+      var tok=getToken(id,prop);
+      var n;
+      if(tok){
+        if(usePct100) n=Math.round(parseFloat(tok)*100);
+        else n=parseFloat(tok);
       }else{
-        selected.setAttribute('contenteditable','true');
-        selected.focus();
-        alert('編集後はもう一度押して保存してください');
+        var node=document.querySelector('[data-dm-id="'+CSS.escape(id)+'"]');
+        n=node?readComputedAsNumber(node,prop):(usePct100?170:0);
       }
+      r.value=String(n);
+      v.textContent=prop+': '+(usePct100?(n/100).toFixed(2):(tok||n+'px'));
+    }
+    r.addEventListener('input',function(){
+      var n=parseFloat(r.value);
+      if(usePct100) setToken(id,prop,String(clamp(n,10,320)/100));
+      else setToken(id,prop,Math.round(n)+'px');
+      rebuildRulesCss();
+      saveState();
+      updateSaveStatus('dirty');
+      sync();
     });
+    r.addEventListener('change',function(){ pushHistory(); });
+    return sync;
   }
 
-  // drag translate (token-based)
-  var dragActive=false, startX=0, startY=0, baseX=0, baseY=0;
+  var syncHq=[];
+  (function(){
+    var h=wireHeroQuick('HERO_LOGO','width','dmHqLogoW','dmHqLogoWVal',80,920,4,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_LOGO','translate-x','dmHqLogoX','dmHqLogoXVal',-120,120,1,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_LOGO','translate-y','dmHqLogoY','dmHqLogoYVal',-120,120,1,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_TOP_COPY','translate-y','dmHqTopY','dmHqTopYVal',-80,80,1,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_BOTTOM_COPY','translate-y','dmHqBotY','dmHqBotYVal',-80,80,1,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_RIGHT','max-width','dmHqRightW','dmHqRightWVal',280,900,4,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_H1','font-size','dmHqH1Size','dmHqH1SizeVal',12,72,1,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_H1','line-height','dmHqH1Lh','dmHqH1LhVal',100,220,1,true);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_BTNS','translate-y','dmHqCtaY','dmHqCtaYVal',-80,120,1,false);
+    if(h) syncHq.push(h);
+    h=wireHeroQuick('HERO_SECTION','min-height','dmHqSecMinH','dmHqSecMinHVal',0,1200,8,false);
+    if(h) syncHq.push(h);
+  })();
+
+  function syncHeroQuick(){
+    syncHq.forEach(function(fn){ try{ fn(); }catch(e){} });
+  }
+
+  var dragPointerId=null;
   window.addEventListener('pointerdown',function(e){
     if(!document.body.classList.contains('design-mode')) return;
     if(!selectedId) return;
     var h=e.target.closest('.dm-handle');
     if(!h) return;
     dragActive=true;
+    document.body.classList.add('dm-dragging');
+    dragPointerId=e.pointerId;
     startX=e.clientX; startY=e.clientY;
     baseX=toNum(getToken(selectedId,'translate-x'),0);
     baseY=toNum(getToken(selectedId,'translate-y'),0);
     if(h.setPointerCapture) h.setPointerCapture(e.pointerId);
     e.preventDefault();
   },true);
+  var startX=0,startY=0,baseX=0,baseY=0;
   window.addEventListener('pointermove',function(e){
     if(!dragActive||!selectedId) return;
-    var dx=e.clientX-startX;
-    var dy=e.clientY-startY;
-    var nx=Math.round(baseX+dx);
-    var ny=Math.round(baseY+dy);
-    setToken(selectedId,'translate-x',nx+'px');
-    setToken(selectedId,'translate-y',ny+'px');
+    var dx=snap5(e.clientX-startX);
+    var dy=snap5(e.clientY-startY);
+    setToken(selectedId,'translate-x',Math.round(baseX+dx)+'px');
+    setToken(selectedId,'translate-y',Math.round(baseY+dy)+'px');
     if(!state.rules[selectedId]) state.rules[selectedId]={};
     state.rules[selectedId]['translate-x']=true;
     state.rules[selectedId]['translate-y']=true;
     rebuildRulesCss();
+    updateSaveStatus('dirty');
   },true);
-  window.addEventListener('pointerup',function(){
+  window.addEventListener('pointerup',function(e){
     if(!dragActive) return;
+    if(dragPointerId!=null && e.pointerId!==dragPointerId) return;
     dragActive=false;
+    dragPointerId=null;
+    document.body.classList.remove('dm-dragging');
+    pushHistory();
     saveState();
   },true);
 
-  // reset selected
-  var resetBtn=el('dmReset');
-  if(resetBtn){
-    resetBtn.addEventListener('click',function(){
-      if(!selectedId) return;
-      // remove tokens for selected id
-      Object.keys(state.tokens).forEach(function(k){
-        if(k.indexOf('--dm-'+selectedId+'-')===0){
-          root.style.removeProperty(k);
-          delete state.tokens[k];
-        }
-      });
-      delete state.html[selectedId];
-      delete state.rules[selectedId];
-      rebuildRulesCss();
-      saveState();
-      syncControlsFromSelected();
-      alert('リセットしました');
+  el('dmReset')&&el('dmReset').addEventListener('click',function(){
+    if(!selectedId) return;
+    pushHistory();
+    Object.keys(state.tokens).forEach(function(k){
+      if(k.indexOf('--dm-'+currentVp()+'-'+selectedId+'-')===0){
+        root.style.removeProperty(k);
+        delete state.tokens[k];
+      }
+    });
+    delete state.html[selectedId];
+    delete state.rules[selectedId];
+    rebuildRulesCss();
+    saveState();
+    syncControlsFromSelected();
+    syncHeroQuick();
+  });
+
+  function switchViewport(vp){
+    if(!state.cache[vp]) return;
+    flushVp();
+    state.meta.viewport=vp;
+    bindActiveLayerRefs();
+    applyAll();
+    syncVpButtons();
+    if(selectedId){
+      var node=document.querySelector('[data-dm-id="'+CSS.escape(selectedId)+'"]');
+      if(node) selectNode(node);
+      else clearSelection();
+    }
+    syncHeroQuick();
+  }
+  function syncVpButtons(){
+    ['d','t','m'].forEach(function(vp){
+      var b=el(vp==='d'?'dmVpD':vp==='t'?'dmVpT':'dmVpM');
+      if(b) b.classList.toggle('on',currentVp()===vp);
     });
   }
+  el('dmVpD')&&el('dmVpD').addEventListener('click',function(){ switchViewport('d'); });
+  el('dmVpT')&&el('dmVpT').addEventListener('click',function(){ switchViewport('t'); });
+  el('dmVpM')&&el('dmVpM').addEventListener('click',function(){ switchViewport('m'); });
+  syncVpButtons();
+
+  function loadPresets(){
+    try{ return JSON.parse(localStorage.getItem(PRESET_KEY)||'{}'); }catch(e){ return {}; }
+  }
+  function savePresets(obj){
+    try{ localStorage.setItem(PRESET_KEY,JSON.stringify(obj)); }catch(e){}
+  }
+  el('dmPresetSave')&&el('dmPresetSave').addEventListener('click',function(){
+    var name=(el('dmPresetName')&&el('dmPresetName').value||'').trim();
+    if(!name){ alert('プリセット名を入力してください'); return; }
+    var all=loadPresets();
+    flushVp();
+    all[name]=snapshotCache();
+    savePresets(all);
+    alert('保存しました: '+name);
+  });
+  el('dmPresetLoad')&&el('dmPresetLoad').addEventListener('click',function(){
+    var sel=el('dmPresetSelect');
+    var name=sel&&sel.value;
+    if(!name){ alert('プリセットを選択してください'); return; }
+    var all=loadPresets();
+    if(!all[name]){ alert('データがありません'); return; }
+    pushHistory();
+    state.cache=all[name];
+    bindActiveLayerRefs();
+    applyAll();
+    saveState();
+    syncHeroQuick();
+  });
 
   function exportCssTokens(){
     var lines=['/* Design Mode export (tokens + rules) */',''];
     lines.push(':root{');
-    Object.keys(state.tokens).sort().forEach(function(k){
-      lines.push('  '+k+': '+state.tokens[k]+';');
+    ['d','t','m'].forEach(function(vp){
+      var tk=state.cache[vp].tokens;
+      Object.keys(tk).sort().forEach(function(k){
+        lines.push('  '+k+': '+tk[k]+';');
+      });
     });
     lines.push('}');
     lines.push('');
@@ -2242,7 +2732,43 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return lines.join('\n');
   }
 
-  var KNOWN_DM_PROPS=SUPPORTED_PROPS.concat(['translate-x','translate-y']).slice().sort(function(a,b){ return b.length-a.length; });
+  function exportResolvedCssLiteral(){
+    flushVp();
+    var out=[];
+    function emitBlock(layer,vp,media){
+      var blocks=[];
+      Object.keys(layer.rules||{}).forEach(function(id){
+        var props=layer.rules[id]||{};
+        var decl=[];
+        var hasTr=props['translate-x']||props['translate-y'];
+        Object.keys(props).forEach(function(prop){
+          if(!props[prop]) return;
+          if(prop==='translate-x'||prop==='translate-y') return;
+          if(SUPPORTED_PROPS.indexOf(prop)<0) return;
+          var val=layer.tokens[dmVar(vp,id,prop)];
+          if(!val) return;
+          decl.push('  '+prop+': '+val+';');
+        });
+        if(hasTr){
+          var vx=layer.tokens[dmVar(vp,id,'translate-x')]||'0px';
+          var vy=layer.tokens[dmVar(vp,id,'translate-y')]||'0px';
+          decl.push('  translate: '+vx+' '+vy+';');
+        }
+        if(decl.length){
+          blocks.push('[data-dm-id="'+id+'"] {\n'+decl.join('\n')+'\n}');
+        }
+      });
+      var body=blocks.join('\n\n');
+      if(!body.trim()) return;
+      if(media) out.push('@media '+media+' {\n'+body+'\n}');
+      else out.push(body);
+    }
+    emitBlock(state.cache.d,'d',null);
+    emitBlock(state.cache.t,'t','(max-width:900px)');
+    emitBlock(state.cache.m,'m','(max-width:600px)');
+    return out.join('\n\n');
+  }
+
   var DM_EXPORT_ITEMS=[
     { id:'HERO_LEFT', section:'hero', label:'leftVisual' },
     { id:'HERO_TOP_COPY', section:'hero', label:'topCopy' },
@@ -2259,19 +2785,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     DM_EXPORT_ID_META[row.id]={ section:row.section, label:row.label };
     DM_EXPORT_LABEL_REVERSE[row.section+'/'+row.label]=row.id;
   });
-
-  function parseTokenVarName(fullKey){
-    if(typeof fullKey!=='string' || fullKey.indexOf('--dm-')!==0) return null;
-    var rest=fullKey.slice(5);
-    for(var i=0;i<KNOWN_DM_PROPS.length;i++){
-      var p=KNOWN_DM_PROPS[i];
-      var suf='-'+p;
-      if(rest.length>suf.length && rest.slice(-suf.length)===suf){
-        return { id:rest.slice(0,-suf.length), prop:p };
-      }
-    }
-    return null;
-  }
 
   function inferSectionForNode(n){
     if(!n) return 'misc';
@@ -2290,16 +2803,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     if(n.closest('footer')) return 'footer';
     return 'other';
   }
-
   function sectionAndLabelForDmId(id){
     var meta=DM_EXPORT_ID_META[id];
     if(meta) return { section:meta.section, label:meta.label };
     var node=document.querySelector('[data-dm-id="'+CSS.escape(id)+'"]');
     return { section:inferSectionForNode(node), label:id };
-  }
-
-  function camelToCssProp(s){
-    return s.replace(/[A-Z]/g,function(m){ return '-'+m.toLowerCase(); });
   }
 
   function propToFlatExportSuffix(prop){
@@ -2311,6 +2819,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       case 'gap': return 'Gap';
       case 'width': return 'Width';
       case 'max-width': return 'MaxWidth';
+      case 'min-height': return 'MinHeight';
       case 'border-radius': return 'Radius';
       case 'font-size': return 'Size';
       case 'line-height': return 'LineHeight';
@@ -2324,7 +2833,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       default: return '';
     }
   }
-
   function flatExportKey(label, prop){
     if(prop==='__html__') return label+'InnerHTML';
     var suf=propToFlatExportSuffix(prop);
@@ -2343,6 +2851,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     { suffix:'LineHeight', prop:'line-height' },
     { suffix:'Background', prop:'background' },
     { suffix:'MaxWidth', prop:'max-width' },
+    { suffix:'MinHeight', prop:'min-height' },
     { suffix:'Opacity', prop:'opacity' },
     { suffix:'Radius', prop:'border-radius' },
     { suffix:'Color', prop:'color' },
@@ -2396,6 +2905,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return String(val);
   }
 
+  function camelToCssProp(s){
+    return s.replace(/[A-Z]/g,function(m){ return '-'+m.toLowerCase(); });
+  }
+
   function resolveDmIdFromExport(section, label){
     var hit=DM_EXPORT_LABEL_REVERSE[section+'/'+label];
     if(hit) return hit;
@@ -2404,60 +2917,73 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return null;
   }
 
-  function applyPatchToken(next, dmId, propKebab, rawVal){
+  function applyPatchToken(next, vp, dmId, propKebab, rawVal){
     if(propKebab!=='translate-x' && propKebab!=='translate-y' && SUPPORTED_PROPS.indexOf(propKebab)<0) return;
     var v=formatImportedToken(propKebab, rawVal);
     if(v===''||v===undefined) return;
-    next.tokens[dmVar(dmId,propKebab)]=v;
-    if(!next.rules[dmId]) next.rules[dmId]={};
-    next.rules[dmId][propKebab]=true;
+    var vname=dmVar(vp,dmId,propKebab);
+    next.cache[vp].tokens[vname]=v;
+    if(!next.cache[vp].rules[dmId]) next.cache[vp].rules[dmId]={};
+    next.cache[vp].rules[dmId][propKebab]=true;
   }
 
   function diffImportToState(obj){
-    var next={ tokens:{}, html:{}, rules:{}, meta:{ version:2 } };
+    var next=freshStateForImport();
     Object.keys(obj).forEach(function(sec){
       if(sec==='meta') return;
       var block=obj[sec];
       if(!block||typeof block!=='object'||Array.isArray(block)) return;
-      Object.keys(block).forEach(function(k){
-        var val=block[k];
-        if(val!==null && typeof val==='object' && !Array.isArray(val)){
-          var dmIdNest=resolveDmIdFromExport(sec,k);
-          if(!dmIdNest) return;
-          Object.keys(val).forEach(function(cam){
-            if(cam==='innerHTML'){
-              next.html[dmIdNest]=String(val[cam]);
-              return;
-            }
-            applyPatchToken(next,dmIdNest,camelToCssProp(cam),val[cam]);
+      var vps=['d','t','m'];
+      var maybeVp=vps.filter(function(vp){ return block[vp]&&typeof block[vp]==='object'&&!Array.isArray(block[vp]); });
+      if(maybeVp.length){
+        maybeVp.forEach(function(vp){
+          var sub=block[vp];
+          Object.keys(sub).forEach(function(k){
+            applyDiffFlatEntry(next,vp,sec,k,sub[k]);
           });
-          return;
-        }
-        var flat=parseFlatSectionKey(k);
-        if(!flat) return;
-        var dmId=resolveDmIdFromExport(sec,flat.label);
-        if(!dmId) return;
-        if(flat.isHtml){
-          next.html[dmId]=String(val);
-          return;
-        }
-        applyPatchToken(next,dmId,flat.prop,val);
+        });
+        return;
+      }
+      Object.keys(block).forEach(function(k){
+        applyDiffFlatEntry(next,'d',sec,k,block[k]);
       });
     });
     return next;
   }
 
+  function applyDiffFlatEntry(next,vp,sec,k,val){
+    if(val!==null && typeof val==='object' && !Array.isArray(val)){
+      var dmIdNest=resolveDmIdFromExport(sec,k);
+      if(!dmIdNest) return;
+      Object.keys(val).forEach(function(cam){
+        if(cam==='innerHTML') next.cache[vp].html[dmIdNest]=String(val[cam]);
+        else applyPatchToken(next,vp,dmIdNest,camelToCssProp(cam),val[cam]);
+      });
+      return;
+    }
+    var flat=parseFlatSectionKey(k);
+    if(!flat) return;
+    var dmId=resolveDmIdFromExport(sec,flat.label);
+    if(!dmId) return;
+    if(flat.isHtml) next.cache[vp].html[dmId]=String(val);
+    else applyPatchToken(next,vp,dmId,flat.prop,val);
+  }
+
   function isLegacyImport(obj){
-    return obj && typeof obj==='object' && obj.tokens && typeof obj.tokens==='object';
+    return obj && typeof obj==='object' && obj.tokens && typeof obj.tokens==='object' && !obj.cache;
   }
 
   function looksLikeDesignDiff(obj){
     if(!obj||typeof obj!=='object'||isLegacyImport(obj)) return false;
-    if(obj.meta && obj.meta.format==='design-diff-v1') return true;
+    if(obj.meta && (obj.meta.format==='design-diff-v1'||obj.meta.format==='design-diff-v2')) return true;
     for(var sec in obj){
       if(sec==='meta') continue;
       var block=obj[sec];
       if(!block||typeof block!=='object'||Array.isArray(block)) continue;
+      if(block.d||block.t||block.m){
+        var sub=block.d||block.t||block.m;
+        for(var k in sub){ if(parseFlatSectionKey(k)) return true; }
+      }
       for(var k in block){
         if(parseFlatSectionKey(k)) return true;
         var v=block[k];
@@ -2475,31 +3001,46 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
 
   function exportJson(){
-    var out={ meta:{ version:2, format:'design-diff-v1', exportedAt:new Date().toISOString() } };
-    Object.keys(state.tokens).forEach(function(k){
-      var parsed=parseTokenVarName(k);
-      if(!parsed) return;
-      var sl=sectionAndLabelForDmId(parsed.id);
-      var fk=flatExportKey(sl.label,parsed.prop);
-      if(!fk) return;
-      if(!out[sl.section]) out[sl.section]={};
-      out[sl.section][fk]=serializeTokenValue(parsed.prop, state.tokens[k]);
-    });
-    Object.keys(state.html).forEach(function(id){
-      var sl=sectionAndLabelForDmId(id);
-      var fk=flatExportKey(sl.label,'__html__');
-      if(!fk) return;
-      if(!out[sl.section]) out[sl.section]={};
-      out[sl.section][fk]=state.html[id];
+    flushVp();
+    var out={ meta:{ version:4, format:'design-state-v4', exportedAt:new Date().toISOString(), viewport:state.meta.viewport, recentColors:state.meta.recentColors||[] }, cache:JSON.parse(JSON.stringify(state.cache)) };
+    return JSON.stringify(out,null,2);
+  }
+
+  function exportJsonDiff(){
+    var out={ meta:{ version:4, format:'design-diff-v2', exportedAt:new Date().toISOString() } };
+    ['d','t','m'].forEach(function(vp){
+      var layer=state.cache[vp];
+      Object.keys(layer.tokens).forEach(function(k){
+        var parsed=parseTokenVarName(k);
+        if(!parsed||parsed.vp!==vp) return;
+        var sl=sectionAndLabelForDmId(parsed.id);
+        var fk=flatExportKey(sl.label,parsed.prop);
+        if(!fk) return;
+        if(!out[sl.section]) out[sl.section]={};
+        if(!out[sl.section][vp]) out[sl.section][vp]={};
+        out[sl.section][vp][fk]=serializeTokenValue(parsed.prop, layer.tokens[k]);
+      });
+      Object.keys(layer.html).forEach(function(id){
+        var sl=sectionAndLabelForDmId(id);
+        var fk=flatExportKey(sl.label,'__html__');
+        if(!fk) return;
+        if(!out[sl.section]) out[sl.section]={};
+        if(!out[sl.section][vp]) out[sl.section][vp]={};
+        out[sl.section][vp][fk]=layer.html[id];
+      });
     });
     Object.keys(out).forEach(function(sec){
       if(sec==='meta') return;
-      var block=out[sec];
-      if(!block||typeof block!=='object') return;
-      if(!Object.keys(block).length) delete out[sec];
+      var o=out[sec];
+      if(!o||typeof o!=='object') return;
+      ['d','t','m'].forEach(function(vp){
+        if(o[vp]&&!Object.keys(o[vp]).length) delete o[vp];
+      });
+      if(!Object.keys(o).length) delete out[sec];
     });
     return JSON.stringify(out,null,2);
   }
+
   function downloadFile(filename, content, mime){
     var blob=new Blob([content],{type:mime||'text/plain'});
     var url=URL.createObjectURL(blob);
@@ -2511,6 +3052,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); },500);
   }
+
   function copyText(s){
     if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(s);
     var ta=document.createElement('textarea');
@@ -2524,59 +3066,71 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return Promise.resolve();
   }
 
-  // export/import
   el('dmExportJson')&&el('dmExportJson').addEventListener('click',function(){
-    downloadFile('design-mode-export.json',exportJson(),'application/json');
-    alert('JSONを書き出しました');
+    downloadFile('design-mode-export.json',exportJsonDiff(),'application/json');
+    alert('JSON保存しました（design-diff-v2・セクション→d/t/m→フラットキー）');
   });
-  var importEl=el('dmImportJson');
-  if(importEl){
-    importEl.addEventListener('change',function(){
-      var f=importEl.files&&importEl.files[0];
-      if(!f) return;
-      var reader=new FileReader();
-      reader.onload=function(){
-        try{
-          var obj=JSON.parse(String(reader.result||'{}'));
-          if(!obj||typeof obj!=='object') throw new Error('invalid');
-          if(isLegacyImport(obj)){
-            obj.tokens=obj.tokens||{};
-            obj.html=obj.html||{};
-            obj.rules=obj.rules||{};
-            obj.meta=obj.meta||{version:2};
-            obj.meta.version=2;
-            state=obj;
-          }else if(looksLikeDesignDiff(obj)){
-            var patch=diffImportToState(obj);
-            state.tokens=Object.assign({}, state.tokens, patch.tokens);
-            state.html=Object.assign({}, state.html, patch.html);
-            Object.keys(patch.rules).forEach(function(id){
-              state.rules[id]=Object.assign({}, state.rules[id], patch.rules[id]);
-            });
-            state.meta=state.meta||{version:2};
-            state.meta.version=2;
-          }else{
-            throw new Error('unknown format');
-          }
-          saveState();
-          applyAll();
-          alert('import完了');
-        }catch(e){
-          alert('JSONの読み込みに失敗しました');
-        }
-        importEl.value='';
-      };
-      reader.readAsText(f);
-    });
-  }
 
-  // css export/copy
+  el('dmImportJson')&&el('dmImportJson').addEventListener('change',function(){
+    var f=el('dmImportJson').files&&el('dmImportJson').files[0];
+    if(!f) return;
+    var reader=new FileReader();
+    reader.onload=function(){
+      try{
+        var obj=JSON.parse(String(reader.result||'{}'));
+        if(!obj||typeof obj!=='object') throw new Error('invalid');
+        if(obj.cache&&obj.cache.d){
+          state=obj;
+          bindActiveLayerRefs();
+          applyAll();
+          syncVpButtons();
+          syncHeroQuick();
+          hist=[snapshotCache()]; histIdx=0;
+          saveState();
+          alert('import完了（全状態）');
+        }else if(isLegacyImport(obj)){
+          var ns=freshState();
+          Object.keys(obj.tokens||{}).forEach(function(k){
+            ns.cache.d.tokens[migrateLegacyTokenKey(k)]=obj.tokens[k];
+          });
+          ns.cache.d.html=obj.html||{};
+          ns.cache.d.rules=obj.rules||{};
+          state=ns;
+          bindActiveLayerRefs();
+          applyAll();
+          hist=[snapshotCache()]; histIdx=0;
+          saveState();
+          alert('import完了（旧形式→Desktopに取り込み）');
+        }else if(looksLikeDesignDiff(obj)){
+          var patch=diffImportToState(obj);
+          ['d','t','m'].forEach(function(vp){
+            state.cache[vp].tokens=Object.assign({}, state.cache[vp].tokens, patch.cache[vp].tokens);
+            state.cache[vp].html=Object.assign({}, state.cache[vp].html, patch.cache[vp].html);
+            Object.keys(patch.cache[vp].rules).forEach(function(id){
+              state.cache[vp].rules[id]=Object.assign({}, state.cache[vp].rules[id], patch.cache[vp].rules[id]);
+            });
+          });
+          bindActiveLayerRefs();
+          applyAll();
+          hist=[snapshotCache()]; histIdx=0;
+          saveState();
+          alert('import完了（差分マージ・全ブレークポイント）');
+        }else throw new Error('unknown');
+      }catch(e){ alert('JSONの読み込みに失敗しました'); }
+      el('dmImportJson').value='';
+    };
+    reader.readAsText(f);
+  });
+
   el('dmCopyCss')&&el('dmCopyCss').addEventListener('click',function(){
     var css=exportCssTokens();
-    copyText(css).then(function(){ alert('CSSを書き出してコピーしました'); });
+    copyText(css).then(function(){
+      state.meta.saveStatus='cssCopied';
+      updateSaveStatus('cssCopied');
+      alert('CSSをクリップボードにコピーしました');
+    });
   });
 
-  // apply (browser-only) by injecting persisted styles
   el('dmApplyProd')&&el('dmApplyProd').addEventListener('click',function(){
     var css=exportCssTokens();
     var stEl=document.getElementById('dmOverrides');
@@ -2587,31 +3141,59 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     }
     stEl.textContent=css;
     copyText(css).then(function(){
-      alert('このブラウザ内で本番相当の見た目に適用しました。\n同じCSSもコピーしました。');
+      alert('このブラウザ内にプレビュー適用しました（同じCSSをコピー済み）');
     });
   });
 
-  // confirm: download updated html with embedded css
+  el('dmFinalCss')&&el('dmFinalCss').addEventListener('click',function(){
+    var css=exportResolvedCssLiteral();
+    copyText(css).then(function(){
+      downloadFile('design-mode-resolved.css',css,'text/css');
+      state.meta.saveStatus='cssCopied';
+      updateSaveStatus('cssCopied');
+      alert('確定CSS（実値・[data-dm-id] セレクタ）をコピーし、design-mode-resolved.css もダウンロードしました');
+    });
+  });
+
   el('dmConfirm')&&el('dmConfirm').addEventListener('click',function(){
     var css=exportCssTokens();
-    // ensure persisted style blocks exist in DOM for downloaded html
     var t=document.getElementById('dmPersisted');
     if(!t){
       t=document.createElement('style');
       t.id='dmPersisted';
       t.textContent=css;
       document.head.appendChild(t);
-    }else{
-      t.textContent=css;
-    }
+    }else t.textContent=css;
     var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
     downloadFile('index.designmode.html',html,'text/html');
     downloadFile('design-mode.css',css,'text/css');
-    downloadFile('design-mode-export.json',exportJson(),'application/json');
-    alert('確定用ファイルを書き出しました（ダウンロード）\nindex.designmode.html を index.html に置き換えると本番反映できます。');
+    downloadFile('design-mode-export.json',exportJsonDiff(),'application/json');
+    alert('HTML確定DL: index.designmode.html / design-mode.css / JSON を出力しました');
   });
 
-  // Auto-pick hero logo first when mode enabled
+  function ensureAutoDmIds(){
+    var sel='h1,h2,h3,p,span,a,button,section,footer,header,nav,div,li,details,summary,input,textarea,img';
+    document.querySelectorAll(sel).forEach(function(n){
+      if(n.closest('#dmPanel')) return;
+      if(n.id==='dmFab') return;
+      if(n.hasAttribute('data-dm-id')) return;
+      if(n.tagName==='DIV' && n.children.length===1 && (n.textContent||'').trim()==='') return;
+      var parts=[],node=n,depth=0;
+      for(; node && depth<6; depth++){
+        var p=node.parentElement;
+        if(!p) break;
+        var idx=Array.prototype.indexOf.call(p.children,node);
+        parts.push(node.tagName.toLowerCase()+':'+idx);
+        node=p;
+      }
+      var key=parts.reverse().join('/');
+      var h=0;
+      for(var i=0;i<key.length;i++){ h=((h<<5)-h)+key.charCodeAt(i); h|=0; }
+      n.setAttribute('data-dm-id','AUTO_'+Math.abs(h));
+      n.setAttribute('data-dm-auto','1');
+    });
+  }
+
   var autoPickDone=false;
   fab.addEventListener('click',function(){
     if(autoPickDone) return;
@@ -2619,10 +3201,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     setTimeout(function(){
       if(!document.body.classList.contains('design-mode')) return;
       ensureAutoDmIds();
-      var n=document.querySelector('[data-dm-id=\"HERO_LOGO\"]') || document.querySelector('[data-dm-id]');
+      var n=document.querySelector('[data-dm-id="HERO_LOGO"]') || document.querySelector('[data-dm-id]');
       if(n) selectNode(n);
     },0);
   });
+
+  updateSaveStatus(state.meta.saveStatus||'local');
 })();
 </script>
 
