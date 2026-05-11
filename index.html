@@ -440,37 +440,24 @@ section{padding:88px 5%}
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Tune Mode UI (dev-only)
+   Design Mode (dev-only)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-body.tune-mode .hero-visual,
-body.tune-mode .hero-desc{outline:1px dashed rgba(255,255,255,.32);outline-offset:10px}
-body.tune-mode .hero-logo-img.logo-calligraphy{outline:1px dashed rgba(216,177,90,.55);outline-offset:12px}
+body.design-mode *{caret-color:auto}
+body.design-mode [data-dm-id]{outline:1px dashed rgba(216,177,90,.25);outline-offset:6px}
+body.design-mode [data-dm-id].dm-selected{outline:2px solid rgba(216,177,90,.85);outline-offset:8px}
 
-.tune-fab{
-  position:fixed;
-  right:14px;
-  bottom:14px;
-  z-index:9999;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(47,58,47,.92);
-  color:rgba(255,255,255,.92);
+.dm-fab{
+  position:fixed;right:14px;bottom:14px;z-index:9999;
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;padding:10px 14px;border-radius:999px;
+  background:rgba(47,58,47,.92);color:rgba(255,255,255,.92);
   border:1px solid rgba(255,255,255,.16);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.08em;
+  font-size:12px;font-weight:800;letter-spacing:.08em;
   cursor:pointer;
 }
-.tune-panel{
-  position:fixed;
-  right:14px;
-  bottom:62px;
-  z-index:9999;
-  width:min(360px,92vw);
+.dm-panel{
+  position:fixed;right:14px;bottom:62px;z-index:9999;
+  width:min(420px,92vw);
   background:rgba(244,241,234,.98);
   border:1px solid rgba(70,98,70,.18);
   border-radius:16px;
@@ -478,51 +465,36 @@ body.tune-mode .hero-logo-img.logo-calligraphy{outline:1px dashed rgba(216,177,9
   padding:14px 14px 12px;
   display:none;
 }
-.tune-panel.active{display:block}
-.tune-h{
-  font-size:12px;
-  font-weight:900;
-  color:var(--gd);
-  letter-spacing:.12em;
-  margin-bottom:10px;
-}
-.tune-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}
-.tune-row label{font-size:11px;font-weight:700;color:var(--tm);letter-spacing:.06em}
-.tune-row input[type="range"]{flex:1}
-.tune-val{width:64px;text-align:right;font-size:11px;color:var(--tm);font-variant-numeric:tabular-nums}
-.tune-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.tune-btn{
-  flex:1;
-  padding:10px 12px;
-  border-radius:12px;
+.dm-panel.active{display:block}
+.dm-h{font-size:12px;font-weight:900;color:var(--gd);letter-spacing:.12em;margin-bottom:10px}
+.dm-sub{font-size:11px;font-weight:800;color:var(--tm);letter-spacing:.06em;margin:10px 0 6px}
+.dm-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0}
+.dm-row label{font-size:11px;font-weight:700;color:var(--tm);letter-spacing:.06em;min-width:88px}
+.dm-row input[type="range"]{flex:1}
+.dm-row input[type="color"]{width:38px;height:30px;border:none;background:none;padding:0}
+.dm-row .dm-num{width:72px;text-align:right;font-size:11px;color:var(--tm);font-variant-numeric:tabular-nums}
+.dm-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.dm-btn{
+  flex:1;padding:10px 12px;border-radius:12px;
   border:1px solid rgba(70,98,70,.22);
-  background:#fff;
-  color:var(--gd);
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.06em;
-  cursor:pointer;
+  background:#fff;color:var(--gd);
+  font-size:12px;font-weight:800;letter-spacing:.06em;cursor:pointer;
 }
-.tune-btn.primary{background:var(--g);border-color:transparent;color:#fff}
-.tune-note{margin-top:10px;font-size:11px;color:var(--ts);line-height:1.6}
-.tune-drag{
-  position:absolute;
-  inset:auto auto 10px 10px;
-  z-index:5;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.08em;
-  color:rgba(255,255,255,.88);
-  background:rgba(47,58,47,.45);
+.dm-btn.primary{background:var(--g);border-color:transparent;color:#fff}
+.dm-note{margin-top:10px;font-size:11px;color:var(--ts);line-height:1.6}
+.dm-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;color:var(--gd)}
+.dm-tag code{font-size:11px;font-weight:800;color:var(--tm)}
+.dm-handle{
+  position:absolute;inset:auto auto 10px 10px;z-index:6;
+  font-size:11px;font-weight:900;letter-spacing:.08em;
+  color:rgba(255,255,255,.92);
+  background:rgba(47,58,47,.52);
   border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;
-  padding:6px 10px;
+  border-radius:999px;padding:6px 10px;
+  user-select:none;cursor:grab;
   display:none;
-  user-select:none;
-  cursor:grab;
 }
-body.tune-mode .hero-visual .tune-drag,
-body.tune-mode .hero-desc .tune-drag{display:inline-flex}
+body.design-mode .dm-selected > .dm-handle{display:inline-flex}
 .msg-col-photo{text-align:center}
 .msg-photo-wrap{border-radius:26px;overflow:hidden;box-shadow:0 6px 22px rgba(47,58,47,.12)}
 .msg-photo-wrap img{width:100%;aspect-ratio:3/4;object-fit:cover}
@@ -1025,25 +997,23 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <section class="hero" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important">
   <div class="hero-bg" aria-hidden="true" style="background:linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;background-color:#466246 !important"></div>
   <div class="hero-content">
-    <div class="hero-visual">
-      <div class="tune-drag" data-tune-drag="logo">ドラッグで位置調整</div>
+    <div class="hero-visual" data-dm-id="HERO_LEFT">
       <div class="hero-mark" aria-label="ヒーローの書とメッセージ">
-        <div class="hero-mark-top">生きる力を育む家庭教師</div>
+        <div class="hero-mark-top" data-dm-id="HERO_TOP_COPY">生きる力を育む家庭教師</div>
         <div class="hero-logo-block">
           <div class="hero-logo-frame">
-            <img class="hero-logo-img logo-calligraphy" src="./lp-assets/hero-logo-antagaorana.png?v=20260510e" width="1024" height="682" alt="あんたがおらな" decoding="async" fetchpriority="high">
+            <img class="hero-logo-img logo-calligraphy" data-dm-id="HERO_LOGO" src="./lp-assets/hero-logo-antagaorana.png?v=20260510e" width="1024" height="682" alt="あんたがおらな" decoding="async" fetchpriority="high">
           </div>
         </div>
-        <div class="hero-mark-bottom">に込めたメッセージ</div>
+        <div class="hero-mark-bottom" data-dm-id="HERO_BOTTOM_COPY">に込めたメッセージ</div>
       </div>
     </div>
-    <div class="hero-desc">
-      <div class="tune-drag" data-tune-drag="desc">ドラッグで位置調整</div>
+    <div class="hero-desc" data-dm-id="HERO_RIGHT">
       <div class="hero-desc-head">
-        <span class="hero-desc-k">ABOUT</span>
-        <h1 class="hero-desc-heading">比べられ、<br>責められ、<br><br>閉じこもってしまう<br>子どもたちへ</h1>
+        <span class="hero-desc-k" data-dm-id="HERO_ABOUT">ABOUT</span>
+        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、<br>責められ、<br><br>閉じこもってしまう<br>子どもたちへ</h1>
       </div>
-      <p class="hero-desc-body">信頼と希望を、もう一度届けたい。</p>
+      <p class="hero-desc-body" data-dm-id="HERO_BODY">信頼と希望を、もう一度届けたい。</p>
       <div class="hero-kometa">
         <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><br><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
         <p>教育とは、<br><strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
@@ -1058,54 +1028,41 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   </div>
 </section>
 
-<!-- Tune Mode UI -->
-<button class="tune-fab" id="tuneFab" type="button" aria-pressed="false">調整モード</button>
-<div class="tune-panel" id="tunePanel" aria-hidden="true">
-  <div class="tune-h">ヒーロー微調整（ドラッグ＋保存）</div>
+<!-- Design Mode UI -->
+<button class="dm-fab" id="dmFab" type="button" aria-pressed="false">Design Mode</button>
+<div class="dm-panel" id="dmPanel" aria-hidden="true">
+  <div class="dm-h">Design Mode（全体微調整）</div>
+  <div class="dm-tag">選択中: <code id="dmSelectedId">なし</code></div>
 
-  <div class="tune-row">
-    <label for="tunePadTop">上余白</label>
-    <input id="tunePadTop" type="range" min="-120" max="240" step="2">
-    <div class="tune-val" id="tunePadTopVal"></div>
-  </div>
-  <div class="tune-row">
-    <label for="tunePadBottom">下余白</label>
-    <input id="tunePadBottom" type="range" min="-120" max="240" step="2">
-    <div class="tune-val" id="tunePadBottomVal"></div>
-  </div>
-  <div class="tune-row">
-    <label for="tuneGap">左右の間</label>
-    <input id="tuneGap" type="range" min="-80" max="160" step="2">
-    <div class="tune-val" id="tuneGapVal"></div>
-  </div>
-  <div class="tune-row">
-    <label for="tuneLogoX">ロゴX</label>
-    <input id="tuneLogoX" type="range" min="-160" max="160" step="1">
-    <div class="tune-val" id="tuneLogoXVal"></div>
-  </div>
-  <div class="tune-row">
-    <label for="tuneLogoY">ロゴY</label>
-    <input id="tuneLogoY" type="range" min="-160" max="160" step="1">
-    <div class="tune-val" id="tuneLogoYVal"></div>
-  </div>
-  <div class="tune-row">
-    <label for="tuneDescX">右X</label>
-    <input id="tuneDescX" type="range" min="-160" max="160" step="1">
-    <div class="tune-val" id="tuneDescXVal"></div>
-  </div>
-  <div class="tune-row">
-    <label for="tuneDescY">右Y</label>
-    <input id="tuneDescY" type="range" min="-160" max="160" step="1">
-    <div class="tune-val" id="tuneDescYVal"></div>
-  </div>
+  <div class="dm-sub">レイアウト</div>
+  <div class="dm-row"><label for="dmMarginTop">margin-top</label><input id="dmMarginTop" type="range" min="-200" max="240" step="1"><div class="dm-num" id="dmMarginTopVal"></div></div>
+  <div class="dm-row"><label for="dmMarginBottom">margin-bottom</label><input id="dmMarginBottom" type="range" min="-200" max="240" step="1"><div class="dm-num" id="dmMarginBottomVal"></div></div>
+  <div class="dm-row"><label for="dmPaddingTop">padding-top</label><input id="dmPaddingTop" type="range" min="-200" max="320" step="1"><div class="dm-num" id="dmPaddingTopVal"></div></div>
+  <div class="dm-row"><label for="dmPaddingBottom">padding-bottom</label><input id="dmPaddingBottom" type="range" min="-200" max="320" step="1"><div class="dm-num" id="dmPaddingBottomVal"></div></div>
+  <div class="dm-row"><label for="dmGap">gap</label><input id="dmGap" type="range" min="-120" max="240" step="1"><div class="dm-num" id="dmGapVal"></div></div>
 
-  <div class="tune-btns">
-    <button class="tune-btn" id="tuneReset" type="button">リセット</button>
-    <button class="tune-btn primary" id="tuneCopy" type="button">CSSをコピー</button>
+  <div class="dm-sub">サイズ</div>
+  <div class="dm-row"><label for="dmWidth">width</label><input id="dmWidth" type="range" min="0" max="1200" step="2"><div class="dm-num" id="dmWidthVal"></div></div>
+  <div class="dm-row"><label for="dmMaxWidth">max-width</label><input id="dmMaxWidth" type="range" min="0" max="1400" step="2"><div class="dm-num" id="dmMaxWidthVal"></div></div>
+  <div class="dm-row"><label for="dmRadius">radius</label><input id="dmRadius" type="range" min="0" max="64" step="1"><div class="dm-num" id="dmRadiusVal"></div></div>
+  <div class="dm-row"><label for="dmOpacity">opacity</label><input id="dmOpacity" type="range" min="0" max="100" step="1"><div class="dm-num" id="dmOpacityVal"></div></div>
+
+  <div class="dm-sub">テキスト</div>
+  <div class="dm-row"><label for="dmFontSize">font-size</label><input id="dmFontSize" type="range" min="8" max="64" step="1"><div class="dm-num" id="dmFontSizeVal"></div></div>
+  <div class="dm-row"><label for="dmLineHeight">line-height</label><input id="dmLineHeight" type="range" min="10" max="320" step="1"><div class="dm-num" id="dmLineHeightVal"></div></div>
+  <div class="dm-row"><label for="dmLetterSpacing">letter-spacing</label><input id="dmLetterSpacing" type="range" min="-2" max="20" step="0.1"><div class="dm-num" id="dmLetterSpacingVal"></div></div>
+  <div class="dm-row"><label for="dmColor">color</label><input id="dmColor" type="color"><div class="dm-num" id="dmColorVal"></div></div>
+
+  <div class="dm-btns">
+    <button class="dm-btn" id="dmEditable" type="button">テキストを直接編集</button>
+    <button class="dm-btn" id="dmReset" type="button">リセット</button>
+    <button class="dm-btn primary" id="dmCopyCss" type="button">CSS書き出し</button>
+    <button class="dm-btn primary" id="dmApplyProd" type="button">本番へ反映</button>
   </div>
-  <div class="tune-note">
-    - 調整値はこのブラウザに保存されます（本番には影響しません）。<br>
-    - ロゴ/右ブロックは「ドラッグ」でも動かせます。
+  <div class="dm-note">
+    - Design Mode中は、クリックで要素を選択できます。<br>
+    - 選択要素はドラッグで移動できます（translate）。<br>
+    - 変更はlocalStorageに保存され、通常時は一切表示されません。
   </div>
 </div>
 
@@ -1827,93 +1784,329 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <script>
 (function(){
-  var STORAGE_KEY='ago_tune_hero_v1';
+  var STORAGE_KEY='ago_design_mode_v1';
   var root=document.documentElement;
 
-  var props={
-    padTop:'--tune-hero-pad-top',
-    padBottom:'--tune-hero-pad-bottom',
-    gap:'--tune-hero-gap',
-    logoX:'--tune-logo-x',
-    logoY:'--tune-logo-y',
-    descX:'--tune-desc-x',
-    descY:'--tune-desc-y'
-  };
-
   function el(id){ return document.getElementById(id); }
-  function setPx(k,n){ root.style.setProperty(k,String(Math.round(n))+'px'); }
-  function getPx(k){
-    var v=getComputedStyle(root).getPropertyValue(k);
-    var m=(v||'').match(/-?\d+/);
-    return m?parseInt(m[0],10):0;
-  }
+  function clamp(n,min,max){ return Math.max(min,Math.min(max,n)); }
+  function toNum(v,fallback){ var n=parseFloat(v); return isFinite(n)?n:fallback; }
 
   function readState(){
     try{
       var raw=localStorage.getItem(STORAGE_KEY);
-      if(!raw) return null;
+      if(!raw) return { styles:{}, html:{}, meta:{} };
       var obj=JSON.parse(raw);
-      return obj&&typeof obj==='object'?obj:null;
-    }catch(e){ return null; }
+      if(!obj||typeof obj!=='object') return { styles:{}, html:{}, meta:{} };
+      obj.styles=obj.styles||{};
+      obj.html=obj.html||{};
+      obj.meta=obj.meta||{};
+      return obj;
+    }catch(e){
+      return { styles:{}, html:{}, meta:{} };
+    }
   }
-  function saveState(){
-    var st={
-      padTop:getPx(props.padTop),
-      padBottom:getPx(props.padBottom),
-      gap:getPx(props.gap),
-      logoX:getPx(props.logoX),
-      logoY:getPx(props.logoY),
-      descX:getPx(props.descX),
-      descY:getPx(props.descY)
-    };
+  function saveState(st){
     try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(st)); }catch(e){}
-    console.log('[tune] saved',st);
-  }
-  function applyState(st){
-    if(!st) return;
-    setPx(props.padTop,st.padTop||0);
-    setPx(props.padBottom,st.padBottom||0);
-    setPx(props.gap,st.gap||0);
-    setPx(props.logoX,st.logoX||0);
-    setPx(props.logoY,st.logoY||0);
-    setPx(props.descX,st.descX||0);
-    setPx(props.descY,st.descY||0);
+    console.log('[design-mode] saved',st);
   }
 
-  function bindRange(rangeId,valId,cssVar){
-    var r=el(rangeId), v=el(valId);
-    if(!r||!v) return;
-    var cur=getPx(cssVar);
-    r.value=String(cur);
-    v.textContent=String(cur)+'px';
-    r.addEventListener('input',function(){
-      var n=parseInt(r.value,10)||0;
-      setPx(cssVar,n);
-      v.textContent=String(n)+'px';
+  var state=readState();
+
+  // Apply saved changes
+  function applyAll(){
+    Object.keys(state.styles).forEach(function(id){
+      var node=document.querySelector('[data-dm-id=\"'+CSS.escape(id)+'\"]');
+      if(!node) return;
+      var s=state.styles[id]||{};
+      Object.keys(s).forEach(function(k){
+        if(k==='translateX' || k==='translateY') return;
+        node.style[k]=s[k];
+      });
+      if(typeof s.translateX==='number' || typeof s.translateY==='number'){
+        var tx=toNum(s.translateX,0), ty=toNum(s.translateY,0);
+        node.style.translate=tx+'px '+ty+'px';
+      }
     });
-    r.addEventListener('change',saveState);
+    Object.keys(state.html).forEach(function(id){
+      var node=document.querySelector('[data-dm-id=\"'+CSS.escape(id)+'\"]');
+      if(!node) return;
+      node.innerHTML=String(state.html[id]);
+    });
+  }
+  applyAll();
+
+  // UI
+  var fab=el('dmFab');
+  var panel=el('dmPanel');
+  var selectedIdEl=el('dmSelectedId');
+  if(!fab||!panel||!selectedIdEl) return;
+
+  var selected=null;
+  var selectedId=null;
+
+  function setMode(on){
+    document.body.classList.toggle('design-mode',!!on);
+    panel.classList.toggle('active',!!on);
+    panel.setAttribute('aria-hidden',on?'false':'true');
+    fab.setAttribute('aria-pressed',on?'true':'false');
+    if(!on) clearSelection();
+  }
+  fab.addEventListener('click',function(){
+    var on=!document.body.classList.contains('design-mode');
+    setMode(on);
+  });
+
+  function clearSelection(){
+    if(selected) selected.classList.remove('dm-selected');
+    selected=null;
+    selectedId=null;
+    selectedIdEl.textContent='なし';
+  }
+  function selectNode(node){
+    if(selected) selected.classList.remove('dm-selected');
+    selected=node;
+    selectedId=node.getAttribute('data-dm-id');
+    selected.classList.add('dm-selected');
+    selectedIdEl.textContent=selectedId||'なし';
+    ensureHandle(selected);
+    syncControlsFromSelected();
   }
 
-  function cssSnippet(){
-    var st={
-      padTop:getPx(props.padTop),
-      padBottom:getPx(props.padBottom),
-      gap:getPx(props.gap),
-      logoX:getPx(props.logoX),
-      logoY:getPx(props.logoY),
-      descX:getPx(props.descX),
-      descY:getPx(props.descY)
-    };
-    return "/* tune export */\n:root{\n"
-      +"  --tune-hero-pad-top:"+st.padTop+"px;\n"
-      +"  --tune-hero-pad-bottom:"+st.padBottom+"px;\n"
-      +"  --tune-hero-gap:"+st.gap+"px;\n"
-      +"  --tune-logo-x:"+st.logoX+"px;\n"
-      +"  --tune-logo-y:"+st.logoY+"px;\n"
-      +"  --tune-desc-x:"+st.descX+"px;\n"
-      +"  --tune-desc-y:"+st.descY+"px;\n"
-      +"}\n";
+  function ensureHandle(node){
+    if(!node) return;
+    var h=node.querySelector(':scope > .dm-handle');
+    if(h) return;
+    h=document.createElement('div');
+    h.className='dm-handle';
+    h.textContent='ドラッグで移動';
+    node.style.position=node.style.position||'relative';
+    node.insertBefore(h,node.firstChild);
   }
+
+  // Click-to-select
+  document.addEventListener('click',function(ev){
+    if(!document.body.classList.contains('design-mode')) return;
+    if(panel.contains(ev.target) || fab.contains(ev.target)) return;
+    var n=ev.target.closest('[data-dm-id]');
+    if(!n) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    selectNode(n);
+  },true);
+
+  // Controls mapping (style property keys)
+  var controls=[
+    { id:'dmMarginTop',     val:'dmMarginTopVal',     key:'marginTop',      unit:'px' },
+    { id:'dmMarginBottom',  val:'dmMarginBottomVal',  key:'marginBottom',   unit:'px' },
+    { id:'dmPaddingTop',    val:'dmPaddingTopVal',    key:'paddingTop',     unit:'px' },
+    { id:'dmPaddingBottom', val:'dmPaddingBottomVal', key:'paddingBottom',  unit:'px' },
+    { id:'dmGap',           val:'dmGapVal',           key:'gap',            unit:'px' },
+    { id:'dmWidth',         val:'dmWidthVal',         key:'width',          unit:'px0' },      // 0 => ''
+    { id:'dmMaxWidth',      val:'dmMaxWidthVal',      key:'maxWidth',       unit:'px0' },
+    { id:'dmRadius',        val:'dmRadiusVal',        key:'borderRadius',   unit:'px' },
+    { id:'dmOpacity',       val:'dmOpacityVal',       key:'opacity',        unit:'pct01' },    // 0-100 -> 0-1
+    { id:'dmFontSize',      val:'dmFontSizeVal',      key:'fontSize',       unit:'px' },
+    { id:'dmLineHeight',    val:'dmLineHeightVal',    key:'lineHeight',     unit:'pct100' },  // 10-320 -> 0.10-3.20
+    { id:'dmLetterSpacing', val:'dmLetterSpacingVal', key:'letterSpacing',  unit:'px' },
+  ];
+
+  function getSavedForSelected(){
+    if(!selectedId) return null;
+    if(!state.styles[selectedId]) state.styles[selectedId]={};
+    return state.styles[selectedId];
+  }
+
+  function readComputedAsNumber(node,key){
+    var cs=getComputedStyle(node);
+    var v=cs[key];
+    if(!v) return 0;
+    if(key==='opacity') return Math.round(parseFloat(v)*100);
+    if(key==='lineHeight'){
+      // if "normal" fallback to 1.7
+      if(v==='normal') return 170;
+      var n=parseFloat(v);
+      if(String(v).indexOf('px')>0){
+        // px to ratio-ish (%*100) using font-size
+        var fs=parseFloat(cs.fontSize)||16;
+        return Math.round((n/fs)*100);
+      }
+      return Math.round(n*100);
+    }
+    if(String(v).endsWith('px')) return Math.round(parseFloat(v));
+    return Math.round(parseFloat(v));
+  }
+
+  function syncControlsFromSelected(){
+    if(!selected) return;
+    var saved=getSavedForSelected()||{};
+    controls.forEach(function(c){
+      var r=el(c.id), v=el(c.val);
+      if(!r||!v) return;
+      var key=c.key;
+      var raw=saved[key];
+      var n;
+      if(typeof raw==='string' && raw.endsWith('px')) n=parseFloat(raw);
+      else if(typeof raw==='string' && raw!=='' && !isNaN(parseFloat(raw))) n=parseFloat(raw);
+      else n=readComputedAsNumber(selected,key);
+      r.value=String(n);
+      v.textContent=String(n)+(c.unit==='pct01'?'%':c.unit==='pct100'?'%':'px');
+    });
+    // color
+    var colorInput=el('dmColor');
+    var colorVal=el('dmColorVal');
+    if(colorInput&&colorVal){
+      var s=getSavedForSelected()||{};
+      var col=s.color || getComputedStyle(selected).color;
+      colorVal.textContent=col;
+      // try set to hex if possible
+      var m=String(col).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if(m){
+        var r=parseInt(m[1],10), g=parseInt(m[2],10), b=parseInt(m[3],10);
+        var hex='#'+[r,g,b].map(function(x){ return x.toString(16).padStart(2,'0'); }).join('');
+        colorInput.value=hex;
+      }
+    }
+  }
+
+  function applyControl(c, num){
+    if(!selected || !selectedId) return;
+    var s=getSavedForSelected();
+    var key=c.key;
+    if(c.unit==='pct01'){
+      selected.style[key]=String(clamp(num,0,100)/100);
+      s[key]=selected.style[key];
+    }else if(c.unit==='pct100'){
+      selected.style[key]=String(clamp(num,10,320)/100);
+      s[key]=selected.style[key];
+    }else if(c.unit==='px0'){
+      if(num<=0){ selected.style[key]=''; delete s[key]; }
+      else { selected.style[key]=Math.round(num)+'px'; s[key]=selected.style[key]; }
+    }else{
+      selected.style[key]=String(num)+(c.unit||'');
+      if(c.unit==='px') s[key]=Math.round(num)+'px';
+      else s[key]=selected.style[key];
+    }
+    saveState(state);
+  }
+
+  controls.forEach(function(c){
+    var r=el(c.id), v=el(c.val);
+    if(!r||!v) return;
+    r.addEventListener('input',function(){
+      var n=parseFloat(r.value);
+      v.textContent=String(n)+(c.unit==='pct01'?'%':c.unit==='pct100'?'%':'px');
+      applyControl(c,n);
+    });
+  });
+
+  // Color
+  var colorInput=el('dmColor');
+  if(colorInput){
+    colorInput.addEventListener('input',function(){
+      if(!selected||!selectedId) return;
+      selected.style.color=colorInput.value;
+      var s=getSavedForSelected();
+      s.color=colorInput.value;
+      var cv=el('dmColorVal'); if(cv) cv.textContent=colorInput.value;
+      saveState(state);
+    });
+  }
+
+  // contenteditable toggle
+  var editableBtn=el('dmEditable');
+  if(editableBtn){
+    editableBtn.addEventListener('click',function(){
+      if(!selected||!selectedId) return;
+      var tag=(selected.tagName||'').toLowerCase();
+      var isText=/(h1|h2|h3|p|span|a|div)/.test(tag);
+      if(!isText){
+        alert('この要素は直接編集できません（テキスト要素を選択してください）');
+        return;
+      }
+      var on=selected.getAttribute('contenteditable')==='true';
+      if(on){
+        selected.setAttribute('contenteditable','false');
+        selected.classList.remove('dm-editing');
+        state.html[selectedId]=selected.innerHTML;
+        saveState(state);
+        alert('保存しました');
+      }else{
+        selected.setAttribute('contenteditable','true');
+        selected.focus();
+        alert('編集後はもう一度「テキストを直接編集」を押して保存してください');
+      }
+    });
+  }
+
+  // Drag selected (translate)
+  var dragActive=false, startX=0, startY=0, baseX=0, baseY=0;
+  window.addEventListener('pointerdown',function(e){
+    if(!document.body.classList.contains('design-mode')) return;
+    if(!selected) return;
+    var h=e.target.closest('.dm-handle');
+    if(!h) return;
+    dragActive=true;
+    startX=e.clientX; startY=e.clientY;
+    var s=getSavedForSelected();
+    baseX=toNum(s.translateX,0);
+    baseY=toNum(s.translateY,0);
+    h.style.cursor='grabbing';
+    if(h.setPointerCapture) h.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  },true);
+  window.addEventListener('pointermove',function(e){
+    if(!dragActive||!selected||!selectedId) return;
+    var dx=e.clientX-startX;
+    var dy=e.clientY-startY;
+    var nx=Math.round(baseX+dx);
+    var ny=Math.round(baseY+dy);
+    selected.style.translate=nx+'px '+ny+'px';
+    var s=getSavedForSelected();
+    s.translateX=nx; s.translateY=ny;
+  },true);
+  window.addEventListener('pointerup',function(){
+    if(!dragActive) return;
+    dragActive=false;
+    saveState(state);
+  },true);
+
+  // Reset selected
+  var resetBtn=el('dmReset');
+  if(resetBtn){
+    resetBtn.addEventListener('click',function(){
+      if(!selected||!selectedId) return;
+      selected.removeAttribute('style');
+      selected.style.translate='';
+      delete state.styles[selectedId];
+      delete state.html[selectedId];
+      saveState(state);
+      syncControlsFromSelected();
+      alert('リセットしました');
+    });
+  }
+
+  function exportCss(){
+    var lines=[];
+    Object.keys(state.styles).forEach(function(id){
+      var s=state.styles[id]||{};
+      var decl=[];
+      Object.keys(s).forEach(function(k){
+        if(k==='translateX' || k==='translateY') return;
+        decl.push('  '+k.replace(/[A-Z]/g,function(m){return '-'+m.toLowerCase();})+': '+s[k]+';');
+      });
+      if(typeof s.translateX==='number' || typeof s.translateY==='number'){
+        var tx=toNum(s.translateX,0), ty=toNum(s.translateY,0);
+        decl.push('  translate: '+tx+'px '+ty+'px;');
+      }
+      if(!decl.length) return;
+      lines.push('[data-dm-id=\"'+id+'\"]{');
+      lines=lines.concat(decl);
+      lines.push('}');
+      lines.push('');
+    });
+    return '/* Design Mode export */\n'+lines.join('\n');
+  }
+
   function copyText(s){
     if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(s);
     var ta=document.createElement('textarea');
@@ -1927,82 +2120,43 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     return Promise.resolve();
   }
 
-  var fab=el('tuneFab');
-  var panel=el('tunePanel');
-  if(!fab||!panel) return;
-
-  function setMode(on){
-    document.body.classList.toggle('tune-mode',!!on);
-    panel.classList.toggle('active',!!on);
-    panel.setAttribute('aria-hidden',on?'false':'true');
-    fab.setAttribute('aria-pressed',on?'true':'false');
+  var copyCssBtn=el('dmCopyCss');
+  if(copyCssBtn){
+    copyCssBtn.addEventListener('click',function(){
+      var css=exportCss();
+      copyText(css).then(function(){ alert('CSSを書き出してコピーしました'); });
+    });
   }
 
+  // "本番へ反映" = overrides styleタグを注入 + CSSコピー（Cursorに貼り付けられる）
+  var applyBtn=el('dmApplyProd');
+  if(applyBtn){
+    applyBtn.addEventListener('click',function(){
+      var css=exportCss();
+      var stEl=document.getElementById('dmOverrides');
+      if(!stEl){
+        stEl=document.createElement('style');
+        stEl.id='dmOverrides';
+        document.head.appendChild(stEl);
+      }
+      stEl.textContent=css;
+      copyText(css).then(function(){
+        alert('本番反映用CSSを適用しました（このブラウザ内）\n同じCSSをコピーしたので、index.htmlにも貼り付けて確定できます。');
+      });
+    });
+  }
+
+  // Auto-select hero logo first when mode is enabled (helps beginners)
+  var autoPickDone=false;
   fab.addEventListener('click',function(){
-    var on=!document.body.classList.contains('tune-mode');
-    setMode(on);
-    if(on) saveState();
+    if(autoPickDone) return;
+    autoPickDone=true;
+    setTimeout(function(){
+      if(!document.body.classList.contains('design-mode')) return;
+      var n=document.querySelector('[data-dm-id=\"HERO_LOGO\"]');
+      if(n) selectNode(n);
+    },0);
   });
-
-  applyState(readState());
-  bindRange('tunePadTop','tunePadTopVal',props.padTop);
-  bindRange('tunePadBottom','tunePadBottomVal',props.padBottom);
-  bindRange('tuneGap','tuneGapVal',props.gap);
-  bindRange('tuneLogoX','tuneLogoXVal',props.logoX);
-  bindRange('tuneLogoY','tuneLogoYVal',props.logoY);
-  bindRange('tuneDescX','tuneDescXVal',props.descX);
-  bindRange('tuneDescY','tuneDescYVal',props.descY);
-
-  var reset=el('tuneReset');
-  if(reset) reset.addEventListener('click',function(){
-    applyState({padTop:0,padBottom:0,gap:0,logoX:0,logoY:0,descX:0,descY:0});
-    saveState();
-    ['tunePadTop','tunePadBottom','tuneGap','tuneLogoX','tuneLogoY','tuneDescX','tuneDescY'].forEach(function(id){
-      var input=el(id);
-      if(input) input.dispatchEvent(new Event('input',{bubbles:true}));
-    });
-  });
-  var copy=el('tuneCopy');
-  if(copy) copy.addEventListener('click',function(){
-    copyText(cssSnippet()).then(function(){
-      alert('CSSをコピーしました（貼り付けて保存できます）');
-    });
-  });
-
-  function makeDraggable(handleSel,xVar,yVar,xInputId,yInputId){
-    var h=document.querySelector(handleSel);
-    if(!h) return;
-    var startX=0,startY=0,baseX=0,baseY=0,active=false;
-
-    h.addEventListener('pointerdown',function(e){
-      if(!document.body.classList.contains('tune-mode')) return;
-      active=true;
-      h.style.cursor='grabbing';
-      if(h.setPointerCapture) h.setPointerCapture(e.pointerId);
-      startX=e.clientX; startY=e.clientY;
-      baseX=getPx(xVar); baseY=getPx(yVar);
-      e.preventDefault();
-    });
-    window.addEventListener('pointermove',function(e){
-      if(!active) return;
-      var dx=e.clientX-startX;
-      var dy=e.clientY-startY;
-      setPx(xVar,baseX+dx);
-      setPx(yVar,baseY+dy);
-      var xi=el(xInputId), yi=el(yInputId);
-      if(xi){ xi.value=String(getPx(xVar)); xi.dispatchEvent(new Event('input',{bubbles:true})); }
-      if(yi){ yi.value=String(getPx(yVar)); yi.dispatchEvent(new Event('input',{bubbles:true})); }
-    });
-    window.addEventListener('pointerup',function(){
-      if(!active) return;
-      active=false;
-      h.style.cursor='grab';
-      saveState();
-    });
-  }
-
-  makeDraggable('[data-tune-drag=\"logo\"]',props.logoX,props.logoY,'tuneLogoX','tuneLogoY');
-  makeDraggable('[data-tune-drag=\"desc\"]',props.descX,props.descY,'tuneDescX','tuneDescY');
 })();
 </script>
 
