@@ -130,7 +130,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:calc(16px * 0.82 * 0.9);
+  font-size:calc(16px * 0.82 * 0.9 * 0.85);
   font-weight:500;
   letter-spacing:.16em;
   color:rgba(255,255,255,.82);
@@ -141,10 +141,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   padding:0 4px;
   box-sizing:border-box;
   text-align:center;
-  /* 「ん」「た」付近の縦軸へ：左60〜80px・下10〜20px（transformは使わない） */
+  opacity:.76;
+  /* 墨と離して余白でつなぐ：上へ120〜160px・さらに左へ40〜60px */
   position:relative;
-  left:clamp(-78px,-10vw,-60px);
-  top:clamp(10px,1.5vw,18px);
+  left:clamp(-138px,-18vw,-100px);
+  top:clamp(-160px,-11vw,-120px);
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
@@ -1010,7 +1011,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     max-width:100%;
     margin:0 auto;
   }
-  .hero-mark-top{margin-bottom:7px;font-size:calc(15px * 0.82 * 0.9);letter-spacing:.14em}
+  .hero-mark-top{margin-bottom:7px;font-size:calc(15px * 0.82 * 0.9 * 0.85);letter-spacing:.14em}
   .hero-mark-bottom{margin-top:7px;font-size:calc(16px * 0.82 * 0.9);letter-spacing:.065em}
   .hero-logo-block{align-self:stretch}
   .hero-logo-img.logo-calligraphy{
