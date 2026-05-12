@@ -74,8 +74,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   overflow-x:clip;
   overflow-y:visible;
   isolation:isolate;
-  padding-top:calc(152px + var(--tune-hero-pad-top));
-  padding-bottom:calc(148px + var(--tune-hero-pad-bottom));
+  padding-top:calc(112px + var(--tune-hero-pad-top));
+  padding-bottom:calc(96px + var(--tune-hero-pad-bottom));
   padding-left:7vw;
   padding-right:7vw;
   box-sizing:border-box;
@@ -105,7 +105,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   align-items:center;
   justify-content:center;
   gap:0;
-  transform:translateY(clamp(-8px,-1vh,-24px));
+  transform:translateY(clamp(-4px,-0.6vh,-14px));
 }
 .hero-visual{
   flex:none;
@@ -122,7 +122,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   flex-direction:column;
   align-items:stretch;
   text-align:center;
-  width:min(calc(680px * 1.4),92vw);
+  position:relative;
+  width:min(calc(680px * 1.4 * 1.1 * 1.12),92vw);
   max-width:100%;
   margin:0 auto;
   box-sizing:border-box;
@@ -265,78 +266,129 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-btns{margin-top:42px;display:flex;gap:20px;flex-wrap:wrap}
 
 @media(min-width:901px){
+  .hero{
+    padding-top:calc(88px + var(--tune-hero-pad-top));
+    padding-bottom:calc(80px + var(--tune-hero-pad-bottom));
+  }
   .hero-content{
-    flex-direction:row;
-    flex-wrap:nowrap;
+    display:grid;
+    grid-template-columns:46fr 54fr;
+    gap:88px;
     align-items:center;
     justify-content:center;
-    gap:clamp(20px,3.2vw,48px);
-    max-width:min(1180px,94vw);
+    max-width:min(1280px,94vw);
+    width:100%;
+    min-height:calc(100vh - 88px);
+    padding-top:42px;
+    padding-bottom:32px;
+    box-sizing:border-box;
+    transform:none;
   }
   .hero-visual{
-    flex:1 1 min(0,50%);
     min-width:0;
-    max-width:min(1000px,54vw);
-    width:auto;
+    width:100%;
+    max-width:none;
+    display:flex;
+    flex-direction:column;
     align-items:center;
+    justify-content:center;
   }
   .hero-mark{
-    /* 上コピー・書・下コピーを同じ幅帯で中央揃え＝画像の中心軸に合わせる */
-    --hero-mark-w:min(100%,calc(680px * 1.4 * 1.1));
+    /* 視覚重心：ロゴの幾何中心＋コピーは +28px で「た／ら」付近の縦軸に寄せる */
+    --hero-logo-w:min(100%,calc(680px * 1.4 * 1.1 * 1.12));
+    position:relative;
+    display:flex;
+    flex-direction:column;
     align-items:center;
-    text-align:center;
     width:100%;
     max-width:100%;
     margin:0 auto;
-    transform:translateX(clamp(-12px,-1vw,-4px));
+    transform:none;
   }
-  .hero-mark-top,
-  .hero-mark-bottom,
   .hero-logo-block{
-    width:var(--hero-mark-w);
+    position:relative;
+    z-index:1;
+    order:2;
+    width:var(--hero-logo-w);
     max-width:100%;
-    margin-left:auto;
-    margin-right:auto;
-    box-sizing:border-box;
-  }
-  .hero-mark-top{
-    text-align:center;
-    padding-left:0;
-    padding-right:0;
-    margin-bottom:12px;
-  }
-  .hero-mark-bottom{
-    text-align:center;
-    padding-left:0;
-    padding-right:0;
-    margin-top:12px;
-  }
-  .hero-logo-block,
-  .hero-logo-frame{
+    margin:0 auto;
+    display:flex;
     justify-content:center;
     align-items:center;
+    box-sizing:border-box;
+  }
+  .hero-logo-frame{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    line-height:0;
   }
   .hero-logo-img.logo-calligraphy{
     width:100%;
     max-width:100%;
     height:auto;
-    margin:0 auto;
     display:block;
-    transform:none;
+    margin:0 auto;
+    opacity:.96;
+    transform:translate(-36px,18px);
   }
-  .hero-cta-row{margin-top:32px;width:100%;text-align:center}
+  .hero-mark-top{
+    order:1;
+    position:relative;
+    z-index:2;
+    width:max-content;
+    max-width:100%;
+    margin:0 auto 34px;
+    padding:0;
+    box-sizing:border-box;
+    font-size:15px;
+    letter-spacing:.22em;
+    font-weight:500;
+    color:rgba(255,255,255,.92);
+    opacity:.88;
+    line-height:1.5;
+    white-space:nowrap;
+    transform:translateX(28px);
+  }
+  .hero-mark-bottom{
+    order:3;
+    position:relative;
+    z-index:2;
+    width:max-content;
+    max-width:100%;
+    margin:26px auto 0;
+    padding:0;
+    box-sizing:border-box;
+    font-size:15px;
+    font-weight:500;
+    color:rgba(216,177,90,.82);
+    letter-spacing:.12em;
+    line-height:1.5;
+    white-space:nowrap;
+    transform:translateX(28px);
+  }
   .hero-desc{
-    flex:1 1 min(0,50%);
     min-width:0;
-    max-width:min(560px,50vw);
+    width:100%;
+    max-width:540px;
     margin:0;
+    justify-self:start;
     align-self:center;
   }
-  .hero-desc-head,
-  .hero-desc-heading,
+  .hero-desc-head{
+    max-width:540px;
+  }
+  .hero-desc-heading{
+    font-size:clamp(42px,4vw,58px);
+    line-height:1.42;
+    letter-spacing:.04em;
+    font-weight:500;
+    max-width:540px;
+  }
   .hero-desc-body,
   .hero-kometa{
-    max-width:100%;
+    max-width:540px;
   }
   .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
   .hero-kometa{max-width:100%}
@@ -369,21 +421,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero .btn-out:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.48)}
 .hero-right{display:none}
-.hero-cta-row{margin-top:56px;text-align:center}
-.hero-cta-btn{
-  display:inline-block;
-  padding:16px 44px;
-  border:1px solid rgba(255,255,255,.36);
-  color:rgba(255,255,255,.86);
-  border-radius:999px;
-  font-size:14px;
-  font-weight:600;
-  font-family:'Noto Sans JP',sans-serif;
-  letter-spacing:.08em;
-  background:transparent;
-  transition:background .18s,border-color .18s,color .18s;
-}
-.hero-cta-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.54);color:#fff}
 
 .btn-prim{
   padding:14px 28px;
@@ -1031,7 +1068,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
   .hero-mark{
     align-items:stretch;
-    width:min(calc(680px * 1.4 * 1.1),92vw);
+    width:min(calc(680px * 1.4 * 1.1 * 1.12),92vw);
     max-width:100%;
     margin:0 auto;
   }
@@ -1181,14 +1218,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         </div>
         <div class="hero-mark-bottom" data-dm-id="HERO_BOTTOM_COPY">に込めたメッセージ</div>
       </div>
-      <div class="hero-cta-row">
-        <a href="#contact" class="hero-cta-btn">一度お話ししてみる</a>
-      </div>
     </div>
     <div class="hero-desc" data-dm-id="HERO_RIGHT">
       <div class="hero-desc-head">
         <span class="hero-desc-k" data-dm-id="HERO_ABOUT">ABOUT</span>
-        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、<br>責められ、<br>閉じこもってしまう<br>子どもたちへ</h1>
+        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、責められ、<br>閉じこもってしまう子どもたちへ</h1>
       </div>
       <p class="hero-desc-body" data-dm-id="HERO_BODY">「あなたがいないとダメなんだよ」<br>「あなたは必要とされているんだよ」<br>と本気で届けたい。</p>
       <div class="hero-kometa" data-dm-id="HERO_KOMETA">
