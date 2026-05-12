@@ -66,7 +66,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .nav-drawer .sub{font-size:12px;font-weight:600;color:var(--tm);padding:10px 6px 6px}
 
 .hero{
-  min-height:78vh;
+  min-height:92vh;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -74,8 +74,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   overflow-x:clip;
   overflow-y:visible;
   isolation:isolate;
-  padding-top:calc(160px + var(--tune-hero-pad-top));
-  padding-bottom:calc(120px + var(--tune-hero-pad-bottom));
+  padding-top:calc(190px + var(--tune-hero-pad-top));
+  padding-bottom:calc(160px + var(--tune-hero-pad-bottom));
   padding-left:7vw;
   padding-right:7vw;
   box-sizing:border-box;
@@ -98,16 +98,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   position:relative;
   z-index:2;
   width:100%;
-  max-width:1320px;
+  max-width:860px;
   margin:0 auto;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:calc(72px + var(--tune-hero-gap));
+  gap:0;
 }
 .hero-visual{
-  flex:0 1 46%;
-  min-width:0;
+  flex:none;
+  width:100%;
   position:relative;
   display:flex;
   flex-direction:column;
@@ -125,22 +126,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:15px;
+  font-size:16px;
   font-weight:500;
-  letter-spacing:.18em;
-  color:rgba(255,255,255,.88);
-  margin:0 0 10px;
+  letter-spacing:.24em;
+  color:rgba(255,255,255,.82);
+  margin:0 0 20px;
   line-height:1.5;
   width:100%;
   text-align:center;
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:16px;
+  font-size:18px;
   font-weight:500;
-  letter-spacing:.08em;
+  letter-spacing:.14em;
   color:#d8b15a;
-  margin:6px 0 0;
+  margin:20px 0 0;
   line-height:1.5;
   width:100%;
   text-align:center;
@@ -159,15 +160,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-logo-img.logo-calligraphy{
   display:block;
-  width:620px;
-  max-width:48vw;
+  width:680px;
+  max-width:76vw;
   height:auto;
-  opacity:.92;
+  opacity:.97;
   position:relative;
   transform:
-    translateX(calc(-38px + var(--tune-logo-x)))
+    translateX(var(--tune-logo-x))
     translateY(var(--tune-logo-y));
-  filter:brightness(.98) saturate(.92);
+  filter:none;
   background:transparent;
 }
 .hero-content::after{content:none}
@@ -185,16 +186,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 
 .hero-desc{
-  flex:0 1 54%;
-  min-width:0;
-  max-width:580px;
-  padding-top:0;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  transform:
-    translateX(var(--tune-desc-x))
-    translateY(var(--tune-desc-y));
+  display:none;
+  --hero-h1-size:calc(0.7 * clamp(22px,2.2vw,42px));
 }
 .hero-desc-head{
   width:100%;
@@ -213,7 +206,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-desc-heading{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:clamp(22px,2.2vw,42px);
+  font-size:var(--hero-h1-size);
   line-height:1.9;
   font-weight:500;
   color:rgba(255,255,255,.94);
@@ -223,7 +216,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-desc-body{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:18px;
+  font-size:calc(0.7 * var(--hero-h1-size));
   line-height:2;
   font-weight:500;
   color:rgba(255,255,255,.92);
@@ -234,14 +227,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-kometa-h{font-size:11px;font-weight:800;color:rgba(216,177,90,.95);letter-spacing:.16em;margin-bottom:12px}
 .hero-kometa p{font-size:17px;color:rgba(255,255,255,.78);line-height:2.08;margin-bottom:18px;max-width:56ch}
 .hero-kometa .hero-em{font-weight:700;color:rgba(255,255,255,.92)}
-.hero-kometa-closing{font-family:'Zen Old Mincho','Shippori Mincho','Noto Serif JP',serif;font-size:clamp(17px,2vw,21px);font-weight:600;color:#d8b15a;line-height:1.62;margin:28px 0 14px;letter-spacing:.1em}
+.hero-yell{
+  font-family:'Zen Old Mincho','Shippori Mincho','Noto Serif JP',serif;
+  font-size:clamp(26px,4.6vw,44px);
+  font-weight:900;
+  line-height:1.2;
+  margin:28px 0 14px;
+  letter-spacing:.12em;
+  color:#fff8e8;
+  text-shadow:0 2px 0 rgba(47,58,47,.4),0 0 32px rgba(216,177,90,.5);
+  transform:rotate(-0.6deg);
+  max-width:20ch;
+}
 .hero-kometa-more{margin-top:14px}
 .hero-kometa-more a{font-size:13px;font-weight:500;color:rgba(255,255,255,.55);border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px;letter-spacing:.08em}
 .hero-kometa-more a:hover{color:rgba(255,255,255,.75)}
 .hero-btns{margin-top:42px;display:flex;gap:20px;flex-wrap:wrap}
 
 @media(min-width:901px){
-  .hero-kometa p:not(.hero-kometa-closing):not(.hero-kometa-more){display:none}
+  .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
   .hero-kometa{max-width:520px}
 }
 
@@ -272,6 +276,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero .btn-out:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.48)}
 .hero-right{display:none}
+.hero-cta-row{margin-top:56px;text-align:center}
+.hero-cta-btn{
+  display:inline-block;
+  padding:16px 44px;
+  border:1px solid rgba(255,255,255,.36);
+  color:rgba(255,255,255,.86);
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  font-family:'Noto Sans JP',sans-serif;
+  letter-spacing:.08em;
+  background:transparent;
+  transition:background .18s,border-color .18s,color .18s;
+}
+.hero-cta-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.54);color:#fff}
 
 .btn-prim{
   padding:14px 28px;
@@ -879,7 +898,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   nav .nav-links{display:none}
   .creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
   .hero-message{max-width:none}
-  .hero-content{flex-direction:column;align-items:center;justify-content:center;gap:48px}
+  .hero-content{flex-direction:column;align-items:center;justify-content:center;gap:0}
   .hero-visual{
     flex:none;
     display:flex;
@@ -892,12 +911,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     padding:0;
   }
   .hero-desc{
-    flex:none;
-    width:100%;
-    max-width:min(580px,100%);
-    padding:0 3%;
-    align-items:center;
-    text-align:center;
+    --hero-h1-size:calc(0.7 * clamp(20px,4.2vw,34px));
   }
   .hero-desc-head{
     max-width:520px;
@@ -908,7 +922,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
   .hero-desc-k{margin-bottom:10px}
   .hero-desc-heading{
-    font-size:clamp(20px,4.2vw,34px);
+    font-size:var(--hero-h1-size);
     line-height:1.85;
     letter-spacing:.05em;
     max-width:22em;
@@ -916,7 +930,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     margin-right:auto;
   }
   .hero-desc-body{
-    font-size:17px;
+    font-size:calc(0.7 * var(--hero-h1-size));
     line-height:2;
     max-width:32em;
     margin-left:auto;
@@ -928,10 +942,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-logo-block{align-self:center}
   .hero-logo-img.logo-calligraphy{
     width:100%;
-    max-width:min(520px,88vw);
-    transform:translateX(-18px);
-    opacity:.92;
-    filter:brightness(.98) saturate(.92);
+    max-width:min(540px,90vw);
+    transform:none;
+    opacity:.97;
+    filter:none;
   }
   .hero-message-sub{max-width:54ch}
   .hero-kometa{margin-left:auto;margin-right:auto;text-align:left}
@@ -1068,17 +1082,18 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         </div>
         <div class="hero-mark-bottom" data-dm-id="HERO_BOTTOM_COPY">に込めたメッセージ</div>
       </div>
+      <div class="hero-cta-row">
+        <a href="#contact" class="hero-cta-btn">一度お話ししてみる</a>
+      </div>
     </div>
     <div class="hero-desc" data-dm-id="HERO_RIGHT">
       <div class="hero-desc-head">
         <span class="hero-desc-k" data-dm-id="HERO_ABOUT">ABOUT</span>
-        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、<br>責められ、<br><br>閉じこもってしまう<br>子どもたちへ</h1>
+        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、<br>責められ、<br>閉じこもってしまう<br>子どもたちへ</h1>
       </div>
-      <p class="hero-desc-body" data-dm-id="HERO_BODY">信頼と希望を、もう一度届けたい。</p>
+      <p class="hero-desc-body" data-dm-id="HERO_BODY">「あなたがいないとダメなんだよ」<br>「あなたは必要とされているんだよ」<br>と本気で届けたい。</p>
       <div class="hero-kometa" data-dm-id="HERO_KOMETA">
-        <p><span class="hero-em">「あなたじゃないとダメなんだ」</span><br><span class="hero-em">「あなたを必要とされているんだよ」</span><br><span class="hero-em">「あなたがいないと」</span>——そんな思いで関わることが、可能性を引き出す。</p>
-        <p>教育とは、<br><strong class="hero-em">「子どものやりたい」を応援し、励まし、褒めること」</strong>。</p>
-        <p class="hero-kometa-closing">「あんたがおらなあかんねん！」</p>
+        <p class="hero-yell" data-dm-id="HERO_YELL">あんたがおらなあかんねん！</p>
         <p class="hero-kometa-more"><a href="#creed">理念（想いの土台）を読む →</a></p>
       </div>
       <div class="hero-btns" data-dm-id="HERO_BTNS">
@@ -1191,7 +1206,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <div class="stats">
   <div class="stats-inner">
     <div class="stat"><span class="stat-num">30,000<span class="stat-unit">件</span></span><div class="stat-lbl">不登校教育相談件数</div></div>
-    <div class="stat"><span class="stat-num">95<span class="stat-unit">%</span></span><div class="stat-lbl">変化を実感</div></div>
+    <div class="stat"><span class="stat-num">95<span class="stat-unit">%</span></span><div class="stat-lbl">子供の変化を実感</div></div>
     <div class="stat"><span class="stat-num">30<span class="stat-unit">年以上</span></span><div class="stat-lbl">教育支援の実績</div></div>
     <div class="stat"><span class="stat-num">100<span class="stat-unit">+</span></span><div class="stat-lbl">サポート家庭数</div></div>
   </div>
@@ -2777,7 +2792,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     { id:'HERO_RIGHT', section:'hero', label:'rightColumn' },
     { id:'HERO_ABOUT', section:'hero', label:'aboutLabel' },
     { id:'HERO_H1', section:'hero', label:'title' },
-    { id:'HERO_BODY', section:'hero', label:'lead' }
+    { id:'HERO_BODY', section:'hero', label:'lead' },
+    { id:'HERO_YELL', section:'hero', label:'yell' }
   ];
   var DM_EXPORT_ID_META={};
   var DM_EXPORT_LABEL_REVERSE={};
