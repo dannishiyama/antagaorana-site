@@ -552,9 +552,88 @@ section{padding:88px 5%}
    Design Mode (dev-only)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 body.design-mode *{caret-color:auto}
-body.design-mode [data-dm-id]{outline:1px dashed rgba(216,177,90,.25);outline-offset:6px}
-body.design-mode [data-dm-id]:hover{outline-color:rgba(216,177,90,.55)}
-body.design-mode [data-dm-id].dm-selected{outline:2px solid rgba(216,177,90,.85);outline-offset:8px}
+body.design-mode [data-dm-id]{
+  outline:1px dashed rgba(216,177,90,.28);outline-offset:6px;
+  cursor:pointer;
+  position:relative;
+}
+body.design-mode [data-dm-id]:hover{
+  outline-color:rgba(59,130,246,.65);
+  outline-width:2px;
+  z-index:5;
+}
+body.design-mode [data-dm-id].dm-selected{
+  outline:3px solid rgba(59,130,246,.95)!important;
+  outline-offset:4px;
+  box-shadow:inset 0 0 0 999px rgba(59,130,246,.09),0 0 0 1px rgba(59,130,246,.25);
+  z-index:6;
+}
+body.design-mode .hero-mark > [data-dm-id]{
+  z-index:auto;
+}
+body.design-mode .hero-mark .hero-mark-top[data-dm-id],
+body.design-mode .hero-mark .hero-mark-bottom[data-dm-id]{
+  padding:10px 14px;
+  margin-left:-14px;margin-right:-14px;
+  box-sizing:content-box;
+}
+body.design-mode nav a,
+body.design-mode .nav-cta,
+body.design-mode .hero a,
+body.design-mode .hero button,
+body.design-mode section a[href],
+body.design-mode footer a[href],
+body.design-mode .cta a,
+body.design-mode .faq-summary,
+body.design-mode button:not(#dmFab):not(.dm-vp-btn):not(.dm-btn):not(.dm-layer-btn):not(.dm-swatch){
+  cursor:default!important;
+}
+body.design-mode nav a:hover,
+body.design-mode .hero .btn-prim:hover,
+body.design-mode .hero .btn-out:hover{
+  transform:none!important;
+  opacity:1!important;
+}
+.dm-sel-badge{
+  position:fixed;
+  z-index:1000001;
+  max-width:min(280px,70vw);
+  padding:4px 10px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+  font-family:'Noto Sans JP',sans-serif;
+  background:rgba(59,130,246,.94);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  pointer-events:none;
+  display:none;
+}
+.dm-layer-list{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  max-height:220px;
+  overflow-y:auto;
+  padding:4px 0;
+}
+.dm-layer-btn{
+  display:block;width:100%;text-align:left;
+  padding:8px 10px;border-radius:10px;
+  border:1px solid rgba(70,98,70,.18);
+  background:rgba(255,255,255,.75);
+  font-size:11px;font-weight:700;color:var(--gd);
+  cursor:pointer;
+  letter-spacing:.02em;
+}
+.dm-layer-btn:hover{border-color:rgba(59,130,246,.45);background:#fff}
+.dm-layer-btn.dm-layer-btn-on{
+  border-color:rgba(59,130,246,.65);
+  background:rgba(59,130,246,.12);
+  color:var(--gd);
+}
+.dm-layer-meta{font-size:9px;font-weight:600;color:var(--tm);opacity:.85}
 
 .dm-fab{
   position:fixed;left:16px;bottom:16px;z-index:999999;
@@ -1183,6 +1262,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </section>
 
 <!-- Design Mode UI -->
+<div id="dmSelBadge" class="dm-sel-badge" aria-hidden="true"></div>
 <button class="dm-fab" id="dmFab" type="button" aria-pressed="false">Design Mode</button>
 <div class="dm-panel design-mode-panel" id="dmPanel" aria-hidden="true">
   <div class="dm-h">Design Mode</div>
@@ -1194,10 +1274,18 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   </div>
   <div class="dm-tag">選択: <code id="dmSelectedId">なし</code></div>
 
+  <details class="dm-acc" id="dmLayerAcc" open>
+    <summary>レイヤー一覧（クリックで選択）</summary>
+    <div class="dm-acc-body" style="padding-top:4px">
+      <p class="dm-note" style="margin:0 0 8px">重なるときは <strong>⌘+クリック</strong> で背面へ順に切り替え</p>
+      <div class="dm-layer-list" id="dmLayerList" role="listbox" aria-label="編集レイヤー"></div>
+    </div>
+  </details>
+
   <div id="dmEmptyHint" class="dm-empty">編集したい要素をクリックしてください</div>
 
   <div id="dmEditorBody" hidden>
-    <p class="dm-note" style="margin:0 0 8px">テキストは<strong>ダブルクリック</strong>で編集。Escで取消 / ⌘+Enterで保存。ドラッグは左下ハンドル（5px単位）。</p>
+    <p class="dm-note" style="margin:0 0 8px">要素が重なるときは<strong>⌘+クリック</strong>で背面へ順に選択。テキストは<strong>ダブルクリック</strong>で編集（Esc / ⌘+Enter）。ドラッグは左下「移動」。レイヤー一覧からも選択できます。</p>
 
     <details class="dm-acc" id="dmAccLayout"><summary>Layout</summary><div class="dm-acc-body">
       <div class="dm-row"><label for="dmWidth">width</label><input id="dmWidth" type="range" min="0" max="1200" step="2"><div class="dm-num" id="dmWidthVal"></div></div>
@@ -2298,6 +2386,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   var dragActive=false;
   var editingNode=null;
   var editSnapshotHtml=null;
+  var dmCmdCycleSig='';
+  var dmCmdCycleIdx=0;
 
   function setUiEditorVisible(on){
     if(dmEmptyHint) dmEmptyHint.style.display=on?'none':'';
@@ -2312,6 +2402,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     if(on){
       ensureAutoDmIds();
       buildSwatches();
+      if(typeof buildDmLayerList==='function') buildDmLayerList();
       if(!hist.length){ hist=[snapshotCache()]; histIdx=0; }
     }else{
       endTextEdit(true);
@@ -2333,6 +2424,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     selectedId=null;
     selectedIdEl.textContent='なし';
     setUiEditorVisible(false);
+    dmCmdCycleSig='';
+    dmCmdCycleIdx=0;
+    if(typeof updateDmSelBadge==='function') updateDmSelBadge();
+    if(typeof updateDmLayerButtons==='function') updateDmLayerButtons();
   }
 
   function ensureHandle(node){
@@ -2357,16 +2452,43 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     setUiEditorVisible(!!selectedId);
     syncControlsFromSelected();
     syncHeroQuick();
+    if(typeof updateDmSelBadge==='function') updateDmSelBadge();
+    if(typeof updateDmLayerButtons==='function') updateDmLayerButtons();
   }
 
   document.addEventListener('click',function(ev){
     if(!document.body.classList.contains('design-mode')) return;
     if(panel.contains(ev.target) || fab.contains(ev.target)) return;
-    var n=ev.target.closest('[data-dm-id]');
-    if(!n) return;
+    var stack=(typeof dmNodesFromPoint==='function')
+      ? dmNodesFromPoint(ev.clientX,ev.clientY)
+      : [];
+    if(!stack.length) return;
     ev.preventDefault();
     ev.stopPropagation();
-    selectNode(n);
+    var pick;
+    var sig=(typeof dmStackSig==='function')?dmStackSig(stack):'';
+    if(ev.metaKey||ev.ctrlKey){
+      if(sig===dmCmdCycleSig) dmCmdCycleIdx=(dmCmdCycleIdx+1)%stack.length;
+      else{
+        dmCmdCycleSig=sig;
+        dmCmdCycleIdx=stack.length>1?1:0;
+      }
+      pick=stack[dmCmdCycleIdx];
+    }else{
+      dmCmdCycleSig='';
+      dmCmdCycleIdx=0;
+      pick=stack[0];
+    }
+    selectNode(pick);
+  },true);
+
+  document.addEventListener('click',function(ev){
+    if(!document.body.classList.contains('design-mode')) return;
+    if(panel.contains(ev.target)||fab.contains(ev.target)) return;
+    var a=ev.target.closest('a[href]');
+    if(a&&!panel.contains(a)) ev.preventDefault();
+    var btn=ev.target.closest('button');
+    if(btn&&!panel.contains(btn)&&btn.id!=='dmFab') ev.preventDefault();
   },true);
 
   function isTextEditableNode(n){
@@ -2376,7 +2498,10 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   document.addEventListener('dblclick',function(ev){
     if(!document.body.classList.contains('design-mode')) return;
     if(panel.contains(ev.target) || fab.contains(ev.target)) return;
-    var n=ev.target.closest('[data-dm-id]');
+    var stack=(typeof dmNodesFromPoint==='function')
+      ? dmNodesFromPoint(ev.clientX,ev.clientY)
+      : [];
+    var n=stack&&stack.length?stack[0]:ev.target.closest('[data-dm-id]');
     if(!n||!isTextEditableNode(n)) return;
     ev.preventDefault();
     ev.stopPropagation();
@@ -2769,6 +2894,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       else clearSelection();
     }
     syncHeroQuick();
+    if(document.body.classList.contains('design-mode')&&typeof buildDmLayerList==='function') buildDmLayerList();
   }
   function syncVpButtons(){
     ['d','t','m'].forEach(function(vp){
@@ -2863,6 +2989,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
 
   var DM_EXPORT_ITEMS=[
+    { id:'HERO_SECTION', section:'hero', label:'heroSection' },
     { id:'HERO_LEFT', section:'hero', label:'leftVisual' },
     { id:'HERO_TOP_COPY', section:'hero', label:'topCopy' },
     { id:'HERO_LOGO', section:'hero', label:'logo' },
@@ -2871,7 +2998,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     { id:'HERO_ABOUT', section:'hero', label:'aboutLabel' },
     { id:'HERO_H1', section:'hero', label:'title' },
     { id:'HERO_BODY', section:'hero', label:'lead' },
-    { id:'HERO_YELL', section:'hero', label:'yell' }
+    { id:'HERO_KOMETA', section:'hero', label:'kometa' },
+    { id:'HERO_YELL', section:'hero', label:'yell' },
+    { id:'HERO_BTNS', section:'hero', label:'ctas' }
   ];
   var DM_EXPORT_ID_META={};
   var DM_EXPORT_LABEL_REVERSE={};
@@ -2903,6 +3032,101 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     var node=document.querySelector('[data-dm-id="'+CSS.escape(id)+'"]');
     return { section:inferSectionForNode(node), label:id };
   }
+
+  function dmNodesFromPoint(clientX, clientY){
+    var raw=document.elementsFromPoint(clientX, clientY);
+    var out=[];
+    var seen=new WeakSet();
+    for(var i=0;i<raw.length;i++){
+      var el=raw[i];
+      if(panel.contains(el)||fab.contains(el)) continue;
+      var hit=el.closest('[data-dm-id]');
+      if(!hit||panel.contains(hit)||fab.contains(hit)) continue;
+      if(seen.has(hit)) continue;
+      seen.add(hit);
+      out.push(hit);
+    }
+    return out;
+  }
+
+  function dmStackSig(nodes){
+    return nodes.map(function(n){return n.getAttribute('data-dm-id')||'';}).join('\x1e');
+  }
+
+  function updateDmSelBadge(){
+    var badge=el('dmSelBadge');
+    if(!badge) return;
+    if(!selected||!selectedId){
+      badge.style.display='none';
+      badge.textContent='';
+      return;
+    }
+    badge.textContent=selectedId;
+    badge.style.display='block';
+    requestAnimationFrame(function(){
+      var r=selected.getBoundingClientRect();
+      var top=Math.max(6,r.top+window.scrollY-26);
+      var left=Math.max(6,r.left+window.scrollX);
+      var maxL=window.innerWidth-badge.offsetWidth-8;
+      if(left>maxL) left=Math.max(6,maxL);
+      badge.style.top=top+'px';
+      badge.style.left=left+'px';
+    });
+  }
+
+  function updateDmLayerButtons(){
+    var box=el('dmLayerList');
+    if(!box) return;
+    box.querySelectorAll('.dm-layer-btn').forEach(function(b){
+      var id=b.getAttribute('data-dm-target-id');
+      b.classList.toggle('dm-layer-btn-on', id===selectedId);
+      b.setAttribute('aria-selected', id===selectedId ? 'true' : 'false');
+    });
+  }
+
+  function buildDmLayerList(){
+    var box=el('dmLayerList');
+    if(!box) return;
+    box.innerHTML='';
+    var nodes=Array.prototype.slice.call(document.querySelectorAll('[data-dm-id]')).filter(function(n){
+      return !panel.contains(n)&&!fab.contains(n)&&!n.closest('#dmPanel');
+    });
+    nodes.forEach(function(node){
+      var id=node.getAttribute('data-dm-id');
+      var btn=document.createElement('button');
+      btn.type='button';
+      btn.className='dm-layer-btn';
+      btn.setAttribute('data-dm-target-id',id);
+      btn.setAttribute('role','option');
+      var meta=DM_EXPORT_ID_META[id];
+      var lab=meta?meta.label:id;
+      var sec=meta?meta.section:inferSectionForNode(node);
+      var t1=document.createElement('div');
+      t1.textContent=id;
+      var t2=document.createElement('div');
+      t2.className='dm-layer-meta';
+      t2.textContent=(sec||'')+' · '+lab;
+      btn.appendChild(t1);
+      btn.appendChild(t2);
+      btn.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        selectNode(node);
+        try{
+          node.scrollIntoView({behavior:'smooth',block:'center'});
+        }catch(err){}
+      });
+      box.appendChild(btn);
+    });
+    updateDmLayerButtons();
+  }
+
+  window.addEventListener('resize',function(){
+    if(document.body.classList.contains('design-mode')) updateDmSelBadge();
+  });
+  window.addEventListener('scroll',function(){
+    if(document.body.classList.contains('design-mode')) updateDmSelBadge();
+  },true);
 
   function propToFlatExportSuffix(prop){
     switch(prop){
