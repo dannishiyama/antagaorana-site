@@ -276,47 +276,68 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   .hero-visual{
     flex:1 1 min(0,50%);
     min-width:0;
-    max-width:min(920px,52vw);
+    max-width:min(1000px,54vw);
     width:auto;
-    align-items:flex-start;
+    align-items:center;
   }
   .hero-mark{
-    align-items:flex-start;
-    text-align:left;
-    /* 92vw は親より広くなり flex が折り返す原因になるため、左カラム内は 100% に限定 */
+    /* 上コピー・書・下コピーを同じ幅帯で中央揃え＝画像の中心軸に合わせる */
+    --hero-mark-w:min(100%,calc(680px * 1.4 * 1.1));
+    align-items:center;
+    text-align:center;
     width:100%;
     max-width:100%;
-    margin:0;
+    margin:0 auto;
+    transform:translateX(clamp(-12px,-1vw,-4px));
   }
   .hero-mark-top,
   .hero-mark-bottom,
   .hero-logo-block{
-    max-width:none;
-    width:100%;
-    margin-left:0;
-    margin-right:0;
+    width:var(--hero-mark-w);
+    max-width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    box-sizing:border-box;
   }
-  .hero-mark-top,
-  .hero-mark-bottom{
-    text-align:left;
+  .hero-mark-top{
+    text-align:center;
     padding-left:0;
     padding-right:0;
+    margin-bottom:12px;
+  }
+  .hero-mark-bottom{
+    text-align:center;
+    padding-left:0;
+    padding-right:0;
+    margin-top:12px;
   }
   .hero-logo-block,
   .hero-logo-frame{
-    justify-content:flex-start;
-    align-items:flex-start;
+    justify-content:center;
+    align-items:center;
   }
   .hero-logo-img.logo-calligraphy{
-    width:min(100%,calc(680px * 1.4));
+    width:100%;
     max-width:100%;
     height:auto;
-    margin-left:0;
-    margin-right:auto;
+    margin:0 auto;
     display:block;
     transform:none;
   }
-  .hero-cta-row{margin-top:40px;width:100%;text-align:left}
+  .hero-cta-row{margin-top:32px;width:100%;text-align:center}
+  .hero-desc{
+    flex:1 1 min(0,50%);
+    min-width:0;
+    max-width:min(560px,50vw);
+    margin:0;
+    align-self:center;
+  }
+  .hero-desc-head,
+  .hero-desc-heading,
+  .hero-desc-body,
+  .hero-kometa{
+    max-width:100%;
+  }
   .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
   .hero-kometa{max-width:100%}
 }
@@ -1010,12 +1031,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
   .hero-mark{
     align-items:stretch;
-    width:min(calc(680px * 1.4),92vw);
+    width:min(calc(680px * 1.4 * 1.1),92vw);
     max-width:100%;
     margin:0 auto;
   }
-  .hero-mark-top{margin-bottom:20px;font-size:15px;letter-spacing:.18em}
-  .hero-mark-bottom{margin-top:20px;font-size:16px;letter-spacing:.08em}
+  .hero-mark-top{margin-bottom:14px;font-size:15px;letter-spacing:.18em}
+  .hero-mark-bottom{margin-top:14px;font-size:16px;letter-spacing:.08em}
   .hero-logo-block{align-self:stretch}
   .hero-logo-img.logo-calligraphy{
     width:100%;
