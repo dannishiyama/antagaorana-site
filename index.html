@@ -130,9 +130,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.24em;
   color:rgba(255,255,255,.82);
-  margin:0 0 20px;
+  margin:0 auto 20px;
   line-height:1.5;
   width:100%;
+  max-width:min(680px,76vw);
   text-align:center;
 }
 .hero-mark-bottom{
@@ -141,30 +142,39 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.14em;
   color:#d8b15a;
-  margin:20px 0 0;
+  margin:20px auto 0;
   line-height:1.5;
   width:100%;
+  max-width:min(680px,76vw);
   text-align:center;
 }
 .hero-logo-block{
   position:relative;
-  display:inline-block;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   margin:0;
+  width:100%;
+  max-width:min(680px,76vw);
   background:transparent;
 }
 .hero-logo-frame{
   position:relative;
-  display:block;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
   line-height:0;
   background:transparent;
 }
 .hero-logo-img.logo-calligraphy{
   display:block;
   width:680px;
-  max-width:76vw;
+  max-width:100%;
   height:auto;
   opacity:.97;
   position:relative;
+  margin:0 auto;
   transform:
     translateX(var(--tune-logo-x))
     translateY(var(--tune-logo-y));
@@ -248,6 +258,43 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-btns{margin-top:42px;display:flex;gap:20px;flex-wrap:wrap}
 
 @media(min-width:901px){
+  .hero-content{
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(24px,4vw,56px);
+    max-width:min(1180px,94vw);
+  }
+  .hero-visual{
+    flex:1 1 min(460px,46vw);
+    max-width:min(500px,48vw);
+    width:auto;
+    align-items:center;
+  }
+  .hero-mark{
+    align-items:center;
+    width:100%;
+    margin:0 auto;
+  }
+  .hero-mark-top,
+  .hero-mark-bottom,
+  .hero-logo-block{
+    max-width:min(440px,42vw);
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .hero-logo-img.logo-calligraphy{
+    max-width:100%;
+    transform:none;
+  }
+  .hero-desc{
+    flex:1 1 min(300px,46vw);
+    max-width:min(520px,48vw);
+    margin:0;
+    align-self:center;
+  }
+  .hero-cta-row{margin-top:40px;width:100%}
   .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
   .hero-kometa{max-width:520px}
 }
