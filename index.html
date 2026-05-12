@@ -74,8 +74,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   overflow-x:clip;
   overflow-y:visible;
   isolation:isolate;
-  padding-top:calc(190px + var(--tune-hero-pad-top));
-  padding-bottom:calc(160px + var(--tune-hero-pad-bottom));
+  padding-top:calc(152px + var(--tune-hero-pad-top));
+  padding-bottom:calc(148px + var(--tune-hero-pad-bottom));
   padding-left:7vw;
   padding-right:7vw;
   box-sizing:border-box;
@@ -105,6 +105,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   align-items:center;
   justify-content:center;
   gap:0;
+  transform:translateY(clamp(-8px,-1vh,-24px));
 }
 .hero-visual{
   flex:none;
@@ -119,10 +120,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-mark{
   display:flex;
   flex-direction:column;
-  align-items:center;
+  align-items:stretch;
   text-align:center;
-  width:100%;
+  width:min(calc(680px * 1.4),92vw);
   max-width:100%;
+  margin:0 auto;
+  box-sizing:border-box;
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
@@ -130,10 +133,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.24em;
   color:rgba(255,255,255,.82);
-  margin:0 auto 20px;
+  margin:0 0 20px;
   line-height:1.5;
   width:100%;
-  max-width:min(680px,76vw);
+  max-width:none;
+  padding:0 4px;
+  box-sizing:border-box;
   text-align:center;
 }
 .hero-mark-bottom{
@@ -142,10 +147,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.14em;
   color:#d8b15a;
-  margin:20px auto 0;
+  margin:20px 0 0;
   line-height:1.5;
   width:100%;
-  max-width:min(680px,76vw);
+  max-width:none;
+  padding:0 4px;
+  box-sizing:border-box;
   text-align:center;
 }
 .hero-logo-block{
@@ -155,7 +162,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   align-items:center;
   margin:0;
   width:100%;
-  max-width:min(680px,76vw);
+  max-width:none;
   background:transparent;
 }
 .hero-logo-frame{
@@ -169,7 +176,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 .hero-logo-img.logo-calligraphy{
   display:block;
-  width:680px;
+  width:100%;
   max-width:100%;
   height:auto;
   opacity:.97;
@@ -267,24 +274,27 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     max-width:min(1180px,94vw);
   }
   .hero-visual{
-    flex:1 1 min(460px,46vw);
-    max-width:min(500px,48vw);
+    flex:1 1 min(560px,54vw);
+    max-width:min(1000px,58vw);
     width:auto;
     align-items:center;
   }
   .hero-mark{
-    align-items:center;
-    width:100%;
+    align-items:stretch;
+    width:min(calc(680px * 1.4),92vw);
+    max-width:100%;
     margin:0 auto;
   }
   .hero-mark-top,
   .hero-mark-bottom,
   .hero-logo-block{
-    max-width:min(440px,42vw);
-    margin-left:auto;
-    margin-right:auto;
+    max-width:none;
+    width:100%;
+    margin-left:0;
+    margin-right:0;
   }
   .hero-logo-img.logo-calligraphy{
+    width:100%;
     max-width:100%;
     transform:none;
   }
@@ -986,13 +996,18 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     margin-left:auto;
     margin-right:auto;
   }
-  .hero-mark{align-items:center;max-width:100%}
-  .hero-mark-top{margin-bottom:10px;font-size:15px;letter-spacing:.18em}
-  .hero-mark-bottom{margin-top:6px;font-size:16px;letter-spacing:.08em}
-  .hero-logo-block{align-self:center}
+  .hero-mark{
+    align-items:stretch;
+    width:min(calc(680px * 1.4),92vw);
+    max-width:100%;
+    margin:0 auto;
+  }
+  .hero-mark-top{margin-bottom:20px;font-size:15px;letter-spacing:.18em}
+  .hero-mark-bottom{margin-top:20px;font-size:16px;letter-spacing:.08em}
+  .hero-logo-block{align-self:stretch}
   .hero-logo-img.logo-calligraphy{
     width:100%;
-    max-width:min(540px,90vw);
+    max-width:100%;
     transform:none;
     opacity:.97;
     filter:none;
@@ -1006,7 +1021,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
-  .hero{min-height:auto;padding:120px 6vw 80px;padding-top:max(120px,12vh)}
+  .hero{min-height:auto;padding:112px 6vw 80px;padding-top:max(104px,10vh)}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
