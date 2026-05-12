@@ -125,34 +125,38 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   max-width:100%;
   margin:0 auto;
   box-sizing:border-box;
+  overflow:visible;
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:16px;
+  font-size:calc(16px * 0.82);
   font-weight:500;
-  letter-spacing:.24em;
+  letter-spacing:.18em;
   color:rgba(255,255,255,.82);
-  margin:0 0 20px;
+  margin:0 0 10px;
   line-height:1.5;
   width:100%;
   max-width:none;
   padding:0 4px;
   box-sizing:border-box;
   text-align:center;
+  /* ロゴの視覚重心（た〜らの縦軸付近）へ：幾何中央からわずかに右へ */
+  transform:translateX(clamp(14px,2.2vw,26px));
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:18px;
+  font-size:calc(18px * 0.82);
   font-weight:500;
-  letter-spacing:.14em;
+  letter-spacing:.1em;
   color:#d8b15a;
-  margin:20px 0 0;
+  margin:10px 0 0;
   line-height:1.5;
   width:100%;
   max-width:none;
   padding:0 4px;
   box-sizing:border-box;
   text-align:center;
+  transform:translateX(clamp(14px,2.2vw,26px));
 }
 .hero-logo-block{
   position:relative;
@@ -181,9 +185,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   opacity:.97;
   position:relative;
   margin:0 auto;
-  transform:
-    translateX(var(--tune-logo-x))
-    translateY(var(--tune-logo-y));
+  /* 1.35倍＋左50px・上25px（Tune変数はそのまま加算）— 1要素1つの transform */
+  transform:translate(calc(-50px + var(--tune-logo-x)),calc(-25px + var(--tune-logo-y))) scale(1.35);
+  transform-origin:center center;
   filter:none;
   background:transparent;
 }
@@ -1003,8 +1007,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     max-width:100%;
     margin:0 auto;
   }
-  .hero-mark-top{margin-bottom:20px;font-size:15px;letter-spacing:.18em}
-  .hero-mark-bottom{margin-top:20px;font-size:16px;letter-spacing:.08em}
+  .hero-mark-top{margin-bottom:10px;font-size:calc(15px * 0.82);letter-spacing:.15em}
+  .hero-mark-bottom{margin-top:10px;font-size:calc(16px * 0.82);letter-spacing:.07em}
   .hero-logo-block{align-self:stretch}
   .hero-logo-img.logo-calligraphy{
     width:100%;
