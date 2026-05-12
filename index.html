@@ -121,12 +121,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   flex-direction:column;
   align-items:stretch;
   text-align:center;
-  width:min(calc(680px * 1.4),92vw);
+  width:min(calc(680px * 1.28),90vw);
   max-width:100%;
   margin:0 auto;
   box-sizing:border-box;
   overflow:visible;
-  padding:6px 0 10px;
+  padding:10px 0 12px;
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
@@ -134,18 +134,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.16em;
   color:rgba(255,255,255,.82);
-  margin:0 0 7px;
+  margin:0 0 14px;
   line-height:1.55;
   width:100%;
   max-width:none;
   padding:0 4px;
   box-sizing:border-box;
   text-align:center;
-  opacity:.76;
-  /* 墨と離して余白でつなぐ：上へ120〜160px・さらに左へ40〜60px */
+  opacity:.78;
   position:relative;
-  left:clamp(-138px,-18vw,-100px);
-  top:clamp(-160px,-11vw,-120px);
+  /* 墨の縦軸（あんたが〜おらな）に添える：幾何中央よりわずかに右 */
+  transform:translateX(clamp(10px,1.4vw,18px));
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
@@ -153,14 +152,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.09em;
   color:#d8b15a;
-  margin:7px 0 0;
+  margin:14px 0 0;
   line-height:1.55;
   width:100%;
   max-width:none;
   padding:0 4px;
   box-sizing:border-box;
   text-align:center;
-  transform:translateX(clamp(-8px,-0.5vw,2px));
+  transform:translateX(clamp(10px,1.4vw,18px));
 }
 .hero-logo-block{
   position:relative;
@@ -189,9 +188,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   opacity:.97;
   position:relative;
   margin:0 auto;
-  /* 約85〜88%相当の縮小・上65px・右寄せ25px（Tune加算はそのまま） */
-  transform:translate(calc(-25px + var(--tune-logo-x)),calc(-65px + var(--tune-logo-y))) scale(calc(1.35 * 0.865));
-  transform-origin:center center;
+  /* さらに82〜88%縮小・押しの強さを抑え重心をやや上に（Tune加算はそのまま） */
+  transform:translate(calc(-12px + var(--tune-logo-x)),calc(-38px + var(--tune-logo-y))) scale(calc(1.35 * 0.865 * 0.855));
+  transform-origin:50% 42%;
   filter:none;
   background:transparent;
 }
@@ -277,45 +276,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     flex-wrap:nowrap;
     align-items:center;
     justify-content:center;
-    gap:clamp(20px,3.2vw,48px);
+    gap:clamp(32px,4vw,56px);
     max-width:min(1180px,94vw);
   }
   .hero-visual{
-    flex:1 1 min(0,52%);
+    flex:1 1 min(0,50%);
     min-width:0;
-    max-width:min(1000px,56vw);
+    max-width:min(880px,50vw);
     width:auto;
     align-items:center;
   }
   .hero-mark{
-    align-items:stretch;
+    align-items:center;
     /* 92vw は親より広くなり flex が折り返す原因になるため、左カラム内は 100% に限定 */
     width:100%;
-    max-width:100%;
+    max-width:min(520px,100%);
     margin:0 auto;
   }
   .hero-mark-top,
   .hero-mark-bottom,
   .hero-logo-block{
-    max-width:none;
+    max-width:100%;
     width:100%;
-    margin-left:0;
-    margin-right:0;
+    margin-left:auto;
+    margin-right:auto;
   }
   .hero-logo-img.logo-calligraphy{
     width:100%;
     max-width:100%;
   }
   .hero-desc{
-    flex:1 1 min(0,44%);
+    flex:1 1 min(0,48%);
     min-width:0;
-    max-width:min(520px,44vw);
+    max-width:min(580px,47vw);
     margin:0;
     align-self:center;
   }
+  .hero-desc-head,
+  .hero-desc-heading,
+  .hero-desc-body{
+    max-width:100%;
+  }
   .hero-cta-row{margin-top:40px;width:100%}
   .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
-  .hero-kometa{max-width:520px}
+  .hero-kometa{max-width:100%}
 }
 
 .hero .btn-prim{
@@ -1007,12 +1011,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   }
   .hero-mark{
     align-items:stretch;
-    width:min(calc(680px * 1.4),92vw);
+    width:min(calc(680px * 1.28),92vw);
     max-width:100%;
     margin:0 auto;
   }
-  .hero-mark-top{margin-bottom:7px;font-size:calc(15px * 0.82 * 0.9 * 0.85);letter-spacing:.14em}
-  .hero-mark-bottom{margin-top:7px;font-size:calc(16px * 0.82 * 0.9);letter-spacing:.065em}
+  .hero-mark-top{margin-bottom:14px;font-size:calc(15px * 0.82 * 0.9 * 0.85);letter-spacing:.14em}
+  .hero-mark-bottom{margin-top:14px;font-size:calc(16px * 0.82 * 0.9);letter-spacing:.065em}
   .hero-logo-block{align-self:stretch}
   .hero-logo-img.logo-calligraphy{
     width:100%;
