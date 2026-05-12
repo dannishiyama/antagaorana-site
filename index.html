@@ -119,47 +119,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-mark{
   display:flex;
   flex-direction:column;
-  align-items:stretch;
+  align-items:center;
   text-align:center;
-  width:min(calc(680px * 1.28),90vw);
+  width:100%;
   max-width:100%;
   margin:0 auto;
-  box-sizing:border-box;
   overflow:visible;
-  padding:10px 0 12px;
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:calc(16px * 0.82 * 0.9 * 0.85);
+  font-size:14px;
   font-weight:500;
-  letter-spacing:.16em;
-  color:rgba(255,255,255,.82);
-  margin:0 0 14px;
+  letter-spacing:.22em;
+  color:rgba(255,255,255,.80);
+  margin:0 0 18px;
   line-height:1.55;
   width:100%;
-  max-width:none;
-  padding:0 4px;
-  box-sizing:border-box;
   text-align:center;
-  opacity:.78;
-  position:relative;
-  /* 墨の縦軸（あんたが〜おらな）に添える：幾何中央よりわずかに右 */
-  transform:translateX(clamp(10px,1.4vw,18px));
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:calc(18px * 0.82 * 0.9);
+  font-size:17px;
   font-weight:500;
-  letter-spacing:.09em;
+  letter-spacing:.14em;
   color:#d8b15a;
-  margin:14px 0 0;
+  margin:18px 0 0;
   line-height:1.55;
   width:100%;
-  max-width:none;
-  padding:0 4px;
-  box-sizing:border-box;
   text-align:center;
-  transform:translateX(clamp(10px,1.4vw,18px));
 }
 .hero-logo-block{
   position:relative;
@@ -185,12 +172,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   width:100%;
   max-width:100%;
   height:auto;
-  opacity:.97;
+  opacity:.96;
   position:relative;
   margin:0 auto;
-  /* さらに82〜88%縮小・押しの強さを抑え重心をやや上に（Tune加算はそのまま） */
-  transform:translate(calc(-12px + var(--tune-logo-x)),calc(-38px + var(--tune-logo-y))) scale(calc(1.35 * 0.865 * 0.855));
-  transform-origin:50% 42%;
+  transform:translate(var(--tune-logo-x),var(--tune-logo-y));
   filter:none;
   background:transparent;
 }
@@ -209,11 +194,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 }
 
 .hero-desc{
-  display:block;
+  display:flex;
+  flex-direction:column;
   width:100%;
   max-width:520px;
   margin:32px auto 0;
-  --hero-h1-size:calc(0.7 * clamp(22px,2.2vw,42px));
+  --hero-h1-size:clamp(24px,2.6vw,40px);
 }
 .hero-desc-head{
   width:100%;
@@ -276,21 +262,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     flex-wrap:nowrap;
     align-items:center;
     justify-content:center;
-    gap:clamp(32px,4vw,56px);
-    max-width:min(1180px,94vw);
+    gap:clamp(40px,5vw,72px);
+    max-width:min(1240px,92vw);
   }
   .hero-visual{
-    flex:1 1 min(0,50%);
+    flex:0 1 52%;
     min-width:0;
-    max-width:min(880px,50vw);
+    max-width:600px;
     width:auto;
     align-items:center;
   }
   .hero-mark{
     align-items:center;
-    /* 92vw は親より広くなり flex が折り返す原因になるため、左カラム内は 100% に限定 */
     width:100%;
-    max-width:min(520px,100%);
+    max-width:100%;
     margin:0 auto;
   }
   .hero-mark-top,
@@ -306,9 +291,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     max-width:100%;
   }
   .hero-desc{
-    flex:1 1 min(0,48%);
+    flex:0 1 46%;
     min-width:0;
-    max-width:min(580px,47vw);
+    max-width:520px;
     margin:0;
     align-self:center;
   }
@@ -317,7 +302,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   .hero-desc-body{
     max-width:100%;
   }
-  .hero-cta-row{margin-top:40px;width:100%}
+  .hero-cta-row{display:none}
   .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
   .hero-kometa{max-width:100%}
 }
