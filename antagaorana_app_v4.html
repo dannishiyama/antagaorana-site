@@ -678,7 +678,11 @@ async function ensureUserDoc(fbUser) {
 }
 
 function enterAppAfterAuth(fbUser) {
-  const initial = user && user.name && user.name.trim() ? user.name.trim().charAt(0) : 'メ';
+  if (!user) {
+    console.error('[auth] enterAppAfterAuth: user is not set');
+    return;
+  }
+  const initial = user.name && user.name.trim() ? user.name.trim().charAt(0) : 'メ';
   user.initial = initial;
   ['tName','pName'].forEach((id) => {
     const ne = document.getElementById(id);
@@ -729,11 +733,20 @@ auth.onAuthStateChanged(async (fbUser) => {
     const u = await ensureUserDoc(fbUser);
     user = { name: u.name || 'メンバー', email: u.email || fbUser.email || '' };
     console.log('[auth] signed in', currentUid);
+    enterAppAfterAuth(fbUser);
   } catch (e) {
     console.error(e);
     alert('ユーザー情報の読み込みに失敗しました。');
+    user = null;
+    document.getElementById('appScreen').classList.remove('active');
+    document.getElementById('loginScreen').classList.add('active');
+    showLoginError('ユーザー情報の読み込みに失敗しました。');
+    try {
+      await auth.signOut();
+    } catch (e2) {
+      console.error(e2);
+    }
   }
-  enterAppAfterAuth(fbUser);
 });
 
 /**
