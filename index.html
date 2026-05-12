@@ -274,18 +274,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     max-width:min(1180px,94vw);
   }
   .hero-visual{
-    flex:1 1 min(0,52%);
+    flex:1 1 min(0,50%);
     min-width:0;
-    max-width:min(1000px,56vw);
+    max-width:min(920px,52vw);
     width:auto;
-    align-items:center;
+    align-items:flex-start;
   }
   .hero-mark{
-    align-items:stretch;
+    align-items:flex-start;
+    text-align:left;
     /* 92vw は親より広くなり flex が折り返す原因になるため、左カラム内は 100% に限定 */
     width:100%;
     max-width:100%;
-    margin:0 auto;
+    margin:0;
   }
   .hero-mark-top,
   .hero-mark-bottom,
@@ -295,21 +296,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     margin-left:0;
     margin-right:0;
   }
+  .hero-mark-top,
+  .hero-mark-bottom{
+    text-align:left;
+    padding-left:0;
+    padding-right:0;
+  }
+  .hero-logo-block,
+  .hero-logo-frame{
+    justify-content:flex-start;
+    align-items:flex-start;
+  }
   .hero-logo-img.logo-calligraphy{
-    width:100%;
+    width:min(100%,calc(680px * 1.4));
     max-width:100%;
+    height:auto;
+    margin-left:0;
+    margin-right:auto;
+    display:block;
     transform:none;
   }
-  .hero-desc{
-    flex:1 1 min(0,44%);
-    min-width:0;
-    max-width:min(520px,44vw);
-    margin:0;
-    align-self:center;
-  }
-  .hero-cta-row{margin-top:40px;width:100%}
+  .hero-cta-row{margin-top:40px;width:100%;text-align:left}
   .hero-kometa p:not(.hero-yell):not(.hero-kometa-more){display:none}
-  .hero-kometa{max-width:520px}
+  .hero-kometa{max-width:100%}
 }
 
 .hero .btn-prim{
