@@ -267,21 +267,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 @media(min-width:901px){
   .hero-content{
     flex-direction:row;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
     align-items:center;
     justify-content:center;
-    gap:clamp(24px,4vw,56px);
+    gap:clamp(20px,3.2vw,48px);
     max-width:min(1180px,94vw);
   }
   .hero-visual{
-    flex:1 1 min(560px,54vw);
-    max-width:min(1000px,58vw);
+    flex:1 1 min(0,52%);
+    min-width:0;
+    max-width:min(1000px,56vw);
     width:auto;
     align-items:center;
   }
   .hero-mark{
     align-items:stretch;
-    width:min(calc(680px * 1.4),92vw);
+    /* 92vw は親より広くなり flex が折り返す原因になるため、左カラム内は 100% に限定 */
+    width:100%;
     max-width:100%;
     margin:0 auto;
   }
@@ -299,8 +301,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     transform:none;
   }
   .hero-desc{
-    flex:1 1 min(300px,46vw);
-    max-width:min(520px,48vw);
+    flex:1 1 min(0,44%);
+    min-width:0;
+    max-width:min(520px,44vw);
     margin:0;
     align-self:center;
   }
