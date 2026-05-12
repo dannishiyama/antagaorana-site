@@ -141,8 +141,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   padding:0 4px;
   box-sizing:border-box;
   text-align:center;
-  /* 墨の重心軸：右へ出し過ぎていた分を左へ戻す */
-  transform:translateX(clamp(-8px,-0.5vw,2px));
+  /* 「ん」「た」付近の縦軸へ：左60〜80px・下10〜20px（transformは使わない） */
+  position:relative;
+  left:clamp(-78px,-10vw,-60px);
+  top:clamp(10px,1.5vw,18px);
 }
 .hero-mark-bottom{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
