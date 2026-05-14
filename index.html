@@ -74,6 +74,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 
 .hero{
   min-height:92vh;
+  min-height:92dvh;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -228,20 +229,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-desc-heading{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
   font-size:var(--hero-h1-size);
-  line-height:1.82;
+  line-height:1.58;
   font-weight:500;
   color:rgba(255,255,255,.94);
-  margin:0 0 20px;
-  letter-spacing:.052em;
+  margin:0 0 16px;
+  letter-spacing:.048em;
   max-width:520px;
 }
 .hero-desc-body{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
   font-size:clamp(15px,calc(14px + 0.12vw),18px);
-  line-height:1.72;
+  line-height:1.62;
   font-weight:500;
   color:rgba(255,255,255,.92);
-  margin:0 0 28px;
+  margin:0 0 22px;
   max-width:520px;
   opacity:.92;
 }
@@ -253,8 +254,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-size:clamp(19px,calc(16px + 0.25vw),26px);
   font-weight:900;
   line-height:1.45;
-  margin:20px 0 14px;
-  letter-spacing:.095em;
+  margin:14px 0 12px;
+  letter-spacing:.09em;
   color:#fff8e8;
   text-shadow:0 2px 0 rgba(47,58,47,.4),0 0 32px rgba(216,177,90,.5);
   max-width:24ch;
@@ -262,13 +263,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-kometa-more{margin-top:14px}
 .hero-kometa-more a{font-size:15px;font-weight:500;color:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px;letter-spacing:.08em}
 .hero-kometa-more a:hover{color:rgba(255,255,255,.75)}
-.hero-btns{margin-top:42px;margin-bottom:clamp(12px,2.5vh,40px);display:flex;gap:20px;flex-wrap:wrap}
+.hero-btns{margin-top:32px;margin-bottom:clamp(12px,2.5vh,40px);display:flex;gap:20px;flex-wrap:wrap}
 
 @media(min-width:901px){
   .hero-content{
     display:grid;
     grid-template-columns:minmax(0,1fr) minmax(0,min(432px,40%));
-    align-items:center;
+    /* center だと右列の高さ計算差で左列（金の下コピー）がブラウザごとに縦ズレする → 上揃えで固定 */
+    align-items:start;
     justify-items:stretch;
     column-gap:clamp(24px,calc(20px + 0.9vw),44px);
     row-gap:0;
@@ -281,6 +283,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     max-width:min(720px,100%);
     width:100%;
     justify-self:center;
+    align-self:start;
     align-items:center;
   }
   .hero-mark{
@@ -307,7 +310,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     max-width:100%;
     width:100%;
     margin:0;
-    align-self:center;
+    align-self:start;
     --hero-h1-size:clamp(25px,calc(22px + 0.35vw),33px);
   }
   .hero-desc-head,
@@ -1080,15 +1083,15 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-desc-k{margin-bottom:10px}
   .hero-desc-heading{
     font-size:var(--hero-h1-size);
-    line-height:1.82;
-    letter-spacing:.052em;
+    line-height:1.58;
+    letter-spacing:.048em;
     max-width:22em;
     margin-left:auto;
     margin-right:auto;
   }
   .hero-desc-body{
     font-size:clamp(15px,calc(14px + 0.12vw),17px);
-    line-height:1.72;
+    line-height:1.62;
     max-width:32em;
     margin-left:auto;
     margin-right:auto;
