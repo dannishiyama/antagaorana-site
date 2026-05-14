@@ -37,13 +37,20 @@
   --tune-hero-pad-top:0px;
   --tune-hero-pad-bottom:0px;
   --tune-hero-gap:0px;
+  /* Logo optical nudge (frame margin; avoids transform on img) */
   --tune-logo-x:0px;
   --tune-logo-y:0px;
   --tune-desc-x:0px;
   --tune-desc-y:0px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;background:#f4f1ea}
+html{
+  scroll-behavior:smooth;
+  background:#f4f1ea;
+  font-size:16px;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
 body{font-family:'Noto Sans JP',sans-serif;color:var(--txt);background:#f4f1ea;line-height:1.7;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
@@ -75,9 +82,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   overflow-y:visible;
   isolation:isolate;
   padding-top:calc(152px + var(--tune-hero-pad-top));
-  padding-bottom:calc(148px + var(--tune-hero-pad-bottom));
-  padding-left:4vw;
-  padding-right:4vw;
+  padding-bottom:calc(148px + clamp(12px,1.5vh,28px) + var(--tune-hero-pad-bottom));
+  padding-left:clamp(16px,2.8vw,48px);
+  padding-right:clamp(16px,2.8vw,48px);
   box-sizing:border-box;
   background:radial-gradient(ellipse 52% 60% at 26% 52%,rgba(205,190,135,.22) 0%,transparent 68%),linear-gradient(90deg,#466246 0%,#6f7f67 48%,#a3ab97 100%) !important;
   background-color:#466246 !important;
@@ -130,10 +137,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
   font-size:16px;
   font-weight:500;
-  letter-spacing:.22em;
+  letter-spacing:.21em;
   color:rgba(255,255,255,.82);
   margin:0 0 6px;
-  line-height:1.4;
+  line-height:1.38;
   width:100%;
   text-align:center;
 }
@@ -141,10 +148,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
   font-size:20px;
   font-weight:500;
-  letter-spacing:.16em;
+  letter-spacing:.155em;
   color:#d8b15a;
   margin:6px 0 0;
-  line-height:1.4;
+  line-height:1.38;
   width:100%;
   text-align:center;
 }
@@ -166,6 +173,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   width:100%;
   line-height:0;
   background:transparent;
+  margin-left:var(--tune-logo-x,0px);
+  margin-top:var(--tune-logo-y,0px);
 }
 .hero-logo-img.logo-calligraphy{
   display:block;
@@ -175,13 +184,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   opacity:.96;
   position:relative;
   margin:0 auto;
-  transform:translate(var(--tune-logo-x),var(--tune-logo-y));
   filter:none;
   background:transparent;
 }
 .hero-content::after{content:none}
 .hero-tag{font-size:12px;font-weight:800;color:rgba(255,255,255,.78);letter-spacing:.18em;margin-bottom:18px}
-.hero-h1{font-family:'Noto Serif JP',serif;font-size:clamp(32px,4vw,54px);font-weight:900;color:var(--w);line-height:1.35;margin-bottom:18px}
+.hero-h1{font-family:'Noto Serif JP',serif;font-size:clamp(32px,calc(22px + 1.1vw),54px);font-weight:900;color:var(--w);line-height:1.34;margin-bottom:18px}
 .hero-h1 em{color:var(--goldl);font-style:normal}
 .hero-message{max-width:640px}
 .hero-text{display:none}
@@ -199,7 +207,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   width:100%;
   max-width:520px;
   margin:32px auto 0;
-  --hero-h1-size:clamp(27px,2.9vw,44px);
+  /* vw を弱め、Chrome/Safari で頭打ちを揃える（100vw 由来のズレ回避） */
+  --hero-h1-size:clamp(25px,calc(22px + 0.35vw),33px);
 }
 .hero-desc-head{
   width:100%;
@@ -219,17 +228,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-desc-heading{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
   font-size:var(--hero-h1-size);
-  line-height:1.9;
+  line-height:1.82;
   font-weight:500;
   color:rgba(255,255,255,.94);
   margin:0 0 20px;
-  letter-spacing:.06em;
+  letter-spacing:.052em;
   max-width:520px;
 }
 .hero-desc-body{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
-  font-size:19px;
-  line-height:2;
+  font-size:clamp(15px,calc(14px + 0.12vw),18px);
+  line-height:1.72;
   font-weight:500;
   color:rgba(255,255,255,.92);
   margin:0 0 28px;
@@ -241,11 +250,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-kometa .hero-em{font-weight:700;color:rgba(255,255,255,.92)}
 .hero-yell{
   font-family:'Zen Old Mincho','Shippori Mincho','Noto Serif JP',serif;
-  font-size:clamp(20px,2.2vw,30px);
+  font-size:clamp(19px,calc(16px + 0.25vw),26px);
   font-weight:900;
-  line-height:1.6;
+  line-height:1.45;
   margin:20px 0 14px;
-  letter-spacing:.1em;
+  letter-spacing:.095em;
   color:#fff8e8;
   text-shadow:0 2px 0 rgba(47,58,47,.4),0 0 32px rgba(216,177,90,.5);
   max-width:24ch;
@@ -253,22 +262,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .hero-kometa-more{margin-top:14px}
 .hero-kometa-more a{font-size:15px;font-weight:500;color:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px;letter-spacing:.08em}
 .hero-kometa-more a:hover{color:rgba(255,255,255,.75)}
-.hero-btns{margin-top:42px;display:flex;gap:20px;flex-wrap:wrap}
+.hero-btns{margin-top:42px;margin-bottom:clamp(12px,2.5vh,40px);display:flex;gap:20px;flex-wrap:wrap}
 
 @media(min-width:901px){
   .hero-content{
-    flex-direction:row;
-    flex-wrap:nowrap;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,min(432px,40%));
     align-items:center;
-    justify-content:flex-start;
-    gap:clamp(24px,3vw,48px);
-    max-width:min(1380px,96vw);
+    justify-items:stretch;
+    column-gap:clamp(24px,calc(20px + 0.9vw),44px);
+    row-gap:0;
+    width:100%;
+    max-width:min(1240px,100%);
   }
   .hero-visual{
-    flex:0 0 58%;
+    grid-column:1;
     min-width:0;
-    max-width:760px;
-    width:auto;
+    max-width:min(720px,100%);
+    width:100%;
+    justify-self:center;
     align-items:center;
   }
   .hero-mark{
@@ -290,12 +302,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     max-width:100%;
   }
   .hero-desc{
-    flex:0 0 38%;
+    grid-column:2;
     min-width:0;
-    max-width:460px;
+    max-width:100%;
+    width:100%;
     margin:0;
     align-self:center;
-    --hero-h1-size:clamp(27px,2.9vw,44px);
+    --hero-h1-size:clamp(25px,calc(22px + 0.35vw),33px);
   }
   .hero-desc-head,
   .hero-desc-heading,
@@ -1055,7 +1068,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     padding:0;
   }
   .hero-desc{
-    --hero-h1-size:calc(0.7 * clamp(20px,4.2vw,34px));
+    --hero-h1-size:clamp(19px,calc(15px + 0.55vw),28px);
   }
   .hero-desc-head{
     max-width:520px;
@@ -1067,22 +1080,22 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .hero-desc-k{margin-bottom:10px}
   .hero-desc-heading{
     font-size:var(--hero-h1-size);
-    line-height:1.85;
-    letter-spacing:.05em;
+    line-height:1.82;
+    letter-spacing:.052em;
     max-width:22em;
     margin-left:auto;
     margin-right:auto;
   }
   .hero-desc-body{
-    font-size:calc(0.7 * var(--hero-h1-size));
-    line-height:2;
+    font-size:clamp(15px,calc(14px + 0.12vw),17px);
+    line-height:1.72;
     max-width:32em;
     margin-left:auto;
     margin-right:auto;
   }
   .hero-mark{
     align-items:stretch;
-    width:min(calc(680px * 1.28),92vw);
+    width:min(870px,calc(100vw - 24px));
     max-width:100%;
     margin:0 auto;
   }
@@ -1104,7 +1117,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
-  .hero{min-height:auto;padding:112px 6vw 80px;padding-top:max(104px,10vh)}
+  .hero{min-height:auto;padding:112px clamp(16px,5vw,40px) 80px;padding-top:max(104px,10vh)}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -1238,7 +1251,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <div class="hero-desc" data-dm-id="HERO_RIGHT">
       <div class="hero-desc-head">
         <span class="hero-desc-k" data-dm-id="HERO_ABOUT">ABOUT</span>
-        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、<br>責められ、<br>閉じこもってしまう<br>子どもたちへ</h1>
+        <h1 class="hero-desc-heading" data-dm-id="HERO_H1">比べられ、責められ、<br>閉じこもってしまう子どもたちへ</h1>
       </div>
       <p class="hero-desc-body" data-dm-id="HERO_BODY">「あなたがいないとダメなんだよ」<br>「あなたは必要とされているんだよ」<br>と本気で届けたい。</p>
       <div class="hero-kometa" data-dm-id="HERO_KOMETA">
@@ -1275,7 +1288,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div id="dmEmptyHint" class="dm-empty">編集したい要素をクリックしてください</div>
 
   <div id="dmEditorBody" hidden>
-    <p class="dm-note" style="margin:0 0 8px">クリックで選択（重なるときは <strong>⌘/Ctrl+クリック</strong> で背面へ）。テキストは<strong>ダブルクリック</strong>で編集。Esc取消 / ⌘+Enter保存。移動は左下「移動」ハンドル（5px単位）。</p>
+    <p class="dm-note" style="margin:0 0 8px">クリックで選択（重なるときは <strong>⌘/Ctrl+クリック</strong> で背面へ）。テキストは<strong>ダブルクリック</strong>で編集。Esc取消 / ⌘+Enter保存。移動は左下「移動」ハンドル（5px単位・<code>margin-left</code> / <code>margin-top</code> に反映）。</p>
 
     <details class="dm-acc" id="dmAccLayout"><summary>Layout</summary><div class="dm-acc-body">
       <div class="dm-row"><label for="dmWidth">width</label><input id="dmWidth" type="range" min="0" max="1200" step="2"><div class="dm-num" id="dmWidthVal"></div></div>
@@ -1312,14 +1325,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="dm-hero-quick" id="dmHeroQuick">
         <div class="dm-sub">HERO クイック</div>
         <div class="dm-row"><label for="dmHqLogoW">ロゴ幅</label><input id="dmHqLogoW" type="range" min="80" max="920" step="4"><div class="dm-num" id="dmHqLogoWVal"></div></div>
-        <div class="dm-row"><label for="dmHqLogoX">ロゴX</label><input id="dmHqLogoX" type="range" min="-120" max="120" step="1"><div class="dm-num" id="dmHqLogoXVal"></div></div>
-        <div class="dm-row"><label for="dmHqLogoY">ロゴY</label><input id="dmHqLogoY" type="range" min="-120" max="120" step="1"><div class="dm-num" id="dmHqLogoYVal"></div></div>
-        <div class="dm-row"><label for="dmHqTopY">上コピーY</label><input id="dmHqTopY" type="range" min="-80" max="80" step="1"><div class="dm-num" id="dmHqTopYVal"></div></div>
-        <div class="dm-row"><label for="dmHqBotY">下コピーY</label><input id="dmHqBotY" type="range" min="-80" max="80" step="1"><div class="dm-num" id="dmHqBotYVal"></div></div>
+        <div class="dm-row"><label for="dmHqLogoX">ロゴ margin 左</label><input id="dmHqLogoX" type="range" min="-120" max="120" step="1"><div class="dm-num" id="dmHqLogoXVal"></div></div>
+        <div class="dm-row"><label for="dmHqLogoY">ロゴ margin 上</label><input id="dmHqLogoY" type="range" min="-120" max="120" step="1"><div class="dm-num" id="dmHqLogoYVal"></div></div>
+        <div class="dm-row"><label for="dmHqTopY">上コピー margin 上</label><input id="dmHqTopY" type="range" min="-80" max="80" step="1"><div class="dm-num" id="dmHqTopYVal"></div></div>
+        <div class="dm-row"><label for="dmHqBotY">下コピー margin 上</label><input id="dmHqBotY" type="range" min="-80" max="80" step="1"><div class="dm-num" id="dmHqBotYVal"></div></div>
         <div class="dm-row"><label for="dmHqRightW">右欄max-w</label><input id="dmHqRightW" type="range" min="280" max="900" step="4"><div class="dm-num" id="dmHqRightWVal"></div></div>
         <div class="dm-row"><label for="dmHqH1Size">H1 size</label><input id="dmHqH1Size" type="range" min="12" max="72" step="1"><div class="dm-num" id="dmHqH1SizeVal"></div></div>
         <div class="dm-row"><label for="dmHqH1Lh">H1行間</label><input id="dmHqH1Lh" type="range" min="100" max="220" step="1"><div class="dm-num" id="dmHqH1LhVal"></div></div>
-        <div class="dm-row"><label for="dmHqCtaY">CTA Y</label><input id="dmHqCtaY" type="range" min="-80" max="120" step="1"><div class="dm-num" id="dmHqCtaYVal"></div></div>
+        <div class="dm-row"><label for="dmHqCtaY">CTA margin 上</label><input id="dmHqCtaY" type="range" min="-80" max="120" step="1"><div class="dm-num" id="dmHqCtaYVal"></div></div>
         <div class="dm-row"><label for="dmHqSecMinH">ヒーロー高さ</label><input id="dmHqSecMinH" type="range" min="0" max="1200" step="8"><div class="dm-num" id="dmHqSecMinHVal"></div></div>
         <p class="dm-note">H1の改行位置は本文をダブルクリック編集で &lt;br&gt; を調整してください。</p>
       </div>
@@ -2106,6 +2119,25 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   function dmVar(vp,id,prop){ return '--dm-'+vp+'-'+id+'-'+prop; }
   function currentVp(){ return (state.meta&&state.meta.viewport)||'d'; }
 
+  function dmRuleSelector(id){
+    var map={
+      HERO_SECTION:'section.hero[data-dm-id="HERO_SECTION"]',
+      HERO_LEFT:'.hero-visual[data-dm-id="HERO_LEFT"]',
+      HERO_TOP_COPY:'.hero-mark-top[data-dm-id="HERO_TOP_COPY"]',
+      HERO_LOGO:'img.hero-logo-img.logo-calligraphy[data-dm-id="HERO_LOGO"]',
+      HERO_BOTTOM_COPY:'.hero-mark-bottom[data-dm-id="HERO_BOTTOM_COPY"]',
+      HERO_RIGHT:'.hero-desc[data-dm-id="HERO_RIGHT"]',
+      HERO_ABOUT:'.hero-desc-k[data-dm-id="HERO_ABOUT"]',
+      HERO_H1:'.hero-desc-heading[data-dm-id="HERO_H1"]',
+      HERO_BODY:'.hero-desc-body[data-dm-id="HERO_BODY"]',
+      HERO_KOMETA:'.hero-kometa[data-dm-id="HERO_KOMETA"]',
+      HERO_YELL:'.hero-yell[data-dm-id="HERO_YELL"]',
+      HERO_BTNS:'.hero-btns[data-dm-id="HERO_BTNS"]'
+    };
+    if(map[id]) return map[id];
+    return '[data-dm-id="'+id+'"]';
+  }
+
   var KNOWN_DM_PROPS=[
     'margin-top','margin-bottom','padding-top','padding-bottom','gap','width','max-width','min-height','border-radius',
     'font-size','line-height','letter-spacing','opacity','color','background','border-color','translate-x','translate-y'
@@ -2304,10 +2336,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           else decl.push('  '+prop+': '+v+';');
         });
         if(props['translate-x']||props['translate-y']){
-          decl.push('  translate: var('+dmVar(vp,id,'translate-x')+') var('+dmVar(vp,id,'translate-y')+');');
+          decl.push('  margin-left: var('+dmVar(vp,id,'translate-x')+', 0px);');
+          decl.push('  margin-top: var('+dmVar(vp,id,'translate-y')+', 0px);');
         }
         if(!decl.length) return;
-        lines.push('[data-dm-id="'+id+'"]{');
+        lines.push(dmRuleSelector(id)+'{');
         lines=lines.concat(decl);
         lines.push('}');
         lines.push('');
@@ -2936,10 +2969,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         if(hasTr){
           var vx=layer.tokens[dmVar(vp,id,'translate-x')]||'0px';
           var vy=layer.tokens[dmVar(vp,id,'translate-y')]||'0px';
-          decl.push('  translate: '+vx+' '+vy+';');
+          decl.push('  margin-left: '+vx+';');
+          decl.push('  margin-top: '+vy+';');
         }
         if(decl.length){
-          blocks.push('[data-dm-id="'+id+'"] {\n'+decl.join('\n')+'\n}');
+          blocks.push(dmRuleSelector(id)+' {\n'+decl.join('\n')+'\n}');
         }
       });
       var body=blocks.join('\n\n');
