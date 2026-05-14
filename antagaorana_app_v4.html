@@ -439,7 +439,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
     <div class="fgroup"><label for="pwd">パスワード</label><input type="password" id="pwd" name="password" autocomplete="current-password" placeholder="パスワードを入力"></div>
     <p id="loginErr" style="display:none;font-size:12px;color:#ffb4a8;margin:-4px 0 8px;text-align:left;width:100%"></p>
     <button type="button" class="btn-login" onclick="doLogin()">ログイン</button>
-    <p class="login-note">※ 運営が発行したメールアドレス・パスワードでログインしてください。</p>
+    <p class="login-note">※ 株式会社あんたがおらなの運営が発行したメールアドレス・パスワードでログインしてください。</p>
   </div>
 </div>
 
@@ -465,7 +465,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
       <div class="sec-hd"><h2>555チャレンジ</h2></div>
       <a class="remote-card" href="https://meet.google.com/cvr-kkda-mcg" target="_blank">
         <div class="rc-icon">555<br>チャレンジ</div>
-        <div class="rc-info"><div class="rc-title">555チャレンジ（自由参加）</div><div class="rc-sub">毎朝5時55分スタート ／ リモートで繋がりながら</div></div>
+        <div class="rc-info"><div class="rc-title">555チャレンジ（任意参加）</div><div class="rc-sub">毎朝5時55分スタート ／ リモートで繋がりながら</div><div class="rc-sub" style="margin-top:4px;font-size:11px;opacity:0.72;">参加は自由です。無理のない範囲でどうぞ。</div></div>
         <span class="rc-badge badge-live">OPEN</span>
       </a>
       <a class="remote-card" href="#" onclick="alert('カレンダーが開きます');return false;">
@@ -634,8 +634,8 @@ try {
   localStorage.removeItem('ago_goals4');
 } catch (e) {}
 
-const IMG_DONE  = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 viewBox=%270 0 80 80%27%3E%3Ctext x=%2750%25%27 y=%2754%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%2752%27 font-weight=%27900%27 fill=%27%232A4A3E%27%3E%E3%81%82%3C/text%3E%3C/svg%3E';
-const IMG_EMPTY = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 viewBox=%270 0 80 80%27%3E%3Ctext x=%2750%25%27 y=%2754%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%2752%27 font-weight=%27900%27 fill=%27%23C8C3BC%27%3E%E3%81%82%3C/text%3E%3C/svg%3E';
+const IMG_DONE  = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 viewBox=%270 0 80 80%27%3E%3Ccircle cx=%2740%27 cy=%2740%27 r=%2736%27 fill=%27%232A4A3E%27/%3E%3Ccircle cx=%2740%27 cy=%2740%27 r=%2732%27 fill=%27none%27 stroke=%27rgba(255,255,255,0.2)%27 stroke-width=%271.5%27/%3E%3Cpath d=%27M24 40 L34 52 L56 27%27 fill=%27none%27 stroke=%27white%27 stroke-width=%275%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E';
+const IMG_EMPTY = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27 viewBox=%270 0 80 80%27%3E%3Ccircle cx=%2740%27 cy=%2740%27 r=%2736%27 fill=%27%23EDEAE4%27/%3E%3Ccircle cx=%2740%27 cy=%2740%27 r=%2734%27 fill=%27none%27 stroke=%27%23C0BAB2%27 stroke-width=%271.5%27/%3E%3C/svg%3E';
 
 /** 画面表示用ユーザー情報 */
 let user = null;
@@ -693,10 +693,12 @@ function enterAppAfterAuth(fbUser) {
   const h = new Date().getHours();
   const greet =
     h < 10
-      ? 'おはようございます！\n今日もそれぞれの場所から。'
-      : h < 17
-        ? 'こんにちは！\nいい調子ですか？'
-        : 'お疲れさまです！\nゆっくり休んでください。';
+      ? 'おはようございます。\n今日もそれぞれの場所から。'
+      : h < 13
+        ? 'こんにちは。\n午前中もお疲れさまです。'
+        : h < 17
+          ? 'こんにちは。\n午後もよろしくお願いします。'
+          : 'おつかれさまです。\n今日もよく頑張りました。';
   document.getElementById('greetTxt').textContent = greet;
   initGoals();
   initSessions();
@@ -910,11 +912,11 @@ function calcStreak(stamps, today) {
 }
 
 function stampMsg(done, today) {
-  if (done === 0) return '最初のスタンプを押してみよう';
-  if (done === today) return '今日まで全部達成！すごい！';
-  if (done >= today * 0.8) return 'とても順調です。この調子で！';
-  if (done >= today * 0.5) return '半分以上達成。引き続き頑張ろう';
-  return `${done}日達成。少しずつ積み重ねていこう`;
+  if (done === 0) return 'まだスタンプがありません。今日が最初の一日になります。';
+  if (done === today) return `今月${today}日、すべて達成。ここまで続けてくれて、ありがとう。`;
+  if (done >= today * 0.8) return `${today}日中${done}日達成。着実に積み重ねています。`;
+  if (done >= today * 0.5) return `${today}日中${done}日達成。半分を超えました。この調子で。`;
+  return `${done}日分の記録があります。一日一日が、確かな一歩です。`;
 }
 
 async function toggleStamp(gid, d, days, today, y, m) {
@@ -1213,14 +1215,15 @@ function changeEmail() {
 
 function showStampBubble(streak) {
   const msgs = [
-    { streak: 1, emoji: '🌱', title: '1日目スタート！', msg: '素晴らしい一歩です。' },
-    { streak: 3, emoji: '🔥', title: '3日連続！', msg: 'リズムが生まれてきた！' },
-    { streak: 5, emoji: '⭐', title: '5日連続！', msg: '習慣の芽が出てきました。' },
-    { streak: 7, emoji: '🏆', title: '7日連続！', msg: '1週間完走、本当にすごい！' },
-    { streak: 10, emoji: '✨', title: '10日連続！', msg: 'あなたの継続力は本物です！' },
-    { streak: 14, emoji: '🎖', title: '2週間連続！', msg: 'もう習慣になっていますね！' },
-    { streak: 21, emoji: '👑', title: '21日連続！', msg: '習慣化の証明、達成！' },
-    { streak: 30, emoji: '🎊', title: '1ヶ月連続！', msg: '圧倒的な継続力に拍手！' },
+    { streak: 1,  emoji: '🌿', title: '1日目',     msg: '最初の一歩を踏み出した。それだけで十分です。' },
+    { streak: 2,  emoji: '🌿', title: '2日連続',   msg: '昨日に続いて、今日も。その積み重ねが全てです。' },
+    { streak: 3,  emoji: '🌱', title: '3日連続',   msg: '3日続けた。小さいけれど、確かなことです。' },
+    { streak: 5,  emoji: '🌱', title: '5日連続',   msg: '5日。静かに、でも確実に変わっています。' },
+    { streak: 7,  emoji: '🍃', title: '7日連続',   msg: '一週間、続きました。自分を信じてよかった。' },
+    { streak: 10, emoji: '🍃', title: '10日連続',  msg: '10日。もうあなたの中に根がついています。' },
+    { streak: 14, emoji: '🌿', title: '14日連続',  msg: '2週間。習慣というより、あなたの一部になりつつある。' },
+    { streak: 21, emoji: '🌳', title: '21日連続',  msg: '21日。ここまで来れたのは、諦めなかったから。' },
+    { streak: 30, emoji: '🌳', title: '30日連続',  msg: '1ヶ月。大久保先生もきっと喜んでいます。ありがとう。' },
   ];
   let best = msgs[0];
   for (const x of msgs) {
