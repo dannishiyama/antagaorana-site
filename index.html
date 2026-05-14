@@ -135,8 +135,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   max-width:100%;
   margin:0 auto;
   overflow:visible;
-  /* 上コピー・ロゴ・下コピーを一塊の呼吸に */
-  gap:clamp(4px,0.6vw,8px);
+  gap:0;
 }
 .hero-mark-top{
   font-family:'Shippori Mincho','Shippori Mincho B1','Noto Serif JP',serif;
@@ -144,7 +143,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   font-weight:500;
   letter-spacing:.21em;
   color:rgba(255,255,255,.82);
-  margin:0;
+  margin:0 0 12px;
   line-height:1.32;
   width:100%;
   text-align:center;
@@ -165,7 +164,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   display:flex;
   justify-content:center;
   align-items:center;
-  margin:0;
+  margin:0 0 14px;
   width:100%;
   max-width:none;
   background:transparent;
@@ -292,8 +291,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     justify-self:center;
     align-self:start;
     align-items:center;
-    /* 右欄を左へ寄せた分、書をわずかに中央へ引き寄せて対話感 */
-    padding-left:clamp(12px,1.8vw,36px);
+    /* 数値: 左塊を中央寄りへ +28px（指示レンジ +20〜40px の中間） */
+    padding-left:56px;
     padding-right:0;
     box-sizing:border-box;
   }
@@ -302,7 +301,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     width:100%;
     max-width:100%;
     margin:0 auto;
-    gap:clamp(3px,0.45vw,6px);
+    /* 数値: 左ブロック全体を 52px 上へ（指示 40〜60px の中間） */
+    margin-top:-52px;
+    gap:0;
+  }
+  /* 上コピー→ロゴ: 上側 margin-bottom 14px + ロゴ margin-top -18px（計算上コピー下端〜ロゴ上端を大きく詰める。transform 不使用） */
+  .hero-mark-top{
+    margin:0 0 14px;
+  }
+  /* ロゴ→下コピー: margin-bottom 26px（上段より広め。指示の 35〜45% 縮小イメージを px で固定） */
+  .hero-logo-block{
+    margin:-18px 0 26px;
   }
   .hero-mark-top,
   .hero-mark-bottom,
@@ -313,8 +322,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     margin-right:auto;
   }
   .hero-logo-img.logo-calligraphy{
-    width:100%;
-    max-width:100%;
+    /* 数値: ロゴ約 6.5% 縮小（5〜8% の中間） */
+    width:93.5%;
+    max-width:93.5%;
   }
   .hero-desc{
     grid-column:2;
@@ -323,8 +333,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     width:100%;
     margin:0;
     align-self:start;
-    /* 右端へ逃げないよう、列内で静かな余白を残して左へ */
-    padding-right:clamp(72px,7vw,112px);
+    /* 数値: 既存最大 112px + 80px 左寄せ相当。本文最小幅 300px を確保 */
+    padding-right:min(192px,calc(100% - 300px));
     box-sizing:border-box;
     --hero-h1-size:clamp(25px,calc(22px + 0.35vw),33px);
   }
@@ -1128,9 +1138,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     width:min(870px,calc(100vw - 24px));
     max-width:100%;
     margin:0 auto;
-    gap:clamp(6px,1.8vw,12px);
+    gap:0;
   }
-  .hero-mark-top{margin-bottom:0;font-size:calc(15px * 0.82 * 0.9 * 0.85);letter-spacing:.14em}
+  .hero-mark-top{margin-bottom:10px;font-size:calc(15px * 0.82 * 0.9 * 0.85);letter-spacing:.14em}
   .hero-mark-bottom{margin-top:0;font-size:calc(16px * 0.82 * 0.9);letter-spacing:.065em}
   .hero-logo-block{align-self:stretch}
   .hero-logo-img.logo-calligraphy{
