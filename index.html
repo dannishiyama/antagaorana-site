@@ -303,28 +303,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     margin:0 auto;
     /* 数値: 左ブロック全体を 52px 上へ（指示 40〜60px の中間） */
     margin-top:-52px;
-    gap:0;
-  }
-  /* 上コピー→ロゴ: 上側 margin-bottom 14px + ロゴ margin-top -18px（計算上コピー下端〜ロゴ上端を大きく詰める。transform 不使用） */
-  .hero-mark-top{
-    margin:0 0 14px;
-  }
-  /* ロゴ→下コピー: margin-bottom 26px（上段より広め。指示の 35〜45% 縮小イメージを px で固定） */
-  .hero-logo-block{
-    margin:-18px 0 26px;
+    /* 上コピー・習字・下コピー間は PC で約 0.5mm（画像内余白はトリミング済み） */
+    gap:0.5mm;
   }
   .hero-mark-top,
-  .hero-mark-bottom,
-  .hero-logo-block{
+  .hero-logo-block,
+  .hero-mark-bottom{
+    margin:0;
     max-width:100%;
     width:100%;
     margin-left:auto;
     margin-right:auto;
   }
   .hero-logo-img.logo-calligraphy{
-    /* 数値: ロゴ約 6.5% 縮小（5〜8% の中間） */
-    width:93.5%;
-    max-width:93.5%;
+    /* 従来 93.5% 表示の 1.5 倍 */
+    width:140.25%;
+    max-width:140.25%;
   }
   .hero-desc{
     grid-column:2;
@@ -1280,7 +1274,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="hero-mark-top" data-dm-id="HERO_TOP_COPY">生きる力を育む家庭教師</div>
         <div class="hero-logo-block">
           <div class="hero-logo-frame">
-            <img class="hero-logo-img logo-calligraphy" data-dm-id="HERO_LOGO" src="./lp-assets/hero-logo-antagaorana.png?v=20260510e" width="1024" height="682" alt="あんたがおらな" decoding="async" fetchpriority="high">
+            <img class="hero-logo-img logo-calligraphy" data-dm-id="HERO_LOGO" src="./lp-assets/hero-logo-antagaorana.png?v=20260515b" width="387" height="229" alt="あんたがおらな" decoding="async" fetchpriority="high">
           </div>
         </div>
         <div class="hero-mark-bottom" data-dm-id="HERO_BOTTOM_COPY">に込めたメッセージ</div>
