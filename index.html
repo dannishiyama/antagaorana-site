@@ -73,6 +73,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 .nav-drawer a{display:block;padding:12px 6px;font-size:14px;font-weight:700;color:var(--gd);border-bottom:1px solid rgba(0,0,0,.06)}
 .nav-drawer a:last-child{border-bottom:none}
 .nav-drawer .sub{font-size:12px;font-weight:600;color:var(--tm);padding:10px 6px 6px}
+.nav-drawer-divider{height:1px;background:rgba(0,0,0,.1);margin:10px 6px 4px}
+.nav-drawer-member{color:var(--g) !important;font-size:13px !important;font-weight:600 !important;opacity:.75;letter-spacing:.04em}
+.nav-drawer-member::before{content:'👥  '}
 
 .hero{
   min-height:92vh;
@@ -291,8 +294,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     justify-self:center;
     align-self:start;
     align-items:center;
-    /* 数値: 左塊を中央寄りへ +28px（指示レンジ +20〜40px の中間） */
-    padding-left:56px;
+    padding-left:0;
     padding-right:0;
     box-sizing:border-box;
   }
@@ -301,8 +303,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     width:100%;
     max-width:100%;
     margin:0 auto;
-    /* 数値: 左ブロック全体を 52px 上へ（指示 40〜60px の中間） */
-    margin-top:-52px;
     /* 上コピー・習字・下コピー間は PC で約 0.5mm（画像内余白はトリミング済み） */
     gap:0.5mm;
   }
@@ -316,9 +316,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
     margin-right:auto;
   }
   .hero-logo-img.logo-calligraphy{
-    /* 従来 93.5% 表示の 1.5 倍 */
-    width:140.25%;
-    max-width:140.25%;
+    /* 140.25% × 0.7 ≈ 98.2%（前回比 0.7 倍） */
+    width:98.175%;
+    max-width:98.175%;
   }
   .hero-desc{
     grid-column:2;
@@ -514,7 +514,8 @@ section{padding:88px 5%}
 .india-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
 .india-imgs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .india-img{border-radius:12px;overflow:hidden}
-.india-img img{width:100%;aspect-ratio:16/11;object-fit:cover;object-position:50% 28%}
+.india-img img{width:100%;aspect-ratio:16/11;object-fit:cover;object-position:50% 40%}
+.india-imgs .india-img:nth-child(2) img{object-position:50% 65%}
 .india-pt{display:flex;gap:14px;margin-bottom:22px;align-items:flex-start}
 .india-dot{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:rgba(216,177,90,.18);border:1px solid rgba(216,177,90,.38);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif JP',serif;font-size:12px;font-weight:700;color:var(--goldl)}
 .india-pt-h{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:700;color:var(--w);margin-bottom:4px}
@@ -544,17 +545,35 @@ section{padding:88px 5%}
 .msg-message-link{
   display:inline-flex;
   align-items:center;
-  gap:8px;
-  margin-top:12px;
-  font-size:18px;
-  font-weight:600;
+  gap:10px;
+  margin-top:14px;
+  font-size:15px;
+  font-weight:700;
   color:#466246;
-  border-bottom:1px solid transparent;
-  padding-bottom:2px;
-  transition:border-color .2s ease,color .2s ease;
+  background:rgba(70,98,70,.07);
+  border:1.5px solid rgba(70,98,70,.22);
+  border-radius:999px;
+  padding:9px 18px 9px 14px;
+  transition:background .2s ease,border-color .2s ease,transform .15s ease;
+  line-height:1.4;
 }
-.msg-message-link:hover{border-bottom-color:rgba(70,98,70,.45)}
-.msg-message-link .sub{font-size:11px;font-weight:700;color:var(--tm);letter-spacing:.06em}
+.msg-message-link:hover{
+  background:rgba(70,98,70,.13);
+  border-color:rgba(70,98,70,.42);
+  transform:translateY(-1px);
+}
+.msg-message-link .sub{
+  font-size:10px;
+  font-weight:800;
+  color:rgba(70,98,70,.65);
+  letter-spacing:.1em;
+  flex-shrink:0;
+}
+.msg-message-link .arrow{
+  font-size:13px;
+  opacity:.6;
+  flex-shrink:0;
+}
 .msg-photo-wrap.placeholder{
   background:linear-gradient(165deg,rgba(70,98,70,.08) 0%,rgba(232,224,214,.45) 55%,rgba(255,255,255,.85) 100%);
   border:1px solid rgba(70,98,70,.08);
@@ -1243,7 +1262,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <nav>
   <div class="nav-logo"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
   <div class="nav-links">
-    <a href="#creed">理念</a>
     <a href="#services">支援内容</a>
     <a href="#message">挨拶</a>
     <a href="#voice">実際の声</a>
@@ -1256,13 +1274,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="sub">MENU</div>
-  <a href="#creed">理念</a>
   <a href="#services">支援内容</a>
   <a href="#message">挨拶</a>
   <a href="#voice">実際の声</a>
   <a href="#faq">よくあるご質問</a>
   <a href="./news.html">お知らせ</a>
   <a href="#contact">お問い合わせ</a>
+  <div class="nav-drawer-divider"></div>
+  <a href="./antagaorana_app_v4.html" class="nav-drawer-member">コミュニティへ入る</a>
 </div>
 
 <!-- HERO（背景は .hero / .hero-bg 二重指定＋インラインで本番テーマ上書き対策） -->
@@ -1609,7 +1628,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <span class="msg-tag">不登校支援</span>
             <span class="msg-tag">発達障害支援</span>
           </div>
-          <a class="msg-message-link" href="./nishiyama.html"><span class="sub">メッセージ</span>「ダメな子なんて、いない。」の原点へ。</a>
+          <a class="msg-message-link" href="./nishiyama.html"><span class="sub">MESSAGE</span>「ダメな子なんて、いない」<span class="arrow">→</span></a>
         </div>
       </div>
 
