@@ -52,6 +52,10 @@
   --hero-type-bump:1mm;
   --tune-desc-x:0px;
   --tune-desc-y:0px;
+  /* スマホ: 左ブロックを画面幅いっぱいにせず余白を残す */
+  --hero-m-mark-max:min(272px,72vw);
+  --hero-m-logo-w:55%;
+  --hero-m-copy-fs:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{
@@ -519,7 +523,6 @@ section{padding:88px 5%}
 .sv-body{padding:26px}
 .sv-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;background:var(--gp);color:var(--g);letter-spacing:.08em}
 .sv-name{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:900;color:var(--g);margin-bottom:4px}
-.sv-ruby{font-size:13px;color:var(--ts);margin-bottom:14px}
 .sv-txt{font-size:14px;color:var(--tm);line-height:1.9;margin-bottom:18px}
 .sv-for {
   font-size: 12px;
@@ -1002,19 +1005,37 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     margin-right:auto;
   }
   .hero-mark{
-    align-items:stretch;
-    width:min(870px,calc(100vw - 24px));
-    max-width:100%;
-    margin:0 auto;
-    gap:0;
-  }
-  .hero-mark-top{margin-bottom:10px;font-size:calc(15px * 0.82 * 0.9 * 0.85);letter-spacing:.14em}
-  .hero-mark-bottom{margin-top:0;font-size:calc(16px * 0.82 * 0.9);letter-spacing:.065em}
-  .hero-logo-block{align-self:stretch}
-  .hero-logo-img.logo-calligraphy{
+    align-items:center;
     width:100%;
-    max-width:100%;
-    opacity:.97;
+    max-width:var(--hero-m-mark-max,min(272px,72vw));
+    margin:0 auto;
+    gap:clamp(8px,2.4vw,14px);
+    padding:0 4px;
+    box-sizing:border-box;
+  }
+  .hero-mark-top{
+    margin-bottom:0;
+    font-size:var(--hero-m-copy-fs);
+    letter-spacing:.16em;
+    line-height:1.45;
+    color:rgba(255,255,255,.78);
+    max-width:24em;
+  }
+  .hero-mark-bottom{
+    margin-top:0;
+    font-size:var(--hero-m-copy-fs);
+    letter-spacing:.12em;
+    line-height:1.45;
+    color:rgba(216,177,90,.82);
+    max-width:22em;
+  }
+  .hero-logo-block{align-self:center;width:100%;max-width:min(280px,74vw)}
+  .hero-logo-img.logo-calligraphy{
+    width:var(--hero-m-logo-w,55%);
+    max-width:220px;
+    margin-left:auto;
+    margin-right:auto;
+    opacity:.94;
     filter:none;
   }
   .hero-message-sub{max-width:54ch}
@@ -1219,7 +1240,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="sv-body">
           <span class="sv-badge">家庭教師事業</span>
           <div class="sv-name">芽（メイ）</div>
-          <div class="sv-ruby">可能性の芽吹き</div>
           <div class="sv-for">
             <span>こんなご家庭へ</span>
             「学校に行けない日が続いている」「普通の家庭教師では合わなかった」「まず自信を取り戻してほしい」
@@ -1236,7 +1256,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="sv-body">
           <span class="sv-badge">教育コンサルティング</span>
           <div class="sv-name">導（シルべ）</div>
-          <div class="sv-ruby">自己を導く力</div>
           <div class="sv-for">
             <span>こんな親御様へ</span>
             「どう声をかければいいかわからない」「怒ってしまう自分が嫌になる」「夫婦でこの問題について意見が合わない」
@@ -1253,7 +1272,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="sv-body">
           <span class="sv-badge">社会人コーチング</span>
           <div class="sv-name">拓（ハク）</div>
-          <div class="sv-ruby">未来を拓く行動</div>
           <div class="sv-for">
             <span>こんな方へ</span>
             「このままでいいのかと感じている」「本当にやりたいことがわからなくなった」「人生を変えたいが何から始めればいいかわからない」
@@ -1270,7 +1288,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="sv-body">
           <span class="sv-badge" style="background:rgba(196,133,106,.12);color:var(--rose)">海外体験プロジェクト</span>
           <div class="sv-name">越（エツ）</div>
-          <div class="sv-ruby">枠を越える</div>
           <div class="sv-for">
             <span>こんなお子様へ</span>
             「日本の環境から一度離れてみたい」「自分が必要とされる感覚を体験したい」「不登校・ひきこもりから抜け出すきっかけが欲しい」
@@ -1378,7 +1395,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <span class="msg-tag">不登校支援</span>
             <span class="msg-tag">発達障害支援</span>
           </div>
-          <a class="msg-message-link" href="./nishiyama.html"><span class="sub">MESSAGE</span>「ダメな子なんて、いない」<span class="arrow">→</span></a>
+          <a class="msg-message-link" href="./nishiyama.html"><span class="sub">MESSAGE</span>「ダメな子なんて、いない。」<span class="arrow">→</span></a>
         </div>
       </div>
 
