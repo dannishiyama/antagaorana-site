@@ -56,6 +56,7 @@
   --hero-m-mark-max:min(272px,72vw);
   --hero-m-logo-w:55%;
   --hero-m-copy-fs:12px;
+  --hero-m-top-space:clamp(28px,7vw,52px);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{
@@ -290,9 +291,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
   text-shadow:0 2px 0 rgba(47,58,47,.4),0 0 32px rgba(216,177,90,.5);
   max-width:24ch;
 }
-.hero-kometa-more{margin-top:14px}
-.hero-kometa-more a{font-size:calc(15px + var(--hero-type-bump,0mm));font-weight:500;color:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px;letter-spacing:.08em}
-.hero-kometa-more a:hover{color:rgba(255,255,255,.75)}
+.hero-kometa-more{margin-top:18px}
+.hero-kometa-more a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:46px;
+  padding:12px 22px;
+  font-size:calc(15px + var(--hero-type-bump,0mm));
+  font-weight:700;
+  letter-spacing:.06em;
+  color:#fff;
+  background:rgba(255,255,255,.14);
+  border:2px solid rgba(255,255,255,.42);
+  border-radius:999px;
+  box-shadow:0 3px 14px rgba(0,0,0,.12);
+  transition:background .18s ease,border-color .18s ease,transform .15s ease,box-shadow .18s ease;
+}
+.hero-kometa-more a:hover{
+  color:#fff;
+  background:rgba(255,255,255,.22);
+  border-color:rgba(255,255,255,.62);
+  transform:translateY(-1px);
+  box-shadow:0 5px 18px rgba(0,0,0,.16);
+}
 .hero-btns{margin-top:32px;margin-bottom:clamp(12px,2.5vh,40px);display:flex;gap:20px;flex-wrap:wrap}
 
 @media(min-width:901px){
@@ -541,10 +564,51 @@ section{padding:88px 5%}
   margin-bottom: 4px;
   color: var(--gd);
 }
-.sv-lnk{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--g);border-bottom:1px solid var(--gp2);padding-bottom:2px}
-.sv-actions{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:14px}
-.sv-cta{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;color:var(--w);background:var(--g);border:none;font-family:inherit;cursor:pointer;text-decoration:none;transition:opacity .15s,transform .15s}
-.sv-cta:hover{opacity:.94;transform:translateY(-1px)}
+.sv-lnk{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:46px;
+  padding:12px 22px;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:var(--gd);
+  background:#fff;
+  border:2px solid var(--g);
+  border-radius:999px;
+  box-shadow:0 2px 12px rgba(70,98,70,.12);
+  transition:background .18s ease,border-color .18s ease,transform .15s ease,box-shadow .18s ease;
+}
+.sv-lnk:hover{
+  background:var(--gp);
+  border-color:var(--gd);
+  color:var(--gd);
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(70,98,70,.18);
+}
+.sv-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-top:16px}
+.sv-actions .sv-lnk{align-self:flex-start}
+.sv-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  padding:12px 22px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+  color:var(--w);
+  background:var(--g);
+  border:2px solid transparent;
+  font-family:inherit;
+  cursor:pointer;
+  text-decoration:none;
+  box-shadow:0 3px 14px rgba(70,98,70,.2);
+  transition:opacity .15s,transform .15s,box-shadow .18s ease;
+}
+.sv-cta:hover{opacity:.96;transform:translateY(-1px);box-shadow:0 5px 18px rgba(70,98,70,.26)}
 
 .india{background:linear-gradient(160deg,#2f3a2f 0%,#243528 100%);position:relative;overflow:hidden}
 .india .stag{color:var(--goldl)}
@@ -584,34 +648,66 @@ section{padding:88px 5%}
 .msg-message-link{
   display:inline-flex;
   align-items:center;
-  gap:10px;
-  margin-top:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px 10px;
+  margin-top:16px;
+  min-height:48px;
+  padding:12px 22px 12px 16px;
   font-size:15px;
   font-weight:700;
-  color:#466246;
-  background:rgba(70,98,70,.07);
-  border:1.5px solid rgba(70,98,70,.22);
+  color:var(--gd);
+  background:rgba(70,98,70,.1);
+  border:2px solid rgba(70,98,70,.32);
   border-radius:999px;
-  padding:9px 18px 9px 14px;
-  transition:background .2s ease,border-color .2s ease,transform .15s ease;
-  line-height:1.4;
+  box-shadow:0 2px 12px rgba(70,98,70,.1);
+  line-height:1.45;
+  transition:background .2s ease,border-color .2s ease,transform .15s ease,box-shadow .18s ease;
 }
 .msg-message-link:hover{
-  background:rgba(70,98,70,.13);
-  border-color:rgba(70,98,70,.42);
+  background:rgba(70,98,70,.16);
+  border-color:rgba(70,98,70,.5);
   transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(70,98,70,.16);
 }
 .msg-message-link .sub{
-  font-size:10px;
+  font-size:11px;
   font-weight:800;
-  color:rgba(70,98,70,.65);
-  letter-spacing:.1em;
+  color:rgba(70,98,70,.75);
+  letter-spacing:.12em;
   flex-shrink:0;
+  padding:3px 8px;
+  border-radius:999px;
+  background:rgba(70,98,70,.08);
 }
 .msg-message-link .arrow{
-  font-size:13px;
-  opacity:.6;
+  font-size:15px;
+  font-weight:800;
+  opacity:.85;
   flex-shrink:0;
+}
+.india .slead a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  margin-top:10px;
+  min-height:44px;
+  padding:10px 20px;
+  font-size:14px;
+  font-weight:700;
+  color:#fff8e8;
+  background:rgba(255,255,255,.1);
+  border:2px solid rgba(216,177,90,.45);
+  border-radius:999px;
+  text-decoration:none;
+  box-shadow:0 2px 12px rgba(0,0,0,.12);
+  transition:background .18s ease,border-color .18s ease,transform .15s ease;
+}
+.india .slead a:hover{
+  background:rgba(255,255,255,.16);
+  border-color:rgba(216,177,90,.7);
+  transform:translateY(-1px);
 }
 .msg-photo-wrap.placeholder{
   background:linear-gradient(165deg,rgba(70,98,70,.08) 0%,rgba(232,224,214,.45) 55%,rgba(255,255,255,.85) 100%);
@@ -972,13 +1068,18 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     min-height:auto;
     justify-content:center;
     align-items:center;
-    padding:0;
+    padding:var(--hero-m-top-space) 0 0;
   }
   .hero-desc{
     --hero-h1-size:clamp(19px,calc(15px + 0.55vw),28px);
+    align-items:center;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
   }
   .hero-desc-head{
     max-width:520px;
+    width:100%;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -992,6 +1093,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     max-width:22em;
     margin-left:auto;
     margin-right:auto;
+    text-align:center;
   }
   .hero-desc-heading .hero-h1-l2{
     white-space:normal;
@@ -1003,7 +1105,18 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     max-width:32em;
     margin-left:auto;
     margin-right:auto;
+    text-align:center;
   }
+  .hero-kometa{
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .hero-kometa p{text-align:center}
+  .hero-kometa-more{text-align:center}
   .hero-mark{
     align-items:center;
     width:100%;
@@ -1012,6 +1125,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     gap:clamp(8px,2.4vw,14px);
     padding:0 4px;
     box-sizing:border-box;
+    text-align:center;
+    transform:none;
   }
   .hero-mark-top{
     margin-bottom:0;
@@ -1019,7 +1134,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     letter-spacing:.16em;
     line-height:1.45;
     color:rgba(255,255,255,.78);
-    max-width:24em;
+    width:100%;
+    max-width:none;
+    text-align:center;
   }
   .hero-mark-bottom{
     margin-top:0;
@@ -1027,7 +1144,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     letter-spacing:.12em;
     line-height:1.45;
     color:rgba(216,177,90,.82);
-    max-width:22em;
+    width:100%;
+    max-width:none;
+    text-align:center;
   }
   .hero-logo-block{align-self:center;width:100%;max-width:min(280px,74vw)}
   .hero-logo-img.logo-calligraphy{
@@ -1038,16 +1157,27 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     opacity:.94;
     filter:none;
   }
-  .hero-message-sub{max-width:54ch}
-  .hero-kometa{margin-left:auto;margin-right:auto;text-align:left}
-  .hero-yell{margin-left:auto;margin-right:auto;text-align:center}
+  .hero-message-sub{max-width:54ch;text-align:center;margin-left:auto;margin-right:auto}
+  .hero-yell{margin-left:auto;margin-right:auto;text-align:center;max-width:none}
   .hero-btns{justify-content:center}
+  .msg-message-link{
+    width:100%;
+    max-width:min(340px,100%);
+    justify-content:center;
+    text-align:center;
+  }
+  .sv-actions .sv-lnk,
+  .sv-actions .sv-cta{
+    width:100%;
+    justify-content:center;
+    align-self:stretch;
+  }
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
   .msg-col-photo{max-width:320px;margin:0 auto}
-  .hero{min-height:auto;padding:112px clamp(16px,5vw,40px) 80px;padding-top:max(104px,10vh)}
+  .hero{min-height:auto;padding:112px clamp(16px,5vw,40px) 80px;padding-top:max(124px,13vh)}
   .nav-burger{display:inline-flex}
   .nav-cta{display:none}
 }
@@ -1308,7 +1438,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="si" style="position:relative;z-index:1">
     <div class="stag">INDIA PROJECT</div>
     <h2 class="stitle">越（エツ）— インドプロジェクト</h2>
-    <p class="slead">言葉が通じなくても「ありがとう」は伝わる。その体験が、人生を変える。<br><a href="./etsu.html" style="color:var(--goldl);font-weight:700;text-decoration:underline;text-underline-offset:3px">越（エツ）の概要・プロジェクトの詳細はこちら →</a></p>
+    <p class="slead">言葉が通じなくても「ありがとう」は伝わる。その体験が、人生を変える。<br><a href="./etsu.html">越（エツ）の概要・プロジェクトの詳細はこちら →</a></p>
     <div class="india-grid">
       <div class="india-imgs">
         <div class="india-img"><img src="./lp-assets/india-slide-04.png?v=20260501" alt="学校での交流のひとコマ"></div>
