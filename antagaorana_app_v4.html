@@ -421,6 +421,81 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
   font-family:'Noto Serif JP',serif;font-size:18px;font-weight:900;
   padding:12px 4px;letter-spacing:.05em;
 }
+
+/* ═══════════════════════════
+   APPLY SCREEN
+═══════════════════════════ */
+#applyScreen{
+  background:linear-gradient(170deg,#3A5A38 0%,#2A4A28 55%,#1A3018 100%);
+  align-items:center;justify-content:center;padding:32px 24px;
+  position:relative;overflow-y:auto;
+}
+#applyScreen::before{
+  content:'';position:absolute;top:-100px;right:-80px;
+  width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,146,42,.14) 0%,transparent 70%);
+  pointer-events:none;
+}
+#applyScreen::after{
+  content:'';position:absolute;bottom:-70px;left:-60px;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,98,58,.10) 0%,transparent 70%);
+  pointer-events:none;
+}
+.apply-wrap{
+  width:100%;max-width:360px;position:relative;z-index:1;
+  animation:fadeUp .55s ease both;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:16px 0;
+}
+.apply-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--ivory);text-align:center;margin-bottom:5px;width:100%}
+.apply-sub{font-size:13px;color:rgba(247,240,230,.50);text-align:center;margin-bottom:22px;width:100%;line-height:1.85}
+.fgroup textarea{
+  width:100%;padding:13px 15px;height:90px;resize:none;
+  background:rgba(247,240,230,.07);
+  border:1px solid rgba(247,240,230,.12);border-radius:10px;
+  color:var(--ivory);font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .2s,background .2s;
+}
+.fgroup textarea:focus{border-color:var(--gold);background:rgba(247,240,230,.11)}
+.fgroup textarea::placeholder{color:rgba(247,240,230,.25)}
+.btn-back-login{
+  background:none;border:none;color:rgba(247,240,230,.42);
+  font-size:12px;margin-top:18px;cursor:pointer;
+  text-decoration:underline;font-family:inherit;letter-spacing:.04em;
+}
+.btn-back-login:active{color:var(--gold-lt)}
+.apply-link-btn{
+  background:none;border:none;color:rgba(247,240,230,.38);
+  font-size:11px;margin-top:18px;cursor:pointer;
+  text-decoration:underline;font-family:inherit;letter-spacing:.04em;width:100%;text-align:center;
+}
+.apply-link-btn:active{color:var(--gold-lt)}
+.apply-success{display:none;text-align:center;padding:10px 0;width:100%}
+.apply-success-icon{font-size:52px;margin-bottom:16px;display:block}
+.apply-success-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--ivory);margin-bottom:12px}
+.apply-success-msg{font-size:13px;color:rgba(247,240,230,.65);line-height:1.95;margin-bottom:24px}
+
+/* ═══════════════════════════
+   ADMIN PANEL
+═══════════════════════════ */
+.pending-item{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh-s)}
+.pending-name{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
+.pending-email{font-size:13px;color:var(--green);margin-bottom:8px;word-break:break-all}
+.pending-reason{font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:8px;border-left:3px solid var(--green-pale2);padding-left:10px}
+.pending-date{font-size:11px;color:var(--text-soft);margin-bottom:12px}
+.pending-status-badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.status-pending{background:rgba(200,146,42,.14);color:#8A6018}
+.status-approved{background:rgba(42,74,62,.1);color:var(--green)}
+.status-rejected{background:rgba(196,98,58,.1);color:var(--terra)}
+.pending-actions{display:flex;gap:8px}
+.btn-approve{flex:1;padding:10px;background:var(--green);border:none;border-radius:10px;color:var(--ivory);font-family:'Noto Serif JP',serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.btn-approve:active{background:var(--green-mid)}
+.btn-reject{flex:1;padding:10px;background:none;border:1.5px solid rgba(196,98,58,.3);border-radius:10px;color:var(--terra);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s}
+.btn-reject:active{background:rgba(196,98,58,.05)}
+.admin-empty{text-align:center;padding:40px 16px;color:var(--text-soft);font-size:14px;line-height:2.2}
+.admin-hint{background:rgba(200,146,42,.08);border:1px solid rgba(200,146,42,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--text-mid);line-height:1.85}
+.admin-hint a{color:var(--green);font-weight:600}
 </style>
 </head>
 <body>
@@ -429,7 +504,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 <div id="loginScreen" class="screen active">
   <div class="login-wrap">
     <div class="login-calli">
-      <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='160' viewBox='0 0 320 160'%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='60' font-weight='900' fill='rgba(247,240,230,0.92)' letter-spacing='6'%3Eあんたが%3C/text%3E%3Ctext x='50%25' y='78%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='60' font-weight='900' fill='rgba(247,240,230,0.92)' letter-spacing='6'%3Eおらな%3C/text%3E%3C/svg%3E" alt="あんたがおらな">
+      <img src="./lp-assets/hero-logo-antagaorana.png?v=20260516a" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260516a 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260516a 2x" width="200" height="118" alt="あんたがおらな" decoding="async">
       <div class="calli-divider"></div>
       <span class="calli-sub">COMMUNITY</span>
     </div>
@@ -440,6 +515,54 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
     <p id="loginErr" style="display:none;font-size:12px;color:#ffb4a8;margin:-4px 0 8px;text-align:left;width:100%"></p>
     <button type="button" class="btn-login" onclick="doLogin()">ログイン</button>
     <p class="login-note">※ 株式会社あんたがおらなの運営が発行したメールアドレス・パスワードでログインしてください。</p>
+    <button type="button" class="apply-link-btn" onclick="showApplyForm()">コミュニティへの参加申請はこちら →</button>
+  </div>
+</div>
+
+<!-- APPLY FORM SCREEN -->
+<div id="applyScreen" class="screen">
+  <div class="apply-wrap">
+    <div class="login-calli">
+      <img src="./lp-assets/hero-logo-antagaorana.png?v=20260516a" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260516a 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260516a 2x" width="200" height="118" alt="あんたがおらな" decoding="async">
+      <div class="calli-divider"></div>
+      <span class="calli-sub">COMMUNITY</span>
+    </div>
+    <h1 class="apply-title">参加申請</h1>
+    <p class="apply-sub">申請内容を運営が確認し、<br>承認後にログイン情報をお送りします。</p>
+    <!-- フォーム本体 -->
+    <div id="applyFormBody" style="width:100%">
+      <div class="fgroup">
+        <label for="applyName" style="display:block;font-size:11px;font-weight:500;color:var(--gold-lt);margin-bottom:5px;letter-spacing:.05em">お名前</label>
+        <input type="text" id="applyName" autocomplete="name" placeholder="山田 太郎"
+          style="width:100%;padding:13px 15px;background:rgba(247,240,230,.07);border:1px solid rgba(247,240,230,.12);border-radius:10px;color:var(--ivory);font-size:15px;font-family:inherit;outline:none;transition:border-color .2s,background .2s"
+          onfocus="this.style.borderColor='var(--gold)';this.style.background='rgba(247,240,230,.11)'"
+          onblur="this.style.borderColor='rgba(247,240,230,.12)';this.style.background='rgba(247,240,230,.07)'">
+      </div>
+      <div class="fgroup" style="margin-bottom:13px">
+        <label for="applyEmail" style="display:block;font-size:11px;font-weight:500;color:var(--gold-lt);margin-bottom:5px;letter-spacing:.05em">メールアドレス</label>
+        <input type="email" id="applyEmail" autocomplete="email" inputmode="email" placeholder="your@email.com"
+          style="width:100%;padding:13px 15px;background:rgba(247,240,230,.07);border:1px solid rgba(247,240,230,.12);border-radius:10px;color:var(--ivory);font-size:15px;font-family:inherit;outline:none;transition:border-color .2s,background .2s"
+          onfocus="this.style.borderColor='var(--gold)';this.style.background='rgba(247,240,230,.11)'"
+          onblur="this.style.borderColor='rgba(247,240,230,.12)';this.style.background='rgba(247,240,230,.07)'">
+      </div>
+      <div class="fgroup" style="margin-bottom:13px">
+        <label for="applyReason" style="display:block;font-size:11px;font-weight:500;color:var(--gold-lt);margin-bottom:5px;letter-spacing:.05em">参加を希望する理由・動機</label>
+        <textarea id="applyReason" placeholder="コミュニティに参加したい理由を自由にお書きください"
+          style="width:100%;padding:13px 15px;height:90px;resize:none;background:rgba(247,240,230,.07);border:1px solid rgba(247,240,230,.12);border-radius:10px;color:var(--ivory);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,background .2s"
+          onfocus="this.style.borderColor='var(--gold)';this.style.background='rgba(247,240,230,.11)'"
+          onblur="this.style.borderColor='rgba(247,240,230,.12)';this.style.background='rgba(247,240,230,.07)'"></textarea>
+      </div>
+      <p id="applyErr" style="display:none;font-size:12px;color:#ffb4a8;margin:-4px 0 8px;text-align:left;width:100%"></p>
+      <button type="button" class="btn-login" id="applySubmitBtn" onclick="submitApplication()">申請を送る</button>
+    </div>
+    <!-- 送信完了 -->
+    <div id="applySuccess" class="apply-success">
+      <span class="apply-success-icon">✉️</span>
+      <div class="apply-success-title">申請を受け付けました</div>
+      <div class="apply-success-msg">内容を確認後、<br>運営よりご連絡いたします。<br>しばらくお待ちください。</div>
+      <button type="button" class="btn-login" onclick="backToLogin()">ログイン画面へ戻る</button>
+    </div>
+    <button type="button" class="btn-back-login" id="applyBackBtn" onclick="backToLogin()">← ログイン画面へ戻る</button>
   </div>
 </div>
 
@@ -550,6 +673,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
       </div>
       <div class="sec-hd"><h2>メニュー</h2></div>
       <div class="menu">
+        <div class="mi" id="adminMenuItem" style="display:none" onclick="showAdminPage()"><div class="mi-dot" style="background:var(--gold)"></div><span class="mi-lbl" style="color:var(--green);font-weight:700">管理者パネル（参加申請）</span><span class="mi-arr">›</span></div>
         <div class="mi" onclick="changePhoto()"><div class="mi-dot"></div><span class="mi-lbl">プロフィール写真を変更</span><span class="mi-arr">›</span></div>
         <div class="mi" onclick="showEmailPage()"><div class="mi-dot"></div><span class="mi-lbl">メールアドレスを変更</span><span class="mi-arr">›</span></div>
         <div class="mi" onclick="showNotifPage()"><div class="mi-dot"></div><span class="mi-lbl">通知設定</span><span class="mi-arr">›</span></div>
@@ -571,6 +695,16 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
         <button onclick="saveEmail()" style="width:100%;padding:13px;background:var(--green);border:none;border-radius:10px;color:var(--ivory);font-family:'Noto Serif JP',serif;font-size:15px;font-weight:700;cursor:pointer">保存する</button>
       </div>
       <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer">戻る</button>
+    </div>
+
+    <!-- ADMIN PAGE -->
+    <div class="page" id="p-admin">
+      <div class="sec-hd"><h2>参加申請の管理</h2></div>
+      <div class="admin-hint">
+        ✅ <strong>承認フロー：</strong>「承認する」→ <a href="https://console.firebase.google.com/project/antagaorana-haku/authentication/users" target="_blank">Firebase Console</a> でそのメールアドレスのアカウントを作成 → パスワードリセットメールを送信。
+      </div>
+      <div id="adminList"></div>
+      <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer;margin-top:4px">戻る</button>
     </div>
 
     <!-- NOTIF PAGE -->
@@ -674,7 +808,7 @@ async function ensureUserDoc(fbUser) {
     return { name: 'メンバー', email };
   }
   const data = snap.data() || {};
-  return { name: data.name || 'メンバー', email: data.email || email };
+  return { name: data.name || 'メンバー', email: data.email || email, role: data.role || 'member' };
 }
 
 function enterAppAfterAuth(fbUser) {
@@ -700,9 +834,13 @@ function enterAppAfterAuth(fbUser) {
           ? 'こんにちは。\n午後もよろしくお願いします。'
           : 'おつかれさまです。\n今日もよく頑張りました。';
   document.getElementById('greetTxt').textContent = greet;
+  // 管理者メニュー表示制御
+  const adminMenuItem = document.getElementById('adminMenuItem');
+  if (adminMenuItem) adminMenuItem.style.display = user.role === 'admin' ? 'flex' : 'none';
   initGoals();
   initSessions();
   document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('applyScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
   showLoginError('');
 }
@@ -733,7 +871,7 @@ auth.onAuthStateChanged(async (fbUser) => {
   currentUid = fbUser.uid;
   try {
     const u = await ensureUserDoc(fbUser);
-    user = { name: u.name || 'メンバー', email: u.email || fbUser.email || '' };
+    user = { name: u.name || 'メンバー', email: u.email || fbUser.email || '', role: u.role || 'member' };
     console.log('[auth] signed in', currentUid);
     enterAppAfterAuth(fbUser);
   } catch (e) {
@@ -1252,6 +1390,162 @@ function showStampBubble(streak) {
   });
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   参加申請フォーム
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function showApplyForm() {
+  const errEl = document.getElementById('applyErr');
+  if (errEl) errEl.style.display = 'none';
+  const formBody = document.getElementById('applyFormBody');
+  const success  = document.getElementById('applySuccess');
+  const backBtn  = document.getElementById('applyBackBtn');
+  if (formBody) formBody.style.display = 'block';
+  if (success)  success.style.display  = 'none';
+  if (backBtn)  backBtn.style.display  = 'block';
+  ['applyName','applyEmail','applyReason'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('applyScreen').classList.add('active');
+}
+
+function backToLogin() {
+  document.getElementById('applyScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('active');
+}
+
+async function submitApplication() {
+  const name   = (document.getElementById('applyName').value   || '').trim();
+  const email  = (document.getElementById('applyEmail').value  || '').trim();
+  const reason = (document.getElementById('applyReason').value || '').trim();
+  const errEl  = document.getElementById('applyErr');
+
+  const showApplyErr = (msg) => {
+    if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+    else alert(msg);
+  };
+  if (errEl) errEl.style.display = 'none';
+
+  if (!name)   { showApplyErr('お名前を入力してください'); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showApplyErr('メールアドレスを正しく入力してください'); return;
+  }
+  if (!reason) { showApplyErr('参加の動機・理由を入力してください'); return; }
+
+  const btn = document.getElementById('applySubmitBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '送信中…'; }
+
+  try {
+    await db.collection('pending_members').add({
+      name,
+      email,
+      reason,
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    const formBody = document.getElementById('applyFormBody');
+    const success  = document.getElementById('applySuccess');
+    const backBtn  = document.getElementById('applyBackBtn');
+    if (formBody) formBody.style.display = 'none';
+    if (success)  success.style.display  = 'block';
+    if (backBtn)  backBtn.style.display  = 'none';
+  } catch (e) {
+    console.error(e);
+    showApplyErr('送信に失敗しました。しばらく経ってからもう一度お試しください。');
+    if (btn) { btn.disabled = false; btn.textContent = '申請を送る'; }
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   管理者パネル（role: 'admin' のみ）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function showAdminPage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-admin').classList.add('active');
+  loadAdminPanel();
+}
+
+async function loadAdminPanel() {
+  const listEl = document.getElementById('adminList');
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-soft);font-size:13px">読み込み中…</div>';
+  try {
+    const snap = await db.collection('pending_members')
+      .orderBy('createdAt', 'desc')
+      .limit(100)
+      .get();
+    if (snap.empty) {
+      listEl.innerHTML = '<div class="admin-empty">申請はまだありません。<br><small>フォームから申請が届くとここに表示されます。</small></div>';
+      return;
+    }
+    const statusLabel = { pending: '審査中', approved: '承認済', rejected: '否認' };
+    const statusClass = { pending: 'status-pending', approved: 'status-approved', rejected: 'status-rejected' };
+    let html = '';
+    snap.forEach(docSnap => {
+      const d  = docSnap.data() || {};
+      const id = docSnap.id;
+      const st = d.status || 'pending';
+      const dateStr = d.createdAt
+        ? new Date(d.createdAt.toMillis()).toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric' })
+        : '—';
+      const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      const actions = st === 'pending'
+        ? `<div class="pending-actions">
+             <button class="btn-approve" onclick="window.approveApplication('${esc(id)}','${esc(d.email)}','${esc(d.name)}')">承認する</button>
+             <button class="btn-reject"  onclick="window.rejectApplication('${esc(id)}','${esc(d.email)}','${esc(d.name)}')">否認する</button>
+           </div>`
+        : '';
+      html += `<div class="pending-item" id="pi-${esc(id)}">
+        <div class="pending-name">${esc(d.name) || '（名前なし）'}</div>
+        <div class="pending-email">${esc(d.email)}</div>
+        <span class="pending-status-badge ${statusClass[st] || 'status-pending'}">${statusLabel[st] || st}</span>
+        <div class="pending-reason">${esc(d.reason)}</div>
+        <div class="pending-date">申請日：${dateStr}</div>
+        ${actions}
+      </div>`;
+    });
+    listEl.innerHTML = html;
+  } catch (e) {
+    console.error(e);
+    listEl.innerHTML = '<div class="admin-empty">読み込みに失敗しました。<br>Firestore ルールで<code>pending_members</code>の<br>読み取りが許可されているか確認してください。</div>';
+  }
+}
+
+async function approveApplication(docId, email, name) {
+  if (!confirm(`${name}（${email}）を承認しますか？`)) return;
+  try {
+    await db.collection('pending_members').doc(docId).update({
+      status: 'approved',
+      approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    alert(
+      `✅ 承認しました。\n\n次のステップ：\nFirebase Console > Authentication でこのメールアドレスのアカウントを作成し、「パスワードリセットメール」を送ってください。\n\nEmail: ${email}`
+    );
+    loadAdminPanel();
+  } catch (e) {
+    console.error(e);
+    alert('更新に失敗しました。');
+  }
+}
+
+async function rejectApplication(docId, email, name) {
+  if (!confirm(`${name}（${email}）の申請を否認しますか？`)) return;
+  try {
+    await db.collection('pending_members').doc(docId).update({
+      status: 'rejected',
+      rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    loadAdminPanel();
+  } catch (e) {
+    console.error(e);
+    alert('更新に失敗しました。');
+  }
+}
+
 // インライン onclick 用に window に公開（type="module" は自動ではグローバルにならない）
 window.doLogin = doLogin;
 window.doLogout = doLogout;
@@ -1273,6 +1567,13 @@ window.changePhoto = changePhoto;
 window.applyPhoto = applyPhoto;
 window.changeEmail = changeEmail;
 window.showStampBubble = showStampBubble;
+window.showApplyForm = showApplyForm;
+window.backToLogin = backToLogin;
+window.submitApplication = submitApplication;
+window.showAdminPage = showAdminPage;
+window.loadAdminPanel = loadAdminPanel;
+window.approveApplication = approveApplication;
+window.rejectApplication = rejectApplication;
 </script>
 
 </body>
