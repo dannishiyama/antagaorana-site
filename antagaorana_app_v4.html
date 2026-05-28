@@ -35,6 +35,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <style>
 :root {
   --green:      #5C7A5A;
@@ -288,18 +289,25 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .goals-empty{text-align:center;padding:32px 16px;color:var(--text-soft);font-size:14px;line-height:2}
 
 /* ═══════════════════════════
+   HOME TIMELINE
+═══════════════════════════ */
+.tl-loading{text-align:center;padding:20px;color:var(--text-soft);font-size:13px}
+.tl-card{
+  display:flex;align-items:center;gap:12px;
+  background:var(--white);border-radius:var(--r);padding:14px 16px;
+  margin-bottom:10px;box-shadow:var(--sh-s);cursor:pointer;
+  transition:transform .12s,box-shadow .12s;
+}
+.tl-card:active{transform:scale(.98);box-shadow:none}
+.tl-icon{font-size:22px;flex-shrink:0;width:36px;text-align:center}
+.tl-body{flex:1;min-width:0}
+.tl-title{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-meta{font-size:12px;color:var(--text-soft)}
+.tl-arr{font-size:18px;color:var(--text-soft);flex-shrink:0}
+
+/* ═══════════════════════════
    SESSIONS
 ═══════════════════════════ */
-.sess-tabs{display:flex;gap:8px;margin-bottom:16px}
-.sess-tab{
-  flex:1;padding:10px 4px;
-  background:var(--white);border:1.5px solid var(--green-pale2);border-radius:10px;
-  font-family:'Noto Serif JP',serif;font-size:12px;font-weight:700;
-  color:var(--text-soft);cursor:pointer;text-align:center;transition:all .15s;
-}
-.sess-tab.active{background:var(--green);color:var(--ivory);border-color:var(--green)}
-.sess-page{display:none}
-.sess-page.active{display:block}
 .session-card{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh-s)}
 .sess-top{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
 .sess-thumb{
@@ -313,6 +321,32 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .sess-meta{font-size:12px;color:var(--text-soft)}
 .sess-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:4px;background:rgba(42,74,62,.1);color:var(--green)}
 .sess-desc{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:12px}
+
+/* ─ チャプターリスト ─ */
+.chapter-list{margin-bottom:10px;border-radius:10px;overflow:hidden;border:1.5px solid var(--green-pale2)}
+.chapter-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:var(--green-pale);cursor:pointer;
+  font-size:12px;font-weight:700;color:var(--green);
+  transition:background .15s;
+}
+.chapter-header:active{background:var(--green-pale2)}
+.chapter-toggle-icon{font-size:10px;color:var(--text-soft)}
+.chapter-items{background:var(--white)}
+.chapter-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 14px;border-bottom:1px solid rgba(0,0,0,.04);
+  cursor:pointer;transition:background .15s;
+}
+.chapter-item:last-child{border-bottom:none}
+.chapter-item:active{background:var(--green-pale)}
+.chapter-time{
+  font-size:11px;font-weight:700;color:var(--green);
+  background:var(--green-pale);padding:2px 7px;border-radius:6px;
+  white-space:nowrap;flex-shrink:0;min-width:36px;text-align:center;
+}
+.chapter-title{font-size:12px;color:var(--text-mid);line-height:1.4}
+
 .audio-player{background:var(--green-pale);border-radius:10px;padding:12px 14px}
 .ap-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .ap-play{
@@ -591,22 +625,9 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
         <div class="rc-info"><div class="rc-title">555チャレンジ（任意参加）</div><div class="rc-sub">毎朝5時55分スタート ／ リモートで繋がりながら</div><div class="rc-sub" style="margin-top:4px;font-size:11px;opacity:0.72;">参加は自由です。無理のない範囲でどうぞ。</div></div>
         <span class="rc-badge badge-live">OPEN</span>
       </a>
-      <a class="remote-card" href="#" onclick="alert('カレンダーが開きます');return false;">
-        <div class="rc-icon">今月<br>予定</div>
-        <div class="rc-info"><div class="rc-title">今月のスケジュール</div><div class="rc-sub">イベント・セッション予定を確認</div></div>
-        <span class="rc-badge badge-new">NEW</span>
-      </a>
-      <div class="sec-hd" style="margin-top:20px"><h2>お知らせ</h2></div>
-
-      <div class="notice">
-        <div class="notice-top"><span class="ntag ntag-gold">イベント</span><span class="ndate">2025.04.26</span></div>
-        <div class="ntitle">越（エツ）インドプロジェクト 説明会</div>
-        <div class="nbody">5月10日（土）20:00〜 Zoomにて。ご家族での参加もお気軽にどうぞ。</div>
-      </div>
-      <div class="notice">
-        <div class="notice-top"><span class="ntag ntag-green">お知らせ</span><span class="ndate">2025.04.20</span></div>
-        <div class="ntitle">株式会社化のご報告</div>
-        <div class="nbody">あんたがおらなは株式会社として新たなスタートを切ります。引き続きよろしくお願いします。</div>
+      <div class="sec-hd" style="margin-top:20px"><h2>セッション</h2></div>
+      <div id="homeTimeline" style="margin-bottom:20px">
+        <div class="tl-loading">読み込み中…</div>
       </div>
     </div>
 
@@ -637,26 +658,12 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 
     <!-- SESSIONS -->
     <div class="page" id="p-sessions">
-      <p style="font-size:13px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">セッションのカテゴリを選んで、自分の言葉を何度でも聴き返しましょう。</p>
-      <div class="sess-tabs" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px">
-        <button class="sess-tab active" onclick="switchSessTab('me',this)">芽</button>
-        <button class="sess-tab" onclick="switchSessTab('do',this)">導</button>
-        <button class="sess-tab" onclick="switchSessTab('haku',this)">拓</button>
-        <button class="sess-tab" onclick="switchSessTab('etsu',this)">越</button>
+      <p style="font-size:13px;color:var(--text-soft);margin-bottom:14px;line-height:1.7">自分のセッション音声を何度でも聴き返しましょう。</p>
+      <!-- マイセッション（Firestoreから個人別ロード）-->
+      <div class="sec-hd" style="margin-bottom:10px"><h2>🎧 マイセッション</h2></div>
+      <div id="st-personal" style="margin-bottom:20px">
+        <div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">読み込み中…</div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px">
-        <div style="font-size:10px;color:var(--text-soft);text-align:center">可能性の<br>芽吹き</div>
-        <div style="font-size:10px;color:var(--text-soft);text-align:center">自己を<br>導く力</div>
-        <div style="font-size:10px;color:var(--text-soft);text-align:center">未来を<br>拓く行動</div>
-        <div style="font-size:10px;color:var(--text-soft);text-align:center">枠を<br>越える</div>
-      </div>
-      <div class="sess-tab-divider" style="height:1px;background:var(--ivory3);margin-bottom:16px"></div>
-      <div class="sec-hd" style="margin-bottom:10px"><h2>今朝のDanielからのシェア</h2></div>
-      <div id="st-morning-top" style="margin-bottom:20px"></div>
-      <div class="sess-page active" id="st-me"></div>
-      <div class="sess-page" id="st-do"></div>
-      <div class="sess-page" id="st-haku"></div>
-      <div class="sess-page" id="st-etsu"></div>
     </div>
 
     <!-- PROFILE -->
@@ -676,6 +683,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
         <div class="mi" id="adminMenuItem" style="display:none" onclick="showAdminPage()"><div class="mi-dot" style="background:var(--gold)"></div><span class="mi-lbl" style="color:var(--green);font-weight:700">管理者パネル（参加申請）</span><span class="mi-arr">›</span></div>
         <div class="mi" onclick="changePhoto()"><div class="mi-dot"></div><span class="mi-lbl">プロフィール写真を変更</span><span class="mi-arr">›</span></div>
         <div class="mi" onclick="showEmailPage()"><div class="mi-dot"></div><span class="mi-lbl">メールアドレスを変更</span><span class="mi-arr">›</span></div>
+        <div class="mi" onclick="showPasswordPage()"><div class="mi-dot"></div><span class="mi-lbl">パスワードを変更</span><span class="mi-arr">›</span></div>
         <div class="mi" onclick="showNotifPage()"><div class="mi-dot"></div><span class="mi-lbl">通知設定</span><span class="mi-arr">›</span></div>
         <a class="mi" href="mailto:info@antagaorana.com?subject=%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%81%B8%E3%81%AE%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B&body=%E3%80%90%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88%E3%80%91%0D%0A%E6%B0%8F%E5%90%8D%EF%BC%9A%0D%0A%E3%81%B5%E3%82%8A%E3%81%8C%E3%81%AA%EF%BC%9A%0D%0A%E6%80%A7%E5%88%A5%EF%BC%9A%0D%0A%E5%B9%B4%E9%BD%A2%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E4%BD%8F%E6%89%80%E3%83%BB%E9%80%A3%E7%B5%A1%E3%80%91%0D%0A%E4%BD%8F%E6%89%80%EF%BC%88%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%81%8B%E3%82%89%EF%BC%89%EF%BC%9A%0D%0A%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%EF%BC%88%E6%97%A5%E4%B8%AD%E3%81%A4%E3%81%AA%E3%81%8C%E3%82%8A%E3%82%84%E3%81%99%E3%81%84%E7%95%AA%E5%8F%B7%EF%BC%89%EF%BC%9A%0D%0A%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%EF%BC%88%E8%BF%94%E4%BF%A1%E7%94%A8%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%E3%80%91%0D%0A%E3%81%94%E7%9B%B8%E8%AB%87%E5%86%85%E5%AE%B9%EF%BC%88%E5%B7%AE%E3%81%97%E6%94%AF%E3%81%88%E3%81%AA%E3%81%91%E3%82%8C%E3%81%B0%E8%A9%B3%E7%B4%B0%E3%81%AB%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%89%E3%81%94%E8%A8%98%E5%85%A5%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%91%0D%0A%E3%81%8A%E5%AD%90%E6%A7%98%E3%81%AE%E5%AD%A6%E5%B9%B4%EF%BC%8F%E7%8A%B6%E6%B3%81%EF%BC%88%E8%A9%B2%E5%BD%93%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%96%B9%E6%B3%95%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%EF%BC%8F%E9%9B%BB%E8%A9%B1%EF%BC%89%EF%BC%9A%0D%0A%E3%81%94%E5%B8%8C%E6%9C%9B%E3%81%AE%E9%80%A3%E7%B5%A1%E6%99%82%E9%96%93%E5%B8%AF%EF%BC%9A%0D%0A%E3%81%8A%E6%80%A5%E3%81%8E%E3%81%AE%E3%81%94%E4%BA%8B%E6%83%85%EF%BC%88%E3%81%82%E3%82%8C%E3%81%B0%EF%BC%89%EF%BC%9A%0D%0A%0D%0A%E3%80%90%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AE%E5%8F%96%E3%82%8A%E6%89%B1%E3%81%84%E3%80%91%0D%0A%E5%80%8B%E4%BA%BA%E6%83%85%E5%A0%B1%E3%81%AF%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%E5%AF%BE%E5%BF%9C%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E5%88%A9%E7%94%A8%E3%81%97%E3%81%BE%E3%81%99%E3%80%82" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:14px;padding:15px 16px;border-bottom:1px solid rgba(0,0,0,.05)"><div class="mi-dot"></div><span class="mi-lbl">運営への問い合わせ</span><span class="mi-arr">›</span></a>
       </div>
@@ -697,6 +705,29 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
       <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer">戻る</button>
     </div>
 
+    <!-- PASSWORD PAGE -->
+    <div class="page" id="p-password">
+      <div class="sec-hd"><h2>パスワードを変更</h2></div>
+      <div style="background:var(--white);border-radius:var(--r);padding:20px;box-shadow:var(--sh-s);margin-bottom:16px">
+        <div style="font-size:13px;color:var(--text-soft);margin-bottom:16px;line-height:1.7">新しいパスワードを設定してください。<br>初回ログイン後は必ずご自身のパスワードに変更をお願いします。</div>
+        <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">現在のパスワード（確認用）</div>
+        <input id="currentPwdInput" type="password" placeholder="現在のパスワード"
+          style="width:100%;padding:12px 14px;background:var(--green-pale);border:1.5px solid transparent;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:12px;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+        <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">新しいパスワード（8文字以上）</div>
+        <input id="newPwdInput" type="password" placeholder="新しいパスワード"
+          style="width:100%;padding:12px 14px;background:var(--green-pale);border:1.5px solid transparent;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:12px;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+        <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px">新しいパスワード（確認）</div>
+        <input id="newPwdConfirm" type="password" placeholder="もう一度入力してください"
+          style="width:100%;padding:12px 14px;background:var(--green-pale);border:1.5px solid transparent;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:14px;transition:border-color .2s"
+          onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+        <div id="pwdErr" style="display:none;color:#C44A3A;font-size:13px;margin-bottom:10px;padding:8px 12px;background:rgba(196,74,58,.08);border-radius:8px"></div>
+        <button onclick="savePassword()" style="width:100%;padding:13px;background:var(--green);border:none;border-radius:10px;color:var(--ivory);font-family:'Noto Serif JP',serif;font-size:15px;font-weight:700;cursor:pointer">変更する</button>
+      </div>
+      <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer">戻る</button>
+    </div>
+
     <!-- ADMIN PAGE -->
     <div class="page" id="p-admin">
       <div class="sec-hd"><h2>参加申請の管理</h2></div>
@@ -704,6 +735,73 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
         ✅ <strong>承認フロー：</strong>「承認する」→ <a href="https://console.firebase.google.com/project/antagaorana-haku/authentication/users" target="_blank">Firebase Console</a> でそのメールアドレスのアカウントを作成 → パスワードリセットメールを送信。
       </div>
       <div id="adminList"></div>
+
+      <!-- セッション音声の割り当て -->
+      <div style="margin-top:24px">
+        <div class="sec-hd"><h2>🎵 セッション音声を追加</h2></div>
+        <div style="background:var(--white);border-radius:var(--r);padding:16px;box-shadow:var(--sh-s);margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">対象メンバーのメールアドレス</div>
+          <input id="sessUserEmail" type="email" placeholder="member@example.com"
+            style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;margin-bottom:10px;transition:border-color .2s"
+            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+          <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">セッションタイトル</div>
+          <input id="sessTitleInput" type="text" placeholder="例：矢野様｜導 分析セッション 第1回"
+            style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;margin-bottom:10px;transition:border-color .2s"
+            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <div style="flex:1">
+              <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">種別</div>
+              <select id="sessTypeInput" style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none">
+                <option value="personal">マイセッション</option>
+                <option value="do">導</option>
+                <option value="haku">拓</option>
+                <option value="me">芽</option>
+                <option value="etsu">越</option>
+                <option value="morning">朝のメッセージ</option>
+              </select>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">時間（例：45:30）</div>
+              <input id="sessDurInput" type="text" placeholder="45:30"
+                style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s"
+                onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">音声ファイル（直接アップロード または URL入力）</div>
+          <!-- ドラッグ&ドロップ アップロードゾーン -->
+          <div id="audioDropZone"
+            style="border:2px dashed var(--green-pale2);border-radius:8px;padding:16px;text-align:center;cursor:pointer;margin-bottom:8px;transition:border-color .2s;background:var(--ivory)"
+            onclick="document.getElementById('audioFileInput').click()"
+            ondragover="event.preventDefault();this.style.borderColor='var(--green)'"
+            ondragleave="this.style.borderColor='var(--green-pale2)'"
+            ondrop="handleAudioDrop(event)">
+            <input type="file" id="audioFileInput" accept=".m4a,.mp3,.wav,.aac,.ogg" style="display:none" onchange="handleAudioFile(this.files[0])">
+            <div style="font-size:13px;color:var(--text-soft)" id="audioDropLabel">🎵 クリックまたはドラッグ＆ドロップで音声ファイルをアップロード（m4a/mp3対応）</div>
+            <div id="audioUploadProgress" style="display:none;margin-top:10px">
+              <div style="background:var(--green-pale2);border-radius:4px;height:6px;overflow:hidden">
+                <div id="audioProgressBar" style="height:6px;background:linear-gradient(to right,var(--green),var(--gold));border-radius:4px;width:0%;transition:width .3s"></div>
+              </div>
+              <div id="audioProgressText" style="font-size:11px;color:var(--text-soft);margin-top:4px">アップロード中…</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text-soft);text-align:center;margin-bottom:6px">— または URL を直接入力 —</div>
+          <input id="sessUrlInput" type="url" placeholder="https://drive.google.com/uc?export=download&id=..."
+            style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;margin-bottom:10px;transition:border-color .2s"
+            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'">
+          <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">説明（任意）</div>
+          <textarea id="sessDescInput" placeholder="セッションの内容・概要"
+            style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none;margin-bottom:12px;transition:border-color .2s;resize:vertical;min-height:60px"
+            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'"></textarea>
+          <div style="font-size:12px;color:var(--text-soft);margin-bottom:4px">チャプター（任意）― 1行ずつ「秒数|タイトル」形式で入力</div>
+          <div style="font-size:11px;color:var(--text-soft);margin-bottom:4px;opacity:.75">例：0|オープニング・現状確認&nbsp;&nbsp;480|性弱説の導入&nbsp;&nbsp;900|目的と目標の区別</div>
+          <textarea id="sessChaptersInput" placeholder="0|オープニング&#10;480|テーマ設定&#10;900|メインコンテンツ&#10;3000|まとめ"
+            style="width:100%;padding:10px 12px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:12px;font-family:monospace;color:var(--text);outline:none;margin-bottom:12px;transition:border-color .2s;resize:vertical;min-height:100px"
+            onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='transparent'"></textarea>
+          <div id="sessAddErr" style="display:none;color:#C44A3A;font-size:12px;margin-bottom:8px"></div>
+          <button onclick="addSessionToUser()" style="width:100%;padding:12px;background:var(--green);border:none;border-radius:8px;color:var(--ivory);font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;cursor:pointer">追加する</button>
+        </div>
+      </div>
+
       <button onclick="backToProfile()" style="width:100%;padding:12px;background:none;border:1.5px solid var(--green-pale2);border-radius:10px;color:var(--text-mid);font-size:14px;font-family:inherit;cursor:pointer;margin-top:4px">戻る</button>
     </div>
 
@@ -759,8 +857,9 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth    = firebase.auth();
+const db      = firebase.firestore();
+const storage = firebase.storage();
 
 // 旧デモ版が保存していたキーを削除（ログイン維持に使わない・Firebase Auth のみでセッション管理）
 try {
@@ -839,6 +938,11 @@ function enterAppAfterAuth(fbUser) {
   if (adminMenuItem) adminMenuItem.style.display = user.role === 'admin' ? 'flex' : 'none';
   initGoals();
   initSessions();
+  // 個人セッションをFirestoreからロード
+  if (currentUid) {
+    loadPersonalSessions(currentUid);
+    loadHomeTimeline(currentUid);
+  }
   document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('applyScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
@@ -1128,78 +1232,58 @@ function updateSummary(days, today) {
 }
 
 /* SESSIONS */
-const sessionsData = {
-  me: [
-    { id: 101, title: '自己肯定感を高める', date: '2025年4月15日', dur: '38:24', tag: '芽 — 可能性の芽吹き', desc: '自分の良さを認めるための具体的なワークについてお話ししました。' },
-    { id: 102, title: '「自分らしさ」を見つける', date: '2025年3月20日', dur: '44:10', tag: '芽 — 可能性の芽吹き', desc: 'どんな小さな光も、あなたの中には眠っています。そこを一緒に掘り起こしました。' },
-  ],
-  do: [
-    { id: 201, title: '目標設定の本質', date: '2025年3月28日', dur: '42:10', tag: '導 — 自己を導く力', desc: 'ワクワクする目標の立て方と、継続するための仕組みについて深掘りしました。' },
-    { id: 202, title: '感情を味方にする', date: '2025年3月5日', dur: '36:55', tag: '導 — 自己を導く力', desc: '感情は敵ではなく、大切なメッセージ。自分を導くための感情との付き合い方。' },
-  ],
-  haku: [
-    { id: 301, title: '行動を変える習慣設計', date: '2025年4月10日', dur: '50:33', tag: '拓 — 未来を拓く行動', desc: '思いが行動を変え、行動が習慣を変える。具体的な設計方法をお伝えしました。' },
-    { id: 302, title: '一歩踏み出す勇気', date: '2025年3月15日', dur: '40:12', tag: '拓 — 未来を拓く行動', desc: '完璧じゃなくていい。まず0.1歩でいい。行動の本質について話しました。' },
-  ],
-  etsu: [
-    { id: 401, title: '人間関係の悩みを解消する', date: '2025年3月10日', dur: '55:03', tag: '越 — 枠を越える', desc: '職場や家族との関係性をどう変えていくか、心理学的アプローチで解説しました。' },
-    { id: 402, title: '枠を越えた先にあるもの', date: '2025年2月20日', dur: '48:30', tag: '越 — 枠を越える', desc: '「こんなもんだ」という思い込みを外したとき、何が見えるか。インドの体験も交えて。' },
-  ],
-};
-const morningSessions = [
-  { id: 10, title: '今朝のDanielからのシェア', date: '2025年4月26日', dur: '5:12', tag: '朝のメッセージ', desc: '「続けることの意味」について今朝西山がシェアした音声です。' },
-  { id: 11, title: '昨日の朝シェア', date: '2025年4月25日', dur: '4:48', tag: '朝のメッセージ', desc: '「焦らなくていい」をテーマにした大久保からの朝のメッセージです。' },
-];
-const allSessions = [...Object.values(sessionsData).flat(), ...morningSessions];
 let progVals = {};
 let intervals = {};
 let playingId = null;
 
 function initSessions() {
-  ['me', 'do', 'haku', 'etsu'].forEach((k) => renderSessList('st-' + k, sessionsData[k]));
-  renderSessList('st-morning-top', morningSessions);
+  // ホームタイムラインはloadPersonalSessions内で描画
 }
 
-function switchSessTab(name, btn) {
-  document.querySelectorAll('.sess-tab').forEach((b) => b.classList.remove('active'));
-  document.querySelectorAll('.sess-page').forEach((p) => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('st-' + name).classList.add('active');
+async function loadHomeTimeline(uid) {
+  const tlEl = document.getElementById('homeTimeline');
+  if (!tlEl) return;
+  try {
+    const snap = await db.collection('users').doc(uid).collection('sessions')
+      .orderBy('createdAt', 'desc')
+      .get();
+    if (snap.empty) {
+      tlEl.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッションが登録されていません。</div>';
+      return;
+    }
+    let html = '';
+    snap.forEach(docSnap => {
+      const d = docSnap.data() || {};
+      const type = d.type || 'session';
+      const icon = type === 'message_nishiyama' ? '💌' : type === 'message_ookubo' ? '📝' : '🎧';
+      html += `<div class="tl-card" onclick="navigateToSession('${docSnap.id}')">
+        <div class="tl-icon">${icon}</div>
+        <div class="tl-body">
+          <div class="tl-title">${d.title || 'セッション'}</div>
+          <div class="tl-meta">${d.date || ''}${d.date && d.dur ? ' ／ ' : ''}${d.dur || ''}</div>
+        </div>
+        <div class="tl-arr">›</div>
+      </div>`;
+    });
+    tlEl.innerHTML = html;
+  } catch(e) {
+    console.error('[homeTimeline]', e);
+    tlEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-soft);font-size:13px">読み込みに失敗しました</div>';
+  }
 }
 
-function renderSessList(cid, sessions) {
-  const el = document.getElementById(cid);
-  if (!el) return;
-  el.innerHTML = sessions
-    .map(
-      (s) => `
-    <div class="session-card">
-      <div class="sess-top">
-        <div class="sess-thumb"><div class="sess-thumb-icon">${s.tag.split('—')[0].trim()}</div></div>
-        <div class="sess-info">
-          <div class="sess-title">${s.title}</div>
-          <div class="sess-meta">${s.date} ／ ${s.dur}</div>
-          <span class="sess-tag">${s.tag}</span>
-        </div>
-      </div>
-      <div class="sess-desc">${s.desc}</div>
-      <div class="audio-player">
-        <div class="ap-row">
-          <button class="ap-play" id="play-${s.id}" onclick="window.togglePlay(${s.id})">▶</button>
-          <div class="ap-track">
-            <input type="range" class="ap-prog" id="prog-${s.id}" value="0" min="0" max="100" oninput="window.seekAudio(${s.id},this.value)">
-            <div class="ap-times"><span id="cur-${s.id}">0:00</span><span>${s.dur}</span></div>
-          </div>
-        </div>
-        <div class="ap-btns">
-          <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒戻る</button>
-          <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒進む ▶▶</button>
-          <button class="ap-btn" onclick="alert('メモ機能（実装予定）')">メモを取る</button>
-        </div>
-      </div>
-    </div>`
-    )
-    .join('');
+function navigateToSession(docId) {
+  // セッションページへ遷移してそのセッションにスクロール
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-sessions').classList.add('active');
+  document.querySelectorAll('.tab').forEach(b => {
+    if (b.textContent.includes('振り返り')) b.classList.add('active');
+  });
+  setTimeout(() => {
+    const el = document.querySelector(`[data-docid="${docId}"]`);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 150);
 }
 
 function togglePlay(id) {
@@ -1223,8 +1307,8 @@ function togglePlay(id) {
     btn.textContent = '⏸';
     btn.style.background = 'var(--green-mid)';
     playingId = id;
-    const sess = allSessions.find((s) => s.id === id);
-    const parts = sess.dur.split(':');
+    const sess = personalSessions.find((s) => s.id === id);
+    const parts = sess ? sess.dur.split(':') : ['0','00'];
     const total = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
     intervals[id] = setInterval(() => {
       progVals[id] = Math.min(100, (progVals[id] || 0) + 0.12);
@@ -1546,6 +1630,439 @@ async function rejectApplication(docId, email, name) {
   }
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   パスワード変更
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function showPasswordPage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-password').classList.add('active');
+  ['currentPwdInput','newPwdInput','newPwdConfirm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const errEl = document.getElementById('pwdErr');
+  if (errEl) errEl.style.display = 'none';
+}
+
+async function savePassword() {
+  const currentPwd = (document.getElementById('currentPwdInput').value || '').trim();
+  const newPwd     = (document.getElementById('newPwdInput').value     || '').trim();
+  const confirmPwd = (document.getElementById('newPwdConfirm').value   || '').trim();
+  const errEl = document.getElementById('pwdErr');
+  const showPwdErr = (msg) => {
+    if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+    else alert(msg);
+  };
+  if (errEl) errEl.style.display = 'none';
+  if (!currentPwd) { showPwdErr('現在のパスワードを入力してください'); return; }
+  if (newPwd.length < 8) { showPwdErr('新しいパスワードは8文字以上にしてください'); return; }
+  if (newPwd !== confirmPwd) { showPwdErr('パスワードが一致しません'); return; }
+
+  const u = auth.currentUser;
+  if (!u || !u.email) { showPwdErr('ログイン情報が取得できません。再ログインしてください'); return; }
+
+  try {
+    // Firebase は再認証が必要な場合がある
+    const credential = firebase.auth.EmailAuthProvider.credential(u.email, currentPwd);
+    await u.reauthenticateWithCredential(credential);
+    await u.updatePassword(newPwd);
+    document.getElementById('currentPwdInput').value = '';
+    document.getElementById('newPwdInput').value = '';
+    document.getElementById('newPwdConfirm').value = '';
+    alert('✅ パスワードを変更しました。次回から新しいパスワードでログインしてください。');
+    backToProfile();
+  } catch (e) {
+    console.error(e);
+    if (e.code === 'auth/wrong-password') {
+      showPwdErr('現在のパスワードが正しくありません');
+    } else if (e.code === 'auth/requires-recent-login') {
+      showPwdErr('セキュリティのため、一度ログアウトして再ログイン後に変更してください');
+    } else {
+      showPwdErr('変更に失敗しました：' + (e.message || e.code));
+    }
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   個人セッション（Firestore: users/{uid}/sessions）
+   ─ 管理者が addSessionToUser() で追加
+   ─ メンバーは自分のセッションのみ閲覧可能
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+let personalSessions = [];
+let audioElements = {};  // セッションID → <audio> 要素
+
+async function loadPersonalSessions(uid) {
+  const el = document.getElementById('st-personal');
+  if (!el) return;
+  try {
+    const snap = await db.collection('users').doc(uid).collection('sessions')
+      .orderBy('createdAt', 'desc')
+      .get();
+    if (snap.empty) {
+      el.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッション音声が登録されていません。<br>セッション後に運営から追加されます。</div>';
+      document.getElementById('statSess').textContent = '0';
+      return;
+    }
+    const arr = [];
+    let idCounter = 9000;
+    snap.forEach(docSnap => {
+      const d = docSnap.data() || {};
+      arr.push({
+        id: idCounter++,
+        docId: docSnap.id,
+        title: d.title || 'セッション',
+        date: d.date || '',
+        dur: d.dur || '—',
+        tag: d.tag || 'マイセッション',
+        desc: d.desc || '',
+        url: d.url || '',
+      });
+    });
+    personalSessions = arr;
+    document.getElementById('statSess').textContent = arr.length;
+    renderPersonalSessions(arr);
+  } catch (e) {
+    console.error('[sessions] load error', e);
+    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-soft);font-size:13px">読み込みに失敗しました</div>';
+  }
+}
+
+function renderPersonalSessions(sessions) {
+  const el = document.getElementById('st-personal');
+  if (!el) return;
+  if (!sessions || sessions.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッション音声が登録されていません。<br>セッション後に運営から追加されます。</div>';
+    return;
+  }
+  el.innerHTML = sessions.map(s => buildSessionCardHTML(s, true)).join('');
+  // <audio> 要素の初期化
+  sessions.forEach(s => {
+    if (s.url) {
+      const audioEl = document.createElement('audio');
+      audioEl.id = 'audio-real-' + s.id;
+      audioEl.src = s.url;
+      audioEl.preload = 'metadata';
+      audioEl.style.display = 'none';
+      document.body.appendChild(audioEl);
+      audioElements[s.id] = audioEl;
+      // 再生時間取得
+      audioEl.addEventListener('loadedmetadata', () => {
+        const m = Math.floor(audioEl.duration / 60);
+        const sec = String(Math.floor(audioEl.duration % 60)).padStart(2, '0');
+        const durEl = document.getElementById('realdur-' + s.id);
+        if (durEl) durEl.textContent = m + ':' + sec;
+      });
+      audioEl.addEventListener('timeupdate', () => {
+        if (!audioEl.duration) return;
+        const pct = (audioEl.currentTime / audioEl.duration) * 100;
+        const progEl = document.getElementById('prog-' + s.id);
+        const curEl  = document.getElementById('cur-' + s.id);
+        if (progEl) progEl.value = pct;
+        if (curEl) {
+          const c = Math.floor(audioEl.currentTime);
+          curEl.textContent = Math.floor(c/60) + ':' + String(c%60).padStart(2,'0');
+        }
+      });
+      audioEl.addEventListener('ended', () => {
+        const btn = document.getElementById('play-' + s.id);
+        if (btn) { btn.textContent = '▶'; btn.style.background = 'var(--green)'; }
+        playingId = null;
+      });
+    }
+  });
+}
+
+function buildSessionCardHTML(s, isReal) {
+  const hasChapters = isReal && Array.isArray(s.chapters) && s.chapters.length > 0;
+  const chaptersHTML = hasChapters ? `
+    <div class="chapter-list" id="chapters-${s.id}">
+      <div class="chapter-header" onclick="toggleChapters(${s.id})">
+        <span>📑 チャプター（${s.chapters.length}件）</span>
+        <span class="chapter-toggle-icon" id="ctoggle-${s.id}">▼</span>
+      </div>
+      <div class="chapter-items" id="citems-${s.id}" style="display:none">
+        ${s.chapters.map((c, i) => `
+          <div class="chapter-item" onclick="seekToChapter(${s.id}, ${c.time})">
+            <span class="chapter-time">${formatChapterTime(c.time)}</span>
+            <span class="chapter-title">${c.title}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : '';
+  return `
+  <div class="session-card" data-docid="${s.docId || ''}">
+    <div class="sess-top">
+      <div class="sess-thumb"><div class="sess-thumb-icon">${s.tag.split('—')[0].trim()}</div></div>
+      <div class="sess-info">
+        <div class="sess-title">${s.title}</div>
+        <div class="sess-meta">${s.date}${s.date ? ' ／ ' : ''}<span id="realdur-${s.id}">${s.dur}</span></div>
+        <span class="sess-tag">${s.tag}</span>
+      </div>
+    </div>
+    ${s.desc ? `<div class="sess-desc">${s.desc}</div>` : ''}
+    ${chaptersHTML}
+    <div class="audio-player">
+      <div class="ap-row">
+        <button class="ap-play" id="play-${s.id}" onclick="window.togglePlay(${s.id})">▶</button>
+        <div class="ap-track">
+          <input type="range" class="ap-prog" id="prog-${s.id}" value="0" min="0" max="100"
+            oninput="window.seekAudio(${s.id},this.value)">
+          <div class="ap-times"><span id="cur-${s.id}">0:00</span><span id="realdur-${s.id}-end">${s.dur}</span></div>
+        </div>
+      </div>
+      <div class="ap-btns">
+        <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒戻る</button>
+        <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒進む ▶▶</button>
+        <button class="ap-btn" onclick="alert('メモ機能（準備中）')">メモを取る</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function formatChapterTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function toggleChapters(id) {
+  const items = document.getElementById('citems-' + id);
+  const icon  = document.getElementById('ctoggle-' + id);
+  if (!items) return;
+  const open = items.style.display !== 'none';
+  items.style.display = open ? 'none' : 'block';
+  if (icon) icon.textContent = open ? '▼' : '▲';
+}
+
+function seekToChapter(id, timeSec) {
+  const audioEl = audioElements[id];
+  if (audioEl) {
+    audioEl.currentTime = timeSec;
+    if (audioEl.paused) {
+      audioEl.play().catch(e => console.warn(e));
+      const btn = document.getElementById('play-' + id);
+      if (btn) { btn.textContent = '⏸'; btn.style.background = 'var(--green-mid)'; }
+      playingId = id;
+    }
+  } else {
+    // タイマーベース（デモ）の場合はシーク風に
+    const sess = personalSessions.find(s => s.id === id);
+    if (sess) {
+      const parts = sess.dur.split(':');
+      const total = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+      progVals[id] = total > 0 ? (timeSec / total) * 100 : 0;
+      const prog = document.getElementById('prog-' + id);
+      if (prog) prog.value = progVals[id];
+      const cur = document.getElementById('cur-' + id);
+      if (cur) cur.textContent = formatChapterTime(timeSec);
+    }
+  }
+}
+
+/* togglePlay をリアル音声対応に上書き */
+const _origTogglePlay = togglePlay;
+window.togglePlay = function(id) {
+  const audioEl = audioElements[id];
+  if (!audioEl) {
+    // フォールバック：既存のタイマーベース再生
+    _origTogglePlay(id);
+    return;
+  }
+  const btn = document.getElementById('play-' + id);
+  // 別の音声が再生中なら停止
+  if (playingId && playingId !== id) {
+    const prevAudio = audioElements[playingId];
+    if (prevAudio) { prevAudio.pause(); }
+    else { clearInterval(intervals[playingId]); }
+    const prevBtn = document.getElementById('play-' + playingId);
+    if (prevBtn) { prevBtn.textContent = '▶'; prevBtn.style.background = 'var(--green)'; }
+    playingId = null;
+  }
+  if (playingId === id) {
+    audioEl.pause();
+    if (btn) { btn.textContent = '▶'; btn.style.background = 'var(--green)'; }
+    playingId = null;
+  } else {
+    audioEl.play().catch(e => console.warn('[audio] play failed', e));
+    if (btn) { btn.textContent = '⏸'; btn.style.background = 'var(--green-mid)'; }
+    playingId = id;
+  }
+};
+
+/* seekAudio をリアル音声対応に上書き */
+const _origSeekAudio = seekAudio;
+window.seekAudio = function(id, v) {
+  const audioEl = audioElements[id];
+  if (!audioEl) { _origSeekAudio(id, v); return; }
+  if (audioEl.duration) {
+    audioEl.currentTime = (parseFloat(v) / 100) * audioEl.duration;
+  }
+};
+
+/* skipBack / skipFwd をリアル音声対応に上書き */
+const _origSkipBack = skipBack;
+window.skipBack = function(id) {
+  const audioEl = audioElements[id];
+  if (!audioEl) { _origSkipBack(id); return; }
+  audioEl.currentTime = Math.max(0, audioEl.currentTime - 15);
+};
+const _origSkipFwd = skipFwd;
+window.skipFwd = function(id) {
+  const audioEl = audioElements[id];
+  if (!audioEl) { _origSkipFwd(id); return; }
+  if (audioEl.duration) audioEl.currentTime = Math.min(audioEl.duration, audioEl.currentTime + 15);
+};
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   管理者：音声ファイルを Firebase Storage にアップロード
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+function handleAudioDrop(event) {
+  event.preventDefault();
+  document.getElementById('audioDropZone').style.borderColor = 'var(--green-pale2)';
+  const file = event.dataTransfer.files[0];
+  if (file) handleAudioFile(file);
+}
+
+async function handleAudioFile(file) {
+  if (!file) return;
+  const allowed = ['audio/mpeg','audio/mp4','audio/m4a','audio/x-m4a','audio/wav','audio/aac','audio/ogg'];
+  if (!allowed.includes(file.type) && !file.name.match(/\.(m4a|mp3|wav|aac|ogg)$/i)) {
+    alert('対応フォーマット: m4a, mp3, wav, aac, ogg');
+    return;
+  }
+  const label    = document.getElementById('audioDropLabel');
+  const progress = document.getElementById('audioUploadProgress');
+  const bar      = document.getElementById('audioProgressBar');
+  const text     = document.getElementById('audioProgressText');
+  const urlInput = document.getElementById('sessUrlInput');
+
+  label.textContent   = `📁 ${file.name}（${(file.size/1024/1024).toFixed(1)}MB）`;
+  progress.style.display = 'block';
+  bar.style.width     = '0%';
+  text.textContent    = 'アップロード中…';
+
+  try {
+    const timestamp = Date.now();
+    const safeName  = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path      = `sessions/${timestamp}_${safeName}`;
+    const ref       = storage.ref().child(path);
+    const task      = ref.put(file);
+
+    task.on('state_changed',
+      (snap) => {
+        const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+        bar.style.width  = pct + '%';
+        text.textContent = `アップロード中… ${pct}%`;
+      },
+      (err) => {
+        console.error('[storage] upload error', err);
+        text.textContent = '❌ アップロード失敗: ' + err.message;
+        bar.style.background = '#C44A3A';
+      },
+      async () => {
+        const downloadURL = await task.snapshot.ref.getDownloadURL();
+        urlInput.value   = downloadURL;
+        bar.style.width  = '100%';
+        text.textContent = '✅ アップロード完了！URLが自動入力されました。';
+        bar.style.background = 'linear-gradient(to right,var(--green),var(--gold))';
+        console.log('[storage] upload done:', downloadURL);
+      }
+    );
+  } catch (err) {
+    console.error('[storage] upload error', err);
+    text.textContent = '❌ アップロード失敗: ' + err.message;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   管理者：ユーザーにセッションを追加
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+async function addSessionToUser() {
+  const targetEmail   = (document.getElementById('sessUserEmail').value || '').trim();
+  const title         = (document.getElementById('sessTitleInput').value || '').trim();
+  const type          = document.getElementById('sessTypeInput').value || 'personal';
+  const dur           = (document.getElementById('sessDurInput').value || '').trim();
+  const url           = (document.getElementById('sessUrlInput').value || '').trim();
+  const desc          = (document.getElementById('sessDescInput').value || '').trim();
+  const chaptersRaw   = (document.getElementById('sessChaptersInput').value || '').trim();
+  const errEl         = document.getElementById('sessAddErr');
+
+  // チャプターパース（形式: "秒数|タイトル" を1行ずつ）
+  const chapters = chaptersRaw
+    ? chaptersRaw.split('\n')
+        .map(line => line.trim())
+        .filter(line => line && line.includes('|'))
+        .map(line => {
+          const sep = line.indexOf('|');
+          const timeSec = parseInt(line.slice(0, sep).trim(), 10);
+          const chTitle = line.slice(sep + 1).trim();
+          return isNaN(timeSec) ? null : { time: timeSec, title: chTitle };
+        })
+        .filter(c => c !== null)
+    : [];
+
+  const showErr = (msg) => {
+    if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+    else alert(msg);
+  };
+  if (errEl) errEl.style.display = 'none';
+  if (!targetEmail) { showErr('メールアドレスを入力してください'); return; }
+  if (!title)       { showErr('タイトルを入力してください'); return; }
+
+  // email から uid を検索（users コレクションのemail フィールド）
+  let uid = null;
+  try {
+    const snap = await db.collection('users').where('email', '==', targetEmail).limit(1).get();
+    if (snap.empty) {
+      showErr(`"${targetEmail}" のユーザーが見つかりません。先にFirebaseでアカウントを作成してください。`);
+      return;
+    }
+    snap.forEach(d => { uid = d.id; });
+  } catch (e) {
+    console.error(e);
+    showErr('ユーザー検索に失敗しました: ' + (e.message || e.code));
+    return;
+  }
+
+  const tagMap = {
+    personal: 'マイセッション',
+    do:   '導 — 自己を導く力',
+    haku: '拓 — 未来を拓く行動',
+    me:   '芽 — 可能性の芽吹き',
+    etsu: '越 — 枠を越える',
+    morning: '朝のメッセージ',
+  };
+
+  try {
+    const sessDoc = {
+      title,
+      tag: tagMap[type] || 'マイセッション',
+      dur: dur || '—',
+      url: url || '',
+      desc: desc || '',
+      date: new Date().toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric' }),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    if (chapters.length > 0) sessDoc.chapters = chapters;
+    await db.collection('users').doc(uid).collection('sessions').add(sessDoc);
+    const chapMsg = chapters.length > 0 ? `\nチャプター：${chapters.length}件` : '';
+    alert(`✅ ${targetEmail} のマイセッションに追加しました！\nタイトル：${title}${chapMsg}`);
+    // フォームリセット
+    ['sessUserEmail','sessTitleInput','sessDurInput','sessUrlInput','sessDescInput','sessChaptersInput'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  } catch (e) {
+    console.error(e);
+    showErr('追加に失敗しました: ' + (e.message || e.code));
+  }
+}
+
 // インライン onclick 用に window に公開（type="module" は自動ではグローバルにならない）
 window.doLogin = doLogin;
 window.doLogout = doLogout;
@@ -1553,12 +2070,14 @@ window.goTab = goTab;
 window.toggleStamp = toggleStamp;
 window.addGoal = addGoal;
 window.deleteGoal = deleteGoal;
-window.switchSessTab = switchSessTab;
+window.navigateToSession = navigateToSession;
 window.togglePlay = togglePlay;
 window.seekAudio = seekAudio;
 window.skipBack = skipBack;
 window.skipFwd = skipFwd;
 window.showEmailPage = showEmailPage;
+window.showPasswordPage = showPasswordPage;
+window.savePassword = savePassword;
 window.showNotifPage = showNotifPage;
 window.backToProfile = backToProfile;
 window.saveEmail = saveEmail;
@@ -1570,6 +2089,11 @@ window.showStampBubble = showStampBubble;
 window.showApplyForm = showApplyForm;
 window.backToLogin = backToLogin;
 window.submitApplication = submitApplication;
+window.addSessionToUser = addSessionToUser;
+window.handleAudioDrop = handleAudioDrop;
+window.handleAudioFile = handleAudioFile;
+window.toggleChapters = toggleChapters;
+window.seekToChapter = seekToChapter;
 window.showAdminPage = showAdminPage;
 window.loadAdminPanel = loadAdminPanel;
 window.approveApplication = approveApplication;
