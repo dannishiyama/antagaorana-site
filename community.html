@@ -139,7 +139,10 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
   display:flex;align-items:center;justify-content:space-between;
   flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.22);position:relative;z-index:50;
 }
-.topbar-logo{display:flex;align-items:center;}
+.topbar-logo{display:flex;align-items:center;gap:8px;}
+.topbar-logo-img{height:28px;width:auto;display:block;}
+.topbar-logo-text{font-family:'Noto Serif JP',serif;font-size:11px;font-weight:700;color:rgba(247,240,230,.8);line-height:1.4;white-space:nowrap;}
+.topbar-logo-text span{display:block;font-size:13px;color:var(--gold-lt);font-weight:900;letter-spacing:.5px;}
 .topbar-right{display:flex;align-items:center;gap:10px}
 .topbar-name{font-size:12px;color:rgba(247,240,230,.7)}
 .topbar-av{
@@ -605,7 +608,10 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 <!-- APP -->
 <div id="appScreen" class="screen">
   <div class="topbar">
-    <div class="topbar-logo"><img src="./lp-assets/hero-calligraphy-20260501.svg" alt="あんたがおらな" style="height:36px;width:auto;display:block;filter:drop-shadow(0 1px 8px rgba(0,0,0,.25))"></div>
+    <div class="topbar-logo">
+      <img class="topbar-logo-img" src="./lp-assets/hero-logo-antagaorana.png?v=20260516a" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260516a 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260516a 2x" alt="あんたがおらな" style="filter:drop-shadow(0 1px 4px rgba(0,0,0,.25))">
+      <div class="topbar-logo-text">教育支援団体<span>あんたがおらな</span></div>
+    </div>
     <div class="topbar-right">
       <span class="topbar-name" id="tName"></span>
       <div class="topbar-av" id="tAv"></div>
@@ -921,7 +927,7 @@ async function ensureUserDoc(fbUser) {
     return { name: 'メンバー', email };
   }
   const data = snap.data() || {};
-  return { name: data.name || 'メンバー', email: data.email || email, role: data.role || 'member' };
+  return { name: data.name || 'メンバー', email: data.email || email, role: data.role || 'member', photoURL: data.photoURL || null };
 }
 
 function enterAppAfterAuth(fbUser) {
@@ -937,6 +943,9 @@ function enterAppAfterAuth(fbUser) {
   });
   document.getElementById('tAv').textContent = user.initial;
   document.getElementById('pAvText').textContent = user.initial;
+  if (user.photoURL) {
+    setTimeout(() => setAvatarPhoto(user.photoURL), 0);
+  }
   const h = new Date().getHours();
   const greet =
     h < 10
@@ -1422,19 +1431,35 @@ function changePhoto() {
   document.getElementById('photoInput').click();
 }
 
+function setAvatarPhoto(url) {
+  if (!url) return;
+  const img = document.getElementById('pAvImg');
+  const txt = document.getElementById('pAvText');
+  if (img) { img.src = url; img.style.display = 'block'; }
+  if (txt) txt.style.display = 'none';
+  const tav = document.getElementById('tAv');
+  if (tav) tav.innerHTML = `<img src="${url}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+}
+
 function applyPhoto(input) {
   if (!input.files || !input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = document.getElementById('pAvImg');
-    const txt = document.getElementById('pAvText');
-    img.src = e.target.result;
-    img.style.display = 'block';
-    txt.style.display = 'none';
-    const tav = document.getElementById('tAv');
-    tav.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
-  };
-  reader.readAsDataURL(input.files[0]);
+  const file = input.files[0];
+  const u = auth.currentUser;
+  if (!u) return;
+  // Upload to Firebase Storage
+  const ref = storage.ref(`profile_photos/${u.uid}`);
+  ref.put(file).then(snap => snap.ref.getDownloadURL()).then(url => {
+    // Save to Firestore
+    return db.collection('users').doc(u.email || u.uid).update({ photoURL: url }).then(() => url);
+  }).then(url => {
+    setAvatarPhoto(url);
+  }).catch(err => {
+    console.error('写真アップロード失敗:', err);
+    // Fallback: show locally
+    const reader = new FileReader();
+    reader.onload = (e) => setAvatarPhoto(e.target.result);
+    reader.readAsDataURL(file);
+  });
 }
 
 function changeEmail() {
@@ -2098,6 +2123,7 @@ window.saveEmail = saveEmail;
 window.saveNotif = saveNotif;
 window.changePhoto = changePhoto;
 window.applyPhoto = applyPhoto;
+window.setAvatarPhoto = setAvatarPhoto;
 window.changeEmail = changeEmail;
 window.showStampBubble = showStampBubble;
 window.showApplyForm = showApplyForm;
