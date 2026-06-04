@@ -1,592 +1,886 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>初回面談 事前ヒアリングシート｜あんたがおらな</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分析セッション前ヒアリングシート｜あんたがおらな</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;500;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-      background: #faf9f6;
-      color: #2c2c2c;
-      line-height: 1.8;
-      padding: 0 0 80px;
-    }
+  :root {
+    --navy:    #1B2A4A;
+    --navy2:   #243355;
+    --gold:    #B8860B;
+    --gold-lt: #D4AF37;
+    --gold-bg: #FFF9EE;
+    --cream:   #FAF7F2;
+    --warm:    #F2EDE4;
+    --text:    #2C2C2C;
+    --muted:   #7A7268;
+    --border:  #DDD5C5;
+    --white:   #FFFFFF;
+  }
 
-    header {
-      background: #2b4a3a;
-      color: #fff;
-      padding: 40px 24px 32px;
-      text-align: center;
-    }
-    header .logo {
-      font-size: 13px;
-      letter-spacing: 0.2em;
-      color: #a8c4b2;
-      margin-bottom: 10px;
-    }
-    header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-    header p {
-      font-size: 13px;
-      color: #c8ddd2;
-      line-height: 1.7;
-    }
+  html { scroll-behavior: smooth; }
 
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+  body {
+    font-family: 'Noto Serif JP', serif;
+    background: var(--cream);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    .intro {
-      background: #fff;
-      border-left: 4px solid #2b4a3a;
-      margin: 32px 0 24px;
-      padding: 20px 24px;
-      border-radius: 0 8px 8px 0;
-      font-size: 14px;
-      color: #444;
-      line-height: 1.9;
-    }
+  /* ── ヘッダー ── */
+  .site-header {
+    background: var(--navy);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-header .logo {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    color: var(--gold-lt);
+    letter-spacing: 2px;
+  }
+  .site-header .label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 3px;
+    font-family: 'Cormorant Garamond', serif;
+  }
 
-    .section {
-      background: #fff;
-      border-radius: 12px;
-      margin-bottom: 24px;
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
+  /* ── ヒーロー ── */
+  .hero {
+    background: linear-gradient(160deg, var(--navy) 0%, #0f1c35 100%);
+    padding: 52px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 0%, rgba(184,134,11,0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--gold-lt);
+    opacity: 0.8;
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.55;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .hero-rule {
+    width: 40px;
+    height: 1px;
+    background: var(--gold-lt);
+    margin: 0 auto 20px;
+    opacity: 0.6;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    line-height: 1.9;
+    max-width: 340px;
+    margin: 0 auto;
+  }
 
-    .section-header {
-      background: #2b4a3a;
-      color: #fff;
-      padding: 14px 24px;
-      font-size: 15px;
-      font-weight: 600;
-    }
-    .section-header .num {
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 10px;
-      font-size: 13px;
-    }
+  /* ── 進捗バー ── */
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .progress-bar {
+    height: 2px;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-steps {
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 0;
+  }
+  .progress-steps::-webkit-scrollbar { display: none; }
+  .step-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 52px;
+    cursor: pointer;
+    flex: 1;
+    transition: opacity 0.2s;
+  }
+  .step-dot.active .dot-num { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .step-dot.done .dot-num { background: var(--gold); color: var(--white); border-color: var(--gold); }
+  .dot-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--muted);
+    transition: all 0.3s;
+    margin-bottom: 4px;
+  }
+  .dot-label {
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .step-dot.active .dot-label { color: var(--navy); font-weight: 500; }
 
-    .section-body {
-      padding: 24px;
-    }
+  /* ── メインコンテンツ ── */
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 16px 80px;
+  }
 
-    .field-group {
-      margin-bottom: 24px;
-    }
-    .field-group:last-child {
-      margin-bottom: 0;
-    }
+  /* ── セクション ── */
+  .section {
+    display: none;
+    animation: fadeUp 0.4s ease both;
+  }
+  .section.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      color: #2b4a3a;
-      margin-bottom: 6px;
-    }
-    label .hint {
-      font-size: 12px;
-      color: #888;
-      font-weight: 400;
-      display: block;
-      margin-top: 2px;
-    }
+  /* ── セクションヘッダー ── */
+  .section-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.9;
+  }
 
-    textarea {
-      width: 100%;
-      border: 1.5px solid #d8e4dc;
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 14px;
-      font-family: inherit;
-      line-height: 1.7;
-      background: #faf9f6;
-      color: #2c2c2c;
-      resize: vertical;
-      min-height: 100px;
-      transition: border-color 0.2s;
-    }
-    textarea:focus {
-      outline: none;
-      border-color: #2b4a3a;
-      background: #fff;
-    }
+  /* ── フォーム要素 ── */
+  .field {
+    margin-bottom: 28px;
+  }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .field-label .req {
+    display: inline-block;
+    font-size: 10px;
+    background: var(--navy);
+    color: var(--white);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-left: 6px;
+    font-family: 'Noto Serif JP', serif;
+    vertical-align: middle;
+    letter-spacing: 0;
+  }
+  .field-label .opt {
+    display: inline-block;
+    font-size: 10px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+    letter-spacing: 0;
+  }
+  .field-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    line-height: 1.7;
+  }
 
-    input[type="text"], input[type="email"] {
-      width: 100%;
-      border: 1.5px solid #d8e4dc;
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 14px;
-      font-family: inherit;
-      background: #faf9f6;
-      color: #2c2c2c;
-      transition: border-color 0.2s;
-    }
-    input[type="text"]:focus, input[type="email"]:focus {
-      outline: none;
-      border-color: #2b4a3a;
-      background: #fff;
-    }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    padding: 13px 14px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    line-height: 1.7;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.08);
+  }
+  textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+  textarea.tall { min-height: 200px; }
 
-    .table-wrapper {
-      overflow-x: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-    th {
-      background: #eef5f1;
-      color: #2b4a3a;
-      font-weight: 600;
-      padding: 10px 14px;
-      text-align: left;
-      white-space: nowrap;
-      border-bottom: 2px solid #c8ddd2;
-    }
-    td {
-      padding: 0;
-      vertical-align: top;
-      border-bottom: 1px solid #eef5f1;
-    }
-    td:first-child {
-      padding: 12px 14px;
-      font-size: 13px;
-      color: #555;
-      white-space: nowrap;
-      background: #fafcfb;
-      border-right: 1px solid #eef5f1;
-      font-weight: 500;
-    }
-    td:last-child textarea {
-      border: none;
-      border-radius: 0;
-      background: transparent;
-      min-height: 56px;
-    }
-    td:last-child textarea:focus {
-      background: #fffde8;
-    }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8860B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
 
-    .optional-note {
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 16px;
-      padding: 10px 14px;
-      background: #f5f5f2;
-      border-radius: 6px;
-    }
+  /* ラジオ・チェックボックス */
+  .radio-group, .check-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .radio-item, .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .radio-item:hover, .check-item:hover {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+  }
+  .radio-item input, .check-item input { display: none; }
+  .radio-item.selected, .check-item.selected {
+    border-color: var(--gold);
+    background: var(--gold-bg);
+  }
+  .radio-mark {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .radio-item.selected .radio-mark {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+  .radio-item.selected .radio-mark::after {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--white);
+  }
+  .check-mark {
+    width: 18px; height: 18px;
+    border-radius: 3px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .check-item.selected .check-mark {
+    border-color: var(--gold);
+    background: var(--gold);
+  }
+  .check-item.selected .check-mark::after {
+    content: '';
+    width: 10px; height: 6px;
+    border-left: 2px solid var(--white);
+    border-bottom: 2px solid var(--white);
+    transform: rotate(-45deg) translate(1px,-1px);
+  }
+  .option-label {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .option-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
 
-    .contact-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 500px) {
-      .contact-row { grid-template-columns: 1fr; }
-    }
+  /* 区切り */
+  .field-group-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
 
-    .submit-section {
-      text-align: center;
-      margin-top: 32px;
-    }
-    .submit-note {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 20px;
-      line-height: 1.8;
-    }
-    button[type="submit"] {
-      background: #2b4a3a;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 16px 56px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: background 0.2s, transform 0.1s;
-      font-family: inherit;
-    }
-    button[type="submit"]:hover {
-      background: #1e3529;
-    }
-    button[type="submit"]:active {
-      transform: scale(0.98);
-    }
+  /* ── カード風囲み ── */
+  .callout {
+    background: var(--gold-bg);
+    border: 1px solid rgba(184,134,11,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 16px 18px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #4A3800;
+    line-height: 1.85;
+  }
 
-    .footer-note {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 12px;
-      color: #aaa;
-    }
+  /* ── ナビゲーションボタン ── */
+  .nav-bar {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .btn-back {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--muted);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-back:hover { border-color: var(--navy); color: var(--navy); }
+  .btn-next {
+    flex: 2;
+    padding: 14px;
+    border: none;
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-next::after {
+    content: '→';
+    margin-left: 8px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .btn-next:hover { background: var(--navy2); }
+  .btn-submit {
+    flex: 2;
+    padding: 16px;
+    border: none;
+    background: linear-gradient(135deg, var(--gold) 0%, #9A6F00 100%);
+    color: var(--white);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 16px rgba(184,134,11,0.25);
+    transition: all 0.2s;
+  }
+  .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(184,134,11,0.35); }
 
-    .success-msg {
-      display: none;
-      background: #2b4a3a;
-      color: #fff;
-      padding: 32px 24px;
-      border-radius: 12px;
-      text-align: center;
-      margin-top: 24px;
-    }
-    .success-msg h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-    .success-msg p {
-      font-size: 14px;
-      color: #c8ddd2;
-    }
-  </style>
+  /* ── 完了画面 ── */
+  .complete {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .complete.active { display: block; }
+  .complete-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--gold-bg);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 24px;
+  }
+  .complete-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .complete-text {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 2;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* ── フッター ── */
+  .site-footer {
+    background: var(--navy);
+    padding: 28px 24px;
+    text-align: center;
+    margin-top: 0;
+  }
+  .site-footer p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ── キャラクター調整 ── */
+  @media (min-width: 600px) {
+    .main { padding: 40px 24px 80px; }
+    .section-title { font-size: 22px; }
+    textarea.tall { min-height: 240px; }
+  }
+</style>
 </head>
 <body>
 
-<header>
-  <div class="logo">教育支援団体｜あんたがおらな</div>
-  <h1>初回面談 事前ヒアリングシート</h1>
-  <p>いただいた内容はセッションの準備のためだけに使用します。<br>外部への共有は一切行いません。</p>
+<!-- ヘッダー -->
+<header class="site-header">
+  <span class="logo">あんたがおらな</span>
+  <span class="label">CONFIDENTIAL HEARING SHEET</span>
 </header>
 
-<div class="container">
-
-  <div class="intro">
-    はじめにお子さんのこと、また今の状況について、できる範囲でお聞かせください。<br>
-    記入が難しい項目は空欄のままで構いません。ご記入いただいた内容をもとに、より実りあるセッションの準備を進めてまいります。
-  </div>
-
-  <!-- お名前・連絡先 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">0</span>お名前・ご連絡先（任意）
-    </div>
-    <div class="section-body">
-      <div class="contact-row">
-        <div class="field-group">
-          <label>お名前</label>
-          <input type="text" name="name" placeholder="例：山田 花子">
-        </div>
-        <div class="field-group">
-          <label>メールアドレス</label>
-          <input type="email" name="email" placeholder="例：hanako@example.com">
-        </div>
-      </div>
-      <div class="field-group">
-        <label>お子さんの学年・年齢</label>
-        <input type="text" name="child_grade" placeholder="例：中学2年（14歳）">
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 1 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">1</span>今回のセッションで軽減したいこと
-    </div>
-    <div class="section-body">
-      <div class="field-group">
-        <label>1-1. 心理的な負担（気持ち・感情面）
-          <span class="hint">例：不安、罪悪感、孤立感、将来への焦りなど</span>
-        </label>
-        <textarea name="burden_mental" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>1-2. 物理的な負担（行動・日常生活面）
-          <span class="hint">例：送り迎え、家での対応、学校との連絡調整など</span>
-        </label>
-        <textarea name="burden_physical" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>1-3. その他、軽減したいこと</label>
-        <textarea name="burden_other" placeholder="ご記入ください"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 2 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">2</span>「こうならなければ不要だった」と感じる負担
-    </div>
-    <div class="section-body">
-      <p style="font-size:13px;color:#666;margin-bottom:16px;">現状がなければ生じなかったと思う負担を、それぞれお聞かせください。</p>
-      <div class="table-wrapper">
-        <table>
-          <tr><th>負担の種類</th><th>具体的な内容</th></tr>
-          <tr>
-            <td>時間的な負担</td>
-            <td><textarea name="burden_time" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>体力・行動面の負担</td>
-            <td><textarea name="burden_physical2" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>気持ち・精神的な負担</td>
-            <td><textarea name="burden_emotion" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>家族全体への影響</td>
-            <td><textarea name="burden_family" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>その他</td>
-            <td><textarea name="burden_misc" placeholder="ご記入ください"></textarea></td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 3 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">3</span>これまでに「期待と違った」と感じたこと
-    </div>
-    <div class="section-body">
-      <p style="font-size:13px;color:#666;margin-bottom:16px;">過去の経験の中で、期待に沿えなかったと思うものがあればお聞かせください。（自己評価で構いません）</p>
-      <div class="field-group">
-        <label>3-1. 親として</label>
-        <textarea name="expect_parent" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>3-2. 家族として（きょうだい・祖父母なども含め）</label>
-        <textarea name="expect_family" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>3-3. 学校・先生・周囲の環境として</label>
-        <textarea name="expect_school" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>3-4. その他</label>
-        <textarea name="expect_other" placeholder="ご記入ください"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 4 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">4</span>今の状況に至った背景・要因
-    </div>
-    <div class="section-body">
-      <p style="font-size:13px;color:#666;margin-bottom:16px;">思い当たる要因があればお聞かせください。（複数でも構いません）</p>
-      <div class="field-group">
-        <label>4-1. お子さん本人について</label>
-        <textarea name="cause_child" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>4-2. ご家族として</label>
-        <textarea name="cause_family" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>4-3. 学校・担任・教育環境について</label>
-        <textarea name="cause_school" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>4-4. 部活・習い事・友人関係など</label>
-        <textarea name="cause_club" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>4-5. その他（環境・社会的な要因など）</label>
-        <textarea name="cause_other" placeholder="ご記入ください"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 5 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">5</span>可能性として期待できること
-    </div>
-    <div class="section-body">
-      <p style="font-size:13px;color:#666;margin-bottom:16px;">これからの変化・再スタートに向けて、プラスに働きそうな要素を教えてください。</p>
-      <div class="field-group">
-        <label>5-1. お子さん本人の努力・工夫・強みで期待できること</label>
-        <textarea name="hope_child" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>5-2. 親御さんとして取り組めること</label>
-        <textarea name="hope_parent" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>5-3. ご家族全体で協力できること</label>
-        <textarea name="hope_family" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>5-4. その他（環境・支援者など）</label>
-        <textarea name="hope_other" placeholder="ご記入ください"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 6 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">6</span>変化・再起に向けて期待できる要因
-    </div>
-    <div class="section-body">
-      <div class="field-group">
-        <label>6-1. お子さん自身の内面・行動面で</label>
-        <textarea name="change_child" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>6-2. 親御さんとして関われること</label>
-        <textarea name="change_parent" placeholder="ご記入ください"></textarea>
-      </div>
-      <div class="field-group">
-        <label>6-3. その他（支援者・環境・タイミングなど）</label>
-        <textarea name="change_other" placeholder="ご記入ください"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 7 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">7</span>これまでの診断・専門家との関わり
-    </div>
-    <div class="section-body">
-      <p class="optional-note">任意記入。これまでに専門機関や医療機関を受診された経験があればお聞かせください。</p>
-      <div class="table-wrapper">
-        <table>
-          <tr><th>関わった専門家</th><th>内容・診断名・時期など</th></tr>
-          <tr>
-            <td>医師（病院名・診療科など）</td>
-            <td><textarea name="expert_doctor" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>心理士・カウンセラー</td>
-            <td><textarea name="expert_counselor" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>その他（相談機関・支援センターなど）</td>
-            <td><textarea name="expert_other" placeholder="ご記入ください"></textarea></td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 8 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">8</span>服薬・指導内容について
-    </div>
-    <div class="section-body">
-      <p class="optional-note">任意記入。現在または過去に服薬・専門的な指導を受けている場合はお知らせください。</p>
-      <div class="table-wrapper">
-        <table>
-          <tr><th>内容</th><th>詳細</th></tr>
-          <tr>
-            <td>服薬中の薬・指示内容（医師より）</td>
-            <td><textarea name="meds_current" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>心理士・支援者からの指導内容</td>
-            <td><textarea name="meds_guidance" placeholder="ご記入ください"></textarea></td>
-          </tr>
-          <tr>
-            <td>その他、継続中の支援</td>
-            <td><textarea name="meds_other" placeholder="ご記入ください"></textarea></td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section 9 -->
-  <div class="section">
-    <div class="section-header">
-      <span class="num">9</span>伝えておきたいこと・特に知っておいてほしいこと
-    </div>
-    <div class="section-body">
-      <p style="font-size:13px;color:#666;margin-bottom:16px;">セッションを進めるうえで、あらかじめ知っておいてほしいことをすべてお書きください。配慮が必要なことや、過去の経緯など、どんな小さなことでも構いません。</p>
-      <div class="field-group">
-        <textarea name="anything_else" rows="6" placeholder="ご記入ください"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- Submit -->
-  <div class="submit-section">
-    <p class="submit-note">
-      ご入力内容はあんたがおらな事務局（dan.nishiyama@antagaorana.com）に送信されます。<br>
-      セッション3日前までにご送信ください。
-    </p>
-    <button type="submit" onclick="submitForm(event)">送信する</button>
-  </div>
-
-  <div class="success-msg" id="successMsg">
-    <h3>✓ 送信が完了しました</h3>
-    <p>ご記入ありがとうございます。<br>担当者より改めてご連絡いたします。</p>
-  </div>
-
-  <p class="footer-note">教育支援団体 あんたがおらな｜antagaorana.com</p>
-
+<!-- 進捗 -->
+<div class="progress-wrap">
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="progress-steps" id="progressSteps"></div>
 </div>
 
+<!-- メイン -->
+<main class="main" id="mainWrap">
+
+  <!-- ヒーロー -->
+  <div class="hero" style="margin: 0 -16px 32px; border-radius: 0;">
+    <p class="hero-en">PRE-ANALYSIS SESSION SHEET</p>
+    <h1 class="hero-title">分析セッション前ヒアリングシート</h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">いただいた内容は、大久保先生が分析セッション前に丁寧に確認します。<br>思いつくことを、ありのままにお書きください。</p>
+  </div>
+
+  <!-- ─────────────────────────────
+       STEP 1：ご状況
+  ───────────────────────────── -->
+  <div class="section active" id="step1">
+    <div class="section-header">
+      <span class="section-num">STEP 01</span>
+      <h2 class="section-title">今、いちばん軽くしたいこと</h2>
+      <p class="section-desc">この面談を通じて、何が少し楽になればいいと感じていますか。</p>
+    </div>
+
+    <div class="callout">
+      「正しい答え」はありません。いま頭の中にあることをそのままお書きください。
+    </div>
+
+    <div class="field">
+      <label class="field-label">心の重さ・精神的な負担<span class="req">必須</span></label>
+      <p class="field-hint">毎日感じている不安や辛さなど、言葉にできる範囲で。</p>
+      <textarea class="tall" placeholder="例）子どもの様子が気になって眠れない夜が続いています。夫とも意見が合わず、孤独に感じています。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">日常の負担（時間・体力・家族関係など）<span class="opt">任意</span></label>
+      <textarea placeholder="例）学校への送迎や関係機関とのやり取りで疲弊しています。"></textarea>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn-next" onclick="goStep(2)">次へ進む</button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       STEP 2：これまでの経緯
+  ───────────────────────────── -->
+  <div class="section" id="step2">
+    <div class="section-header">
+      <span class="section-num">STEP 02</span>
+      <h2 class="section-title">「期待と違った」と感じたこと</h2>
+      <p class="section-desc">これまで周囲に相談してきたこと、関わってきた支援についてお聞かせください。</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">親御様・ご家族への期待と現実<span class="opt">任意</span></label>
+      <p class="field-hint">パートナーや家族に「こうしてほしかった」と感じたことがあれば。</p>
+      <textarea placeholder="例）夫は仕事を優先し、相談しても「気にしすぎ」と言われてしまいます。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">学校・相談機関への期待と現実<span class="opt">任意</span></label>
+      <p class="field-hint">スクールカウンセラーや支援機関など、相談してみたが変わらなかったことがあれば。</p>
+      <textarea placeholder="例）相談員に話を聞いてもらえましたが、「様子を見ましょう」で終わることが多く、具体的な動き方がわかりませんでした。"></textarea>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goStep(1)">前へ</button>
+      <button class="btn-next" onclick="goStep(3)">次へ進む</button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       STEP 3：現在の状況
+  ───────────────────────────── -->
+  <div class="section" id="step3">
+    <div class="section-header">
+      <span class="section-num">STEP 03</span>
+      <h2 class="section-title">いまの状況について</h2>
+      <p class="section-desc">お子様・ご家庭の現在の状況を、分かる範囲でお書きください。</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">今の状況に至った背景・要因<span class="req">必須</span></label>
+      <p class="field-hint">いつ頃から、何がきっかけで今の状態になったかを教えてください。</p>
+      <textarea class="tall" placeholder="例）中学1年の2学期から、クラス替え後に学校へ行けなくなりました。友人関係のトラブルがあったようですが、本人はあまり話してくれません。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">関係していると感じる要因（複数選択可）<span class="opt">任意</span></label>
+      <div class="check-group" id="factorGroup">
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">子ども本人の特性・気質</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">家庭内の関係（夫婦・親子）</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">学校・クラスの人間関係</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">部活動・習い事</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">学習・成績のこと</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">発達特性・医療的な背景</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <span class="check-mark"></span>
+          <span class="option-label">よくわからない</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goStep(2)">前へ</button>
+      <button class="btn-next" onclick="goStep(4)">次へ進む</button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       STEP 4：可能性と変化
+  ───────────────────────────── -->
+  <div class="section" id="step4">
+    <div class="section-header">
+      <span class="section-num">STEP 04</span>
+      <h2 class="section-title">お子様の可能性・変化のきっかけ</h2>
+      <p class="section-desc">「うちの子」をよく知る親御様だから見えているものを教えてください。</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">お子様の強み・好きなこと・得意なこと<span class="opt">任意</span></label>
+      <p class="field-hint">どんな小さなことでも構いません。「これだけは楽しそう」というものがあれば。</p>
+      <textarea placeholder="例）ゲームなら何時間でも集中できます。絵を描くことも好きで、よく部屋で一人で描いています。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">親御様ご自身が取り組めると感じること<span class="opt">任意</span></label>
+      <p class="field-hint">「自分はここなら変われるかも」と感じることがあれば。</p>
+      <textarea placeholder="例）声のかけ方を変えることなら、少しずつ試せると思います。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">変化・再起に向けて、期待できそうな要因<span class="opt">任意</span></label>
+      <textarea placeholder="例）本人は「変わりたい」という気持ちは持っているようです。ただ、どこから手をつければいいか分からない様子です。"></textarea>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goStep(3)">前へ</button>
+      <button class="btn-next" onclick="goStep(5)">次へ進む</button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       STEP 5：医療・支援歴
+  ───────────────────────────── -->
+  <div class="section" id="step5">
+    <div class="section-header">
+      <span class="section-num">STEP 05</span>
+      <h2 class="section-title">これまでの診断・専門家との関わり</h2>
+      <p class="section-desc">大久保先生が状況を正確に理解するために、差し支えない範囲でお教えください。</p>
+    </div>
+
+    <div class="callout">
+      この情報は大久保先生のみが確認します。回答したくない項目は空欄で構いません。
+    </div>
+
+    <div class="field">
+      <label class="field-label">これまでに相談・支援を受けた機関<span class="opt">任意</span></label>
+      <div class="check-group">
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox"><span class="check-mark"></span>
+          <span class="option-label">かかりつけ医・小児科</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox"><span class="check-mark"></span>
+          <span class="option-label">精神科・心療内科・神経科</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox"><span class="check-mark"></span>
+          <span class="option-label">心理士・カウンセラー</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox"><span class="check-mark"></span>
+          <span class="option-label">スクールカウンセラー・教育相談</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox"><span class="check-mark"></span>
+          <span class="option-label">不登校・発達支援の民間機関</span>
+        </label>
+        <label class="check-item" onclick="toggleCheck(this)">
+          <input type="checkbox"><span class="check-mark"></span>
+          <span class="option-label">なし（はじめての相談）</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">診断名・発達特性の有無<span class="opt">任意</span></label>
+      <p class="field-hint">診断を受けている場合は、差し支えない範囲でお書きください。</p>
+      <textarea style="min-height:100px;" placeholder="例）ADHD（注意欠如・多動症）の診断を受けています。現在○○病院に通院中です。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">現在の服薬・指導内容<span class="opt">任意</span></label>
+      <p class="field-hint">服薬している場合は薬名・量、医師からの指示があれば。</p>
+      <textarea style="min-height:100px;" placeholder="例）コンサータ18mgを服用しています。主治医からは「無理させずに生活リズムを整えるよう」と言われています。"></textarea>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goStep(4)">前へ</button>
+      <button class="btn-next" onclick="goStep(6)">次へ進む</button>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────
+       STEP 6：最後に
+  ───────────────────────────── -->
+  <div class="section" id="step6">
+    <div class="section-header">
+      <span class="section-num">STEP 06</span>
+      <h2 class="section-title">大久保先生に伝えておきたいこと</h2>
+      <p class="section-desc">これまでの項目で書けなかったことや、特に知っておいてほしいことを自由にお書きください。</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">伝えておきたいこと・特に知っておいてほしいこと<span class="opt">任意</span></label>
+      <textarea class="tall" placeholder="「ここだけは理解してほしい」ということ、「他の機関には言えなかったこと」など、何でも構いません。
+
+思いが長くなっても大丈夫です。"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">面談への気持ち・不安なこと<span class="opt">任意</span></label>
+      <div class="radio-group">
+        <label class="radio-item" onclick="selectRadio(this, 'mood')">
+          <input type="radio" name="mood">
+          <span class="radio-mark"></span>
+          <span>
+            <span class="option-label">変化への期待がある</span>
+          </span>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'mood')">
+          <input type="radio" name="mood">
+          <span class="radio-mark"></span>
+          <span>
+            <span class="option-label">不安だが、話してみたい</span>
+          </span>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'mood')">
+          <input type="radio" name="mood">
+          <span class="radio-mark"></span>
+          <span>
+            <span class="option-label">正直、変わるかどうか半信半疑</span>
+          </span>
+        </label>
+        <label class="radio-item" onclick="selectRadio(this, 'mood')">
+          <input type="radio" name="mood">
+          <span class="radio-mark"></span>
+          <span>
+            <span class="option-label">疲れ切っていて、藁をもつかむ思い</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goStep(5)">前へ</button>
+      <button class="btn-submit" onclick="submitForm()">送信する</button>
+    </div>
+  </div>
+
+  <!-- 完了 -->
+  <div class="complete" id="complete">
+    <div class="complete-icon">✦</div>
+    <h2 class="complete-title">ありがとうございます</h2>
+    <p class="complete-text">
+      内容を受け取りました。<br>
+      大久保先生が分析セッション前に丁寧に確認します。<br><br>
+      数日以内に、事務局よりご連絡いたします。<br>
+      どうぞ、少しだけ肩の力を抜いてお待ちください。
+    </p>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>© 2026 あんたがおらな株式会社　|　info@antagaorana.com</p>
+</footer>
+
 <script>
-  async function submitForm(e) {
-    e.preventDefault();
+  const STEPS = [
+    { label: '現状' },
+    { label: '経緯' },
+    { label: '背景' },
+    { label: '可能性' },
+    { label: '診断歴' },
+    { label: '最後に' },
+  ];
 
-    const fields = {};
-    document.querySelectorAll('input, textarea').forEach(el => {
-      if (el.name && el.value.trim()) {
-        fields[el.name] = el.value.trim();
-      }
+  let currentStep = 1;
+
+  // 進捗ドット生成
+  const stepsEl = document.getElementById('progressSteps');
+  STEPS.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'step-dot' + (i === 0 ? ' active' : '');
+    div.id = 'dot' + (i + 1);
+    div.innerHTML = `<span class="dot-num">${i + 1}</span><span class="dot-label">${s.label}</span>`;
+    div.onclick = () => { if (i + 1 < currentStep) goStep(i + 1); };
+    stepsEl.appendChild(div);
+  });
+
+  function updateProgress() {
+    const pct = ((currentStep - 1) / STEPS.length) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    STEPS.forEach((_, i) => {
+      const dot = document.getElementById('dot' + (i + 1));
+      dot.classList.remove('active', 'done');
+      if (i + 1 === currentStep) dot.classList.add('active');
+      else if (i + 1 < currentStep) dot.classList.add('done');
     });
-
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzWGg9QccrDvlLrV1rg1mQeg2fscmOP0pKn4Frrazi5RDJoOcNcZ9CS_z7DavkufUsW/exec';
-
-    const btn = document.querySelector('button[type="submit"]');
-    btn.textContent = '送信中...';
-    btn.disabled = true;
-
-    try {
-      // GAS URLが設定されている場合はAPIコール
-      if (GAS_URL !== 'YOUR_GAS_WEB_APP_URL_HERE') {
-        await fetch(GAS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(fields)
-        });
-      }
-
-      btn.style.display = 'none';
-      document.querySelector('.submit-note').style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
-      document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
-
-    } catch (err) {
-      btn.textContent = '送信する';
-      btn.disabled = false;
-      alert('送信に失敗しました。お手数ですが、直接メールにてご連絡ください。\ndan.nishiyama@antagaorana.com');
-    }
   }
-</script>
 
+  function goStep(n) {
+    document.getElementById('step' + currentStep).classList.remove('active');
+    currentStep = n;
+    const el = document.getElementById('step' + currentStep);
+    el.classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function submitForm() {
+    document.getElementById('step6').classList.remove('active');
+    document.getElementById('complete').classList.add('active');
+    document.getElementById('progressBar').style.width = '100%';
+    STEPS.forEach((_, i) => {
+      const dot = document.getElementById('dot' + (i + 1));
+      dot.classList.remove('active');
+      dot.classList.add('done');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('selected');
+  }
+
+  function selectRadio(el, name) {
+    document.querySelectorAll(`.radio-item input[name="${name}"]`).forEach(r => {
+      r.closest('.radio-item').classList.remove('selected');
+    });
+    el.classList.add('selected');
+  }
+
+  updateProgress();
+</script>
 </body>
 </html>
