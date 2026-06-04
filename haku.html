@@ -60,7 +60,12 @@
     .btn.prim{background:linear-gradient(135deg,var(--gold),var(--rose));color:var(--w);box-shadow:0 10px 28px rgba(212,168,67,.22)}
     .btn.ghost{border:2px solid rgba(42,74,42,.18);color:var(--gd);background:#fff}
     .note{margin-top:14px;font-size:12px;color:rgba(0,0,0,.55);line-height:1.9}
-    @media(max-width:860px){}
+    .hero-btm{padding:18px 24px 24px;border-top:1px solid rgba(0,0,0,.06)}
+    .points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+    .pt{border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,.06);padding:14px}
+    .pt b{display:block;font-size:11px;letter-spacing:.12em;color:rgba(58,90,56,.82)}
+    .pt span{display:block;margin-top:6px;font-size:13px;color:var(--tm);line-height:1.85}
+    @media(max-width:860px){.points{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -76,6 +81,14 @@
         </div>
         <div class="hero-img" aria-label="拓（ハク）のイメージ">
           <img src="./lp-assets/service-haku.png?v=20260501a" alt="拓（ハク）のイメージ">
+        </div>
+      </div>
+      <div class="hero-btm">
+        <p style="margin:0;color:var(--tm);font-size:13px;line-height:1.9">答えを押しつけるのではなく、<b style="color:var(--gd)">自分で選べる状態</b>をつくる伴走です。</p>
+        <div class="points" aria-label="特徴">
+          <div class="pt"><b>POINT 01</b><span>体験セッション1.5h×2回、完全無料から始められる</span></div>
+          <div class="pt"><b>POINT 02</b><span>仕事・人間関係・生き方——どんな悩みでも話せる</span></div>
+          <div class="pt"><b>POINT 03</b><span>続く形で積み上げる。小さな一歩を一緒に設計する</span></div>
         </div>
       </div>
     </div>
@@ -100,7 +113,7 @@
       <p>状況を伺い、今のあなたに合う進め方を一緒に整理します。</p>
       <p class="note">※このページでは金額の提示は行いません。</p>
       <div class="cta">
-        <a class="btn prim" href="/?consult=haku#contact">まず、話してみる</a>
+        <a class="btn prim" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" target="_blank" rel="noopener noreferrer">まず、話してみる</a>
         <a class="btn ghost" href="./taku-login.html">コミュニティ（ログイン）へ</a>
       </div>
     </section>
@@ -116,7 +129,7 @@
 </style>
 <div class="float-cta" id="floatCta">
 <span class="float-cta-text"><strong>拓（ハク）— コーチング</strong>　まず話してみるところから</span>
-<a class="float-cta-btn" href="/?consult=haku#contact">まず、話してみる →</a>
+<a class="float-cta-btn" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" target="_blank" rel="noopener noreferrer">まず、話してみる →</a>
 </div>
 <script>
 (function(){var bar=document.getElementById("floatCta");var shown=false;window.addEventListener("scroll",function(){if(!shown&&window.scrollY>300){bar.classList.add("visible");shown=true;}},{passive:true});})();
