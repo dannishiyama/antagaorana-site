@@ -564,68 +564,51 @@ section{padding:88px 5%}
   margin-bottom: 4px;
   color: var(--gd);
 }
-.sv-actions{display:flex;flex-direction:column;align-items:stretch;gap:10px;margin-top:16px}
 .sv-lnk{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:8px;
-  width:100%;
-  min-height:50px;
-  padding:14px 24px;
-  font-size:15px;
+  min-height:46px;
+  padding:12px 22px;
+  font-size:14px;
   font-weight:700;
-  letter-spacing:.06em;
-  font-family:'Shippori Mincho',serif;
+  letter-spacing:.04em;
   color:var(--gd);
-  background:linear-gradient(135deg,var(--gold),#c9a04e);
-  border:2px solid transparent;
+  background:#fff;
+  border:2px solid var(--g);
   border-radius:999px;
-  box-shadow:0 4px 18px rgba(216,177,90,.28);
-  transition:background .18s ease,transform .15s ease,box-shadow .18s ease;
+  box-shadow:0 2px 12px rgba(70,98,70,.12);
+  transition:background .18s ease,border-color .18s ease,transform .15s ease,box-shadow .18s ease;
 }
 .sv-lnk:hover{
-  background:linear-gradient(135deg,#e0bc6a,#c9a04e);
+  background:var(--gp);
+  border-color:var(--gd);
+  color:var(--gd);
   transform:translateY(-1px);
-  box-shadow:0 6px 22px rgba(216,177,90,.34);
+  box-shadow:0 4px 16px rgba(70,98,70,.18);
 }
-.sv-cta-sub{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:42px;
-  padding:10px 20px;
-  border-radius:999px;
-  font-size:13px;
-  font-weight:600;
-  color:var(--g);
-  background:transparent;
-  border:1px solid rgba(70,98,70,.28);
-  font-family:inherit;
-  text-decoration:none;
-  transition:background .15s,border-color .15s,transform .15s;
-}
-.sv-cta-sub:hover{background:var(--gp2);border-color:var(--g);transform:translateY(-1px)}
+.sv-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-top:16px}
+.sv-actions .sv-lnk{align-self:flex-start}
 .sv-cta{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:100%;
-  min-height:42px;
-  padding:10px 20px;
+  min-height:46px;
+  padding:12px 22px;
   border-radius:999px;
-  font-size:13px;
-  font-weight:600;
-  color:var(--g);
-  background:transparent;
-  border:1px solid rgba(70,98,70,.28);
+  font-size:14px;
+  font-weight:700;
+  color:var(--w);
+  background:var(--g);
+  border:2px solid transparent;
   font-family:inherit;
   cursor:pointer;
   text-decoration:none;
-  transition:background .15s,border-color .15s,transform .15s;
+  box-shadow:0 3px 14px rgba(70,98,70,.2);
+  transition:opacity .15s,transform .15s,box-shadow .18s ease;
 }
-.sv-cta:hover{background:var(--gp2);border-color:var(--g);transform:translateY(-1px)}
+.sv-cta:hover{opacity:.96;transform:translateY(-1px);box-shadow:0 5px 18px rgba(70,98,70,.26)}
 
 .india{background:linear-gradient(160deg,#2f3a2f 0%,#243528 100%);position:relative;overflow:hidden}
 .india .stag{color:var(--goldl)}
@@ -1184,8 +1167,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     text-align:center;
   }
   .sv-actions .sv-lnk,
-  .sv-actions .sv-cta,
-  .sv-actions .sv-cta-sub{
+  .sv-actions .sv-cta{
     width:100%;
     justify-content:center;
     align-self:stretch;
@@ -1395,7 +1377,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <div class="sv-txt">不登校・引きこもり・発達特性のお子様へ。勉強を教えるだけでなく、生きる力・自己肯定感・「自分にもできる」という確信を育てます。</div>
           <div class="sv-actions">
             <a href="./mei.html" class="sv-lnk">概要を見る →</a>
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" class="sv-cta-sub" target="_blank" rel="noopener noreferrer">無料面談の日程を決める →</a>
+            <a href="/?consult=mei#contact" class="sv-cta">この支援について相談する</a>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" class="sv-cta" style="margin-top:8px;background:transparent;border:1px solid rgba(70,98,70,.3);color:var(--g);" target="_blank" rel="noopener noreferrer">無料面談の日程を決める →</a>
           </div>
         </div>
       </div>
@@ -1411,7 +1394,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <div class="sv-txt">子どもとの関わり方に悩む親御様へ。心理学的な分析とロードマップで、家庭の空気から変えていきます。親が変われば、家庭が変わる。</div>
           <div class="sv-actions">
             <a href="./shirube.html" class="sv-lnk">概要を見る →</a>
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" class="sv-cta-sub" target="_blank" rel="noopener noreferrer">無料面談の日程を決める →</a>
+            <a href="/?consult=shirube#contact" class="sv-cta">この支援について相談する</a>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" class="sv-cta" style="margin-top:8px;background:transparent;border:1px solid rgba(70,98,70,.3);color:var(--g);" target="_blank" rel="noopener noreferrer">無料面談の日程を決める →</a>
           </div>
         </div>
       </div>
@@ -1442,7 +1426,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           </div>
           <div class="sv-txt">インド・ガンジス川×ブッダガヤへ。言葉が通じなくても「ありがとう」が伝わる瞬間が、人生を変えます。</div>
           <div class="sv-actions">
-            <a href="./etsu.html" class="sv-lnk">概要を見る →</a>
+            <a href="./etsu.html" class="sv-lnk">プロジェクトの概要を見る →</a>
             <a href="/?consult=etsu#contact" class="sv-cta">このプロジェクトについて相談する</a>
           </div>
         </div>
@@ -1526,7 +1510,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <span class="msg-tag">教育相談三万件</span>
             <span class="msg-tag">心理カウンセラー指導員</span>
           </div>
-          <a class="msg-message-link" href="./okubo.html"><span class="sub">メッセージ</span>弱さと向き合う勇気が、変化のはじまりです。<span class="arrow">→</span></a>
+          <a class="msg-message-link" href="./okubo.html"><span class="sub">メッセージ</span>弱さと向き合う勇気が、変化の始まり。<span class="arrow">→</span></a>
         </div>
 
         <div class="msg-person">
@@ -1543,7 +1527,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <span class="msg-tag">不登校支援</span>
             <span class="msg-tag">発達障害支援</span>
           </div>
-          <a class="msg-message-link" href="./nishiyama.html"><span class="sub">MESSAGE</span>「あんたがおらな」が、人を動かす。<span class="arrow">→</span></a>
+          <a class="msg-message-link" href="./nishiyama.html"><span class="sub">メッセージ</span>「あんたがおらな」が、人を動かす。<span class="arrow">→</span></a>
         </div>
       </div>
 

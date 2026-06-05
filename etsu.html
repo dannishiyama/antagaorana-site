@@ -49,8 +49,13 @@
     h1{font-family:'Noto Serif JP',serif;font-size:clamp(22px,4vw,34px);font-weight:900;color:var(--gd);line-height:1.45;margin-top:10px}
     .catch{font-family:'Noto Serif JP',serif;font-size:clamp(16px,2.4vw,20px);font-weight:700;color:var(--gd);line-height:1.65;margin-top:12px}
     .lead{margin-top:12px;color:var(--tm);font-size:14px;line-height:2}
-    .hero-img{aspect-ratio:16/10;background:#fff;border-top:1px solid rgba(0,0,0,.06)}
-    .hero-img img{width:100%;height:100%;object-fit:contain;display:block}
+    .hero-img{aspect-ratio:16/9;background:#f0ede4;border-top:1px solid rgba(0,0,0,.06);overflow:hidden}
+    .hero-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+    /* 写真グリッド：全て16:9横写真で統一 */
+    .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+    .photo-grid img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:center;display:block;border-radius:4px}
+    .photo-grid .wide{grid-column:1/-1}
+    @media(max-width:600px){.photo-grid{grid-template-columns:1fr}}
     .hero-btm{padding:18px 24px 24px;border-top:1px solid rgba(0,0,0,.06)}
     .checklist{font-size:13px;color:var(--tm);line-height:1.95}
     .checklist li{margin-bottom:6px}
@@ -234,7 +239,7 @@
       <p style="margin-top:18px;font-family:'Noto Serif JP',serif;font-weight:900;color:var(--gd)">「あんたがおらなあかんねん！」</p>
 
       <div class="cta">
-        <a class="btn prim" href="/?consult=etsu#contact">相談フォームへ進む</a>
+        <a class="btn prim" href="mailto:etsu_pj@antagaorana.com?subject=%E3%80%90%E8%B6%8A%EF%BC%88%E3%82%A8%E3%83%84%EF%BC%89%E3%80%91%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B">まず、問い合わせてみる</a>
         <a class="btn ghost" href="./india-project.html">プロジェクト詳細（写真・スライド）</a>
       </div>
       <p class="note">最新の募集条件・日程は、お問い合わせのうえご確認ください。</p>

@@ -1,58 +1,61 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>創設者メッセージ｜西山 弾｜あんたがおらな</title>
-  <meta name="description" content="「あんたがおらな」が、人を動かす。創設者・西山弾からのメッセージ。ダメな子なんて、いない。">
+  <meta name="description" content="「あんたがおらな」が、人を動かす。創設者・西山弾からのメッセージ。">
   <link rel="canonical" href="https://antagaorana.com/nishiyama.html">
   <meta property="og:site_name" content="あんたがおらな">
-  <meta property="og:locale" content="ja_JP">
   <meta property="og:type" content="article">
   <meta property="og:title" content="創設者メッセージ｜西山 弾｜あんたがおらな">
   <meta property="og:description" content="「あんたがおらな」が、人を動かす。創設者・西山弾からのメッセージ。">
   <meta property="og:url" content="https://antagaorana.com/nishiyama.html">
   <meta property="og:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="創設者メッセージ｜西山 弾｜あんたがおらな">
-  <meta name="twitter:description" content="「あんたがおらな」が、人を動かす。創設者・西山弾からのメッセージ。">
-  <meta name="twitter:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
   <link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
   <link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root{--g:#466246;--gd:#2f3a2f;--sand:#f7f3ec;--sand2:#efe9df;--txt:#2f3a2f;--tm:#5d6658;--ts:#7a8474;--w:#fff;--gold:#d8b15a;--border:rgba(70,98,70,.14)}
+    :root{--g:#466246;--gd:#2f3a2f;--sand:#f7f3ec;--sand2:#efe9df;--txt:#2f3a2f;--tm:#5d6658;--ts:#7a8474;--w:#fff;--gold:#d8b15a;--border:rgba(70,98,70,.12)}
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Noto Sans JP',sans-serif;background:var(--sand);color:var(--txt);line-height:1.9}
     a{text-decoration:none;color:inherit}
-    .wrap{max-width:800px;margin:0 auto;padding:92px 5% 100px}
-    .back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);margin-bottom:32px;letter-spacing:.06em;transition:color .3s}
+    .wrap{max-width:680px;margin:0 auto;padding:80px 5% 100px}
+    .back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);margin-bottom:28px;letter-spacing:.06em;transition:color .3s}
     .back:hover{color:var(--g)}
-    .head{display:grid;grid-template-columns:minmax(200px,240px) 1fr;gap:36px;align-items:start;margin-top:10px}
-    .photo{overflow:hidden;border:1px solid var(--border);background:var(--sand2)}
+    .head{display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:start;margin-bottom:48px}
+    .photo{overflow:hidden;background:var(--sand2);border:1px solid var(--border)}
     .photo img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
-    .name{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:900;color:var(--gd);line-height:1.35}
-    .role{font-size:12px;letter-spacing:.14em;color:var(--ts);margin-top:6px}
-    h1{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3.2vw,34px);font-weight:900;color:var(--gd);line-height:1.5;margin-top:18px}
-    .lead{margin-top:10px;color:var(--tm);font-size:13px;letter-spacing:.12em}
-    .message{margin-top:52px}
-    .section{margin-top:52px}
-    .section + .section{border-top:1px solid var(--border);padding-top:48px}
-    .prose p{font-family:'Noto Serif JP',serif;font-size:16px;line-height:2.3;color:var(--tm)}
-    .prose p + p{margin-top:22px}
-    /* 強調：左ボーダー */
-    .emph{margin:36px 0;padding:28px 32px;border-left:3px solid var(--gd);background:rgba(70,98,70,.05)}
-    .emph p{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:700;line-height:2.0;color:var(--gd)}
-    /* 強調：大見出し（深緑背景） */
-    .emph-xl{margin:40px 0;padding:36px 32px;background:var(--gd);text-align:center}
-    .emph-xl p{font-family:'Noto Serif JP',serif;font-size:clamp(18px,2.5vw,24px);font-weight:900;line-height:1.8;color:var(--w);letter-spacing:.06em}
-    /* 強調：ゴールドアクセント */
-    .emph-gold{margin:36px 0;padding:28px 32px;border-left:3px solid var(--gold);background:rgba(216,177,90,.06)}
-    .emph-gold p{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:900;line-height:1.8;color:var(--gd);letter-spacing:.04em}
-    .sig{margin-top:64px;padding-top:32px;border-top:1px solid var(--border)}
-    .sig p{font-family:'Noto Serif JP',serif;font-size:14px;color:var(--ts);line-height:2.0}
-    .sig .sig-name{font-size:20px;font-weight:900;color:var(--gd);margin-top:8px;letter-spacing:.06em}
-    @media(max-width:760px){.head{grid-template-columns:1fr;gap:24px}.photo{max-width:280px}.emph,.emph-gold{padding:22px 20px}.emph-xl{padding:28px 20px}}
+    .head-role{font-size:11px;letter-spacing:.2em;color:var(--ts);margin-bottom:6px}
+    .head-name{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:900;color:var(--gd);letter-spacing:.06em}
+    .head-title{font-family:'Noto Serif JP',serif;font-size:clamp(16px,2.6vw,22px);font-weight:700;color:var(--gd);line-height:1.6;margin-top:12px}
+    .prose{font-family:'Noto Serif JP',serif;font-size:15px;line-height:2.0;color:var(--tm)}
+    .scene{margin-top:36px;padding-top:36px;border-top:1px solid var(--border)}
+    .scene:first-child{margin-top:0;padding-top:0;border-top:none}
+    .prose p{margin-bottom:14px}
+    .prose p:last-child{margin-bottom:0}
+    .kw{color:var(--gd);font-weight:700}
+    .kw-gold{color:#8a6a1e;font-weight:900}
+    .voice{
+      margin:24px 0;
+      font-family:'Noto Serif JP',serif;
+      font-size:clamp(15px,2.2vw,18px);
+      font-weight:700;
+      color:var(--gd);
+      line-height:1.9;
+      letter-spacing:.03em;
+      padding-left:16px;
+      border-left:2px solid var(--g);
+    }
+    .sig{margin-top:56px;padding-top:28px;border-top:1px solid var(--border)}
+    .sig-org{font-size:12px;color:var(--ts);letter-spacing:.08em;line-height:2.0}
+    .sig-name{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:900;color:var(--gd);margin-top:4px;letter-spacing:.06em}
+    @media(max-width:560px){
+      .head{grid-template-columns:90px 1fr;gap:16px}
+      .head-name{font-size:18px}
+      .voice{font-size:15px;padding-left:12px}
+    }
   </style>
 </head>
 <body>
@@ -60,87 +63,48 @@
     <a class="back" href="/#message">← 挨拶に戻る</a>
 
     <div class="head">
-      <div class="photo" aria-label="西山 弾（写真）">
+      <div class="photo">
         <img src="./lp-assets/founder-portrait.png" alt="西山 弾" loading="lazy" decoding="async">
       </div>
       <div>
-        <div class="name">西山 弾</div>
-        <div class="role">創設者／教育実践家</div>
-        <h1>「あんたがおらな」が、<br>人を動かす。</h1>
-        <p class="lead">創設者メッセージ</p>
+        <p class="head-role">創設者／教育実践家</p>
+        <p class="head-name">西山 弾</p>
+        <p class="head-title">「あんたがおらな」が、<br>人を動かす。</p>
       </div>
     </div>
 
-    <div class="message">
+    <div class="prose">
 
-      <div class="section">
-        <div class="prose">
-          <p>「どうしてあなたはできないの？」</p>
-          <p>そんな言葉が、子どもの心を少しずつ削っていく。<br>その苦しさを、ここでは置き去りにしません。</p>
-        </div>
+      <div class="scene">
+        <p>「どうしてあなたはできないの？」「周りはできているのに」——そんな言葉を何度も浴びながら、子どもたちは少しずつ、<span class="kw">「自分はダメなんだ」</span>と思い込んでいきます。</p>
+        <p>でも、本当にそうでしょうか？</p>
+        <p>私たちは、"ダメな子"を見てきたのではありません。周りから責められ、比べられることによって、本来の力やその子らしさを<span class="kw">発揮できずに苦しんでいる</span>子どもたちを見てきました。</p>
+        <div class="voice">「ダメにさせられている」<br>だけなんです。</div>
       </div>
 
-      <div class="section">
-        <div class="prose">
-          <p>「どうしてあなたはできないの？」<br>「周りはできているのに」</p>
-          <p>そんな言葉を何度も浴びながら、子どもたちは少しずつ、"自分はダメなんだ"と思い込んでいきます。</p>
-          <p>でも、本当にそうでしょうか？</p>
-        </div>
-
-        <div class="emph">
-          <p>私たちは、"ダメな子"を見てきたのではありません。<br>周りから責められたり、比べられることによって、本来持っている力や優しさ、その子らしさを発揮できずに苦しんでいる子どもたちを見てきました。<br>そう——「ダメにさせられている」だけなんです。</p>
-        </div>
+      <div class="scene">
+        <p>今の社会には、「みんなと同じようにできること」が良いとされる空気があります。うまく適応できる子は「良い子」と呼ばれ、そうでない子は「問題がある」と見られてしまう。</p>
+        <p>その空気は、子どもだけでなく、<span class="kw">親御さん自身も苦しめていきます。</span></p>
+        <p>本当は、誰かと同じになるためではなく、<span class="kw">その子らしく生きる</span>ために教育があるはずです。</p>
+        <div class="voice"><span class="kw-gold">「ダメな子なんて、いない。」</span></div>
+        <p>私たちは、「ダメ」のレッテルを貼られた子どもたちの<span class="kw">味方であり続けたい</span>。その思いでこの活動を始めました。</p>
       </div>
 
-      <div class="section">
-        <div class="prose">
-          <p>今の社会には、「みんなと同じようにできること」が良いことだとされる空気があります。</p>
-          <p>うまく適応できる子は「良い子」と呼ばれ、そうでない子は「問題がある」と見られてしまう。</p>
-          <p>その空気は、子どもだけでなく、親御さん自身も苦しめていきます。</p>
-        </div>
-
-        <div class="emph">
-          <p>本当は、誰かと同じになるためではなく、"その子らしく生きる"ために教育があるはずです。</p>
-        </div>
-
-        <div class="emph-gold">
-          <p>「ダメな子なんて、いない。」</p>
-        </div>
-
-        <div class="prose">
-          <p>私たちは、「ダメ」のレッテルを貼られた子どもたちの味方であり続けたい。<br>その思いでこの活動を始めました。</p>
-        </div>
+      <div class="scene">
+        <p>子どもを変える前に、まず子どもが安心して<span class="kw">「自分でいていい」</span>と思えること。そして親御さん自身も、"自分を責め続ける状態"から少しずつ抜け出していくこと。</p>
+        <div class="voice">「自分のままで居ていいんだ」と思えた時、<br>彼らの可能性はもう一度動き始めます。</div>
       </div>
 
-      <div class="section">
-        <div class="prose">
-          <p>子どもを変える前に、まず子どもが安心して「自分でいていい」と思えること。</p>
-          <p>そして親御さん自身も、"自分を責め続ける状態"から少しずつ抜け出していくこと。</p>
-        </div>
-
-        <div class="emph-xl">
-          <p>子どもが安心して<br>「自分のままで居ていいんだ」と思えた時、<br>彼らの可能性はもう一度動き始めます。</p>
-        </div>
+      <div class="scene">
+        <p>私たちは、ただ勉強を教える団体ではありません。子どもたちが社会を自分らしく生き抜いていくための——<span class="kw">人との信頼。自分を信じる力。社会で生きる力。</span>——を育てていく場所でありたいと思っています。</p>
+        <div class="voice">「本当に味方でいてくれた」<br>そう思っていただける存在で居続けます。<br>それが「あんたがおらな」です。</div>
       </div>
 
-      <div class="section">
-        <div class="prose">
-          <p>私たちは、ただ勉強を教える団体ではありません。</p>
-          <p>子どもたちが、これからの社会を自分らしく生き抜いていくための——</p>
-          <p>「人との信頼」<br>「自分を信じる力」<br>「社会で生きる力」</p>
-          <p>——を育てていく場所でありたいと思っています。</p>
-        </div>
+    </div>
 
-        <div class="emph">
-          <p>私たちは、子どもや親御さんにとって、「本当に味方でいてくれた」——そう思っていただける存在で居続けます。<br>それが「あんたがおらな」です。</p>
-        </div>
-      </div>
-
-      <div class="sig">
-        <p>教育支援団体 あんたがおらな<br>創設者／教育実践家</p>
-        <p class="sig-name">西山 弾</p>
-      </div>
-
+    <div class="sig">
+      <p class="sig-org">教育支援団体 あんたがおらな<br>創設者／教育実践家</p>
+      <p class="sig-name">西山 弾</p>
     </div>
   </div>
 </body>
