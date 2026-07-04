@@ -38,25 +38,26 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <style>
 :root {
-  --green:      #5C7A5A;
-  --green-mid:  #4A6349;
-  --green-lt:   #7A9A78;
-  --green-pale: #EEF4ED;
-  --green-pale2:#DCE9DB;
-  --ivory:      #F5EFE6;
-  --ivory2:     #EDE4D8;
-  --ivory3:     #E0D5C8;
-  --gold:       #D4A843;
-  --gold-lt:    #E8C060;
-  --terra:      #C4856A;
-  --terra-lt:   #D8A088;
-  --white:      #FFFFFF;
-  --text:       #1E1E1E;
-  --text-mid:   #4A4A4A;
-  --text-soft:  #8A8A8A;
-  --sh-s: 0 2px 12px rgba(42,74,62,.10);
-  --sh-m: 0 4px 24px rgba(42,74,62,.14);
-  --r: 16px;
+  /* サイト本体（antagaorana.com）と統一したカラー変数 */
+  --green:      #466246;
+  --green-mid:  #354835;
+  --green-lt:   #5a8c76;
+  --green-pale: #f4f1ea;
+  --green-pale2:#efe9df;
+  --ivory:      #f7f3ec;
+  --ivory2:     #efe9df;
+  --ivory3:     #e2dcd2;
+  --gold:       #d8b15a;
+  --gold-lt:    #e8c870;
+  --terra:      #b5856f;
+  --terra-lt:   #c99a84;
+  --white:      #ffffff;
+  --text:       #2f3a2f;
+  --text-mid:   #5d6658;
+  --text-soft:  #7a8474;
+  --sh-s: 0 2px 16px rgba(47,58,47,.08);
+  --sh-m: 0 6px 28px rgba(47,58,47,.12);
+  --r: 14px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivory);color:var(--text);overflow:hidden}
@@ -135,9 +136,13 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 ═══════════════════════════ */
 #appScreen{background:var(--ivory)}
 .topbar{
-  background:var(--green);padding:13px 18px 11px;
+  background:linear-gradient(135deg,#2f3a2f 0%,#354835 100%);
+  padding:13px 18px 11px;
   display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;box-shadow:0 2px 16px rgba(42,74,62,.22);position:relative;z-index:50;
+  flex-shrink:0;
+  box-shadow:0 2px 20px rgba(47,58,47,.28);
+  position:relative;z-index:50;
+  border-bottom:1px solid rgba(216,177,90,.15);
 }
 .topbar-logo{display:flex;align-items:center;gap:8px;}
 .topbar-logo-img{height:28px;width:auto;display:block;}
@@ -158,9 +163,11 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 
 /* TABBAR */
 .tabbar{
-  position:fixed;bottom:0;left:0;right:0;background:var(--white);
-  display:flex;border-top:1px solid rgba(0,0,0,.06);
-  box-shadow:0 -4px 20px rgba(0,0,0,.07);z-index:100;
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  display:flex;border-top:1px solid rgba(47,58,47,.08);
+  box-shadow:0 -4px 24px rgba(47,58,47,.10);z-index:100;
   padding-bottom:env(safe-area-inset-bottom);
 }
 .tab{
@@ -170,8 +177,9 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 }
 .tab.active{color:var(--green)}
 .tab.active::after{
-  content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
-  background:var(--green);border-radius:0 0 3px 3px;
+  content:'';position:absolute;top:0;left:15%;right:15%;height:2px;
+  background:linear-gradient(to right,var(--gold),var(--green));
+  border-radius:0 0 3px 3px;
 }
 .tab-lbl{font-size:10px;font-weight:600;font-family:inherit;line-height:1.35;text-align:center}
 
@@ -196,7 +204,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
   width:100px;height:100px;border-radius:50%;
   background:rgba(200,146,42,.08);
 }
-.greet-tag{font-size:11px;font-weight:600;color:var(--gold-lt);letter-spacing:.1em;margin-bottom:5px}
+.greet-tag{font-size:10px;font-weight:700;color:var(--gold-lt);letter-spacing:.2em;margin-bottom:8px;opacity:.85}
 .greet-main{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;color:var(--ivory);line-height:1.6}
 .greet-quote{margin-top:10px;font-size:12px;color:rgba(247,240,230,.5);font-style:italic}
 
@@ -245,7 +253,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .gstat-num{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:900;color:var(--ivory)}
 .gstat-lbl{font-size:10px;color:rgba(247,240,230,.5);margin-top:2px}
 
-.add-goal-form{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:18px;box-shadow:var(--sh-s)}
+.add-goal-form{background:var(--white);border-radius:var(--r);padding:18px;margin-bottom:18px;box-shadow:var(--sh-s);border:1px solid rgba(47,58,47,.06)}
 .add-goal-row{display:flex;gap:8px}
 .add-goal-input{
   flex:1;padding:11px 14px;background:var(--green-pale);
@@ -256,14 +264,21 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .add-goal-input:focus{border-color:var(--green)}
 .add-goal-input::placeholder{color:var(--text-soft)}
 .btn-add{
-  padding:11px 16px;background:var(--green);border:none;border-radius:10px;
-  font-family:'Noto Serif JP',serif;color:var(--ivory);font-size:14px;font-weight:700;
-  cursor:pointer;white-space:nowrap;transition:background .15s;
+  padding:12px 22px;
+  background:linear-gradient(135deg,#2f3a2f 0%,#354835 100%);
+  border:none;border-radius:999px;
+  font-family:'Noto Serif JP',serif;color:#f7f3ec;font-size:15px;font-weight:900;
+  cursor:pointer;white-space:nowrap;
+  transition:transform .14s,box-shadow .14s;
+  box-shadow:0 4px 16px rgba(47,58,47,.35);
+  letter-spacing:.06em;
+  min-width:72px;
 }
+.btn-add:active{transform:scale(.97)}
 .btn-add:active{background:var(--green-mid)}
 
 /* goal card */
-.goal-card{background:var(--white);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh-s)}
+.goal-card{background:var(--white);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--sh-s);border:1px solid rgba(47,58,47,.06)}
 .goal-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
 .goal-card-title{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:700;color:var(--text);flex:1;line-height:1.55}
 .goal-card-meta{display:flex;align-items:center;gap:6px;flex-shrink:0}
@@ -621,17 +636,16 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
     <!-- HOME -->
     <div class="page active" id="p-home">
       <div class="greet-card">
-        <div class="greet-tag">TODAY</div>
+        <div class="greet-tag" id="greetTag">WORDS</div>
         <div class="greet-main" id="greetTxt">おはようございます！<br>今日もそれぞれの場所から。</div>
-        <div class="greet-quote">「あんたがおらなあかんねん！」</div>
+        <div class="greet-quote" id="greetSrc">「あんたがおらなあかんねん！」</div>
       </div>
       <div class="sec-hd"><h2>555チャレンジ</h2></div>
       <a class="remote-card" href="https://meet.google.com/cvr-kkda-mcg" target="_blank">
-        <div class="rc-icon">555<br>チャレンジ</div>
         <div class="rc-info"><div class="rc-title">555チャレンジ（任意参加）</div><div class="rc-sub">毎朝5時55分スタート ／ リモートで繋がりながら</div><div class="rc-sub" style="margin-top:4px;font-size:11px;opacity:0.72;">参加は自由です。無理のない範囲でどうぞ。</div></div>
         <span class="rc-badge badge-live">OPEN</span>
       </a>
-      <div class="sec-hd" style="margin-top:20px"><h2>セッション</h2></div>
+      <div class="sec-hd" style="margin-top:20px"><h2>お知らせ</h2></div>
       <div id="homeTimeline" style="margin-bottom:20px">
         <div class="tl-loading">読み込み中…</div>
       </div>
@@ -933,16 +947,37 @@ function enterAppAfterAuth(fbUser) {
   if (user.photoURL) {
     setTimeout(() => setAvatarPhoto(user.photoURL), 0);
   }
-  const h = new Date().getHours();
-  const greet =
-    h < 10
-      ? 'おはようございます。\n今日もそれぞれの場所から。'
-      : h < 13
-        ? 'こんにちは。\n午前中もお疲れさまです。'
-        : h < 17
-          ? 'こんにちは。\n午後もよろしくお願いします。'
-          : 'おつかれさまです。\n今日もよく頑張りました。';
-  document.getElementById('greetTxt').textContent = greet;
+  const WORDS_LIST = [
+    { tag:"DAN'S WORDS", text:"自分を信じることが、最初の一歩になる。", src:"— 西山 弾" },
+    { tag:"DAN'S WORDS", text:"比べることをやめた時、本当の自分が動き始める。", src:"— 西山 弾" },
+    { tag:"DAN'S WORDS", text:"ダメな子なんて、いない。\nダメにさせられているだけだ。", src:"— 西山 弾" },
+    { tag:"DAN'S WORDS", text:"弱さを認めた人間だけが、本当に強くなれる。", src:"— 西山 弾" },
+    { tag:"DAN'S WORDS", text:"あなたがいるから、世界は変わる。", src:"— 西山 弾" },
+    { tag:"DAN'S WORDS", text:"傷ついた経験は、誰かの痛みをわかる力に変わる。", src:"— 西山 弾" },
+    { tag:"WORDS", text:"成功とは、失敗から失敗へと情熱を失わずに進み続けることだ。", src:"— ウィンストン・チャーチル" },
+    { tag:"WORDS", text:"昨日のすべての失敗は今日の知恵になる。", src:"— エマーソン" },
+    { tag:"WORDS", text:"どんな人間も、自分が思っている以上のことができる。", src:"— ヘンリー・フォード" },
+    { tag:"WORDS", text:"夢を見ることができれば、それは実現できる。", src:"— ウォルト・ディズニー" },
+    { tag:"WORDS", text:"始めることが、できるようになる方法だ。", src:"— マーク・トウェイン" },
+    { tag:"WORDS", text:"人生で最も重要なことは、\n失敗しないことではなく、失敗のたびに立ち上がることだ。", src:"— ネルソン・マンデラ" },
+    { tag:"WORDS", text:"あなたが思うほど、他人はあなたのことを考えていない。\nだから自由に生きなさい。", src:"— アルフレッド・アドラー" },
+    { tag:"WORDS", text:"川は岩を砕くことで前に進む。\n障害はあなたを強くする。", src:"— ルシウス・セネカ" },
+    { tag:"BIBLE", text:"わたしはあなたを強め、あなたを助け、\nわたしの義の右の手であなたを支える。", src:"— イザヤ書 41:10" },
+    { tag:"BIBLE", text:"主はわたしの羊飼い、\nわたしには何も欠けることがない。", src:"— 詩篇 23:1" },
+    { tag:"BIBLE", text:"愛は寛容であり、愛は親切である。", src:"— コリント人への第一の手紙 13:4" },
+    { tag:"BIBLE", text:"求めよ、そうすれば与えられる。\n探せ、そうすれば見つかる。", src:"— マタイ 7:7" },
+    { tag:"BIBLE", text:"あなたがどこへ行っても、\nあなたの神、主があなたと共にいる。", src:"— ヨシュア記 1:9" },
+    { tag:"BIBLE", text:"疲れた者、重荷を負う者は、わたしのもとに来なさい。\nあなたがたを休ませてあげよう。", src:"— マタイ 11:28" },
+  ];
+  const today = new Date();
+  const dayKey = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+  const word = WORDS_LIST[dayKey % WORDS_LIST.length];
+  const tagEl = document.getElementById('greetTag');
+  const txtEl = document.getElementById('greetTxt');
+  const srcEl = document.getElementById('greetSrc');
+  if (tagEl) tagEl.textContent = word.tag;
+  if (txtEl) txtEl.innerHTML = word.text.replace(/\n/g, '<br>');
+  if (srcEl) srcEl.textContent = word.src;
   // 管理者メニュー表示制御
   const adminMenuItem = document.getElementById('adminMenuItem');
   if (adminMenuItem) adminMenuItem.style.display = user.role === 'admin' ? 'flex' : 'none';
@@ -1114,7 +1149,12 @@ function renderGoals(days, today, y, m) {
   const list = document.getElementById('goalList');
   if (goals.length === 0) {
     list.innerHTML =
-      '<div class="goals-empty">まだ目標が登録されていません。<br>上のフォームから追加してみましょう。</div>';
+      '<div class="goals-empty" style="text-align:center;padding:40px 16px">' +
+      '<div style="font-size:36px;margin-bottom:16px">🎯</div>' +
+      '<div style="font-family:Noto Serif JP,serif;font-weight:700;color:#2f3a2f;font-size:15px;margin-bottom:8px">今月の目標を設定しましょう</div>' +
+      '<div style="font-size:13px;color:#7a8474;margin-bottom:24px;line-height:1.9">目標を決めると、毎日のスタンプで<br>進捗が見えるようになります。</div>' +
+      '<button onclick="focusGoalInput()" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:linear-gradient(135deg,#466246,#2f3a2f);border:none;border-radius:999px;font-family:Noto Serif JP,serif;font-size:14px;font-weight:700;color:#f7f3ec;cursor:pointer;letter-spacing:.06em;box-shadow:0 4px 16px rgba(70,98,70,.3)">最初の目標を決める →</button>' +
+      '</div>';
     return;
   }
   list.innerHTML = goals
@@ -1196,6 +1236,14 @@ async function toggleStamp(gid, d, days, today, y, m) {
 }
 
 /** 新規 goal を addDoc で追加 */
+function focusGoalInput() {
+  const inp = document.getElementById('newGoalInput');
+  if (inp) {
+    inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => inp.focus(), 300);
+  }
+}
+
 async function addGoal() {
   if (!currentUid) return;
   const inp = document.getElementById('newGoalInput');
@@ -1250,36 +1298,44 @@ function initSessions() {
   // ホームタイムラインはloadPersonalSessions内で描画
 }
 
-async function loadHomeTimeline(uid) {
+function loadHomeTimeline(uid) {
   const tlEl = document.getElementById('homeTimeline');
   if (!tlEl) return;
-  try {
-    const snap = await db.collection('users').doc(uid).collection('sessions')
-      .orderBy('createdAt', 'desc')
-      .get();
-    if (snap.empty) {
-      tlEl.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッションが登録されていません。</div>';
-      return;
-    }
-    let html = '';
-    snap.forEach(docSnap => {
-      const d = docSnap.data() || {};
-      const type = d.type || 'session';
-      const icon = type === 'message_nishiyama' ? '💌' : type === 'message_ookubo' ? '📝' : '🎧';
-      html += `<div class="tl-card" onclick="navigateToSession('${docSnap.id}')">
-        <div class="tl-icon">${icon}</div>
-        <div class="tl-body">
-          <div class="tl-title">${d.title || 'セッション'}</div>
-          <div class="tl-meta">${d.date || ''}${d.date && d.dur ? ' ／ ' : ''}${d.dur || ''}</div>
-        </div>
-        <div class="tl-arr">›</div>
-      </div>`;
-    });
-    tlEl.innerHTML = html;
-  } catch(e) {
-    console.error('[homeTimeline]', e);
-    tlEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-soft);font-size:13px">読み込みに失敗しました</div>';
+  // お知らせ固定コンテンツ（Note記事・イベント等）
+  // 新しいお知らせを追加する場合はここに追記するだけ
+  const notices = [
+    {
+      tag: 'イベント登壇',
+      date: '2026年7月28日（月）20:00〜',
+      title: '下北カレッジ「題名のない座談会」に西山が登壇します',
+      url: 'mailto:info@antagaorana.com?subject=下北カレッジ座談会参加希望',
+      icon: '🎤'
+    },
+    {
+      tag: 'NOTE更新',
+      date: '2024年8月13日',
+      title: '【自己紹介】しがない大学研究員が挑戦する"新しい家庭教師"',
+      url: 'https://note.com/dan_antagaorana',
+      icon: '📝'
+    },
+  ];
+  if (!notices.length) {
+    tlEl.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">現在お知らせはありません。</div>';
+    return;
   }
+  let html = '';
+  notices.forEach(n => {
+    html += `<div class="tl-card" onclick="window.open('${n.url}','_blank')">
+      <div class="tl-icon">${n.icon}</div>
+      <div class="tl-body">
+        <div style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.1em;margin-bottom:3px">${n.tag}</div>
+        <div class="tl-title">${n.title}</div>
+        <div class="tl-meta">${n.date}</div>
+      </div>
+      <div class="tl-arr">›</div>
+    </div>`;
+  });
+  tlEl.innerHTML = html;
 }
 
 function navigateToSession(docId) {
@@ -1411,7 +1467,10 @@ function saveNotif() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && document.activeElement.id === 'newGoalInput') addGoal();
+  // isComposing=trueの間はIME変換中なのでEnterを無視する（日本語入力バグ修正）
+  if (e.key === 'Enter' && document.activeElement.id === 'newGoalInput' && !e.isComposing) {
+    addGoal();
+  }
 });
 
 function changePhoto() {
