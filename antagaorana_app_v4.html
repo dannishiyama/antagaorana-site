@@ -1791,9 +1791,7 @@ async function loadPersonalSessions(uid) {
   const el = document.getElementById('st-personal');
   if (!el) return;
   try {
-    const snap = await db.collection('users').doc(uid).collection('sessions')
-      .orderBy('createdAt', 'desc')
-      .get();
+    const snap = await db.collection('users').doc(uid).collection('sessions').get();
     if (snap.empty) {
       el.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッション音声が登録されていません。<br>セッション後に運営から追加されます。</div>';
       document.getElementById('statSess').textContent = '0';
@@ -1803,6 +1801,9 @@ async function loadPersonalSessions(uid) {
     let idCounter = 9000;
     snap.forEach(docSnap => {
       const d = docSnap.data() || {};
+      // URLのtoken=undefinedを除去
+      let url = d.url || '';
+      if (url.includes('token=undefined')) url = url.replace(/[&?]token=undefined/, '');
       arr.push({
         id: idCounter++,
         docId: docSnap.id,
@@ -1811,9 +1812,13 @@ async function loadPersonalSessions(uid) {
         dur: d.dur || '—',
         tag: d.tag || 'マイセッション',
         desc: d.desc || '',
-        url: d.url || '',
+        url: url,
+        chapters: Array.isArray(d.chapters) ? d.chapters : [],
+        order: typeof d.order === 'number' ? d.order : (parseInt(d.order) || 999),
       });
     });
+    // orderフィールドで昇順ソート（第1回→第2回→...）
+    arr.sort((a, b) => a.order - b.order);
     personalSessions = arr;
     document.getElementById('statSess').textContent = arr.length;
     renderPersonalSessions(arr);
@@ -1880,7 +1885,7 @@ function buildSessionCardHTML(s, isReal) {
         ${s.chapters.map((c, i) => `
           <div class="chapter-item" onclick="seekToChapter(${s.id}, ${c.time})">
             <span class="chapter-time">${formatChapterTime(c.time)}</span>
-            <span class="chapter-title">${c.title}</span>
+            <span class="chapter-title">${c.title || c.label || ''}</span>
           </div>
         `).join('')}
       </div>
