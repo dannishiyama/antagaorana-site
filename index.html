@@ -945,23 +945,30 @@ details[open] .t-more{opacity:.74}
 .news{background:#f4f1ea}
 .news .slead{max-width:46em;line-height:1.95}
 .news-grid{margin-top:38px}
-.news-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.news-item{
-  background:var(--sand);border:1px solid rgba(224,213,200,.82);border-radius:16px;padding:15px 17px;
-  transition:transform .26s ease,box-shadow .26s ease,border-color .26s ease;
+.news-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.news-card{
+  background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:18px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.06);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+  will-change:transform;
 }
-.news-item:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(47,58,47,.1);border-color:rgba(208,196,180,.95)}
-.news-tags{display:flex;flex-wrap:wrap;gap:6px 0;align-items:center;margin-bottom:7px}
+.news-card:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(0,0,0,.075);border-color:rgba(0,0,0,.08)}
+.news-thumb{aspect-ratio:16/10;overflow:hidden;background:#1a3018}
+.news-thumb img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;transform:scale(1.01)}
+.news-body{padding:14px 16px 16px}
+.news-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
 .news-tags .k{
-  display:inline;font-size:10px;font-weight:800;letter-spacing:.14em;color:rgba(70,98,70,.85);margin:0;padding:0;background:none;
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:900;letter-spacing:.12em;
+  color:rgba(58,90,56,.92);background:rgba(92,122,90,.11);border:1px solid rgba(92,122,90,.18);
+  padding:4px 9px;border-radius:999px;
 }
-.news-tags .k + .k{margin-left:10px;padding-left:10px;border-left:1px solid rgba(70,98,70,.22)}
-.news-item .t{font-size:14px;font-weight:900;color:var(--gd);line-height:1.62;letter-spacing:.01em}
-.news-item .m{font-size:12px;color:var(--ts);margin-top:7px;line-height:1.65}
-.news-more{margin-top:12px}
+.news-card .t{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:900;color:var(--gd);line-height:1.6;letter-spacing:.01em}
+.news-card .m{font-size:12px;color:rgba(74,74,74,.72);margin-top:8px;line-height:1.7}
+.news-more{margin-top:20px;text-align:right}
 .news-more a{font-size:13px;font-weight:800;color:var(--g);border-bottom:1px solid rgba(70,98,70,.35);padding-bottom:2px}
 @media (prefers-reduced-motion:reduce){
-  .news-item:hover{transform:none}
+  .news-card:hover{transform:none}
 }
 
 .faq{background:#f7f3ec}
@@ -1158,7 +1165,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     justify-content:center;
     align-self:stretch;
   }
-  .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
+  .sv-grid,.kunxun-grid,.t-grid{grid-template-columns:1fr}
   .news-list{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
@@ -1666,38 +1673,65 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <p class="slead">速報ではなく、現場の空気や言葉の背景を少しずつ残すための記録です。メディア掲載、インドでの交流、動画、note まで一覧からたどれます。</p>
     <div class="news-grid">
       <div class="news-list">
-          <a class="news-item" href="./news-delhi-univ.html">
+
+        <a class="news-card" href="./news-delhi-univ.html">
+          <div class="news-thumb"><img src="./lp-assets/okubo-delhi-univ.jpg?v=20260807" alt="大久保先生 デリー大学講義"></div>
+          <div class="news-body">
             <div class="news-tags"><span class="k">INDIA</span><span class="k">講義</span></div>
             <div class="t">大久保先生がデリー大学にて2講座の特別講義を行いました</div>
             <div class="m">教授・大学院生90名、学生140名を対象に、共生社会と多文化理解をテーマに登壇。2026.07</div>
-          </a>
-          <a class="news-item" href="./news-shimokita.html">
+          </div>
+        </a>
+
+        <a class="news-card" href="./news-shimokita.html">
+          <div class="news-thumb"><img src="./lp-assets/shimokita-building.jpg?v=20260807" alt="下北カレッジ" style="object-position:50% 55%"></div>
+          <div class="news-body">
             <div class="news-tags"><span class="k">イベント</span><span class="k">登壇</span></div>
-            <div class="t">下北カレッジ「題名のない座談会」に西山が登壇します</div>
-            <div class="m">7月28日（月）20:00〜 ／ 下北カレッジ ／ テーマ：「教育と営業に共通する、人を動かす本質。」参加希望はinfo@antagaorana.comまで。2026.07.28</div>
-          </a>
-          <a class="news-item" href="./news-note.html">
+            <div class="t">下北カレッジ「題名のない座談会」に西山が登壇しました</div>
+            <div class="m">7月28日（月）20:00〜 ／ テーマ：「教育と営業に共通する、人を動かす本質。」2026.07.28</div>
+          </div>
+        </a>
+
+        <a class="news-card" href="https://note.com/dan_antagaorana/n/n3749f464ac4c?sub_rt=share_sb" target="_blank" rel="noopener noreferrer">
+          <div class="news-thumb"><img src="./lp-assets/news-note-thumb.png?v=20260508a" alt="西山弾 Note"></div>
+          <div class="news-body">
             <div class="news-tags"><span class="k">NOTE</span></div>
             <div class="t">西山弾 Note</div>
-            <div class="m">今回ご紹介する記事は、創設者である西山が当団体を立ち上げるに至った思いについてNoteにて綴られたものです。2024.08.13</div>
-          </a>
-          <a class="news-item" href="./news-lotus.html">
-            <div class="news-tags"><span class="k">INDIA</span><span class="k">EDUCATION</span></div>
-            <div class="t">Lotus Free School を訪れて</div>
-            <div class="m">学校での交流の記録。2026</div>
-          </a>
-          <a class="news-item" href="./news-delhi-1.html">
+            <div class="m">創設者・西山が当団体を立ち上げるに至った思いをNoteにて綴りました。2024.08.13</div>
+          </div>
+        </a>
+
+        <a class="news-card" href="./news-delhi-1.html">
+          <div class="news-thumb"><img src="./lp-assets/news-03.png?v=20260501" alt="デリー新聞掲載（1回目）" style="object-position:50% 18%"></div>
+          <div class="news-body">
             <div class="news-tags"><span class="k">INDIA</span><span class="k">MEDIA</span></div>
-            <div class="t">インドのデリー新聞で掲載（1回目）</div>
-            <div class="m">日本の高校生が Lotus Free School を訪れ、子どもたちと交流した様子。2025.03.21</div>
-          </a>
-          <a class="news-item" href="./news-youtube.html">
+            <div class="t">インドのデリー新聞で掲載されました（1回目）</div>
+            <div class="m">日本の高校生が Lotus Free School を訪れ、子どもたちと交流した様子が掲載されました。2025.03.21</div>
+          </div>
+        </a>
+
+        <a class="news-card" href="./news-youtube.html">
+          <div class="news-thumb"><img src="./lp-assets/news-02.png?v=20260501" alt="YouTube動画" style="object-position:50% 32%"></div>
+          <div class="news-body">
             <div class="news-tags"><span class="k">VIDEO</span></div>
-            <div class="t">YouTube 動画の紹介</div>
+            <div class="t">YouTube動画を公開しました</div>
             <div class="m">代表の大久保と創設者の西山が、想いや教育観、実体験を台本なしで対談しています。2024.09.13</div>
-          </a>
-        </div>
-        <div class="news-more"><a href="./news.html">ほかの記事（デリー新聞2回目ほか）→</a></div>
+          </div>
+        </a>
+
+        <a class="news-card" href="./news.html">
+          <div class="news-thumb" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#3A5A38,#5C7A5A)">
+            <span style="color:#fff;font-size:13px;font-weight:900;letter-spacing:.1em;opacity:.85">VIEW ALL →</span>
+          </div>
+          <div class="news-body">
+            <div class="news-tags"><span class="k">ARCHIVE</span></div>
+            <div class="t">活動アーカイブ一覧</div>
+            <div class="m">デリー新聞2回目掲載、Lotus Free Schoolの記録など、すべての活動記録を見る。</div>
+          </div>
+        </a>
+
+      </div>
+      <div class="news-more"><a href="./news.html">すべてのお知らせを見る →</a></div>
     </div>
   </div>
 </section>
