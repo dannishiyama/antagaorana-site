@@ -944,21 +944,8 @@ details[open] .t-more{opacity:.74}
 
 .news{background:#f4f1ea}
 .news .slead{max-width:46em;line-height:1.95}
-.news-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start;margin-top:38px}
-.news-rail{
-  display:block;text-decoration:none;color:inherit;border-radius:22px;overflow:hidden;
-  box-shadow:0 12px 40px rgba(47,58,47,.12);border:1px solid rgba(224,213,200,.85);background:#243528;cursor:pointer;
-  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
-}
-.news-rail:hover{transform:translateY(-4px);box-shadow:0 22px 52px rgba(47,58,47,.16);border-color:rgba(218,207,188,.98)}
-.news-rail .frame{position:relative;width:100%;aspect-ratio:16/10;min-height:180px;overflow:hidden;background:#35483a}
-.news-rail .frame img{
-  position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block;
-  transition:transform .45s ease;
-}
-.news-rail:hover .frame img{transform:scale(1.025)}
-.news-rail .cap{padding:14px 16px;background:rgba(253,251,247,.94);font-size:13px;font-weight:800;color:var(--gd);letter-spacing:.02em;line-height:1.55}
-.news-list{display:grid;gap:12px}
+.news-grid{margin-top:38px}
+.news-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .news-item{
   background:var(--sand);border:1px solid rgba(224,213,200,.82);border-radius:16px;padding:15px 17px;
   transition:transform .26s ease,box-shadow .26s ease,border-color .26s ease;
@@ -974,8 +961,7 @@ details[open] .t-more{opacity:.74}
 .news-more{margin-top:12px}
 .news-more a{font-size:13px;font-weight:800;color:var(--g);border-bottom:1px solid rgba(70,98,70,.35);padding-bottom:2px}
 @media (prefers-reduced-motion:reduce){
-  .news-rail:hover,.news-item:hover{transform:none}
-  .news-rail:hover .frame img{transform:none}
+  .news-item:hover{transform:none}
 }
 
 .faq{background:#f7f3ec}
@@ -1173,6 +1159,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     align-self:stretch;
   }
   .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
+  .news-list{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
   .msg-lede{max-width:none}
@@ -1497,7 +1484,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="msg-person">
           <a class="msg-photo-link" href="./okubo.html" aria-label="大久保 俊輝のメッセージへ">
           <div class="msg-photo-wrap placeholder">
-            <img src="./lp-assets/okubo-portrait.jpg?v=20260730" alt="大久保 俊輝" loading="lazy" decoding="async" onerror="this.style.display='none'; this.closest('.msg-photo-wrap').classList.add('placeholder');">
+            <img src="./lp-assets/okubo-portrait.jpg?v=20260508a" alt="大久保 俊輝" loading="lazy" decoding="async" onerror="this.style.display='none'; this.closest('.msg-photo-wrap').classList.add('placeholder');">
           </div>
           </a>
           <div class="msg-name">大久保 俊輝（おおくぼ としき）</div>
@@ -1514,7 +1501,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="msg-person">
           <a class="msg-photo-link" href="./nishiyama.html" aria-label="西山 弾のメッセージへ">
           <div class="msg-photo-wrap">
-            <img src="./lp-assets/founder-portrait.png?v=20260730" alt="西山 弾" loading="lazy" decoding="async">
+            <img src="./lp-assets/founder-portrait.png" alt="西山 弾" loading="lazy" decoding="async">
           </div>
           </a>
           <div class="msg-name">西山 弾（にしやま だん）</div>
@@ -1678,23 +1665,16 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <h2 class="stitle">お知らせ</h2>
     <p class="slead">速報ではなく、現場の空気や言葉の背景を少しずつ残すための記録です。メディア掲載、インドでの交流、動画、note まで一覧からたどれます。</p>
     <div class="news-grid">
-      <a class="news-rail" href="./news.html" aria-label="お知らせ一覧を見る">
-        <div class="frame">
-          <img src="./lp-assets/shimokita-building.jpg" width="2000" height="1250" alt="活動・発信の記録" loading="eager" decoding="async">
-        </div>
-        <div class="cap">活動アーカイブを開く →</div>
-      </a>
-      <div>
-        <div class="news-list">
+      <div class="news-list">
           <a class="news-item" href="./news-delhi-univ.html">
             <div class="news-tags"><span class="k">INDIA</span><span class="k">講義</span></div>
-            <div class="t">大久保先生がデリー大学にて2つの特別講義を行いました</div>
+            <div class="t">大久保先生がデリー大学にて2講座の特別講義を行いました</div>
             <div class="m">教授・大学院生90名、学生140名を対象に、共生社会と多文化理解をテーマに登壇。2026.07</div>
           </a>
           <a class="news-item" href="./news-shimokita.html">
             <div class="news-tags"><span class="k">イベント</span><span class="k">登壇</span></div>
-            <div class="t">下北カレッジ「題名のない座談会」に西山が登壇しました</div>
-            <div class="m">教育と営業に共通する、人を動かす本質について対話。2026.07.28</div>
+            <div class="t">下北カレッジ「題名のない座談会」に西山が登壇します</div>
+            <div class="m">7月28日（月）20:00〜 ／ 下北カレッジ ／ テーマ：「教育と営業に共通する、人を動かす本質。」参加希望はinfo@antagaorana.comまで。2026.07.28</div>
           </a>
           <a class="news-item" href="./news-note.html">
             <div class="news-tags"><span class="k">NOTE</span></div>
@@ -1718,7 +1698,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           </a>
         </div>
         <div class="news-more"><a href="./news.html">ほかの記事（デリー新聞2回目ほか）→</a></div>
-      </div>
     </div>
   </div>
 </section>
