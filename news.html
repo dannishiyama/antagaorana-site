@@ -4,240 +4,379 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>お知らせ・活動報告｜あんたがおらな</title>
-  <meta name="description" content="あんたがおらなの活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。">
+  <meta name="description" content="あんたがおらなの活動報告・メディア掲載・動画・Noteのご紹介をまとめています。">
   <link rel="canonical" href="https://antagaorana.com/news.html">
   <meta property="og:site_name" content="あんたがおらな">
-  <meta property="og:locale" content="ja_JP">
   <meta property="og:type" content="website">
   <meta property="og:title" content="お知らせ・活動報告｜あんたがおらな">
-  <meta property="og:description" content="活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。">
   <meta property="og:url" content="https://antagaorana.com/news.html">
   <meta property="og:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="お知らせ・活動報告｜あんたがおらな">
-  <meta name="twitter:description" content="活動報告・メディア掲載・動画のご紹介をまとめています。教育支援の現場での取り組みや、最新の発信をお届けします。">
-  <meta name="twitter:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
   <link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-  <link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root{--g:#5C7A5A;--gd:#3A5A38;--sand:#F5EFE6;--sand2:#EDE4D8;--txt:#1A1A1A;--tm:#4A4A4A;--w:#fff;--goldl:#E8C060}
+    :root{--g:#5C7A5A;--gd:#3A5A38;--sand:#F5EFE6;--txt:#1A1A1A;--tm:#4A4A4A;--w:#fff}
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(160deg,var(--sand) 0%,#fff 100%);color:var(--txt);line-height:1.85}
     a{text-decoration:none;color:inherit}
-    .wrap{max-width:980px;margin:0 auto;padding:92px 5% 84px}
+    .wrap{max-width:1020px;margin:0 auto;padding:92px 5% 100px}
     .back{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tm);margin-bottom:18px}
     .back:hover{color:var(--g)}
     h1{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3.2vw,34px);font-weight:900;color:var(--gd);line-height:1.45;margin-bottom:10px}
-    .lead{font-size:14px;color:var(--tm);margin-bottom:10px;max-width:56em}
-    .lede-sub{font-size:12px;color:rgba(74,74,74,.72);margin-bottom:30px;max-width:64em;line-height:1.9}
+    .lead{font-size:14px;color:var(--tm);margin-bottom:8px;max-width:56em}
+    .lede-sub{font-size:12px;color:rgba(74,74,74,.72);margin-bottom:32px;max-width:64em;line-height:1.9}
 
-    .section-label{font-size:11px;font-weight:900;letter-spacing:.2em;color:var(--g);margin:36px 0 14px;padding-bottom:6px;border-bottom:2px solid rgba(92,122,90,.2)}
+    .year-label{
+      font-size:13px;font-weight:900;letter-spacing:.18em;color:var(--g);
+      margin:44px 0 16px;padding:8px 0 8px 14px;
+      border-left:4px solid var(--g);
+      display:flex;align-items:center;gap:12px;
+    }
+    .year-label span{font-size:11px;font-weight:500;letter-spacing:.06em;color:rgba(74,74,74,.6)}
 
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     .card{
-      background:var(--w);
-      border:1px solid rgba(0,0,0,.06);
-      border-radius:18px;
-      overflow:hidden;
-      box-shadow:0 10px 30px rgba(0,0,0,.06);
-      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-      will-change:transform;
+      background:var(--w);border:1px solid rgba(0,0,0,.06);border-radius:18px;
+      overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.06);
+      transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;will-change:transform;
     }
-    .card:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(0,0,0,.075);border-color:rgba(0,0,0,.08)}
+    .card:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(0,0,0,.08);border-color:rgba(0,0,0,.09)}
     .thumb{aspect-ratio:16/10;overflow:hidden;background:#1a3018}
     .thumb img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;transform:scale(1.01)}
-    .thumb img.pos-delhi-1{object-position:50% 18%}
-    .thumb img.pos-delhi-2{object-position:50% 20%}
-    .thumb img.pos-youtube{object-position:50% 32%}
-    .thumb img.pos-bottom{object-position:50% 55%}
-
+    .thumb img.pos-top{object-position:50% 18%}
+    .thumb img.pos-mid{object-position:50% 20%}
+    .thumb img.pos-bot{object-position:50% 55%}
     .body{padding:16px 16px 18px}
-    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
     .tag{
-      display:inline-flex;align-items:center;gap:6px;
-      font-size:11px;font-weight:900;letter-spacing:.12em;
+      font-size:10px;font-weight:900;letter-spacing:.12em;
       color:rgba(58,90,56,.92);background:rgba(92,122,90,.11);border:1px solid rgba(92,122,90,.18);
-      padding:5px 10px;border-radius:999px;
+      padding:4px 9px;border-radius:999px;
     }
     .tag.yt{color:rgba(180,30,30,.9);background:rgba(220,50,50,.08);border-color:rgba(220,50,50,.18)}
-    .tag.note-tag{color:rgba(30,140,120,.9);background:rgba(40,180,160,.08);border-color:rgba(40,180,160,.2)}
-    .title{font-family:'Noto Serif JP',serif;font-size:15px;font-weight:900;color:var(--gd);line-height:1.6}
-    .desc{font-size:13px;color:rgba(74,74,74,.84);line-height:1.9;margin-top:10px}
-    .meta{font-size:12px;color:rgba(74,74,74,.64);margin-top:10px}
+    .tag.sp{color:rgba(29,185,84,.9);background:rgba(29,185,84,.1);border-color:rgba(29,185,84,.28)}
+    .tag.nt{color:rgba(40,180,160,.9);background:rgba(40,180,160,.09);border-color:rgba(40,180,160,.22)}
+    .title{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:900;color:var(--gd);line-height:1.6}
+    .desc{font-size:12px;color:rgba(74,74,74,.82);line-height:1.85;margin-top:9px}
+    .meta{font-size:11px;color:rgba(74,74,74,.55);margin-top:9px}
 
     @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
     @media(max-width:560px){
-      .wrap{padding:78px 5% 74px}
+      .wrap{padding:78px 4% 80px}
       .grid{grid-template-columns:1fr;gap:14px}
-      .thumb{aspect-ratio:16/11}
-      .body{padding:16px 14px 18px}
-      .title{font-size:15px}
-      .desc{font-size:13px}
+      .body{padding:14px 14px 16px}
     }
   </style>
 </head>
 <body>
-  <div class="wrap" id="list">
-    <a class="back" href="/">← トップに戻る</a>
-    <h1>お知らせ・活動アーカイブ</h1>
-    <p class="lead">単なるニュースではなく、現場の空気と「積み重ね」が伝わる記録として。</p>
-    <p class="lede-sub">活動の現場／メディア掲載／動画／note。ひとつひとつは小さくても、確かに進んだ足あとを残していきます。</p>
+<div class="wrap">
+  <a class="back" href="/">← トップに戻る</a>
+  <h1>お知らせ・活動アーカイブ</h1>
+  <p class="lead">単なるニュースではなく、現場の空気と「積み重ね」が伝わる記録として。</p>
+  <p class="lede-sub">活動の現場／メディア掲載／YouTube／Spotify Podcast／Note。ひとつひとつは小さくても、確かに進んだ足あとを残していきます。</p>
 
-    <!-- 2026 -->
-    <div class="section-label">2026</div>
-    <div class="grid">
+  <!-- ========== 2026 ========== -->
+  <div class="year-label">2026 <span>3件</span></div>
+  <div class="grid">
 
-      <a class="card" href="./news-shimokita.html">
-        <div class="thumb"><img class="pos-bottom" src="./lp-assets/shimokita-building.jpg?v=20260807" alt="下北カレッジ"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">イベント</span><span class="tag">登壇</span></div>
-          <div class="title">下北カレッジ「題名のない座談会」に西山が登壇しました</div>
-          <div class="desc">テーマ：「教育と営業に共通する、人を動かす本質。」</div>
-          <div class="meta">2026.07.28</div>
-        </div>
-      </a>
+    <a class="card" href="./news-shimokita.html">
+      <div class="thumb"><img class="pos-bot" src="./lp-assets/shimokita-building.jpg?v=20260807" alt="下北カレッジ"></div>
+      <div class="body">
+        <div class="tags"><span class="tag">イベント</span><span class="tag">登壇</span></div>
+        <div class="title">下北カレッジ「題名のない座談会」に西山が登壇しました</div>
+        <div class="desc">テーマ：「教育と営業に共通する、人を動かす本質。」</div>
+        <div class="meta">2026.07.28</div>
+      </div>
+    </a>
 
-      <a class="card" href="./news-delhi-univ.html">
-        <div class="thumb"><img src="./lp-assets/okubo-delhi-univ.jpg?v=20260807" alt="大久保先生 デリー大学講義"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">INDIA</span><span class="tag">講義</span></div>
-          <div class="title">大久保先生がデリー大学にて2講座の特別講義を行いました</div>
-          <div class="desc">教授・大学院生90名、学生140名を対象に、共生社会と多文化理解をテーマに登壇。</div>
-          <div class="meta">2026.07</div>
-        </div>
-      </a>
+    <a class="card" href="./news-delhi-univ.html">
+      <div class="thumb"><img src="./lp-assets/okubo-delhi-univ.jpg?v=20260807" alt="大久保先生 デリー大学講義"></div>
+      <div class="body">
+        <div class="tags"><span class="tag">INDIA</span><span class="tag">講義</span></div>
+        <div class="title">大久保先生がデリー大学にて2講座の特別講義を行いました</div>
+        <div class="desc">教授・大学院生90名、学生140名を対象に、共生社会と多文化理解をテーマに登壇。</div>
+        <div class="meta">2026.07</div>
+      </div>
+    </a>
 
-      <a class="card" href="./news-delhi-2.html">
-        <div class="thumb"><img class="pos-delhi-2" src="./lp-assets/news-04.png?v=20260501" alt="デリー新聞掲載（2回目）"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">MEDIA</span><span class="tag">INDIA</span></div>
-          <div class="title">インドのデリー新聞で掲載されました（2回目）</div>
-          <div class="desc">折り紙やスポーツなどの活動を通じて、子どもたちと交流した様子が掲載されました。</div>
-          <div class="meta">2026.03.27</div>
-        </div>
-      </a>
+    <a class="card" href="./news-delhi-2.html">
+      <div class="thumb"><img class="pos-mid" src="./lp-assets/news-04.png?v=20260501" alt="デリー新聞掲載（2回目）"></div>
+      <div class="body">
+        <div class="tags"><span class="tag">MEDIA</span><span class="tag">INDIA</span></div>
+        <div class="title">インドのデリー新聞で掲載されました（2回目）</div>
+        <div class="desc">折り紙やスポーツなどの活動を通じて、子どもたちと交流した様子が掲載。</div>
+        <div class="meta">2026.03.27</div>
+      </div>
+    </a>
 
-    </div>
-
-    <!-- 2025 -->
-    <div class="section-label">2025</div>
-    <div class="grid">
-
-      <a class="card" href="https://note.com/dan_antagaorana/n/n13bbd1dc5523" target="_blank" rel="noopener noreferrer">
-        <div class="thumb"><img src="./lp-assets/note-thumb-shiseikan.jpg?v=20260807" alt="大切な人がいなくなるとき"></div>
-        <div class="body">
-          <div class="tags"><span class="tag note-tag">NOTE</span></div>
-          <div class="title">大切な人がいなくなるとき 〜死生観を伝える授業〜</div>
-          <div class="desc">西山弾による教育現場からの思索。死生観をテーマにした授業の記録。</div>
-          <div class="meta">2025.12.13</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://note.com/dan_antagaorana/n/n8d43ce1153f2" target="_blank" rel="noopener noreferrer">
-        <div class="thumb"><img src="./lp-assets/note-thumb-kodomo-shokudo.jpg?v=20260807" alt="人が最も大切なことは？"></div>
-        <div class="body">
-          <div class="tags"><span class="tag note-tag">NOTE</span></div>
-          <div class="title">人が最も大切なことは？〜子ども食堂で伝えたメッセージ〜</div>
-          <div class="desc">子ども食堂での活動を通じて、西山が感じた「人として大切なこと」を綴ります。</div>
-          <div class="meta">2025.12.11</div>
-        </div>
-      </a>
-
-      <a class="card" href="./news-delhi-1.html">
-        <div class="thumb"><img class="pos-delhi-1" src="./lp-assets/news-03.png?v=20260501" alt="デリー新聞掲載（1回目）"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">MEDIA</span><span class="tag">INDIA</span></div>
-          <div class="title">インドのデリー新聞で掲載されました（1回目）</div>
-          <div class="desc">日本の高校生が Lotus Free School を訪れ、子どもたちと交流した様子が掲載されました。</div>
-          <div class="meta">2025.03.21</div>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- 2024 -->
-    <div class="section-label">2024</div>
-    <div class="grid">
-
-      <a class="card" href="./news-youtube.html">
-        <div class="thumb"><img class="pos-youtube" src="./lp-assets/news-02.png?v=20260501" alt="YouTube動画の紹介"></div>
-        <div class="body">
-          <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
-          <div class="title">【師弟対談】西山弾×大久保俊輝「あんたがおらなの可能性」</div>
-          <div class="desc">代表の大久保と創設者の西山が、想いや教育観、実体験を台本なしで対談しています。</div>
-          <div class="meta">2024.09.13</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://note.com/dan_antagaorana/n/n3749f464ac4c?sub_rt=share_sb" target="_blank" rel="noopener noreferrer">
-        <div class="thumb"><img class="pos-youtube" src="./lp-assets/news-note-thumb.png?v=20260508a" alt="西山弾 Note"></div>
-        <div class="body">
-          <div class="tags"><span class="tag note-tag">NOTE</span></div>
-          <div class="title">西山弾 Note ― あんたがおらなを立ち上げるまで</div>
-          <div class="desc">創設者・西山が当団体を立ち上げるに至った思いについてNoteにて綴りました。</div>
-          <div class="meta">2024.08.13</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://open.spotify.com/episode/6hxHJX5Gcl7e9uDtcDKHNC" target="_blank" rel="noopener noreferrer">
-        <div class="thumb" style="background:#1DB954;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
-          <img src="./lp-assets/spotify-choikiki.jpg?v=20260808" alt="大久保俊輝の教育相談-ちょい聴き-" style="width:100%;height:100%;object-fit:cover">
-          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent)">
-            <span style="font-size:11px;font-weight:900;color:#1DB954;letter-spacing:.1em">▶ PODCAST</span>
-          </div>
-        </div>
-        <div class="body">
-          <div class="tags"><span class="tag" style="color:rgba(29,185,84,.9);background:rgba(29,185,84,.1);border-color:rgba(29,185,84,.25)">SPOTIFY</span><span class="tag" style="color:rgba(29,185,84,.9);background:rgba(29,185,84,.1);border-color:rgba(29,185,84,.25)">最終回</span></div>
-          <div class="title">最終回「本気の教育支援団体"あんたがおらな"がスタート」</div>
-          <div class="desc">大久保俊輝の教育相談-ちょい聴き-。3万件の教育相談を経験した大久保先生が、あんたがおらな設立への想いを語ります。（15分）</div>
-          <div class="meta">2024.09.20 · Spotify Podcast</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://open.spotify.com/show/3eOAlAl9evhcDWLmA9YJK8" target="_blank" rel="noopener noreferrer">
-        <div class="thumb" style="background:#0d0d0d;display:flex;align-items:center;justify-content:center">
-          <img src="./lp-assets/spotify-choikiki.jpg?v=20260808" alt="大久保俊輝の教育相談-ちょい聴き-" style="width:80%;height:80%;object-fit:contain">
-        </div>
-        <div class="body">
-          <div class="tags"><span class="tag" style="color:rgba(29,185,84,.9);background:rgba(29,185,84,.1);border-color:rgba(29,185,84,.25)">SPOTIFY</span><span class="tag" style="color:rgba(29,185,84,.9);background:rgba(29,185,84,.1);border-color:rgba(29,185,84,.25)">PODCAST</span></div>
-          <div class="title">大久保俊輝の教育相談-ちょい聴き-（全エピソード）</div>
-          <div class="desc">麗澤大学 教育支援研究センター主催。学校・保護者が抱えるお悩みを大久保先生が全力で解決。全18回＋最終回配信中。</div>
-          <div class="meta">2024 · Spotify</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://www.youtube.com/watch?v=jqg1NMsWLaE" target="_blank" rel="noopener noreferrer">
-        <div class="thumb"><img src="./lp-assets/yt-india-project.jpg?v=20260807" alt="インドプロジェクト始動！"></div>
-        <div class="body">
-          <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
-          <div class="title">インドプロジェクト始動！高校生メンバーを紹介します！</div>
-          <div class="desc">あんたがおらなの新メンバーと共に、インドへの挑戦が始まります。</div>
-          <div class="meta">2024</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://www.youtube.com/watch?v=HGeGPCmyxR4" target="_blank" rel="noopener noreferrer">
-        <div class="thumb"><img src="./lp-assets/yt-intro.jpg?v=20260807" alt="自己紹介動画"></div>
-        <div class="body">
-          <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
-          <div class="title">【自己紹介】あんたがおらなはどうして始まったのか？</div>
-          <div class="desc">西山弾が語る、あんたがおらな立ち上げのきっかけと想い。</div>
-          <div class="meta">2024</div>
-        </div>
-      </a>
-
-      <a class="card" href="https://www.youtube.com/watch?v=Q6o7dEmq3Ds" target="_blank" rel="noopener noreferrer">
-        <div class="thumb"><img src="./lp-assets/yt-taidan.jpg?v=20260807" alt="師弟対談 前編"></div>
-        <div class="body">
-          <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
-          <div class="title">【西山弾×大久保俊輝】師弟対談 前編「あんたがおらなの可能性」</div>
-          <div class="desc">師弟コンビが語る教育の本質と、この活動に込めた想い。（16分）</div>
-          <div class="meta">2024</div>
-        </div>
-      </a>
-
-    </div>
   </div>
+
+  <!-- ========== 2025 ========== -->
+  <div class="year-label">2025 <span>15件</span></div>
+  <div class="grid">
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n13bbd1dc5523" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-shiseikan.jpg?v=20260807" alt="大切な人がいなくなるとき"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span></div>
+        <div class="title">大切な人がいなくなるとき 〜死生観を伝える授業〜</div>
+        <div class="desc">西山弾による教育現場からの思索。死生観をテーマにした授業の記録。</div>
+        <div class="meta">2025.12.13</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n8d43ce1153f2" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-kodomo-shokudo.jpg?v=20260807" alt="人が最も大切なことは？"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span></div>
+        <div class="title">人が最も大切なことは？〜子ども食堂で伝えたメッセージ〜</div>
+        <div class="desc">子ども食堂での活動を通じて感じた「人として大切なこと」。</div>
+        <div class="meta">2025.12.11</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n7a6698c027ad" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-oshirase.jpg?v=20260808" alt="大切なご報告"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">お知らせ</span></div>
+        <div class="title">【大切なご報告】</div>
+        <div class="desc">西山弾からの大切なご報告。あんたがおらなの今後についての発信。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n70e46873eb99" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-career2.jpg?v=20260808" alt="キャリアデザイン②"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">キャリア</span></div>
+        <div class="title">キャリアデザインの描き方② 〜「将来〇〇になりたい！」の課題点〜</div>
+        <div class="desc">子どもに多い「なりたい職業」思考の落とし穴と、正しいキャリア観の育み方。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/na60c6ceace8d" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-ijime5.jpg?v=20260808" alt="いじめはなくなるのか⑤"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">いじめ</span></div>
+        <div class="title">いじめはなくなるのか⑤ 〜人として正しい"楽しさ"を届ける〜</div>
+        <div class="desc">いじめシリーズ完結。本質的な教育が子どもに届ける「正しい楽しさ」とは。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n8fe3b63cab2e" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-career1.jpg?v=20260808" alt="キャリアデザイン①"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">キャリア</span></div>
+        <div class="title">キャリアデザインの描き方① 〜正しいキャリア観は大人がつくる〜</div>
+        <div class="desc">子どものキャリア形成に、大人がどう関わるべきかを問い直す。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n40a03613a6cc" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-ijime4.jpg?v=20260808" alt="いじめはなくなるのか④"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">いじめ</span></div>
+        <div class="title">いじめはなくなるのか？④ 〜加害者への正しい叱り方がいじめを止める〜</div>
+        <div class="desc">叱り方ひとつで、加害者がいじめをやめる。その正しいアプローチとは。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n1671f429755e" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-roots.jpg?v=20260808" alt="あなたのルーツは？"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">自己探求</span></div>
+        <div class="title">あなたのルーツはなんですか？ 〜今の自分をつくるのは100%の過去〜</div>
+        <div class="desc">自分のルーツを知ることで、子どもへの関わり方が変わる。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n6db68adbc116" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-ijime3.jpg?v=20260808" alt="いじめはなくなるのか③"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">いじめ</span></div>
+        <div class="title">いじめはなくなるのか？③ 〜「いじめを止めない人も加害者」に潜む罠〜</div>
+        <div class="desc">よかれと思った正論が、かえって子どもを傷つける逆説を解説。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n1be4101941a9" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-comm.jpg?v=20260808" alt="正しいコミュニケーション"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">教育</span></div>
+        <div class="title">正しいコミュニケーションは "心"と"笑顔"を引き出すこと</div>
+        <div class="desc">引きこもりの生徒が大学に遊びに来た！その変化の背景にあったもの。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/nef783e0d22ab" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-book.jpg?v=20260808" alt="本を読まないと馬鹿になる？①"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">教育</span></div>
+        <div class="title">本を読まないと馬鹿になる？① 〜デジタルデバイスとどう向き合うか〜</div>
+        <div class="desc">読書とデジタルの共存。子どもに本を読ませる前に大人が考えるべきこと。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n952dff185d65" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-ijime2.jpg?v=20260808" alt="いじめはなくなるのか②"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">いじめ</span></div>
+        <div class="title">いじめはなくなるのか？② 〜データに騙されず正しく現状把握をする〜</div>
+        <div class="desc">「いじめが増えた・減った」の数字の裏側にある本当の現実とは。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/na0e7b06de78a" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-kouhai.jpg?v=20260808" alt="後輩との対話"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">教育</span></div>
+        <div class="title">後輩との対話 〜年齢ではなく"人"でみること〜</div>
+        <div class="desc">年上・年下関係なく「人として」向き合うことで開く対話の可能性。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n1b00d0a48bac" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-ijime1.jpg?v=20260808" alt="いじめはなくなるのか①"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">いじめ</span></div>
+        <div class="title">いじめはなくなるのか？① 〜心の教育がかえって問題を生むジレンマ〜</div>
+        <div class="desc">いじめシリーズ第1回。善意の教育がなぜ逆効果になるのか。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n2ce6a4ca1d00" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-name.jpg?v=20260808" alt="名を体で表せていますか？"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">教育</span></div>
+        <div class="title">名を体で表せていますか？ 〜名前に込められたメッセージ〜</div>
+        <div class="desc">名前の由来を知ることが、子どもの自己肯定感を育む理由。</div>
+        <div class="meta">2025</div>
+      </div>
+    </a>
+
+    <a class="card" href="./news-delhi-1.html">
+      <div class="thumb"><img class="pos-top" src="./lp-assets/news-03.png?v=20260501" alt="デリー新聞掲載（1回目）"></div>
+      <div class="body">
+        <div class="tags"><span class="tag">MEDIA</span><span class="tag">INDIA</span></div>
+        <div class="title">インドのデリー新聞で掲載されました（1回目）</div>
+        <div class="desc">日本の高校生が Lotus Free School を訪れ、子どもたちと交流した様子が掲載。</div>
+        <div class="meta">2025.03.21</div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ========== 2024 ========== -->
+  <div class="year-label">2024 <span>8件</span></div>
+  <div class="grid">
+
+    <a class="card" href="./news-youtube.html">
+      <div class="thumb"><img src="./lp-assets/news-02.png?v=20260501" alt="YouTube対談動画"></div>
+      <div class="body">
+        <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
+        <div class="title">【師弟対談】西山弾×大久保俊輝「あんたがおらなの可能性」</div>
+        <div class="desc">代表の大久保と創設者の西山が、想いや教育観、実体験を台本なしで対談。</div>
+        <div class="meta">2024.09.13</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://open.spotify.com/episode/6hxHJX5Gcl7e9uDtcDKHNC" target="_blank" rel="noopener noreferrer">
+      <div class="thumb" style="position:relative;overflow:hidden;background:#0d0d0d">
+        <img src="./lp-assets/spotify-choikiki.jpg?v=20260808" alt="大久保俊輝の教育相談-ちょい聴き-" style="width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent)"></div>
+        <div style="position:absolute;bottom:10px;left:12px;font-size:11px;font-weight:900;color:#1DB954;letter-spacing:.1em">▶ PODCAST</div>
+      </div>
+      <div class="body">
+        <div class="tags"><span class="tag sp">SPOTIFY</span><span class="tag sp">最終回</span></div>
+        <div class="title">最終回「本気の教育支援団体"あんたがおらな"がスタート」</div>
+        <div class="desc">大久保先生が語る、あんたがおらな設立への想い。（15分）</div>
+        <div class="meta">2024.09.20 · 大久保俊輝の教育相談-ちょい聴き-</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://open.spotify.com/show/3eOAlAl9evhcDWLmA9YJK8" target="_blank" rel="noopener noreferrer">
+      <div class="thumb" style="background:#121212;display:flex;align-items:center;justify-content:center">
+        <img src="./lp-assets/spotify-choikiki.jpg?v=20260808" alt="ちょい聴きカバー" style="width:75%;height:75%;object-fit:contain;border-radius:8px">
+      </div>
+      <div class="body">
+        <div class="tags"><span class="tag sp">SPOTIFY</span><span class="tag sp">PODCAST</span></div>
+        <div class="title">大久保俊輝の教育相談-ちょい聴き-（全エピソード）</div>
+        <div class="desc">麗澤大学 教育支援研究センター主催。全18回＋最終回。学校・保護者の悩みを大久保先生が解決。</div>
+        <div class="meta">2024 · Spotify</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n3749f464ac4c?sub_rt=share_sb" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/news-note-thumb.png?v=20260508a" alt="西山弾 Note"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span></div>
+        <div class="title">西山弾 Note ― あんたがおらなを立ち上げるまで</div>
+        <div class="desc">創設者・西山が当団体を立ち上げるに至った思いについてNoteにて綴りました。</div>
+        <div class="meta">2024.08.13</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/ne36aea213b01" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-555.jpg?v=20260808" alt="早起きは成功の第一歩"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">習慣</span></div>
+        <div class="title">早起きは成功の第一歩 〜555チャレンジをやってみよう〜</div>
+        <div class="desc">5時起き・5分運動・5分読書。小さな習慣が人生を変える。</div>
+        <div class="meta">2024</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://note.com/dan_antagaorana/n/n8c4f660b8d6d" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/note-thumb-intro.jpg?v=20260807" alt="自己紹介Note"></div>
+      <div class="body">
+        <div class="tags"><span class="tag nt">NOTE</span><span class="tag">固定記事</span></div>
+        <div class="title">【自己紹介】しがない大学研究員が挑戦する"新しい家庭教師"</div>
+        <div class="desc">西山弾が「あんたがおらな」を立ち上げるまでの自己紹介記事。</div>
+        <div class="meta">2024</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.youtube.com/watch?v=jqg1NMsWLaE" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/yt-india-project.jpg?v=20260807" alt="インドプロジェクト始動！"></div>
+      <div class="body">
+        <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
+        <div class="title">インドプロジェクト始動！高校生メンバーを紹介します！</div>
+        <div class="desc">あんたがおらなの新メンバーと共に、インドへの挑戦が始まります。</div>
+        <div class="meta">2024</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.youtube.com/watch?v=HGeGPCmyxR4" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/yt-intro.jpg?v=20260807" alt="自己紹介動画"></div>
+      <div class="body">
+        <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
+        <div class="title">【自己紹介】あんたがおらなはどうして始まったのか？</div>
+        <div class="desc">西山弾が語る、あんたがおらな立ち上げのきっかけと想い。</div>
+        <div class="meta">2024</div>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.youtube.com/watch?v=Q6o7dEmq3Ds" target="_blank" rel="noopener noreferrer">
+      <div class="thumb"><img src="./lp-assets/yt-taidan.jpg?v=20260807" alt="師弟対談 前編"></div>
+      <div class="body">
+        <div class="tags"><span class="tag yt">VIDEO</span><span class="tag yt">YouTube</span></div>
+        <div class="title">【西山弾×大久保俊輝】師弟対談 前編「あんたがおらなの可能性」</div>
+        <div class="desc">師弟コンビが語る教育の本質と、この活動に込めた想い。（16分）</div>
+        <div class="meta">2024</div>
+      </div>
+    </a>
+
+  </div>
+</div>
 </body>
 </html>
