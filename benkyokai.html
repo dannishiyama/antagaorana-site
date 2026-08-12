@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>保護者向け勉強会｜大久保俊輝と語る子育ての本質</title>
-  <meta name="description" content="不登校・引きこもり・子育てに悩む保護者の方へ。元校長・大久保俊輝が月1回オンラインでじっくり向き合う少人数制の勉強会です。">
-  <meta property="og:title" content="保護者向け勉強会｜大久保俊輝と語る子育ての本質">
-  <meta property="og:description" content="不登校・引きこもり・子育てに悩む保護者の方へ。月1回・少人数制のオンライン勉強会。">
-  <meta property="og:image" content="https://antagaorana.com/lp-assets/logo-hero.png">
+  <title>共育ゼミ｜あんたがおらな × 大久保俊輝</title>
+  <meta name="description" content="全国の講演会にご参加いただいた方へ。大久保俊輝が月1回・限定20名でじっくり向き合う、保護者・祖父母向けオンライン勉強会。参加費1,000円。">
+  <meta property="og:title" content="共育ゼミ｜あんたがおらな × 大久保俊輝">
+  <meta property="og:description" content="子どもと一緒に、親も育てていく。月1回・限定20名のオンライン勉強会。参加費1,000円。">
+  <meta property="og:image" content="https://antagaorana.com/lp-assets/okubo-portrait.jpg">
   <meta property="og:url" content="https://antagaorana.com/benkyokai.html">
   <link rel="icon" type="image/png" href="./lp-assets/logo-hero.png">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -32,78 +32,130 @@
     /* ─── HERO ─── */
     .hero {
       min-height: 100svh;
-      background: linear-gradient(160deg, #1c3a1a 0%, #2d5430 50%, #3A5A38 100%);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 80px 6% 100px;
+      background: linear-gradient(150deg, #1a3518 0%, #2d5430 45%, #3d6a3a 100%);
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      align-items: center;
+      padding: 100px 8% 80px;
       position: relative; overflow: hidden;
+      gap: 40px;
     }
     .hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,.04) 0%, transparent 70%);
     }
+    .hero-text { position: relative; z-index: 1; }
     .hero-badge {
-      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .2em;
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: .2em;
       color: rgba(255,255,255,.75); border: 1px solid rgba(255,255,255,.25);
-      padding: 6px 18px; border-radius: 999px; margin-bottom: 28px;
+      padding: 7px 18px 7px 14px; border-radius: 999px; margin-bottom: 32px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #a8d4a0; flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    .hero-eyebrow {
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,.6);
+      letter-spacing: .12em; margin-bottom: 18px;
     }
     .hero h1 {
       font-family: 'Noto Serif JP', serif;
-      font-size: clamp(26px, 5vw, 52px);
-      font-weight: 900; color: #fff; line-height: 1.5;
-      letter-spacing: .04em; margin-bottom: 24px;
-      position: relative;
+      font-size: clamp(30px, 4.5vw, 56px);
+      font-weight: 900; color: #fff; line-height: 1.45;
+      letter-spacing: .04em; margin-bottom: 28px;
     }
-    .hero h1 em {
-      font-style: normal; color: #a8d4a0;
-    }
+    .hero h1 .accent { color: #a8d4a0; }
     .hero-sub {
-      font-size: clamp(14px, 1.8vw, 17px); color: rgba(255,255,255,.8);
-      max-width: 52em; line-height: 2; margin-bottom: 48px;
+      font-size: 15px; color: rgba(255,255,255,.78);
+      line-height: 2.1; margin-bottom: 20px;
+    }
+    .hero-tagline {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 13px; color: rgba(255,255,255,.5);
+      letter-spacing: .12em; margin-bottom: 44px;
+      border-left: 2px solid rgba(255,255,255,.2); padding-left: 16px;
     }
     .btn-primary {
-      display: inline-block;
+      display: inline-flex; align-items: center; gap: 10px;
       background: var(--accent); color: #fff;
       font-size: 16px; font-weight: 700;
-      padding: 18px 48px; border-radius: 999px;
-      box-shadow: 0 8px 30px rgba(200,96,42,.45);
+      padding: 18px 44px; border-radius: 999px;
+      box-shadow: 0 8px 32px rgba(200,96,42,.5);
       transition: transform .2s, box-shadow .2s;
-      letter-spacing: .05em;
+      letter-spacing: .06em;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,96,42,.55); }
-    .btn-sub {
-      display: block; margin-top: 14px;
-      font-size: 12px; color: rgba(255,255,255,.55); letter-spacing: .1em;
-    }
-    .hero-scroll {
-      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
-      font-size: 10px; letter-spacing: .18em; color: rgba(255,255,255,.4);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-    }
-    .hero-scroll::after {
-      content: ''; width: 1px; height: 40px;
-      background: linear-gradient(to bottom, rgba(255,255,255,.3), transparent);
-    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,96,42,.6); }
+    .hero-note { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 14px; }
 
-    /* ─── PAIN ─── */
-    .pain {
-      background: var(--sand);
-      padding: 96px 6%;
+    /* Hero photo side */
+    .hero-photo {
+      position: relative; z-index: 1;
+      display: flex; align-items: flex-end; justify-content: center;
+      height: 520px;
+    }
+    .hero-photo img {
+      height: 100%; object-fit: contain; object-position: bottom center;
+      filter: drop-shadow(0 20px 60px rgba(0,0,0,.4));
+    }
+    .hero-name-tag {
+      position: absolute; bottom: 20px; left: 0; right: 0;
       text-align: center;
     }
-    .section-label {
-      font-size: 11px; font-weight: 700; letter-spacing: .22em; color: var(--g);
-      margin-bottom: 14px;
+    .hero-name-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.12); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px; padding: 8px 24px;
+      font-size: 13px; font-weight: 700; color: #fff;
+      letter-spacing: .08em;
     }
+    .hero-name-badge small {
+      display: block; font-size: 10px; font-weight: 400;
+      color: rgba(255,255,255,.6); letter-spacing: .12em; margin-top: 2px;
+    }
+
+    /* ─── NEXT SESSION BANNER ─── */
+    .next-session {
+      background: var(--accent);
+      padding: 20px 6%;
+      display: flex; align-items: center; justify-content: center;
+      gap: 32px; flex-wrap: wrap;
+    }
+    .next-label { font-size: 11px; font-weight: 900; letter-spacing: .2em; color: rgba(255,255,255,.7); }
+    .next-date { font-family: 'Noto Serif JP', serif; font-size: 22px; font-weight: 900; color: #fff; }
+    .next-time { font-size: 15px; color: rgba(255,255,255,.85); font-weight: 500; }
+    .next-seats {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px; padding: 6px 18px;
+      font-size: 12px; font-weight: 700; color: #fff; letter-spacing: .1em;
+    }
+    .next-cta {
+      display: inline-block; background: #fff; color: var(--accent);
+      font-size: 13px; font-weight: 700; letter-spacing: .06em;
+      padding: 10px 28px; border-radius: 999px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.15);
+      transition: transform .2s;
+    }
+    .next-cta:hover { transform: translateY(-1px); }
+
+    /* ─── SECTION COMMON ─── */
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .22em; color: var(--g); margin-bottom: 14px; }
     .section-title {
       font-family: 'Noto Serif JP', serif;
       font-size: clamp(20px, 3vw, 32px);
       font-weight: 900; color: var(--gd);
       line-height: 1.6; margin-bottom: 12px;
     }
-    .section-lead {
-      font-size: 14px; color: var(--tm); max-width: 48em;
-      margin: 0 auto 56px; line-height: 2;
+    .section-lead { font-size: 14px; color: var(--tm); max-width: 48em; margin: 0 auto 56px; line-height: 2.1; }
+
+    /* ─── PAIN ─── */
+    .pain {
+      background: var(--sand);
+      padding: 96px 6%; text-align: center;
     }
     .pain-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -111,31 +163,29 @@
     }
     .pain-card {
       background: #fff; border-radius: 16px;
-      padding: 32px 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      padding: 28px 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.05);
       text-align: left;
     }
-    .pain-icon { font-size: 28px; margin-bottom: 14px; }
-    .pain-card p { font-size: 14px; color: var(--tm); line-height: 1.9; }
+    .pain-icon { font-size: 26px; margin-bottom: 12px; }
+    .pain-card p { font-size: 13px; color: var(--tm); line-height: 1.9; }
     .pain-card strong { color: var(--gd); font-weight: 700; }
 
-    /* ─── ABOUT SESSION ─── */
-    .about {
-      padding: 96px 6%;
-      max-width: 1040px; margin: 0 auto;
-    }
-    .about-inner {
+    /* ─── SPEC ─── */
+    .spec-section { padding: 96px 6%; background: #fff; }
+    .spec-inner {
+      max-width: 1020px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
     }
-    .about-visual {
+    .spec-visual {
       background: linear-gradient(135deg, var(--gl) 0%, var(--sandD) 100%);
-      border-radius: 24px; padding: 48px 36px;
+      border-radius: 24px; padding: 40px 36px;
       border: 1px solid rgba(92,122,90,.15);
     }
     .spec-list { list-style: none; }
     .spec-list li {
       display: flex; align-items: flex-start; gap: 14px;
-      padding: 16px 0; border-bottom: 1px solid rgba(92,122,90,.12);
+      padding: 15px 0; border-bottom: 1px solid rgba(92,122,90,.12);
       font-size: 14px;
     }
     .spec-list li:last-child { border-bottom: none; }
@@ -143,76 +193,71 @@
       font-size: 10px; font-weight: 900; letter-spacing: .14em;
       color: var(--g); background: rgba(92,122,90,.1);
       padding: 4px 10px; border-radius: 999px; white-space: nowrap;
-      margin-top: 2px;
+      margin-top: 2px; flex-shrink: 0;
     }
     .spec-val { color: var(--txt); line-height: 1.7; }
-    .spec-val strong { font-weight: 700; color: var(--gd); font-size: 16px; }
+    .spec-val strong { font-weight: 900; color: var(--gd); font-size: 17px; }
 
-    /* ─── ABOUT OKUBO ─── */
+    /* ─── PROFILE ─── */
     .profile {
       background: linear-gradient(160deg, #1c3a1a, #2d5430);
       padding: 96px 6%; text-align: center; color: #fff;
     }
     .profile-inner { max-width: 720px; margin: 0 auto; }
     .profile-img {
-      width: 120px; height: 120px; border-radius: 50%;
-      object-fit: cover; margin: 0 auto 24px;
+      width: 140px; height: 140px; border-radius: 50%;
+      object-fit: cover; object-position: top center;
+      margin: 0 auto 24px;
       border: 3px solid rgba(255,255,255,.25);
+      box-shadow: 0 12px 40px rgba(0,0,0,.3);
     }
     .profile-name {
       font-family: 'Noto Serif JP', serif;
-      font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 6px;
+      font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 6px;
     }
     .profile-role {
-      font-size: 12px; color: rgba(255,255,255,.6); letter-spacing: .14em;
-      margin-bottom: 28px;
+      font-size: 12px; color: rgba(255,255,255,.55); letter-spacing: .14em;
+      margin-bottom: 32px; line-height: 1.8;
     }
     .profile-bio {
-      font-size: 14px; color: rgba(255,255,255,.82); line-height: 2.1;
-      text-align: left;
+      font-size: 14px; color: rgba(255,255,255,.82); line-height: 2.2;
+      text-align: left; margin-bottom: 40px;
     }
     .profile-stats {
       display: flex; justify-content: center; gap: 48px;
-      margin-top: 40px; flex-wrap: wrap;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 36px;
     }
     .stat { text-align: center; }
     .stat-num {
       font-family: 'Noto Serif JP', serif;
-      font-size: 36px; font-weight: 900; color: #a8d4a0; line-height: 1;
+      font-size: 34px; font-weight: 900; color: #a8d4a0; line-height: 1;
       margin-bottom: 6px;
     }
-    .stat-label { font-size: 11px; color: rgba(255,255,255,.55); letter-spacing: .1em; }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,.5); letter-spacing: .1em; }
 
-    /* ─── WHAT YOU GET ─── */
-    .benefits {
-      padding: 96px 6%; background: #fff;
-      max-width: 1040px; margin: 0 auto;
-      text-align: center;
-    }
+    /* ─── BENEFITS ─── */
+    .benefits { padding: 96px 6%; background: #fff; text-align: center; }
     .benefit-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-      margin-top: 48px; text-align: left;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+      max-width: 1020px; margin: 48px auto 0; text-align: left;
     }
     .benefit-card {
       border: 1px solid rgba(92,122,90,.15);
-      border-radius: 20px; padding: 32px 26px;
+      border-radius: 20px; padding: 30px 24px;
       background: linear-gradient(135deg, #fff 60%, var(--gl) 100%);
     }
-    .benefit-num {
-      font-size: 11px; font-weight: 900; letter-spacing: .18em; color: var(--g);
-      margin-bottom: 12px;
-    }
+    .benefit-num { font-size: 11px; font-weight: 900; letter-spacing: .18em; color: var(--g); margin-bottom: 10px; }
     .benefit-title {
       font-family: 'Noto Serif JP', serif;
-      font-size: 16px; font-weight: 900; color: var(--gd);
-      line-height: 1.6; margin-bottom: 12px;
+      font-size: 15px; font-weight: 900; color: var(--gd);
+      line-height: 1.6; margin-bottom: 10px;
     }
     .benefit-desc { font-size: 13px; color: var(--tm); line-height: 1.9; }
 
     /* ─── VOICE ─── */
-    .voices {
-      padding: 96px 6%; background: var(--sand); text-align: center;
-    }
+    .voices { padding: 96px 6%; background: var(--sand); text-align: center; }
     .voice-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
       max-width: 1000px; margin: 48px auto 0;
@@ -224,15 +269,35 @@
       position: relative;
     }
     .voice-card::before {
-      content: '"'; font-size: 64px; font-family: Georgia, serif;
-      color: rgba(92,122,90,.15); position: absolute; top: 8px; left: 18px;
+      content: '"'; font-size: 60px; font-family: Georgia, serif;
+      color: rgba(92,122,90,.12); position: absolute; top: 8px; left: 18px;
       line-height: 1;
     }
     .voice-text { font-size: 13px; color: var(--tm); line-height: 2; padding-top: 24px; }
-    .voice-attr {
-      margin-top: 16px; font-size: 11px; color: rgba(74,74,74,.55);
-      letter-spacing: .08em;
+    .voice-attr { margin-top: 14px; font-size: 11px; color: rgba(74,74,74,.5); letter-spacing: .08em; }
+
+    /* ─── FLOW ─── */
+    .flow { padding: 96px 6%; background: #fff; text-align: center; }
+    .flow-steps { max-width: 680px; margin: 48px auto 0; }
+    .flow-step {
+      display: flex; gap: 22px; align-items: flex-start; text-align: left;
     }
+    .flow-left { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+    .step-num {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--gd); color: #fff;
+      font-family: 'Noto Serif JP', serif; font-size: 15px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-line {
+      width: 2px; flex: 1; min-height: 36px;
+      background: linear-gradient(to bottom, var(--g), rgba(92,122,90,.1));
+      margin: 5px 0;
+    }
+    .flow-step:last-child .step-line { display: none; }
+    .flow-body { padding: 6px 0 36px; }
+    .flow-title { font-weight: 700; font-size: 15px; color: var(--gd); margin-bottom: 5px; }
+    .flow-desc { font-size: 13px; color: var(--tm); line-height: 1.9; }
 
     /* ─── CTA ─── */
     .cta {
@@ -243,84 +308,55 @@
     .cta h2 {
       font-family: 'Noto Serif JP', serif;
       font-size: clamp(22px, 3.5vw, 38px);
-      font-weight: 900; color: #fff; line-height: 1.6; margin-bottom: 16px;
+      font-weight: 900; color: #fff; line-height: 1.6; margin-bottom: 14px;
     }
-    .cta p { font-size: 14px; color: rgba(255,255,255,.75); margin-bottom: 44px; line-height: 2; }
-    .price-box {
+    .cta-lead { font-size: 14px; color: rgba(255,255,255,.72); margin-bottom: 44px; line-height: 2; }
+    .price-card {
       display: inline-block;
       background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 20px; padding: 32px 48px;
-      margin-bottom: 36px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 24px; padding: 36px 56px;
+      margin-bottom: 40px;
     }
-    .price-label { font-size: 11px; letter-spacing: .18em; color: rgba(255,255,255,.55); margin-bottom: 8px; }
+    .price-label { font-size: 11px; letter-spacing: .18em; color: rgba(255,255,255,.5); margin-bottom: 10px; }
     .price-num {
       font-family: 'Noto Serif JP', serif;
-      font-size: 42px; font-weight: 900; color: #fff; line-height: 1;
+      font-size: 52px; font-weight: 900; color: #fff; line-height: 1;
     }
-    .price-num span { font-size: 18px; font-weight: 400; margin-left: 4px; color: rgba(255,255,255,.7); }
-    .price-note { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 8px; }
+    .price-unit { font-size: 20px; font-weight: 400; color: rgba(255,255,255,.7); margin-left: 4px; }
+    .price-note { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 10px; }
+    .price-seats {
+      display: inline-block; margin-top: 14px;
+      background: rgba(200,96,42,.3); border: 1px solid rgba(200,96,42,.5);
+      border-radius: 999px; padding: 5px 18px;
+      font-size: 12px; font-weight: 700; color: #ffb89a; letter-spacing: .1em;
+    }
     .btn-cta {
-      display: inline-block;
+      display: inline-flex; align-items: center; gap: 10px;
       background: var(--accent); color: #fff;
       font-size: 17px; font-weight: 700;
-      padding: 22px 64px; border-radius: 999px;
+      padding: 22px 60px; border-radius: 999px;
       box-shadow: 0 10px 36px rgba(200,96,42,.5);
       transition: transform .2s, box-shadow .2s;
       letter-spacing: .06em;
     }
-    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(200,96,42,.6); }
-    .cta-note { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 20px; }
-
-    /* ─── FLOW ─── */
-    .flow {
-      padding: 96px 6%; background: #fff;
-      max-width: 800px; margin: 0 auto; text-align: center;
-    }
-    .flow-steps { margin-top: 48px; }
-    .flow-step {
-      display: flex; gap: 24px; align-items: flex-start;
-      text-align: left; margin-bottom: 0; position: relative;
-    }
-    .flow-step + .flow-step { margin-top: 0; }
-    .flow-left { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
-    .step-num {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: var(--gd); color: #fff;
-      font-family: 'Noto Serif JP', serif;
-      font-size: 16px; font-weight: 900;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .step-line {
-      width: 2px; flex: 1; min-height: 40px;
-      background: linear-gradient(to bottom, var(--g), rgba(92,122,90,.1));
-      margin: 6px 0;
-    }
-    .flow-step:last-child .step-line { display: none; }
-    .flow-body { padding: 8px 0 40px; }
-    .flow-title { font-weight: 700; font-size: 15px; color: var(--gd); margin-bottom: 6px; }
-    .flow-desc { font-size: 13px; color: var(--tm); line-height: 1.9; }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(200,96,42,.65); }
+    .cta-note { font-size: 12px; color: rgba(255,255,255,.38); margin-top: 18px; }
 
     /* ─── FAQ ─── */
-    .faq {
-      padding: 96px 6%; background: var(--sand);
-      max-width: 760px; margin: 0 auto; text-align: center;
-    }
-    .faq-list { margin-top: 48px; text-align: left; }
+    .faq { padding: 96px 6%; background: var(--sand); text-align: center; }
+    .faq-list { max-width: 720px; margin: 48px auto 0; text-align: left; }
     .faq-item {
       background: #fff; border-radius: 14px;
-      margin-bottom: 12px; overflow: hidden;
+      margin-bottom: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,.04);
     }
     .faq-q {
-      padding: 20px 24px; font-size: 14px; font-weight: 700; color: var(--gd);
-      display: flex; gap: 14px;
+      padding: 18px 24px; font-size: 14px; font-weight: 700; color: var(--gd);
+      display: flex; gap: 14px; align-items: flex-start;
     }
-    .faq-q::before { content: 'Q'; color: var(--g); font-size: 16px; font-weight: 900; flex-shrink: 0; }
-    .faq-a {
-      padding: 0 24px 20px 58px; font-size: 13px; color: var(--tm); line-height: 1.9;
-    }
+    .faq-q-mark { color: var(--g); font-size: 16px; font-weight: 900; flex-shrink: 0; line-height: 1.6; }
+    .faq-a { padding: 0 24px 18px 52px; font-size: 13px; color: var(--tm); line-height: 1.9; }
 
     /* ─── FOOTER ─── */
     footer {
@@ -331,7 +367,7 @@
     footer a { color: rgba(255,255,255,.55); }
     footer a:hover { color: #fff; }
 
-    /* ─── STICKY CTA (mobile) ─── */
+    /* ─── STICKY (mobile) ─── */
     .sticky-cta {
       display: none;
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -339,20 +375,21 @@
       text-align: center; z-index: 999;
       box-shadow: 0 -4px 20px rgba(0,0,0,.2);
     }
-    .sticky-cta a {
-      color: #fff; font-weight: 700; font-size: 15px; letter-spacing: .06em;
-    }
+    .sticky-cta a { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: .06em; }
 
     /* ─── RESPONSIVE ─── */
-    @media (max-width: 900px) {
-      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; text-align: center; padding-bottom: 0; min-height: auto; padding-top: 80px; }
+      .hero-photo { height: 360px; }
+      .hero-tagline { margin: 0 auto 36px; max-width: 36em; }
+      .spec-inner { grid-template-columns: 1fr; gap: 40px; }
       .pain-grid, .benefit-grid, .voice-grid { grid-template-columns: 1fr 1fr; }
-      .profile-stats { gap: 32px; }
     }
     @media (max-width: 580px) {
       .pain-grid, .benefit-grid, .voice-grid { grid-template-columns: 1fr; }
-      .price-box { padding: 24px 32px; }
-      .btn-cta { padding: 18px 40px; font-size: 15px; }
+      .next-session { flex-direction: column; gap: 16px; text-align: center; }
+      .price-card { padding: 28px 32px; }
+      .btn-cta { padding: 18px 36px; font-size: 15px; }
       .sticky-cta { display: block; }
       body { padding-bottom: 60px; }
     }
@@ -360,36 +397,55 @@
 </head>
 <body>
 
-<!-- ══════════════════════════════
-     HERO
-══════════════════════════════ -->
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
 <section class="hero">
-  <div class="hero-badge">保護者向け・少人数制オンライン勉強会</div>
-  <h1>
-    「うちの子、<em>どうしたら</em><br>いいんだろう…」<br>
-    その悩み、一人で抱えないでください。
-  </h1>
-  <p class="hero-sub">
-    3万件以上の教育相談に向き合ってきた大久保俊輝が、<br>
-    不登校・引きこもり・子育てに悩む保護者の方と<br>
-    月に一度、少人数でじっくり語り合う場をつくりました。
-  </p>
-  <a href="#cta" class="btn-primary">参加を申し込む</a>
-  <span class="btn-sub">▼ まずは詳しく読んでみる</span>
-  <div class="hero-scroll">SCROLL</div>
+  <div class="hero-text">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      全国の講演会にご参加いただいた方へ
+    </div>
+    <p class="hero-eyebrow">あんたがおらな｜保護者向け勉強会</p>
+    <h1>
+      <span class="accent">共育ゼミ</span><br>
+      子どもと一緒に、<br>親も育てていく。
+    </h1>
+    <p class="hero-sub">
+      子育てのことを、一緒に学び、一緒に考える時間。<br>
+      大久保俊輝が月1回・限定20名でじっくり向き合います。
+    </p>
+    <p class="hero-tagline">— 子どもの人生に、味方であり続けるために。</p>
+    <a href="https://buy.stripe.com/fZu28sgpN72kc8fgkvafS01" class="btn-primary" target="_blank" rel="noopener noreferrer">
+      参加を申し込む →
+    </a>
+    <p class="hero-note">※ クレジットカード決済・Zoom開催</p>
+  </div>
+  <div class="hero-photo">
+    <img src="./lp-assets/okubo-portrait.jpg" alt="大久保 俊輝">
+    <div class="hero-name-tag">
+      <span class="hero-name-badge">
+        大久保 俊輝 先生
+        <small>教育支援団体 あんたがおらな 代表</small>
+      </span>
+    </div>
+  </div>
 </section>
 
+<!-- ══════════════════════════ NEXT SESSION ══════════════════════════ -->
+<div class="next-session">
+  <span class="next-label">NEXT SESSION</span>
+  <span class="next-date">8月30日（日）</span>
+  <span class="next-time">20:00 〜 21:30</span>
+  <span class="next-seats">限定 20 名</span>
+  <a href="https://buy.stripe.com/fZu28sgpN72kc8fgkvafS01" class="next-cta" target="_blank" rel="noopener noreferrer">今すぐ申し込む</a>
+</div>
 
-<!-- ══════════════════════════════
-     PAIN — あるあるの悩み
-══════════════════════════════ -->
+<!-- ══════════════════════════ PAIN ══════════════════════════ -->
 <section class="pain">
   <p class="section-label">PARENT'S WORRIES</p>
   <h2 class="section-title">こんな気持ち、ありませんか？</h2>
   <p class="section-lead">
-    学校の先生や周りには相談しにくい。<br>
-    ネットの情報は多すぎて、何が正しいかわからない。<br>
-    そんな保護者の方のための場所です。
+    一人で抱え込んでいませんか。<br>
+    周りに相談しにくい、正解がわからない——そんな方のための場所です。
   </p>
   <div class="pain-grid">
     <div class="pain-card">
@@ -398,96 +454,92 @@
     </div>
     <div class="pain-card">
       <div class="pain-icon">🏠</div>
-      <p>部屋に閉じこもりがちで、<strong>引きこもりになってしまうのでは</strong>と不安が続いている。</p>
+      <p>部屋に閉じこもりがちで、<strong>このまま引きこもりになってしまうのでは</strong>と不安が続いている。</p>
     </div>
     <div class="pain-card">
       <div class="pain-icon">😢</div>
-      <p>叱っても怒っても変わらない。<strong>子どもへの接し方</strong>が根本的に間違っているのかも。</p>
+      <p>叱っても怒っても変わらない。<strong>子どもへの接し方</strong>が根本的に間違っているのかも…。</p>
     </div>
     <div class="pain-card">
       <div class="pain-icon">🤐</div>
-      <p>周りに話すと「過保護」「甘やかしている」と言われそうで、<strong>一人で抱え込んでいる</strong>。</p>
+      <p>周りに話すと「甘やかしている」と言われそうで、<strong>ずっと一人で抱え込んでいる</strong>。</p>
     </div>
     <div class="pain-card">
       <div class="pain-icon">📚</div>
-      <p>本やネットで調べても情報が多すぎて、<strong>何を信じればいいか</strong>わからなくなってきた。</p>
+      <p>ネットで調べても情報が多すぎて、<strong>何を信じればいいか</strong>わからなくなってきた。</p>
     </div>
     <div class="pain-card">
       <div class="pain-icon">🌱</div>
-      <p>子どもが自分らしく生きられるよう、<strong>親として何をすべきか</strong>を真剣に考えたい。</p>
+      <p>講演会で感動したけれど、<strong>具体的に何から始めればいいか</strong>を誰かに聞きたかった。</p>
     </div>
   </div>
 </section>
 
-
-<!-- ══════════════════════════════
-     ABOUT SESSION — 勉強会について
-══════════════════════════════ -->
-<section style="padding: 96px 6%; background: #fff;">
-  <div class="about" style="padding: 0;">
-    <div class="about-inner">
-      <div>
-        <p class="section-label">ABOUT THIS SESSION</p>
-        <h2 class="section-title" style="text-align:left;">この勉強会は<br>どんな場ですか？</h2>
-        <p style="font-size:14px;color:var(--tm);line-height:2.1;margin-top:20px;">
-          講演会では時間の都合上、お伝えしきれないことがたくさんあります。<br>
-          この勉強会は、<strong>月に一度・少人数・完全クローズド</strong>で開催される、
-          保護者の方が安心して悩みを話せる場です。<br><br>
-          大久保俊輝が直接ファシリテートし、参加者同士の対話も大切にしながら、
-          「我が子に今できることは何か」を一緒に考えます。
-        </p>
-      </div>
-      <div class="about-visual">
-        <ul class="spec-list">
-          <li>
-            <span class="spec-key">開催形式</span>
-            <span class="spec-val">オンライン（Zoom）<br>完全クローズド</span>
-          </li>
-          <li>
-            <span class="spec-key">定員</span>
-            <span class="spec-val"><strong>20〜30名</strong>（先着順）</span>
-          </li>
-          <li>
-            <span class="spec-key">頻度</span>
-            <span class="spec-val"><strong>月1回</strong>定期開催</span>
-          </li>
-          <li>
-            <span class="spec-key">ファシリテーター</span>
-            <span class="spec-val">大久保 俊輝<br><small style="color:var(--tm);font-size:12px;">教育支援研究センター長</small></span>
-          </li>
-          <li>
-            <span class="spec-key">対象</span>
-            <span class="spec-val">不登校・引きこもり・子育てに<br>悩む保護者の方</span>
-          </li>
-          <li>
-            <span class="spec-key">参加費</span>
-            <span class="spec-val"><strong>▶ 下記よりご確認ください</strong></span>
-          </li>
-        </ul>
-      </div>
+<!-- ══════════════════════════ SPEC ══════════════════════════ -->
+<section class="spec-section">
+  <div class="spec-inner">
+    <div>
+      <p class="section-label">ABOUT THIS SESSION</p>
+      <h2 class="section-title" style="text-align:left;">共育ゼミとは<br>どんな場ですか？</h2>
+      <p style="font-size:14px;color:var(--tm);line-height:2.1;margin-top:20px;">
+        講演会では時間の都合上、お伝えしきれないことがたくさんあります。<br>
+        共育ゼミは、<strong>月に一度・限定20名・完全クローズド</strong>で開催される、
+        保護者・祖父母の方が安心して悩みを話せる場です。<br><br>
+        大久保俊輝が直接ファシリテートし、参加者同士の対話も大切にしながら、
+        「今の我が子にできることは何か」を一緒に考えます。
+      </p>
+    </div>
+    <div class="spec-visual">
+      <ul class="spec-list">
+        <li>
+          <span class="spec-key">開催名</span>
+          <span class="spec-val"><strong>共育ゼミ</strong></span>
+        </li>
+        <li>
+          <span class="spec-key">形式</span>
+          <span class="spec-val">Zoom（オンライン）<br>完全クローズド</span>
+        </li>
+        <li>
+          <span class="spec-key">定員</span>
+          <span class="spec-val"><strong>限定 20 名</strong>（先着順）</span>
+        </li>
+        <li>
+          <span class="spec-key">頻度</span>
+          <span class="spec-val"><strong>月 1 回</strong>定期開催</span>
+        </li>
+        <li>
+          <span class="spec-key">次回日程</span>
+          <span class="spec-val"><strong>8月30日（日）20:00〜21:30</strong></span>
+        </li>
+        <li>
+          <span class="spec-key">対象</span>
+          <span class="spec-val">保護者・祖父母の方</span>
+        </li>
+        <li>
+          <span class="spec-key">参加費</span>
+          <span class="spec-val"><strong style="font-size:20px;">1,000円</strong><span style="font-size:13px;color:var(--tm);"> / 1回</span></span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
 
-
-<!-- ══════════════════════════════
-     PROFILE — 大久保俊輝
-══════════════════════════════ -->
+<!-- ══════════════════════════ PROFILE ══════════════════════════ -->
 <section class="profile">
   <div class="profile-inner">
-    <p class="section-label" style="color:rgba(255,255,255,.5);">FACILITATOR</p>
-    <img src="./lp-assets/okubo-delhi-univ.jpg" alt="大久保俊輝" class="profile-img">
+    <p class="section-label" style="color:rgba(255,255,255,.45);">FACILITATOR</p>
+    <img src="./lp-assets/okubo-portrait.jpg" alt="大久保俊輝" class="profile-img">
     <p class="profile-name">大久保 俊輝</p>
-    <p class="profile-role">麗澤大学 教育支援研究センター長 ／ あんたがおらな 代表</p>
+    <p class="profile-role">
+      麗澤大学 教育支援研究センター長<br>
+      教育支援団体「あんたがおらな」代表
+    </p>
     <p class="profile-bio">
-      千葉県公立小中学校で30年以上の教員・校長経験を持ち、
-      「型破り校長」として全国で注目を集める。
-      退職後は麗澤大学教育支援研究センター長として
-      3万件以上の教育相談に向き合い続けてきた。<br><br>
+      千葉県公立小中学校で30年以上の教員・校長経験を持ち、「型破り校長」として全国から注目を集める。
+      退職後は麗澤大学教育支援研究センター長として3万件以上の教育相談に向き合い続けてきた。<br><br>
       不登校・引きこもり・いじめ・家庭環境など、
-      あらゆる子育ての問題に対して「正論ではなく人間力で向き合う」
-      実践的なアプローチで多くの保護者と子どもを支えてきた。
-      全国各地での講演会は常に満員。
+      あらゆる子育ての問題に対して「正論ではなく人間力で向き合う」実践的なアプローチで
+      多くの保護者と子どもを支えてきた。全国各地での講演会は常に好評。
     </p>
     <div class="profile-stats">
       <div class="stat">
@@ -506,19 +558,15 @@
   </div>
 </section>
 
-
-<!-- ══════════════════════════════
-     BENEFITS — 参加で得られること
-══════════════════════════════ -->
-<section style="background:#fff; padding: 96px 6%;">
-<div class="benefits" style="padding:0;">
+<!-- ══════════════════════════ BENEFITS ══════════════════════════ -->
+<section class="benefits">
   <p class="section-label">WHAT YOU GET</p>
   <h2 class="section-title">参加することで得られること</h2>
   <div class="benefit-grid">
     <div class="benefit-card">
       <p class="benefit-num">01</p>
       <p class="benefit-title">「正解」より<br>「我が子への答え」</p>
-      <p class="benefit-desc">一般論や情報の整理ではなく、大久保が直接あなたの状況と向き合い、今の我が子に合った関わり方を一緒に考えます。</p>
+      <p class="benefit-desc">一般論ではなく、大久保が直接あなたの状況と向き合い、今の我が子に合った関わり方を一緒に考えます。</p>
     </div>
     <div class="benefit-card">
       <p class="benefit-num">02</p>
@@ -527,167 +575,136 @@
     </div>
     <div class="benefit-card">
       <p class="benefit-num">03</p>
-      <p class="benefit-title">子どもへの<br>声かけが変わる</p>
-      <p class="benefit-desc">「どう話せばいいかわからない」状態から、明日から試せる具体的な接し方のヒントを持ち帰れる場を目指しています。</p>
+      <p class="benefit-title">明日から変わる<br>声かけのヒント</p>
+      <p class="benefit-desc">「どう話せばいいかわからない」状態から、明日から試せる具体的な接し方を持ち帰れる場を目指しています。</p>
     </div>
     <div class="benefit-card">
       <p class="benefit-num">04</p>
       <p class="benefit-title">月1回、立ち止まる<br>時間をつくる</p>
-      <p class="benefit-desc">日々の子育てに追われていると、自分の関わり方を振り返る余裕がなくなります。月1回の場が「親としての軸」を保つ支えになります。</p>
+      <p class="benefit-desc">日々の子育てに追われていると自分を振り返る余裕がなくなります。月1回の場が「親としての軸」を保つ支えになります。</p>
     </div>
     <div class="benefit-card">
       <p class="benefit-num">05</p>
-      <p class="benefit-title">講演会では<br>話せなかったこと</p>
-      <p class="benefit-desc">大きな会場の講演会では聞けない、個別の状況に踏み込んだ話ができます。少人数だからこそ実現する対話の場です。</p>
+      <p class="benefit-title">講演会の続きを<br>少人数で聞ける</p>
+      <p class="benefit-desc">大きな会場では聞けない、個別の状況に踏み込んだ話ができます。限定20名だからこそ実現する対話の場です。</p>
     </div>
     <div class="benefit-card">
       <p class="benefit-num">06</p>
-      <p class="benefit-title">「見守る」力を<br>身につける</p>
-      <p class="benefit-desc">動かそうとするから動かない。大久保の30年の経験から生まれた「待つ・引き出す」親の関わり方を学べます。</p>
+      <p class="benefit-title">「待つ・引き出す」<br>親の力を育てる</p>
+      <p class="benefit-desc">動かそうとするから動かない。大久保の30年の経験から生まれた、子どもの力を引き出す親の関わり方を学べます。</p>
     </div>
   </div>
-</div>
 </section>
 
-
-<!-- ══════════════════════════════
-     VOICE — 参加者の声
-══════════════════════════════ -->
+<!-- ══════════════════════════ VOICE ══════════════════════════ -->
 <section class="voices">
   <p class="section-label">PARTICIPANT VOICES</p>
   <h2 class="section-title">参加した保護者の声</h2>
   <div class="voice-grid">
     <div class="voice-card">
-      <p class="voice-text">
-        息子が3年間引きこもっていて、どこに相談しても的外れなことを言われ続けていました。大久保さんの言葉は違いました。「まず親が変わること」という話に、涙が止まりませんでした。
-      </p>
-      <p class="voice-attr">40代・女性／中学3年生のお母さま</p>
+      <p class="voice-text">息子が3年間引きこもっていて、どこに相談しても的外れなことを言われ続けていました。大久保さんの言葉は違いました。「まず親が変わること」という話に、涙が止まりませんでした。</p>
+      <p class="voice-attr">40代・女性 ／ 中学3年生のお母さま</p>
     </div>
     <div class="voice-card">
-      <p class="voice-text">
-        同じ悩みを持つ方と話せる場があるだけで、こんなに気持ちが楽になるとは思いませんでした。毎月の勉強会が、今の私の支えになっています。
-      </p>
-      <p class="voice-attr">30代・女性／小学6年生のお母さま</p>
+      <p class="voice-text">同じ悩みを持つ方と話せる場があるだけで、こんなに気持ちが楽になるとは思いませんでした。毎月の勉強会が、今の私の支えになっています。</p>
+      <p class="voice-attr">30代・女性 ／ 小学6年生のお母さま</p>
     </div>
     <div class="voice-card">
-      <p class="voice-text">
-        講演会で大久保先生の話を聞いて、もっと深く聞きたいと思って参加しました。毎回、目からウロコが落ちる話ばかりで、子どもへの声かけが変わってきたと感じています。
-      </p>
-      <p class="voice-attr">40代・女性／高校1年生のお母さま</p>
+      <p class="voice-text">講演会でもっと深く聞きたいと思って参加しました。毎回、目からウロコが落ちる話ばかりで、子どもへの声かけが変わってきたと実感しています。</p>
+      <p class="voice-attr">40代・女性 ／ 高校1年生のお母さま</p>
     </div>
   </div>
 </section>
 
-
-<!-- ══════════════════════════════
-     FLOW — 参加の流れ
-══════════════════════════════ -->
-<section style="background:#fff; padding: 96px 6%;">
-<div class="flow" style="padding:0;">
+<!-- ══════════════════════════ FLOW ══════════════════════════ -->
+<section class="flow">
   <p class="section-label">HOW TO JOIN</p>
   <h2 class="section-title">参加までの流れ</h2>
   <div class="flow-steps">
     <div class="flow-step">
-      <div class="flow-left">
-        <div class="step-num">1</div>
-        <div class="step-line"></div>
-      </div>
+      <div class="flow-left"><div class="step-num">1</div><div class="step-line"></div></div>
       <div class="flow-body">
         <p class="flow-title">このページから申し込む</p>
-        <p class="flow-desc">下の「参加を申し込む」ボタンから決済ページへ。クレジットカードでお手続きいただけます。</p>
+        <p class="flow-desc">「参加を申し込む」ボタンから決済ページへ。クレジットカードでお手続きいただけます（参加費：1,000円）。</p>
       </div>
     </div>
     <div class="flow-step">
-      <div class="flow-left">
-        <div class="step-num">2</div>
-        <div class="step-line"></div>
-      </div>
+      <div class="flow-left"><div class="step-num">2</div><div class="step-line"></div></div>
       <div class="flow-body">
         <p class="flow-title">開催案内メールが届く</p>
         <p class="flow-desc">お申し込みいただいた方に、開催日・Zoomリンクをメールでお送りします。</p>
       </div>
     </div>
     <div class="flow-step">
-      <div class="flow-left">
-        <div class="step-num">3</div>
-        <div class="step-line"></div>
-      </div>
+      <div class="flow-left"><div class="step-num">3</div><div class="step-line"></div></div>
       <div class="flow-body">
         <p class="flow-title">当日、Zoomに参加する</p>
         <p class="flow-desc">スマートフォン・パソコンどちらからでも参加できます。カメラのオンオフはご自由に。</p>
       </div>
     </div>
     <div class="flow-step">
-      <div class="flow-left">
-        <div class="step-num">4</div>
-      </div>
+      <div class="flow-left"><div class="step-num">4</div></div>
       <div class="flow-body">
         <p class="flow-title">翌月も継続して参加できる</p>
         <p class="flow-desc">毎月開催しています。一度きりの参加もOK。継続することで子育ての変化を実感できます。</p>
       </div>
     </div>
   </div>
-</div>
 </section>
 
-
-<!-- ══════════════════════════════
-     CTA — 申し込み
-══════════════════════════════ -->
+<!-- ══════════════════════════ CTA ══════════════════════════ -->
 <section class="cta" id="cta">
   <h2>一人で悩まなくていい。<br>まず、ここから始めてみてください。</h2>
-  <p>定員になり次第、締め切ります。<br>気になったときが、動き出すタイミングです。</p>
-  <div class="price-box">
-    <p class="price-label">参加費</p>
-    <p class="price-num">¥ ——<span>/ 1回</span></p>
-    <p class="price-note">※ 料金は近日公開予定です</p>
+  <p class="cta-lead">
+    定員になり次第、締め切ります。<br>
+    気になったときが、動き出すタイミングです。
+  </p>
+  <div class="price-card">
+    <p class="price-label">参 加 費</p>
+    <p class="price-num">¥1,000<span class="price-unit">/ 1回</span></p>
+    <p class="price-note">Zoom開催 ／ 次回：8月30日（日）20:00〜21:30</p>
+    <p class="price-seats">▶ 限定 20 名様</p>
   </div>
   <br>
-  <a href="#" class="btn-cta">参加を申し込む →</a>
+  <a href="https://buy.stripe.com/fZu28sgpN72kc8fgkvafS01" class="btn-cta" target="_blank" rel="noopener noreferrer">
+    参加を申し込む →
+  </a>
   <p class="cta-note">※ お支払いはクレジットカードにてお手続きいただけます</p>
 </section>
 
-
-<!-- ══════════════════════════════
-     FAQ
-══════════════════════════════ -->
-<section style="background:var(--sand); padding: 96px 6%;">
-<div class="faq" style="padding:0;">
+<!-- ══════════════════════════ FAQ ══════════════════════════ -->
+<section class="faq">
   <p class="section-label">FAQ</p>
   <h2 class="section-title">よくある質問</h2>
   <div class="faq-list">
     <div class="faq-item">
-      <p class="faq-q">顔出しは必須ですか？</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>顔出しは必須ですか？</p>
       <p class="faq-a">カメラのオンオフはご自由です。お気持ちの負担なくご参加ください。</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">発言が苦手でも大丈夫ですか？</p>
-      <p class="faq-a">聞くだけの参加も歓迎しています。悩みを話したいときだけ、お話しいただければ十分です。</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>発言が苦手でも大丈夫ですか？</p>
+      <p class="faq-a">聞くだけの参加も歓迎しています。話したいときだけ、お話しいただければ十分です。</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">一回だけの参加も可能ですか？</p>
-      <p class="faq-a">はい、一回限りのご参加も可能です。継続参加の義務はありません。</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>一回だけの参加も可能ですか？</p>
+      <p class="faq-a">はい、一回限りの参加も可能です。継続参加の義務はありません。</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">子どもの年齢に制限はありますか？</p>
-      <p class="faq-a">特に制限はありません。幼児から高校生、大学生の子を持つ保護者の方まで、幅広くご参加いただけます。</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>子どもの年齢に制限はありますか？</p>
+      <p class="faq-a">特に制限はありません。幼児から高校生・大学生の子を持つ保護者・祖父母の方まで幅広くご参加いただけます。</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">父親でも参加できますか？</p>
-      <p class="faq-a">もちろんです。どなたでもご参加いただけます。</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>父親・祖父母でも参加できますか？</p>
+      <p class="faq-a">もちろんです。対象は保護者・祖父母の方どなたでもご参加いただけます。</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q">大久保先生に直接相談できますか？</p>
-      <p class="faq-a">勉強会の中でご質問・ご相談をいただく時間を設けています。全員の方に回答できない場合もありますが、できる限り向き合います。</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>大久保先生に直接相談できますか？</p>
+      <p class="faq-a">勉強会の中でご質問・ご相談の時間を設けています。全員に回答できない場合もありますが、できる限り向き合います。</p>
     </div>
   </div>
-</div>
 </section>
 
-
-<!-- ══════════════════════════════
-     FOOTER
-══════════════════════════════ -->
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
 <footer>
   <p style="margin-bottom:12px;">
     <a href="/">あんたがおらな トップへ</a>
@@ -697,9 +714,8 @@
   <p>© 2026 あんたがおらな All Rights Reserved.</p>
 </footer>
 
-<!-- Sticky CTA (mobile) -->
 <div class="sticky-cta">
-  <a href="#cta">参加を申し込む →</a>
+  <a href="https://buy.stripe.com/fZu28sgpN72kc8fgkvafS01" target="_blank" rel="noopener noreferrer">参加を申し込む（1,000円）→</a>
 </div>
 
 </body>
