@@ -1778,6 +1778,7 @@ async function loadPersonalSessions(uid) {
     let idCounter = 9000;
     snap.forEach(docSnap => {
       const d = docSnap.data() || {};
+      if (d.hidden) return; // 非表示フラグがある場合はスキップ
       arr.push({
         id: idCounter++,
         docId: docSnap.id,
