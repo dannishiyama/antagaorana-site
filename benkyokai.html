@@ -64,20 +64,22 @@
     }
     .hero h1 {
       font-family: 'Noto Serif JP', serif;
-      font-size: clamp(30px, 4.5vw, 56px);
+      font-size: clamp(28px, 4vw, 52px);
       font-weight: 900; color: #fff; line-height: 1.45;
-      letter-spacing: .04em; margin-bottom: 28px;
+      letter-spacing: .04em; margin-bottom: 16px;
     }
     .hero h1 .accent { color: #a8d4a0; }
-    .hero-sub {
-      font-size: 15px; color: rgba(255,255,255,.78);
-      line-height: 2.1; margin-bottom: 20px;
-    }
-    .hero-tagline {
+    .hero h1 .h1-sub {
+      display: block;
+      font-size: clamp(14px, 1.6vw, 20px);
+      font-weight: 400; color: rgba(255,255,255,.6);
+      letter-spacing: .18em; margin-top: 10px;
       font-family: 'Noto Serif JP', serif;
-      font-size: 13px; color: rgba(255,255,255,.5);
-      letter-spacing: .12em; margin-bottom: 44px;
-      border-left: 2px solid rgba(255,255,255,.2); padding-left: 16px;
+    }
+    .hero-sub {
+      font-size: 14px; color: rgba(255,255,255,.7);
+      line-height: 2.2; margin-bottom: 36px;
+      border-left: 2px solid rgba(168,212,160,.4); padding-left: 16px;
     }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 10px;
@@ -155,21 +157,47 @@
     /* ─── PAIN ─── */
     .pain {
       background: var(--sand);
-      padding: 96px 6%; text-align: center;
+      padding: 96px 6%;
     }
-    .pain-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-      max-width: 900px; margin: 0 auto;
+    .pain-inner {
+      max-width: 1020px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
     }
-    .pain-card {
-      background: #fff; border-radius: 16px;
-      padding: 28px 22px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.05);
-      text-align: left;
+    .pain-head { position: sticky; top: 80px; }
+    .pain-head-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 900; color: var(--gd);
+      line-height: 1.55; margin-bottom: 20px;
     }
-    .pain-icon { font-size: 26px; margin-bottom: 12px; }
-    .pain-card p { font-size: 13px; color: var(--tm); line-height: 1.9; }
-    .pain-card strong { color: var(--gd); font-weight: 700; }
+    .pain-head-note {
+      font-size: 13px; color: var(--tm); line-height: 2.1;
+    }
+    .pain-lines { }
+    .pain-line {
+      border-top: 1px solid rgba(92,122,90,.2);
+      padding: 22px 0;
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(14px, 1.5vw, 16px);
+      color: #2a2a2a; line-height: 1.9;
+    }
+    .pain-line:last-child { border-bottom: 1px solid rgba(92,122,90,.2); }
+    .pain-line-num {
+      display: block; font-size: 10px; font-weight: 700; letter-spacing: .2em;
+      color: var(--g); margin-bottom: 6px;
+    }
+    .pain-closing {
+      margin-top: 36px;
+      font-size: 14px; color: var(--gd); line-height: 1.9;
+      padding: 20px 24px;
+      background: rgba(92,122,90,.08);
+      border-left: 3px solid var(--g);
+      border-radius: 0 8px 8px 0;
+    }
+    @media (max-width: 760px) {
+      .pain-inner { grid-template-columns: 1fr; gap: 40px; }
+      .pain-head { position: static; }
+    }
 
     /* ─── SPEC ─── */
     .spec-section { padding: 96px 6%; background: #fff; }
@@ -406,14 +434,14 @@
     </div>
     <p class="hero-eyebrow">あんたがおらな｜保護者向け勉強会</p>
     <h1>
-      <span class="accent">共育ゼミ</span><br>
-      子どもと一緒に、<br>親も育てていく。
+      「<span class="accent">共育ゼミ</span>」<br>
+      親も育っていく。<br>
+      <span class="h1-sub">——それが、本当の教育。</span>
     </h1>
     <p class="hero-sub">
-      子育てのことを、一緒に学び、一緒に考える時間。<br>
-      大久保俊輝が月1回・限定20名でじっくり向き合います。
+      保護者の味方であり続けるために。<br>
+      大久保俊輝が月1回・限定20名で、じっくり向き合います。
     </p>
-    <p class="hero-tagline">— 子どもの人生に、味方であり続けるために。</p>
     <a href="https://buy.stripe.com/fZu28sgpN72kc8fgkvafS01" class="btn-primary" target="_blank" rel="noopener noreferrer">
       参加を申し込む →
     </a>
@@ -441,36 +469,41 @@
 
 <!-- ══════════════════════════ PAIN ══════════════════════════ -->
 <section class="pain">
-  <p class="section-label">PARENT'S WORRIES</p>
-  <h2 class="section-title">こんな気持ち、ありませんか？</h2>
-  <p class="section-lead">
-    一人で抱え込んでいませんか。<br>
-    周りに相談しにくい、正解がわからない——そんな方のための場所です。
-  </p>
-  <div class="pain-grid">
-    <div class="pain-card">
-      <div class="pain-icon">😔</div>
-      <p><strong>子どもが学校に行けない</strong>のに、どう声をかければいいかわからない。</p>
+  <div class="pain-inner">
+    <div class="pain-head">
+      <p class="section-label">こんなこと、ありませんか</p>
+      <h2 class="pain-head-title">一人で<br>抱えていませんか。</h2>
+      <p class="pain-head-note">
+        周りに話しにくい。正解がわからない。<br>
+        そんな保護者のための場所です。
+      </p>
     </div>
-    <div class="pain-card">
-      <div class="pain-icon">🏠</div>
-      <p>部屋に閉じこもりがちで、<strong>このまま引きこもりになってしまうのでは</strong>と不安が続いている。</p>
-    </div>
-    <div class="pain-card">
-      <div class="pain-icon">😢</div>
-      <p>叱っても怒っても変わらない。<strong>子どもへの接し方</strong>が根本的に間違っているのかも…。</p>
-    </div>
-    <div class="pain-card">
-      <div class="pain-icon">🤐</div>
-      <p>周りに話すと「甘やかしている」と言われそうで、<strong>ずっと一人で抱え込んでいる</strong>。</p>
-    </div>
-    <div class="pain-card">
-      <div class="pain-icon">📚</div>
-      <p>ネットで調べても情報が多すぎて、<strong>何を信じればいいか</strong>わからなくなってきた。</p>
-    </div>
-    <div class="pain-card">
-      <div class="pain-icon">🌱</div>
-      <p>講演会で感動したけれど、<strong>具体的に何から始めればいいか</strong>を誰かに聞きたかった。</p>
+    <div>
+      <div class="pain-lines">
+        <div class="pain-line">
+          <span class="pain-line-num">01</span>
+          子どもが学校に行けない。どう声をかければいいかわからない。
+        </div>
+        <div class="pain-line">
+          <span class="pain-line-num">02</span>
+          「甘やかしている」と言われそうで、誰にも相談できずにいる。
+        </div>
+        <div class="pain-line">
+          <span class="pain-line-num">03</span>
+          叱っても変わらない。接し方が根本的に間違っているのかもしれない。
+        </div>
+        <div class="pain-line">
+          <span class="pain-line-num">04</span>
+          ネットの情報が多すぎて、何を信じればいいかわからなくなってきた。
+        </div>
+        <div class="pain-line">
+          <span class="pain-line-num">05</span>
+          講演会で感動した。でも、明日から何をすればいいかわからない。
+        </div>
+      </div>
+      <p class="pain-closing">
+        正解を教える場ではありません。<br><strong>一緒に考える場です。</strong>
+      </p>
     </div>
   </div>
 </section>
