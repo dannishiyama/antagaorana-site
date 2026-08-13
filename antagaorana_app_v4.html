@@ -377,13 +377,21 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .ap-prog{width:100%;height:4px;border-radius:2px;background:rgba(42,74,62,.15);appearance:none;cursor:pointer;outline:none}
 .ap-prog::-webkit-slider-thumb{appearance:none;width:12px;height:12px;border-radius:50%;background:var(--green);cursor:pointer}
 .ap-times{display:flex;justify-content:space-between;font-size:10px;color:var(--text-soft);margin-top:3px}
-.ap-btns{display:flex;gap:6px}
+.ap-btns{display:flex;gap:6px;flex-wrap:wrap}
 .ap-btn{
   flex:1;padding:7px 0;border:1.5px solid rgba(42,74,62,.18);border-radius:8px;
   background:none;font-size:11px;font-family:inherit;color:var(--green);cursor:pointer;
   font-weight:500;transition:background .15s;
 }
 .ap-btn:active{background:rgba(42,74,62,.07)}
+.ap-speed{min-width:42px;font-weight:600;letter-spacing:.02em}
+.sess-summary{font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:12px;padding:10px 12px;background:rgba(42,74,62,.06);border-left:3px solid var(--green);border-radius:0 8px 8px 0}
+.chapter-list-v2{margin-bottom:12px}
+.chapter-list-label{font-size:11px;font-weight:700;color:var(--text-soft);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.chapter-item-v2{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:none;background:rgba(42,74,62,.05);border-radius:8px;margin-bottom:5px;cursor:pointer;text-align:left;transition:background .15s}
+.chapter-item-v2:active{background:rgba(42,74,62,.14)}
+.chapter-time-v2{font-size:11px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;min-width:36px}
+.chapter-title-v2{font-size:13px;color:var(--text);line-height:1.4}
 
 /* ═══════════════════════════
    PROFILE
@@ -1816,7 +1824,7 @@ async function loadPersonalSessions(uid) {
   const el = document.getElementById('st-personal');
   if (!el) return;
   try {
-    const snap = await db.collection('users').doc(uid).collection('sessions').get();
+    const snap = await db.collection('users').doc(uid).collection('sessions').get({ source: 'server' });
     if (snap.empty) {
       el.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッション音声が登録されていません。<br>セッション後に運営から追加されます。</div>';
       document.getElementById('statSess').textContent = '0';
@@ -1877,6 +1885,19 @@ function renderPersonalSessions(sessions) {
         const sec = String(Math.floor(audioEl.duration % 60)).padStart(2, '0');
         const durEl = document.getElementById('realdur-' + s.id);
         if (durEl) durEl.textContent = m + ':' + sec;
+        // localStorage から再生位置を復元
+        const saved = localStorage.getItem('sess_pos_' + s.docId);
+        if (saved && parseFloat(saved) > 0) {
+          audioEl.currentTime = parseFloat(saved);
+          const pct = (audioEl.currentTime / audioEl.duration) * 100;
+          const progEl = document.getElementById('prog-' + s.id);
+          const curEl  = document.getElementById('cur-' + s.id);
+          if (progEl) progEl.value = pct;
+          if (curEl) {
+            const c = Math.floor(audioEl.currentTime);
+            curEl.textContent = Math.floor(c/60) + ':' + String(c%60).padStart(2,'0');
+          }
+        }
       });
       audioEl.addEventListener('timeupdate', () => {
         if (!audioEl.duration) return;
@@ -1888,6 +1909,10 @@ function renderPersonalSessions(sessions) {
           const c = Math.floor(audioEl.currentTime);
           curEl.textContent = Math.floor(c/60) + ':' + String(c%60).padStart(2,'0');
         }
+        // 再生位置をlocalStorageに保存（5秒ごと）
+        if (Math.floor(audioEl.currentTime) % 5 === 0) {
+          localStorage.setItem('sess_pos_' + s.docId, audioEl.currentTime);
+        }
       });
       audioEl.addEventListener('ended', () => {
         const btn = document.getElementById('play-' + s.id);
@@ -1898,34 +1923,47 @@ function renderPersonalSessions(sessions) {
   });
 }
 
+function formatSessionDate(dateStr) {
+  if (!dateStr) return '';
+  const m = dateStr.match(/^(\d{4})[^\d](\d{1,2})[^\d](\d{1,2})/);
+  if (!m) return dateStr;
+  return `${m[1]}年${parseInt(m[2])}月${parseInt(m[3])}日`;
+}
+
+function formatSessionTitle(s) {
+  // orderフィールドがある場合は「人間力育成プログラム 第N回」形式に
+  const n = typeof s.order === 'number' ? s.order : parseInt(s.order);
+  if (n && n < 900) return `人間力育成プログラム 第${n}回`;
+  // titleから「第N回」を抽出
+  const m = (s.title || '').match(/第(\d+)回/);
+  if (m) return `人間力育成プログラム 第${m[1]}回`;
+  return s.title || 'セッション';
+}
+
 function buildSessionCardHTML(s, isReal) {
   const hasChapters = isReal && Array.isArray(s.chapters) && s.chapters.length > 0;
   const chaptersHTML = hasChapters ? `
-    <div class="chapter-list" id="chapters-${s.id}">
-      <div class="chapter-header" onclick="toggleChapters(${s.id})">
-        <span>📑 チャプター（${s.chapters.length}件）</span>
-        <span class="chapter-toggle-icon" id="ctoggle-${s.id}">▼</span>
-      </div>
-      <div class="chapter-items" id="citems-${s.id}" style="display:none">
-        ${s.chapters.map((c, i) => `
-          <div class="chapter-item" onclick="seekToChapter(${s.id}, ${c.time})">
-            <span class="chapter-time">${formatChapterTime(c.time)}</span>
-            <span class="chapter-title">${c.title || c.label || ''}</span>
-          </div>
-        `).join('')}
-      </div>
+    <div class="chapter-list-v2">
+      <div class="chapter-list-label">📑 チャプター</div>
+      ${s.chapters.map((c, i) => `
+        <button class="chapter-item-v2" onclick="seekToChapter(${s.id}, ${c.time})">
+          <span class="chapter-time-v2">${formatChapterTime(c.time)}</span>
+          <span class="chapter-title-v2">${c.title || c.label || ''}</span>
+        </button>
+      `).join('')}
     </div>` : '';
+  const displayTitle = formatSessionTitle(s);
+  const displayDate  = formatSessionDate(s.date);
   return `
   <div class="session-card" data-docid="${s.docId || ''}">
     <div class="sess-top">
-      <div class="sess-thumb"><div class="sess-thumb-icon">${s.tag.split('—')[0].trim()}</div></div>
+      <div class="sess-thumb"><div class="sess-thumb-icon">🎧</div></div>
       <div class="sess-info">
-        <div class="sess-title">${s.title}</div>
-        <div class="sess-meta">${s.date}${s.date ? ' ／ ' : ''}<span id="realdur-${s.id}">${s.dur}</span></div>
-        <span class="sess-tag">${s.tag}</span>
+        <div class="sess-title">${displayTitle}</div>
+        <div class="sess-meta">${displayDate}${displayDate ? ' ／ ' : ''}<span id="realdur-${s.id}">${s.dur}</span></div>
       </div>
     </div>
-    ${s.desc ? `<div class="sess-desc">${s.desc}</div>` : ''}
+    ${s.desc ? `<div class="sess-summary">💬 ${s.desc}</div>` : ''}
     ${chaptersHTML}
     <div class="audio-player">
       <div class="ap-row">
@@ -1937,9 +1975,9 @@ function buildSessionCardHTML(s, isReal) {
         </div>
       </div>
       <div class="ap-btns">
-        <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒戻る</button>
-        <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒進む ▶▶</button>
-        <button class="ap-btn" onclick="alert('メモ機能（準備中）')">メモを取る</button>
+        <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒</button>
+        <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒 ▶▶</button>
+        <button class="ap-btn ap-speed" id="speed-${s.id}" onclick="window.cycleSpeed(${s.id})">1.0x</button>
       </div>
     </div>
   </div>`;
@@ -1959,6 +1997,20 @@ function toggleChapters(id) {
   items.style.display = open ? 'none' : 'block';
   if (icon) icon.textContent = open ? '▼' : '▲';
 }
+
+const SPEED_STEPS = [1.0, 1.25, 1.5, 2.0, 0.75];
+window.cycleSpeed = function(id) {
+  const audioEl = audioElements[id];
+  const btn = document.getElementById('speed-' + id);
+  if (!audioEl || !btn) return;
+  const cur = audioEl.playbackRate || 1.0;
+  const idx = SPEED_STEPS.findIndex(s => Math.abs(s - cur) < 0.01);
+  const next = SPEED_STEPS[(idx + 1) % SPEED_STEPS.length];
+  audioEl.playbackRate = next;
+  btn.textContent = next.toFixed(2).replace('.00','').replace(/\.(\d)0$/,'.$1') + 'x';
+  btn.style.color = next !== 1.0 ? 'var(--green)' : '';
+  btn.style.fontWeight = next !== 1.0 ? '700' : '';
+};
 
 function seekToChapter(id, timeSec) {
   const audioEl = audioElements[id];
