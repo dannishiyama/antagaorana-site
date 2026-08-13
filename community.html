@@ -371,6 +371,35 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
   font-weight:500;transition:background .15s;
 }
 .ap-btn:active{background:rgba(42,74,62,.07)}
+.ap-speed{color:var(--text-soft);min-width:36px}
+
+/* セッション要約 */
+.sess-summary{
+  font-size:13px;line-height:1.7;color:var(--text-soft);
+  padding:10px 12px;background:var(--green-pale);border-radius:8px;
+  margin-bottom:10px;border-left:3px solid var(--green);
+}
+
+/* チャプター v2 */
+.chapter-list-v2{
+  display:flex;flex-direction:column;gap:4px;margin-bottom:10px;
+}
+.chapter-item-v2{
+  display:flex;align-items:center;gap:10px;
+  background:var(--white);border:1px solid rgba(42,74,62,.1);
+  border-radius:8px;padding:8px 12px;cursor:pointer;
+  font-family:inherit;font-size:13px;text-align:left;
+  transition:background .14s;width:100%;
+}
+.chapter-item-v2:active{background:var(--green-pale)}
+.chapter-num{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--green);color:var(--ivory);
+  font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.chapter-item-label{flex:1;color:var(--text);font-weight:500}
+.chapter-item-time{font-size:11px;color:var(--text-soft);font-variant-numeric:tabular-nums;flex-shrink:0}
 
 /* ═══════════════════════════
    PROFILE
@@ -1739,7 +1768,7 @@ async function loadPersonalSessions(uid) {
   try {
     const snap = await db.collection('users').doc(uid).collection('sessions')
       .orderBy('createdAt', 'desc')
-      .get();
+      .get({ source: 'server' });
     if (snap.empty) {
       el.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--text-soft);font-size:13px;line-height:2">まだセッション音声が登録されていません。<br>セッション後に運営から追加されます。</div>';
       document.getElementById('statSess').textContent = '0';
@@ -1753,11 +1782,13 @@ async function loadPersonalSessions(uid) {
         id: idCounter++,
         docId: docSnap.id,
         title: d.title || 'セッション',
+        order: d.order,
         date: d.date || '',
         dur: d.dur || '—',
         tag: d.tag || 'マイセッション',
         desc: d.desc || '',
         url: d.url || '',
+        chapters: d.chapters || [],
       });
     });
     personalSessions = arr;
@@ -1793,6 +1824,9 @@ function renderPersonalSessions(sessions) {
         const sec = String(Math.floor(audioEl.duration % 60)).padStart(2, '0');
         const durEl = document.getElementById('realdur-' + s.id);
         if (durEl) durEl.textContent = m + ':' + sec;
+        // 再生位置を復元
+        const saved = localStorage.getItem('sess_pos_' + s.docId);
+        if (saved) { audioEl.currentTime = parseFloat(saved); }
       });
       audioEl.addEventListener('timeupdate', () => {
         if (!audioEl.duration) return;
@@ -1804,6 +1838,10 @@ function renderPersonalSessions(sessions) {
           const c = Math.floor(audioEl.currentTime);
           curEl.textContent = Math.floor(c/60) + ':' + String(c%60).padStart(2,'0');
         }
+        // 5秒ごとに再生位置を保存
+        if (Math.floor(audioEl.currentTime) % 5 === 0) {
+          localStorage.setItem('sess_pos_' + s.docId, audioEl.currentTime);
+        }
       });
       audioEl.addEventListener('ended', () => {
         const btn = document.getElementById('play-' + s.id);
@@ -1814,34 +1852,59 @@ function renderPersonalSessions(sessions) {
   });
 }
 
+function formatSessionDate(dateStr) {
+  if (!dateStr) return '';
+  const m = dateStr.match(/^(\d{4})[^\d](\d{1,2})[^\d](\d{1,2})/);
+  if (!m) return dateStr;
+  return `${m[1]}年${parseInt(m[2])}月${parseInt(m[3])}日`;
+}
+
+function formatSessionTitle(s) {
+  const n = typeof s.order === 'number' ? s.order : parseInt(s.order);
+  if (n && n < 900) return `人間力育成プログラム 第${n}回`;
+  const m = (s.title || '').match(/第(\d+)回/);
+  if (m) return `人間力育成プログラム 第${m[1]}回`;
+  return s.title || 'セッション';
+}
+
+const SPEED_STEPS = [1.0, 1.25, 1.5, 2.0, 0.75];
+window.cycleSpeed = function(id) {
+  const audioEl = audioElements[id];
+  const btn = document.getElementById('speed-' + id);
+  if (!audioEl || !btn) return;
+  const cur = audioEl.playbackRate || 1.0;
+  const idx = SPEED_STEPS.findIndex(s => Math.abs(s - cur) < 0.01);
+  const next = SPEED_STEPS[(idx + 1) % SPEED_STEPS.length];
+  audioEl.playbackRate = next;
+  btn.textContent = next.toFixed(2).replace('.00','').replace(/\.(\d)0$/,'.$1') + 'x';
+  btn.style.color = next !== 1.0 ? 'var(--green)' : '';
+  btn.style.fontWeight = next !== 1.0 ? '700' : '';
+};
+
 function buildSessionCardHTML(s, isReal) {
   const hasChapters = isReal && Array.isArray(s.chapters) && s.chapters.length > 0;
   const chaptersHTML = hasChapters ? `
-    <div class="chapter-list" id="chapters-${s.id}">
-      <div class="chapter-header" onclick="toggleChapters(${s.id})">
-        <span>📑 チャプター（${s.chapters.length}件）</span>
-        <span class="chapter-toggle-icon" id="ctoggle-${s.id}">▼</span>
-      </div>
-      <div class="chapter-items" id="citems-${s.id}" style="display:none">
-        ${s.chapters.map((c, i) => `
-          <div class="chapter-item" onclick="seekToChapter(${s.id}, ${c.time})">
-            <span class="chapter-time">${formatChapterTime(c.time)}</span>
-            <span class="chapter-title">${c.title}</span>
-          </div>
-        `).join('')}
-      </div>
+    <div class="chapter-list-v2" id="chapters-${s.id}">
+      ${s.chapters.map((c, i) => `
+        <button class="chapter-item-v2" onclick="seekToChapter(${s.id}, ${c.time || c.timeSec || 0})">
+          <span class="chapter-num">${i + 1}</span>
+          <span class="chapter-item-label">${c.label || c.title || ''}</span>
+          <span class="chapter-item-time">${formatChapterTime(c.time || c.timeSec || 0)}</span>
+        </button>
+      `).join('')}
     </div>` : '';
+  const displayTitle = formatSessionTitle(s);
+  const displayDate = formatSessionDate(s.date);
   return `
   <div class="session-card" data-docid="${s.docId || ''}">
     <div class="sess-top">
-      <div class="sess-thumb"><div class="sess-thumb-icon">${s.tag.split('—')[0].trim()}</div></div>
+      <div class="sess-thumb"><div class="sess-thumb-icon">🎙</div></div>
       <div class="sess-info">
-        <div class="sess-title">${s.title}</div>
-        <div class="sess-meta">${s.date}${s.date ? ' ／ ' : ''}<span id="realdur-${s.id}">${s.dur}</span></div>
-        <span class="sess-tag">${s.tag}</span>
+        <div class="sess-title">${displayTitle}</div>
+        <div class="sess-meta">${displayDate}${displayDate ? ' ／ ' : ''}<span id="realdur-${s.id}">${s.dur}</span></div>
       </div>
     </div>
-    ${s.desc ? `<div class="sess-desc">${s.desc}</div>` : ''}
+    ${s.desc ? `<div class="sess-summary">${s.desc}</div>` : ''}
     ${chaptersHTML}
     <div class="audio-player">
       <div class="ap-row">
@@ -1853,9 +1916,9 @@ function buildSessionCardHTML(s, isReal) {
         </div>
       </div>
       <div class="ap-btns">
-        <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒戻る</button>
-        <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒進む ▶▶</button>
-        <button class="ap-btn" onclick="alert('メモ機能（準備中）')">メモを取る</button>
+        <button class="ap-btn" onclick="window.skipBack(${s.id})">◀◀ 15秒</button>
+        <button class="ap-btn" onclick="window.skipFwd(${s.id})">15秒 ▶▶</button>
+        <button class="ap-btn ap-speed" id="speed-${s.id}" onclick="window.cycleSpeed(${s.id})">1x</button>
       </div>
     </div>
   </div>`;
