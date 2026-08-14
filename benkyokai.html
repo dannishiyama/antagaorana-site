@@ -395,6 +395,27 @@
     footer a { color: rgba(255,255,255,.55); }
     footer a:hover { color: #fff; }
 
+    /* ─── CTA FLOW ─── */
+    .cta-flow {
+      margin-top: 48px; display: inline-flex; flex-direction: column;
+      align-items: center; gap: 4px;
+    }
+    .cta-flow-item {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px; padding: 14px 24px;
+      font-size: 14px; color: rgba(255,255,255,.85);
+      min-width: 340px; text-align: left;
+    }
+    .cta-flow-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 12px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .cta-flow-arrow { font-size: 16px; color: rgba(255,255,255,.3); }
+
     /* ─── STICKY (mobile) ─── */
     .sticky-cta {
       display: none;
@@ -471,7 +492,7 @@
 <section class="pain">
   <div class="pain-inner">
     <div class="pain-head">
-      <p class="section-label">こんなこと、ありませんか</p>
+      <p class="section-label" style="letter-spacing:.1em;">こんなこと、ありませんか</p>
       <h2 class="pain-head-title">一人で<br>抱えていませんか。</h2>
       <p class="pain-head-note">
         周りに話しにくい。正解がわからない。<br>
@@ -560,7 +581,7 @@
 <!-- ══════════════════════════ PROFILE ══════════════════════════ -->
 <section class="profile">
   <div class="profile-inner">
-    <p class="section-label" style="color:rgba(255,255,255,.45);">FACILITATOR</p>
+    <p class="section-label" style="color:rgba(255,255,255,.45);">ファシリテーター</p>
     <img src="./lp-assets/okubo-portrait.jpg" alt="大久保俊輝" class="profile-img">
     <p class="profile-name">大久保 俊輝</p>
     <p class="profile-role">
@@ -585,54 +606,15 @@
         <div class="stat-label">教員・校長経験</div>
       </div>
       <div class="stat">
-        <div class="stat-num">全国</div>
-        <div class="stat-label">講演・授業実績</div>
+        <div class="stat-num">47都道府県</div>
+        <div class="stat-label">講演実績</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════ BENEFITS ══════════════════════════ -->
-<section class="benefits">
-  <p class="section-label">WHAT YOU GET</p>
-  <h2 class="section-title">参加することで得られること</h2>
-  <div class="benefit-grid">
-    <div class="benefit-card">
-      <p class="benefit-num">01</p>
-      <p class="benefit-title">「正解」より<br>「我が子への答え」</p>
-      <p class="benefit-desc">一般論ではなく、大久保が直接あなたの状況と向き合い、今の我が子に合った関わり方を一緒に考えます。</p>
-    </div>
-    <div class="benefit-card">
-      <p class="benefit-num">02</p>
-      <p class="benefit-title">同じ悩みを持つ<br>保護者との繋がり</p>
-      <p class="benefit-desc">「同じ状況の人がいた」という安心感が、孤独な子育ての大きな支えになります。参加者限定だからこそ話せることがあります。</p>
-    </div>
-    <div class="benefit-card">
-      <p class="benefit-num">03</p>
-      <p class="benefit-title">明日から変わる<br>声かけのヒント</p>
-      <p class="benefit-desc">「どう話せばいいかわからない」状態から、明日から試せる具体的な接し方を持ち帰れる場を目指しています。</p>
-    </div>
-    <div class="benefit-card">
-      <p class="benefit-num">04</p>
-      <p class="benefit-title">月1回、立ち止まる<br>時間をつくる</p>
-      <p class="benefit-desc">日々の子育てに追われていると自分を振り返る余裕がなくなります。月1回の場が「親としての軸」を保つ支えになります。</p>
-    </div>
-    <div class="benefit-card">
-      <p class="benefit-num">05</p>
-      <p class="benefit-title">講演会の続きを<br>少人数で聞ける</p>
-      <p class="benefit-desc">大きな会場では聞けない、個別の状況に踏み込んだ話ができます。限定20名だからこそ実現する対話の場です。</p>
-    </div>
-    <div class="benefit-card">
-      <p class="benefit-num">06</p>
-      <p class="benefit-title">「待つ・引き出す」<br>親の力を育てる</p>
-      <p class="benefit-desc">動かそうとするから動かない。大久保の30年の経験から生まれた、子どもの力を引き出す親の関わり方を学べます。</p>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════ VOICE ══════════════════════════ -->
 <section class="voices">
-  <p class="section-label">PARTICIPANT VOICES</p>
   <h2 class="section-title">参加した方の声</h2>
   <div class="voice-grid">
     <div class="voice-card">
@@ -650,42 +632,6 @@
   </div>
 </section>
 
-<!-- ══════════════════════════ FLOW ══════════════════════════ -->
-<section class="flow">
-  <p class="section-label">HOW TO JOIN</p>
-  <h2 class="section-title">参加までの流れ</h2>
-  <div class="flow-steps">
-    <div class="flow-step">
-      <div class="flow-left"><div class="step-num">1</div><div class="step-line"></div></div>
-      <div class="flow-body">
-        <p class="flow-title">このページから申し込む</p>
-        <p class="flow-desc">「参加を申し込む」ボタンから決済ページへ。クレジットカードでお手続きいただけます（参加費：1,000円）。</p>
-      </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-left"><div class="step-num">2</div><div class="step-line"></div></div>
-      <div class="flow-body">
-        <p class="flow-title">開催案内メールが届く</p>
-        <p class="flow-desc">お申し込みいただいた方に、開催日・Zoomリンクをメールでお送りします。</p>
-      </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-left"><div class="step-num">3</div><div class="step-line"></div></div>
-      <div class="flow-body">
-        <p class="flow-title">当日、Zoomに参加する</p>
-        <p class="flow-desc">スマートフォン・パソコンどちらからでも参加できます。カメラのオンオフはご自由に。</p>
-      </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-left"><div class="step-num">4</div></div>
-      <div class="flow-body">
-        <p class="flow-title">翌月も継続して参加できる</p>
-        <p class="flow-desc">毎月開催しています。一度きりの参加もOK。継続することで子育ての変化を実感できます。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════════════════════ CTA ══════════════════════════ -->
 <section class="cta" id="cta">
   <h2>一人で悩まなくていい。<br>まず、ここから始めてみてください。</h2>
@@ -696,7 +642,7 @@
   <div class="price-card">
     <p class="price-label">参 加 費</p>
     <p class="price-num">¥1,000<span class="price-unit">/ 1回</span></p>
-    <p class="price-note">Zoom開催 ／ 次回：8月30日（日）20:00〜21:30</p>
+    <p class="price-note">Google Meet開催 ／ 次回：8月30日（日）20:00〜21:30</p>
     <p class="price-seats">▶ 限定 20 名様</p>
   </div>
   <br>
@@ -704,35 +650,34 @@
     参加を申し込む →
   </a>
   <p class="cta-note">※ お支払いはクレジットカードにてお手続きいただけます</p>
+
+  <div class="cta-flow">
+    <div class="cta-flow-item"><span class="cta-flow-num">1</span>このページで申し込む（クレカ決済・1分）</div>
+    <div class="cta-flow-arrow">↓</div>
+    <div class="cta-flow-item"><span class="cta-flow-num">2</span>開催案内メールが届く（Google Meetリンク含む）</div>
+    <div class="cta-flow-arrow">↓</div>
+    <div class="cta-flow-item"><span class="cta-flow-num">3</span>8月30日（日）20時、当日参加するだけ</div>
+  </div>
 </section>
 
 <!-- ══════════════════════════ FAQ ══════════════════════════ -->
 <section class="faq">
-  <p class="section-label">FAQ</p>
   <h2 class="section-title">よくある質問</h2>
   <div class="faq-list">
     <div class="faq-item">
-      <p class="faq-q"><span class="faq-q-mark">Q</span>顔出しは必須ですか？</p>
-      <p class="faq-a">カメラのオンオフはご自由です。お気持ちの負担なくご参加ください。</p>
-    </div>
-    <div class="faq-item">
-      <p class="faq-q"><span class="faq-q-mark">Q</span>発言が苦手でも大丈夫ですか？</p>
-      <p class="faq-a">聞くだけの参加も歓迎しています。話したいときだけ、お話しいただければ十分です。</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>顔出し・発言は必須ですか？</p>
+      <p class="faq-a">いずれも任意です。カメラオフ・聞くだけの参加も歓迎しています。負担なくご参加ください。</p>
     </div>
     <div class="faq-item">
       <p class="faq-q"><span class="faq-q-mark">Q</span>一回だけの参加も可能ですか？</p>
-      <p class="faq-a">はい、一回限りの参加も可能です。継続参加の義務はありません。</p>
-    </div>
-    <div class="faq-item">
-      <p class="faq-q"><span class="faq-q-mark">Q</span>子どもの年齢に制限はありますか？</p>
-      <p class="faq-a">特に制限はありません。幼児から高校生・大学生の子を持つ保護者・祖父母の方まで幅広くご参加いただけます。</p>
+      <p class="faq-a">はい。継続参加の義務はありません。一度きりの参加も、毎月の継続もどちらも自由です。</p>
     </div>
     <div class="faq-item">
       <p class="faq-q"><span class="faq-q-mark">Q</span>父親・祖父母でも参加できますか？</p>
-      <p class="faq-a">もちろんです。対象は保護者・祖父母の方どなたでもご参加いただけます。</p>
+      <p class="faq-a">もちろんです。保護者・祖父母の方どなたでもご参加いただけます。子どもの年齢制限もありません。</p>
     </div>
     <div class="faq-item">
-      <p class="faq-q"><span class="faq-q-mark">Q</span>大久保先生に直接相談できますか？</p>
+      <p class="faq-q"><span class="faq-q-mark">Q</span>大久保に直接相談できますか？</p>
       <p class="faq-a">勉強会の中でご質問・ご相談の時間を設けています。全員に回答できない場合もありますが、できる限り向き合います。</p>
     </div>
   </div>
