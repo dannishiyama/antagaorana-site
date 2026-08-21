@@ -945,30 +945,23 @@ details[open] .t-more{opacity:.74}
 .news{background:#f4f1ea}
 .news .slead{max-width:46em;line-height:1.95}
 .news-grid{margin-top:38px}
-.news-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.news-card{
-  background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:18px;overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.06);
-  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
-  will-change:transform;
+.news-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.news-item{
+  background:var(--sand);border:1px solid rgba(224,213,200,.82);border-radius:16px;padding:15px 17px;
+  transition:transform .26s ease,box-shadow .26s ease,border-color .26s ease;
 }
-.news-card:hover{transform:translateY(-3px);box-shadow:0 14px 38px rgba(0,0,0,.075);border-color:rgba(0,0,0,.08)}
-.news-thumb{aspect-ratio:16/10;overflow:hidden;background:#1a3018}
-.news-thumb img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;transform:scale(1.01)}
-.news-body{padding:14px 16px 16px}
-.news-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.news-item:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(47,58,47,.1);border-color:rgba(208,196,180,.95)}
+.news-tags{display:flex;flex-wrap:wrap;gap:6px 0;align-items:center;margin-bottom:7px}
 .news-tags .k{
-  display:inline-flex;align-items:center;
-  font-size:10px;font-weight:900;letter-spacing:.12em;
-  color:rgba(58,90,56,.92);background:rgba(92,122,90,.11);border:1px solid rgba(92,122,90,.18);
-  padding:4px 9px;border-radius:999px;
+  display:inline;font-size:10px;font-weight:800;letter-spacing:.14em;color:rgba(70,98,70,.85);margin:0;padding:0;background:none;
 }
-.news-card .t{font-family:'Noto Serif JP',serif;font-size:14px;font-weight:900;color:var(--gd);line-height:1.6;letter-spacing:.01em}
-.news-card .m{font-size:12px;color:rgba(74,74,74,.72);margin-top:8px;line-height:1.7}
-.news-more{margin-top:20px;text-align:right}
+.news-tags .k + .k{margin-left:10px;padding-left:10px;border-left:1px solid rgba(70,98,70,.22)}
+.news-item .t{font-size:14px;font-weight:900;color:var(--gd);line-height:1.62;letter-spacing:.01em}
+.news-item .m{font-size:12px;color:var(--ts);margin-top:7px;line-height:1.65}
+.news-more{margin-top:12px}
 .news-more a{font-size:13px;font-weight:800;color:var(--g);border-bottom:1px solid rgba(70,98,70,.35);padding-bottom:2px}
 @media (prefers-reduced-motion:reduce){
-  .news-card:hover{transform:none}
+  .news-item:hover{transform:none}
 }
 
 .faq{background:#f7f3ec}
@@ -1165,7 +1158,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     justify-content:center;
     align-self:stretch;
   }
-  .sv-grid,.kunxun-grid,.t-grid{grid-template-columns:1fr}
+  .sv-grid,.kunxun-grid,.t-grid,.news-grid{grid-template-columns:1fr}
   .news-list{grid-template-columns:1fr}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .message{padding:110px 5%}
@@ -1290,7 +1283,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="hero-content">
     <div class="hero-visual">
       <div class="hero-mark" aria-label="ヒーローの書とメッセージ">
-        <div class="hero-mark-top">教育支援団体</div>
+        <div class="hero-mark-top">生きる力を育む家庭教師</div>
         <div class="hero-logo-block">
           <div class="hero-logo-frame">
             <img class="hero-logo-img logo-calligraphy" src="./lp-assets/hero-logo-antagaorana.png?v=20260516a" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260516a 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260516a 2x" width="387" height="229" alt="あんたがおらな" decoding="async" fetchpriority="high">
@@ -1490,7 +1483,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="msg-people">
         <div class="msg-person">
           <a class="msg-photo-link" href="./okubo.html" aria-label="大久保 俊輝のメッセージへ">
-          <div class="msg-photo-wrap">
+          <div class="msg-photo-wrap placeholder">
             <img src="./lp-assets/okubo-portrait.jpg?v=20260508a" alt="大久保 俊輝" loading="lazy" decoding="async" onerror="this.style.display='none'; this.closest('.msg-photo-wrap').classList.add('placeholder');">
           </div>
           </a>
@@ -1499,9 +1492,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <div class="msg-tags">
             <span class="msg-tag">元校長</span>
             <span class="msg-tag">元大学教授</span>
-            <span class="msg-tag">スクールカウンセラー指導員</span>
-            <span class="msg-tag">不登校支援</span>
-            <span class="msg-tag">発達障害支援</span>
+            <span class="msg-tag">教育相談三万件</span>
+            <span class="msg-tag">心理カウンセラー指導員</span>
           </div>
           <a class="msg-message-link" href="./okubo.html"><span class="sub">メッセージ</span>弱さと向き合う勇気が、変化の始まり。<span class="arrow">→</span></a>
         </div>
@@ -1674,83 +1666,38 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <p class="slead">速報ではなく、現場の空気や言葉の背景を少しずつ残すための記録です。メディア掲載、インドでの交流、動画、note まで一覧からたどれます。</p>
     <div class="news-grid">
       <div class="news-list">
-
-        <!-- 0位: 共育ゼミ受付中バナー -->
-        <a class="news-card" href="./benkyokai.html" style="background:linear-gradient(135deg,#2d5430 0%,#3d6a3a 60%,#5c7a5a 100%);border-color:transparent;">
-          <div class="news-thumb" style="background:linear-gradient(135deg,#1c3a1a,#3A5A38);display:flex;align-items:center;justify-content:center;gap:0;">
-            <span style="font-family:'Noto Serif JP',serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:.08em;text-align:center;line-height:1.5;">共育<br>ゼミ</span>
-          </div>
-          <div class="news-body">
-            <div class="news-tags"><span class="k" style="background:#C8602A;color:#fff;border-color:transparent;">▶ 受付中</span><span class="k" style="color:rgba(255,255,255,.7);background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);">保護者向け</span></div>
-            <div class="t" style="color:#fff;">保護者向け共育ゼミ</div>
-            <div class="m" style="color:rgba(255,255,255,.7);">8月30日（日）20:00〜 ／ 限定20名 ／ ¥1,000</div>
-          </div>
-        </a>
-
-        <!-- 1位: 2026.07.28 下北カレッジ -->
-        <a class="news-card" href="./news-shimokita.html">
-          <div class="news-thumb"><img src="./lp-assets/shimokita-building.jpg?v=20260807" alt="下北カレッジ" style="object-position:50% 55%"></div>
-          <div class="news-body">
-            <div class="news-tags"><span class="k">イベント</span><span class="k">登壇</span></div>
-            <div class="t">下北カレッジ「題名のない座談会」に西山が登壇しました</div>
-            <div class="m">テーマ：「教育と営業に共通する、人を動かす本質。」2026.07.28</div>
-          </div>
-        </a>
-
-        <!-- 2位: 2026.07 デリー大学 -->
-        <a class="news-card" href="./news-delhi-univ.html">
-          <div class="news-thumb"><img src="./lp-assets/okubo-delhi-univ.jpg?v=20260807" alt="大久保先生 デリー大学講義"></div>
-          <div class="news-body">
+          <a class="news-item" href="./news-delhi-univ.html">
             <div class="news-tags"><span class="k">INDIA</span><span class="k">講義</span></div>
-            <div class="t">大久保がデリー大学にて2講座の特別講義を行いました</div>
-            <div class="m">教授・大学院生90名、学生140名を対象に登壇。2026.07.06</div>
-          </div>
-        </a>
-
-        <!-- 3位: 2026.03.27 デリー新聞2回目 -->
-        <a class="news-card" href="./news-delhi-2.html">
-          <div class="news-thumb"><img src="./lp-assets/news-04.png?v=20260501" alt="デリー新聞掲載（2回目）" style="object-position:50% 20%"></div>
-          <div class="news-body">
-            <div class="news-tags"><span class="k">MEDIA</span><span class="k">INDIA</span></div>
-            <div class="t">インドのデリー新聞で掲載されました（2回目）</div>
-            <div class="m">折り紙やスポーツを通じて子どもたちと交流した様子が掲載。2026.03.27</div>
-          </div>
-        </a>
-
-        <!-- 4位: 2025.12.13 Note 死生観 -->
-        <a class="news-card" href="https://note.com/dan_antagaorana/n/n13bbd1dc5523" target="_blank" rel="noopener noreferrer">
-          <div class="news-thumb"><img src="./lp-assets/note-header-n13bbd1dc5523.jpg?v=20260809" alt="大切な人がいなくなるとき"></div>
-          <div class="news-body">
-            <div class="news-tags"><span class="k" style="color:rgba(30,140,120,.9);background:rgba(40,180,160,.08);border-color:rgba(40,180,160,.25)">NOTE</span></div>
-            <div class="t">大切な人がいなくなるとき 〜死生観を伝える授業〜</div>
-            <div class="m">西山弾による、教育現場での死生観をめぐる思索の記録。2025.12.13</div>
-          </div>
-        </a>
-
-        <!-- 5位: 2025.12.11 Note 子ども食堂 -->
-        <a class="news-card" href="https://note.com/dan_antagaorana/n/n8d43ce1153f2" target="_blank" rel="noopener noreferrer">
-          <div class="news-thumb"><img src="./lp-assets/note-header-n8d43ce1153f2.jpg?v=20260809" alt="人が最も大切なことは？"></div>
-          <div class="news-body">
-            <div class="news-tags"><span class="k" style="color:rgba(30,140,120,.9);background:rgba(40,180,160,.08);border-color:rgba(40,180,160,.25)">NOTE</span></div>
-            <div class="t">人が最も大切なことは？〜子ども食堂で伝えたメッセージ〜</div>
-            <div class="m">子ども食堂での活動を通じて感じた「人として大切なこと」。2025.12.11</div>
-          </div>
-        </a>
-
-        <!-- 6位: VIEW ALL -->
-        <a class="news-card" href="./news.html">
-          <div class="news-thumb" style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2A4A28,#3A5A38)">
-            <span style="color:rgba(255,255,255,.9);font-size:14px;font-weight:900;letter-spacing:.12em">VIEW ALL →</span>
-          </div>
-          <div class="news-body">
-            <div class="news-tags"><span class="k">ARCHIVE</span></div>
-            <div class="t">すべてのお知らせを見る</div>
-            <div class="m">YouTube動画・デリー新聞掲載・Note記事など全アーカイブ。</div>
-          </div>
-        </a>
-
-      </div>
-      <div class="news-more"><a href="./news.html">お知らせ一覧へ →</a></div>
+            <div class="t">大久保先生がデリー大学にて2講座の特別講義を行いました</div>
+            <div class="m">教授・大学院生90名、学生140名を対象に、共生社会と多文化理解をテーマに登壇。2026.07</div>
+          </a>
+          <a class="news-item" href="./news-shimokita.html">
+            <div class="news-tags"><span class="k">イベント</span><span class="k">登壇</span></div>
+            <div class="t">下北カレッジ「題名のない座談会」に西山が登壇します</div>
+            <div class="m">7月28日（月）20:00〜 ／ 下北カレッジ ／ テーマ：「教育と営業に共通する、人を動かす本質。」参加希望はinfo@antagaorana.comまで。2026.07.28</div>
+          </a>
+          <a class="news-item" href="./news-note.html">
+            <div class="news-tags"><span class="k">NOTE</span></div>
+            <div class="t">西山弾 Note</div>
+            <div class="m">今回ご紹介する記事は、創設者である西山が当団体を立ち上げるに至った思いについてNoteにて綴られたものです。2024.08.13</div>
+          </a>
+          <a class="news-item" href="./news-lotus.html">
+            <div class="news-tags"><span class="k">INDIA</span><span class="k">EDUCATION</span></div>
+            <div class="t">Lotus Free School を訪れて</div>
+            <div class="m">学校での交流の記録。2026</div>
+          </a>
+          <a class="news-item" href="./news-delhi-1.html">
+            <div class="news-tags"><span class="k">INDIA</span><span class="k">MEDIA</span></div>
+            <div class="t">インドのデリー新聞で掲載（1回目）</div>
+            <div class="m">日本の高校生が Lotus Free School を訪れ、子どもたちと交流した様子。2025.03.21</div>
+          </a>
+          <a class="news-item" href="./news-youtube.html">
+            <div class="news-tags"><span class="k">VIDEO</span></div>
+            <div class="t">YouTube 動画の紹介</div>
+            <div class="m">代表の大久保と創設者の西山が、想いや教育観、実体験を台本なしで対談しています。2024.09.13</div>
+          </a>
+        </div>
+        <div class="news-more"><a href="./news.html">ほかの記事（デリー新聞2回目ほか）→</a></div>
     </div>
   </div>
 </section>
@@ -1856,12 +1803,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="cta-inner">
     <h2 class="cta-h">一緒に始めましょう。<br>お子様の可能性を、私たちと拓きませんか。</h2>
     <p class="cta-lead">まずは無料相談から。「もう少し様子を見ようか」と思っているなら、まず話してみてください。<br>「話してよかった」と思っていただける40分を約束します。</p>
-    <!-- 送信: FormSubmit（初回のみ info@ に届く確認メールで有効化が必要） -->
     <div class="cta-form-wrap">
       <form id="contactForm" class="cta-form" action="https://formsubmit.co/info@antagaorana.com" method="POST">
         <input type="hidden" name="_subject" id="formSubject" value="【サイトフォーム】無料相談・お問い合わせ｜あんたがおらな">
         <input type="hidden" name="_next" value="/">
+        <input type="hidden" name="_captcha" value="false">
+        <!-- honeypot -->
         <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
 
         <div>
           <label for="inquiryType">ご相談の種類</label>
@@ -1886,21 +1835,19 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <input id="cf_kana" name="ふりがな" type="text" autocomplete="off">
           </div>
         </div>
-        <div class="cta-form-row2">
-          <div>
-            <label for="cf_gender">性別</label>
-            <input id="cf_gender" name="性別" type="text" placeholder="例：男性／女性／その他">
-          </div>
-          <div>
-            <label for="cf_age">年齢</label>
-            <input id="cf_age" name="年齢" type="text" inputmode="numeric">
-          </div>
-        </div>
-
-        <p class="cta-form-note" style="margin:4px 0 0;font-weight:700;color:rgba(255,255,255,.75)">【ご住所・連絡】</p>
+        <p class="cta-form-note" style="margin:4px 0 0;font-weight:700;color:rgba(255,255,255,.75)">【ご連絡先】</p>
         <div>
-          <label for="cf_address">住所（都道府県から）</label>
-          <input id="cf_address" name="住所（都道府県から）" type="text" autocomplete="street-address">
+          <label for="cf_address">お住まいの都道府県</label>
+          <select id="cf_address" name="都道府県">
+            <option value="">選択してください</option>
+            <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option><option>秋田県</option><option>山形県</option><option>福島県</option>
+            <option>茨城県</option><option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option><option>東京都</option><option>神奈川県</option>
+            <option>新潟県</option><option>富山県</option><option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option><option>岐阜県</option>
+            <option>静岡県</option><option>愛知県</option><option>三重県</option><option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option>
+            <option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option><option>岡山県</option><option>広島県</option><option>山口県</option>
+            <option>徳島県</option><option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option><option>佐賀県</option><option>長崎県</option>
+            <option>熊本県</option><option>大分県</option><option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option><option>海外在住</option>
+          </select>
         </div>
         <div class="cta-form-row2">
           <div>
@@ -1915,7 +1862,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
         <div>
           <label for="cf_body">【ご相談内容】ご相談内容（差し支えなければ詳細に）</label>
-          <textarea id="cf_body" name="ご相談内容" required placeholder="お気持ちやご状況をご記入ください"></textarea>
+          <textarea id="cf_body" name="ご相談内容" required placeholder="お気持ちやご状況をご記入ください" maxlength="2000"></textarea>
         </div>
 
         <p class="cta-form-note" style="margin:8px 0 0;font-weight:700;color:rgba(255,255,255,.75)">【可能ならご記入ください】</p>
@@ -1933,18 +1880,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <input id="cf_pref_time" name="ご希望の連絡時間帯" type="text">
           </div>
         </div>
-        <div>
-          <label for="cf_urgent">お急ぎのご事情（あれば）</label>
-          <input id="cf_urgent" name="お急ぎのご事情" type="text">
-        </div>
-
         <label class="cta-check">
           <input type="checkbox" name="個人情報の取り扱い" value="同意する" required>
           <span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に基づき、お問い合わせ対応のために個人情報を利用することに同意します。</span>
         </label>
 
         <button type="submit" class="cta-submit">この内容で送信する</button>
-        <p class="cta-form-note">送信後、初回のみ FormSubmit から info@antagaorana.com に確認メールが届きます（迷惑メールフォルダもご確認ください）。届いたメール内のリンクで有効化すると、その後フォーム送信がメールで届きます。</p>
       </form>
     </div>
     <div class="cta-btns">
