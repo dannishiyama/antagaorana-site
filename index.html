@@ -515,16 +515,19 @@ section{padding:88px 5%}
 .creed-yell{display:block;font-weight:900;font-family:'Noto Serif JP',serif;color:var(--gd);font-size:clamp(19px,2.5vw,26px);margin:14px 0 24px;padding:16px 0 16px 20px;border-left:4px solid var(--goldl);line-height:1.5}
 .creed-yell strong{font-size:1.12em;font-weight:900;color:var(--gd)}
 .creed-bridge{font-size:15px;color:var(--gd);font-weight:700;margin-top:28px;padding-top:18px;border-top:1px solid rgba(0,0,0,.1)}
-.attitude{background:var(--gd);padding:72px 0}
-.attitude .stag{color:var(--goldl)}
-.attitude .stitle{color:var(--w)}
-.attitude-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-.attitude-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:36px 28px;text-align:center;transition:background .25s}
-.attitude-card:hover{background:rgba(255,255,255,.12)}
-.attitude-num{font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--goldl);margin-bottom:14px}
-.attitude-name{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--w);margin:0 0 6px}
-.attitude-en{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.5);margin:0 0 20px;text-transform:uppercase}
-.attitude-body{font-size:15px;line-height:2;color:rgba(255,255,255,.85);margin:0}
+.attitude{background:#3e5739;padding:72px 0}
+.attitude .stag{color:#c9aa6a}
+.attitude .stitle{color:#fff;margin-bottom:0}
+.attitude-lead{font-size:clamp(13px,1.5vw,15px);color:rgba(255,255,255,.75);margin-top:18px;margin-bottom:44px;line-height:1.9}
+.attitude-lead strong{color:#fff;font-weight:700}
+.attitude-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.attitude-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:36px 28px;text-align:left;transition:background .2s}
+.attitude-card:hover{background:rgba(255,255,255,.1)}
+.attitude-num{font-size:11px;font-weight:700;letter-spacing:.18em;color:#c9aa6a;margin-bottom:18px;text-transform:uppercase}
+.attitude-name{font-family:'Noto Serif JP',serif;font-size:clamp(20px,2.4vw,26px);font-weight:700;color:#fff;margin:0 0 4px}
+.attitude-en{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.38);margin:0 0 22px;text-transform:uppercase}
+.attitude-catch{font-size:14px;font-weight:700;color:rgba(255,255,255,.9);line-height:1.7;margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.12)}
+.attitude-body{font-size:14px;line-height:2;color:rgba(255,255,255,.72);margin:0}
 
 .kunxun{background:#f4f1ea}
 .kunxun-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
@@ -1055,6 +1058,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   nav .nav-links{display:none}
   .creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
   .attitude-grid{grid-template-columns:1fr;gap:16px}
+  .attitude-card{padding:28px 22px}
+  .attitude-lead{margin-bottom:32px}
   .hero-message{max-width:none}
   .hero-content{flex-direction:column;align-items:center;justify-content:center;gap:0}
   .hero-visual{
@@ -1363,25 +1368,26 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <section class="attitude" id="attitude">
   <div class="si">
     <div class="stag">OUR ATTITUDE</div>
-    <h2 class="stitle">3つの姿勢</h2>
+    <h2 class="stitle">私たちが大切にする3つの姿勢</h2>
+    <p class="attitude-lead"><strong>「子どもの人生に味方する。」</strong><br>そのために、私たちはこの3つの姿勢を大切にしています。</p>
     <div class="attitude-grid">
       <div class="attitude-card">
-        <div class="attitude-num">01</div>
+        <div class="attitude-num">01 — Compassion</div>
         <h3 class="attitude-name">共苦</h3>
-        <p class="attitude-en">Compassion</p>
-        <p class="attitude-body">悩みを「他人事」にしない。<br>泣いているあなたの横で、<br>一緒に泣ける大人でいたい。</p>
+        <p class="attitude-catch">誰かの味方であり続ける、共苦の心。</p>
+        <p class="attitude-body">悩みや苦しみを受け止め、労い、味方であり続けます。共感するだけではなく、ともに悩み、ともに考える。その「共苦」の心が安心を生み、新たな一歩を踏み出す力になると、私たちは信じています。</p>
       </div>
       <div class="attitude-card">
-        <div class="attitude-num">02</div>
+        <div class="attitude-num">02 — Hope</div>
         <h3 class="attitude-name">希望</h3>
-        <p class="attitude-en">Hope</p>
-        <p class="attitude-body">どんな状況でも「必ず道はある」と信じる。<br>私たちは元気と希望を届ける<br>発信源であり続ける。</p>
+        <p class="attitude-catch">元気と希望の発信源。</p>
+        <p class="attitude-body">私たちは明るさをもって、子どもやご家庭へ元気と希望を届けます。「この人たちと一緒なら、なんとかなるかもしれない。」そう思っていただける存在を目指しています。</p>
       </div>
       <div class="attitude-card">
-        <div class="attitude-num">03</div>
+        <div class="attitude-num">03 — Earnestness</div>
         <h3 class="attitude-name">真剣勝負</h3>
-        <p class="attitude-en">Earnestness</p>
-        <p class="attitude-body">子どもの人生に、本気で向き合う。<br>「まあいいか」では済まされない、<br>一度きりの時間がある。</p>
+        <p class="attitude-catch">真剣勝負で築き上げる信頼関係。</p>
+        <p class="attitude-body">本気で向き合うからこそ、耳の痛いことも必要であれば誠実に伝えます。表面的な優しさではなく、目の前の人の人生に責任を持つ。その積み重ねが、本当の信頼関係を築くと私たちは信じています。</p>
       </div>
     </div>
   </div>
