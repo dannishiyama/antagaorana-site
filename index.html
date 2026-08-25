@@ -514,6 +514,17 @@ section{padding:88px 5%}
 .creed-sub{font-size:clamp(18px,2.4vw,24px);font-weight:800;color:var(--gd);margin:10px 0 22px;font-family:'Noto Serif JP',serif;line-height:1.5}
 .creed-yell{display:block;font-weight:900;font-family:'Noto Serif JP',serif;color:var(--gd);font-size:clamp(19px,2.5vw,26px);margin:14px 0 24px;padding:16px 0 16px 20px;border-left:4px solid var(--goldl);line-height:1.5}
 .creed-yell strong{font-size:1.12em;font-weight:900;color:var(--gd)}
+.creed-bridge{font-size:15px;color:var(--gd);font-weight:700;margin-top:28px;padding-top:18px;border-top:1px solid rgba(0,0,0,.1)}
+.attitude{background:var(--gd);padding:72px 0}
+.attitude .stag{color:var(--goldl)}
+.attitude .stitle{color:var(--w)}
+.attitude-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.attitude-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:36px 28px;text-align:center;transition:background .25s}
+.attitude-card:hover{background:rgba(255,255,255,.12)}
+.attitude-num{font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--goldl);margin-bottom:14px}
+.attitude-name{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--w);margin:0 0 6px}
+.attitude-en{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.5);margin:0 0 20px;text-transform:uppercase}
+.attitude-body{font-size:15px;line-height:2;color:rgba(255,255,255,.85);margin:0}
 
 .kunxun{background:#f4f1ea}
 .kunxun-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
@@ -1043,6 +1054,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 @media(max-width:900px){
   nav .nav-links{display:none}
   .creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
+  .attitude-grid{grid-template-columns:1fr;gap:16px}
   .hero-message{max-width:none}
   .hero-content{flex-direction:column;align-items:center;justify-content:center;gap:0}
   .hero-visual{
@@ -1255,6 +1267,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <nav>
   <div class="nav-logo"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
   <div class="nav-links">
+    <a href="#creed">私たちについて</a>
     <a href="#services">支援内容</a>
     <a href="#message">挨拶</a>
     <a href="#voice">実際の声</a>
@@ -1267,6 +1280,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="sub">MENU</div>
+  <a href="#creed">私たちについて</a>
   <a href="#services">支援内容</a>
   <a href="#message">挨拶</a>
   <a href="#voice">実際の声</a>
@@ -1337,14 +1351,42 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <p>子どもの人生にとって、<br>自分の存在を<strong>認めて受け止めてくれる大人</strong>がひとり増えるだけで、<br>大きな救いになります。</p>
           <p class="creed-yell"><strong>"味方"</strong>の数だけ、人は強くなる。</p>
           <p><strong>人生の味方でいてくれる存在</strong>が、<br>子どもに安心感を与え、成長と輝きを引き出します。</p>
-          <p>「あんたがおらな」の家庭教師は、<br>悩めるご家庭にとって<strong>唯一無二の価値</strong>を提供します。</p>
+          <p>「あんたがおらな」は、悩めるすべての家庭にとって<strong>唯一無二の存在</strong>であり続けます。</p>
+          <p class="creed-bridge">そのために、私たちは3つの姿勢を貫いています。</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- KUNXUN 社訓（削除） -->
+<!-- ATTITUDE 3つの姿勢 -->
+<section class="attitude" id="attitude">
+  <div class="si">
+    <div class="stag">OUR ATTITUDE</div>
+    <h2 class="stitle">3つの姿勢</h2>
+    <div class="attitude-grid">
+      <div class="attitude-card">
+        <div class="attitude-num">01</div>
+        <h3 class="attitude-name">共苦</h3>
+        <p class="attitude-en">Compassion</p>
+        <p class="attitude-body">悩みを「他人事」にしない。<br>泣いているあなたの横で、<br>一緒に泣ける大人でいたい。</p>
+      </div>
+      <div class="attitude-card">
+        <div class="attitude-num">02</div>
+        <h3 class="attitude-name">希望</h3>
+        <p class="attitude-en">Hope</p>
+        <p class="attitude-body">どんな状況でも「必ず道はある」と信じる。<br>私たちは元気と希望を届ける<br>発信源であり続ける。</p>
+      </div>
+      <div class="attitude-card">
+        <div class="attitude-num">03</div>
+        <h3 class="attitude-name">真剣勝負</h3>
+        <p class="attitude-en">Earnestness</p>
+        <p class="attitude-body">子どもの人生に、本気で向き合う。<br>「まあいいか」では済まされない、<br>一度きりの時間がある。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SERVICES -->
 <section class="services" id="services">
   <div class="si">
@@ -1483,7 +1525,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="msg-people">
         <div class="msg-person">
           <a class="msg-photo-link" href="./okubo.html" aria-label="大久保 俊輝のメッセージへ">
-          <div class="msg-photo-wrap placeholder">
+          <div class="msg-photo-wrap">
             <img src="./lp-assets/okubo-portrait.jpg?v=20260508a" alt="大久保 俊輝" loading="lazy" decoding="async" onerror="this.style.display='none'; this.closest('.msg-photo-wrap').classList.add('placeholder');">
           </div>
           </a>
@@ -1911,8 +1953,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     </div>
     <div>
       <div class="ft-h">会社情報</div>
-      <a class="ft-a" href="#creed">理念</a>
-      <a class="ft-a" href="#philosophy">社訓</a>
+      <a class="ft-a" href="#creed">理念・3つの姿勢</a>
       <a class="ft-a" href="#message">挨拶</a>
       <a class="ft-a" href="#voice">実際の声</a>
     </div>
