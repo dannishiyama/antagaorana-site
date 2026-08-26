@@ -496,7 +496,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,241,234,
 
 section{padding:88px 5%}
 .si{max-width:1100px;margin:0 auto}
-.stag{font-size:11px;font-weight:700;color:var(--label-en);letter-spacing:.2em;margin-bottom:8px}
+.stag{font-size:13px;font-weight:400;color:var(--label-en);letter-spacing:.08em;margin-bottom:8px}
 .stitle{font-family:'Noto Serif JP',serif;font-size:clamp(24px,3vw,38px);font-weight:900;color:var(--txt);line-height:1.4;margin-bottom:14px}
 .slead{font-size:15px;color:var(--tm);line-height:1.95;max-width:640px;margin-bottom:40px}
 
@@ -517,17 +517,19 @@ section{padding:88px 5%}
 .creed-bridge{font-size:15px;color:var(--gd);font-weight:700;margin-top:28px;padding-top:18px;border-top:1px solid rgba(0,0,0,.1)}
 .attitude{background:#3e5739;padding:72px 0}
 .attitude .stag{color:#c9aa6a}
-.attitude .stitle{color:#fff;margin-bottom:0}
+.attitude .stitle{color:#fff;margin-bottom:36px}
 .attitude-lead{font-size:clamp(13px,1.5vw,15px);color:rgba(255,255,255,.75);margin-top:18px;margin-bottom:44px;line-height:1.9}
 .attitude-lead strong{color:#fff;font-weight:700}
 .attitude-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.attitude-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:36px 28px;text-align:left;transition:background .2s}
+.attitude-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:36px 28px;text-align:left;transition:background .2s}
 .attitude-card:hover{background:rgba(255,255,255,.1)}
+.attitude-card:nth-child(2){background:rgba(255,255,255,.095);border-color:rgba(255,255,255,.14)}
+.attitude-card:nth-child(3){background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.12)}
 .attitude-num{font-size:11px;font-weight:700;letter-spacing:.18em;color:#c9aa6a;margin-bottom:18px;text-transform:uppercase}
 .attitude-name{font-family:'Noto Serif JP',serif;font-size:clamp(20px,2.4vw,26px);font-weight:700;color:#fff;margin:0 0 4px}
 .attitude-en{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.38);margin:0 0 22px;text-transform:uppercase}
-.attitude-catch{font-size:14px;font-weight:700;color:rgba(255,255,255,.9);line-height:1.7;margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.12)}
-.attitude-body{font-size:14px;line-height:2;color:rgba(255,255,255,.72);margin:0}
+.attitude-catch{font-family:'Noto Serif JP',serif;font-size:clamp(19px,2.3vw,22px);font-weight:500;color:#fff;line-height:1.6;margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.attitude-body{font-size:14px;line-height:2.05;color:rgba(255,255,255,.72);margin:0;max-width:38em}
 
 .kunxun{background:#f4f1ea}
 .kunxun-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
@@ -1347,7 +1349,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="si">
     <div class="creed-grid">
       <div>
-        <div class="stag">PHILOSOPHY</div>
+        <div class="stag">Philosophy</div>
         <h2 class="stitle">理念<span class="creed-title-line">「子どもの人生に味方を。」</span></h2>
         <p class="creed-sub">「卒業したら、さようなら？」</p>
         <div class="creed-phil">
@@ -1367,24 +1369,23 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- ATTITUDE 3つの姿勢 -->
 <section class="attitude" id="attitude">
   <div class="si">
-    <div class="stag">OUR ATTITUDE</div>
+    <div class="stag">Our Attitude</div>
     <h2 class="stitle">私たちが大切にする3つの姿勢</h2>
-    <p class="attitude-lead"><strong>「子どもの人生に味方する。」</strong><br>そのために、私たちはこの3つの姿勢を大切にしています。</p>
     <div class="attitude-grid">
       <div class="attitude-card">
         <div class="attitude-num">01</div>
         <p class="attitude-catch">誰かの味方であり続ける、共苦の心。</p>
-        <p class="attitude-body">悩みや苦しみを受け止め、労い、味方であり続けます。共感するだけではなく、ともに悩み、ともに考える。その心が安心を生み、新たな一歩を踏み出す力になると、私たちは信じています。</p>
+        <p class="attitude-body">悩みや苦しみを受け止め、労い、<br>味方であり続けます。<br>共感するだけではなく、ともに悩み、ともに考える。<br>その心が安心を生み、新たな一歩を踏み出す力になると、<br>私たちは信じています。</p>
       </div>
       <div class="attitude-card">
         <div class="attitude-num">02</div>
         <p class="attitude-catch">元気と希望の発信源。</p>
-        <p class="attitude-body">私たちは明るさをもって、子どもやご家庭へ元気と希望を届けます。「この人たちと一緒なら、なんとかなるかもしれない。」そう思っていただける存在を目指しています。</p>
+        <p class="attitude-body">私たちは明るさをもって、<br>子どもやご家庭へ元気と希望を届けます。<br>「この人たちと一緒なら、なんとかなるかもしれない。」<br>そう思っていただける存在を目指しています。</p>
       </div>
       <div class="attitude-card">
         <div class="attitude-num">03</div>
         <p class="attitude-catch">真剣勝負で築き上げる信頼関係。</p>
-        <p class="attitude-body">本気で向き合うからこそ、耳の痛いことも必要であれば誠実に伝えます。表面的な優しさではなく、目の前の人の人生に責任を持つ。その積み重ねが、本当の信頼関係を築くと私たちは信じています。</p>
+        <p class="attitude-body">本気で向き合うからこそ、<br>耳の痛いことも必要であれば誠実に伝えます。<br>表面的な優しさではなく、<br>目の前の人の人生に責任を持つ。<br>その積み重ねが、本当の信頼関係を築くと<br>私たちは信じています。</p>
       </div>
     </div>
   </div>
@@ -1393,7 +1394,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- SERVICES -->
 <section class="services" id="services">
   <div class="si">
-    <div class="stag">OUR SERVICES</div>
+    <div class="stag">Services</div>
     <h2 class="stitle">支援内容</h2>
     <p class="slead">私たちは多角的な支援の体制で、子どもとご家族の未来をつくります。</p>
     <div class="sv-grid">
@@ -1468,7 +1469,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- INDIA -->
 <section class="india" id="india">
   <div class="si" style="position:relative;z-index:1">
-    <div class="stag">INDIA PROJECT</div>
+    <div class="stag">India Project</div>
     <h2 class="stitle">越（エツ）— インドプロジェクト</h2>
     <p class="slead">言葉が通じなくても「ありがとう」は伝わる。その体験が、人生を変える。<br><a href="./etsu.html">越（エツ）の概要・プロジェクトの詳細はこちら →</a></p>
     <div class="india-grid">
@@ -1522,7 +1523,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- MESSAGE 挨拶 -->
 <section class="message" id="message">
   <div class="si">
-    <div class="stag">GREETING</div>
+    <div class="stag">Greeting</div>
     <h2 class="stitle">挨拶</h2>
     <div class="msg-grid">
       <div class="msg-people">
@@ -1568,7 +1569,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- TESTIMONIALS -->
 <section class="testi" id="voice">
   <div class="si">
-    <div class="stag">VOICES</div>
+    <div class="stag">Voices</div>
     <h2 class="stitle">実際の声</h2>
     <p class="slead">派手な言葉より、日々のなかで「少し楽になった」と感じた瞬間。<br>そんな記憶の断片を、いくつかだけ。</p>
     <div class="t-grid">
@@ -1706,7 +1707,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- NEWS -->
 <section class="news" id="news">
   <div class="si">
-    <div class="stag">NEWS</div>
+    <div class="stag">News</div>
     <h2 class="stitle">お知らせ</h2>
     <p class="slead">速報ではなく、現場の空気や言葉の背景を少しずつ残すための記録です。メディア掲載、インドでの交流、動画、note まで一覧からたどれます。</p>
     <div class="news-grid">
