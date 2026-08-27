@@ -97,7 +97,7 @@ function buildEmailHtml({ customerName, session: sess }) {
 <body>
 <div class="wrap">
   <div class="hd">
-    <p class="hd-sub">株式会社あんたがおらな</p>
+    <p class="hd-sub">教育支援団体 あんたがおらな</p>
     <p class="hd-brand">共育ゼミ｜参加のご案内</p>
   </div>
   <div class="bd">
@@ -146,14 +146,14 @@ function buildEmailHtml({ customerName, session: sess }) {
     <p class="closing">
       ご不明な点や、参加案内が正しく表示されない場合は、<br>
       以下までご連絡ください。<br><br>
-      株式会社あんたがおらな<br>
+      教育支援団体 あんたがおらな<br>
       <a href="mailto:info@antagaorana.com">info@antagaorana.com</a><br>
       090-3435-0306<br><br>
       それでは、当日お会いできることを楽しみにしております。
     </p>
   </div>
   <div class="ft">
-    <p>株式会社あんたがおらな | 代表取締役 大久保 俊輝</p>
+    <p>教育支援団体 あんたがおらな | 代表 大久保 俊輝</p>
     <p><a href="https://antagaorana.com">https://antagaorana.com</a></p>
     <div class="ft-cancel">
       キャンセル・返金条件については
@@ -196,14 +196,14 @@ ${sess.meetUrl}
 
 ご不明な点や、参加案内が正しく表示されない場合は、以下までご連絡ください。
 
-株式会社あんたがおらな
+教育支援団体 あんたがおらな
 info@antagaorana.com
 090-3435-0306
 
 それでは、当日お会いできることを楽しみにしております。
 
-株式会社あんたがおらな
-代表取締役 大久保 俊輝
+教育支援団体 あんたがおらな
+代表 大久保 俊輝
 https://antagaorana.com
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -309,7 +309,7 @@ export default async function handler(req, res) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from:        `株式会社あんたがおらな <${fromEmail}>`,
+      from:        `教育支援団体 あんたがおらな <${fromEmail}>`,
       to:          [customerEmail],
       replyTo:     'info@antagaorana.com',
       subject:     '【共育ゼミ】お申し込みありがとうございます｜参加のご案内',
