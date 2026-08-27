@@ -1,36 +1,62 @@
 /**
  * api/stripe-webhook.js
- * Stripe決済完了 → 購入者へ参加案内メール自動送信（Resend）
+ * Stripe決済完了 → Supabase申込登録 → Resend案内メール送信
+ *
+ * V1 設計方針:
+ *   Stripe    = 決済情報の正本
+ *   Supabase  = 申込・メール送信状態・返金・振替の正本
+ *   Resend    = メール送信のみ
+ *
+ * 冪等性:
+ *   - DB: stripe_event_id の UNIQUE 制約で二重登録を防ぐ
+ *   - メール: email_status='sent' の確認で二重送信を防ぐ
+ *   - Resend: X-Idempotency-Key: event.id でさらに保護
+ *
+ * エラー処理:
+ *   - Supabaseエラー → 500 返却（Stripeが再試行）+ 管理者通知
+ *   - Resend失敗    → DB に email_status='failed' を記録 + 管理者通知 + 500 返却
+ *   - 再試行時      → email_status を確認し 'sent' なら絶対に再送しない
  *
  * 必要な環境変数（Vercel Dashboard > Settings > Environment Variables）:
- *   STRIPE_SECRET_KEY      … StripeのSecretキー（sk_live_... / sk_test_...）
- *   STRIPE_WEBHOOK_SECRET  … Stripe WebhookのSigning Secret（whsec_...）
- *   RESEND_API_KEY         … ResendのAPIキー（re_...）
- *   FROM_EMAIL             … 送信元アドレス（例: info@antagaorana.com）
- *   SESSION_DATE           … 開催日（例: 2026年8月30日（日））
- *   SESSION_TIME_START     … 開始時刻（例: 20:00）
- *   SESSION_TIME_END       … 終了時刻（例: 21:30）
- *   SESSION_MEET_URL       … Google MeetのURL（秘密情報・絶対にフロントへ出さない）
- *   TEST_MODE              … 'true' のときメール送信をスキップしログのみ出力
+ *   STRIPE_SECRET_KEY          sk_live_... / sk_test_...
+ *   STRIPE_WEBHOOK_SECRET      whsec_...
+ *   RESEND_API_KEY             re_...
+ *   FROM_EMAIL                 info@antagaorana.com
+ *   SUPABASE_URL               https://xxxx.supabase.co
+ *   SUPABASE_SERVICE_ROLE_KEY  service_role secret key（絶対にフロントへ出さない）
+ *   SESSION_DATE               例: 2026年8月30日（日）
+ *   SESSION_TIME_START         例: 20:00
+ *   SESSION_TIME_END           例: 21:30
+ *   SESSION_MEET_URL           Google Meet URL（絶対にGit・フロントへ出さない）
+ *   TEST_MODE                  'true' でメール送信をスキップ
  *
  * セキュリティ要件:
- *   - Stripe署名を検証し、未検証のリクエストを拒否
+ *   - Stripe署名を検証し、未検証リクエストを拒否
  *   - checkout.session.completed かつ payment_status=paid のみ処理
- *   - Stripe Event IDをResendのidempotencyKeyに使い重複送信を防止
- *   - livemode=false（テスト）のとき、TEST_MODEでメールをスキップ
- *   - Google Meet URLはサーバーサイドのみで使用し、フロントには出力しない
- *   - 個人情報（メールアドレス・氏名）をログに出力しない
+ *   - SUPABASE_SERVICE_ROLE_KEY はサーバーサイドのみで使用
+ *   - Google Meet URL はサーバーサイドのみで使用
+ *   - 個人情報（メール・氏名）をログに出力しない
  */
 
 import { Resend } from 'resend';
 import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
 
 // Vercelのbody parserを無効化（Stripe署名検証にraw bodyが必要）
 export const config = {
   api: { bodyParser: false },
 };
 
-// ── raw body 読み取り ────────────────────────────────────────
+// ── Supabase クライアント（サービスロールキー = サーバーサイド専用） ──
+function getSupabase() {
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } },
+  );
+}
+
+// ── raw body 読み取り（Stripe署名検証に必要） ──────────────────────
 async function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -40,7 +66,7 @@ async function getRawBody(req) {
   });
 }
 
-// ── 開催回設定（環境変数から取得） ──────────────────────────
+// ── 開催回設定（環境変数から取得） ────────────────────────────────
 function getSessionConfig() {
   const date      = process.env.SESSION_DATE       || '（日程未設定）';
   const timeStart = process.env.SESSION_TIME_START || '（時刻未設定）';
@@ -52,11 +78,34 @@ function getSessionConfig() {
   }
 
   const timeRange = timeEnd ? `${timeStart}〜${timeEnd}` : timeStart;
-
   return { date, timeRange, meetUrl };
 }
 
-// ── HTMLメール本文 ───────────────────────────────────────────
+// ── 管理者へのエラー通知（Resendでメール送信） ─────────────────────
+// 失敗しても握りつぶす（通知失敗でメイン処理を止めない）
+async function notifyAdmin(resend, fromEmail, subject, body) {
+  try {
+    await resend.emails.send({
+      from:    `共育ゼミ自動通知 <${fromEmail}>`,
+      to:      [fromEmail],
+      subject: `【共育ゼミ決済処理エラー】${subject}`,
+      text:    [
+        'このメールは共育ゼミ決済処理の自動エラー通知です。',
+        '',
+        body,
+        '',
+        '---',
+        'Supabase Dashboard > benkyokai_registrations テーブルを確認してください。',
+        `https://supabase.com/dashboard`,
+      ].join('\n'),
+    });
+  } catch (e) {
+    // 管理者通知自体の失敗はログのみ（Vercelで確認する）
+    console.error('[webhook] Admin notification failed:', e.message);
+  }
+}
+
+// ── HTMLメール本文 ───────────────────────────────────────────────
 function buildEmailHtml({ customerName, session: sess }) {
   const name = customerName ? `${customerName}` : 'ご参加者';
   const termsUrl = 'https://antagaorana.com/benkyokai-terms.html';
@@ -166,7 +215,7 @@ function buildEmailHtml({ customerName, session: sess }) {
 </html>`;
 }
 
-// ── プレーンテキスト版 ───────────────────────────────────────
+// ── プレーンテキスト版 ────────────────────────────────────────────
 function buildEmailText({ customerName, session: sess }) {
   const name = customerName ? `${customerName}` : 'ご参加者';
   return `${name} 様
@@ -213,7 +262,7 @@ https://antagaorana.com/benkyokai-terms.html
 `;
 }
 
-// ── メインハンドラ ───────────────────────────────────────────
+// ── メインハンドラ ───────────────────────────────────────────────
 export default async function handler(req, res) {
   // POSTのみ受け付ける
   if (req.method !== 'POST') {
@@ -227,6 +276,8 @@ export default async function handler(req, res) {
     'STRIPE_WEBHOOK_SECRET',
     'RESEND_API_KEY',
     'SESSION_MEET_URL',
+    'SUPABASE_URL',
+    'SUPABASE_SERVICE_ROLE_KEY',
   ].filter((v) => !process.env[v]);
 
   if (missingVars.length > 0) {
@@ -267,30 +318,26 @@ export default async function handler(req, res) {
 
   const session = event.data.object;
 
-  // 決済未完了の場合はスキップ（payment_status=unpaidなど）
+  // 決済未完了の場合はスキップ
   if (session.payment_status !== 'paid') {
     console.log(`[webhook] Skipped: payment_status=${session.payment_status}`);
     return res.status(200).json({ received: true, skipped: 'payment_not_paid' });
   }
 
+  // メールアドレス確認
   const customerEmail = session.customer_details?.email;
   const customerName  = session.customer_details?.name;
 
   if (!customerEmail) {
-    // メールなし：Stripeへは200を返してキューをクリアする
-    console.warn('[webhook] No customer email in session id:', session.id);
+    console.warn('[webhook] No customer email in session:', session.id);
     return res.status(200).json({ received: true, skipped: 'no_email' });
   }
 
-  // テストモード制御
-  const isTestMode = event.livemode === false;
+  const isTestMode  = event.livemode === false;
   const testModeEnv = process.env.TEST_MODE === 'true';
-
-  if (isTestMode && testModeEnv) {
-    // テスト決済では実際のメールを送らず、ログのみ出力
-    console.log(`[webhook][TEST] Would send email to <redacted> | event=${event.id}`);
-    return res.status(200).json({ received: true, testMode: true });
-  }
+  const resend      = new Resend(process.env.RESEND_API_KEY);
+  const fromEmail   = process.env.FROM_EMAIL || 'info@antagaorana.com';
+  const supabase    = getSupabase();
 
   // 開催回設定を取得
   let sess;
@@ -298,39 +345,149 @@ export default async function handler(req, res) {
     sess = getSessionConfig();
   } catch (err) {
     console.error('[webhook] Session config error:', err.message);
-    // 設定ミスでも参加者への200は返す（Stripeのリトライを防ぐため）
-    // 運営側には別途アラートが必要（Vercelのログ監視を推奨）
-    return res.status(200).json({ received: true, configError: err.message });
+    await notifyAdmin(resend, fromEmail, 'セッション設定エラー',
+      `Stripe Event ID: ${event.id}\nエラー: ${err.message}\n\nSESSION_MEET_URL が Vercel 環境変数に設定されているか確認してください。`);
+    return res.status(500).json({ error: 'Session config error' });
   }
 
-  // メール送信（Resendのidempotencyキーにevent.idを使い二重送信を防止）
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
+  // ──────────────────────────────────────────────────────────────────
+  // Phase 1: Supabaseに申込レコードを登録（冪等: stripe_event_id UNIQUE）
+  // ──────────────────────────────────────────────────────────────────
+  const insertData = {
+    stripe_event_id:            event.id,
+    stripe_checkout_session_id: session.id,
+    stripe_payment_intent_id:   session.payment_intent  || null,
+    stripe_customer_id:         session.customer         || null,
+    customer_name:              customerName             || null,
+    customer_email:             customerEmail,
+    product_name:               '共育ゼミ',
+    amount:                     session.amount_total     ?? 1000,
+    currency:                   session.currency         || 'jpy',
+    payment_status:             session.payment_status,
+    event_date:                 sess.date,
+    event_time:                 sess.timeRange,
+    email_status:               'pending',
+  };
 
+  // INSERT を試みる。stripe_event_id が既に存在する場合は UNIQUE 制約で失敗（コード 23505）
+  const { error: insertErr } = await supabase
+    .from('benkyokai_registrations')
+    .insert(insertData);
+
+  if (insertErr && insertErr.code !== '23505') {
+    // UNIQUE違反以外のエラーは障害 → 500でStripeに再試行させる
+    console.error('[webhook] Supabase insert error:', insertErr.message, '| event:', event.id);
+    await notifyAdmin(resend, fromEmail, 'Supabase登録エラー',
+      `Stripe Event ID: ${event.id}\nエラーコード: ${insertErr.code}\nエラー: ${insertErr.message}`);
+    return res.status(500).json({ error: 'Database insert error' });
+  }
+
+  // 現在の申込レコードを取得（新規 or 既存どちらも）
+  const { data: registration, error: fetchErr } = await supabase
+    .from('benkyokai_registrations')
+    .select()
+    .eq('stripe_event_id', event.id)
+    .single();
+
+  if (fetchErr || !registration) {
+    console.error('[webhook] Supabase fetch error:', fetchErr?.message, '| event:', event.id);
+    await notifyAdmin(resend, fromEmail, 'Supabase取得エラー',
+      `Stripe Event ID: ${event.id}\nエラー: ${fetchErr?.message}`);
+    return res.status(500).json({ error: 'Database fetch error' });
+  }
+
+  // ──────────────────────────────────────────────────────────────────
+  // Phase 2: メール送信状態を確認（二重送信防止）
+  // ──────────────────────────────────────────────────────────────────
+  if (registration.email_status === 'sent') {
+    // 既に送信済み → 絶対に再送しない（Stripeの再試行でも安全）
+    console.log(`[webhook] Email already sent, skip | event=${event.id}`);
+    return res.status(200).json({ received: true, emailAlreadySent: true });
+  }
+
+  if (registration.email_status === 'test_skipped') {
+    console.log(`[webhook] Test-skipped registration, skip | event=${event.id}`);
+    return res.status(200).json({ received: true, testSkipped: true });
+  }
+
+  // テストモードスキップ（livemode=false かつ TEST_MODE=true）
+  if (isTestMode && testModeEnv) {
+    console.log(`[webhook][TEST] Skip email | event=${event.id}`);
+    const { error: tsErr } = await supabase
+      .from('benkyokai_registrations')
+      .update({ email_status: 'test_skipped' })
+      .eq('stripe_event_id', event.id);
+    if (tsErr) console.error('[webhook] Failed to update test_skipped status:', tsErr.message);
+    return res.status(200).json({ received: true, testMode: true });
+  }
+
+  // ──────────────────────────────────────────────────────────────────
+  // Phase 3: メール送信
+  // ──────────────────────────────────────────────────────────────────
   try {
-    const { data, error } = await resend.emails.send({
-      from:        `教育支援団体 あんたがおらな <${fromEmail}>`,
-      to:          [customerEmail],
-      replyTo:     'info@antagaorana.com',
-      subject:     '【共育ゼミ】お申し込みありがとうございます｜参加のご案内',
-      html:        buildEmailHtml({ customerName, session: sess }),
-      text:        buildEmailText({ customerName, session: sess }),
-      // Resend idempotencyKey: 同じevent.idで再送されても1通だけ送信される
-      headers: {
-        'X-Idempotency-Key': event.id,
-      },
+    const { data: emailData, error: emailErr } = await resend.emails.send({
+      from:    `株式会社あんたがおらな <${fromEmail}>`,
+      to:      [customerEmail],
+      replyTo: fromEmail,
+      subject: '【共育ゼミ】お申し込みありがとうございます｜参加のご案内',
+      html:    buildEmailHtml({ customerName, session: sess }),
+      text:    buildEmailText({ customerName, session: sess }),
+      // 同一 event.id で何度リクエストしても Resend 側で重複送信を防ぐ
+      headers: { 'X-Idempotency-Key': event.id },
     });
 
-    if (error) throw error;
+    if (emailErr) throw emailErr;
+
+    // ── 送信成功 → Supabase を更新 ──
+    const { error: updateErr } = await supabase
+      .from('benkyokai_registrations')
+      .update({
+        email_status:  'sent',
+        email_sent_at: new Date().toISOString(),
+        email_error:   null,
+      })
+      .eq('stripe_event_id', event.id);
+
+    if (updateErr) {
+      // メールは送れているが DB 更新失敗 → ログだけ（200を返す）
+      console.error('[webhook] DB update after email success failed:', updateErr.message, '| event:', event.id);
+    }
 
     // 個人情報（メールアドレス）をログに残さない
-    console.log(`[webhook] Email sent | event=${event.id} | resend_id=${data?.id}`);
-    return res.status(200).json({ received: true, emailId: data?.id });
+    console.log(`[webhook] Email sent | event=${event.id} | resend_id=${emailData?.id}`);
+    return res.status(200).json({ received: true, emailId: emailData?.id });
 
   } catch (err) {
     console.error(`[webhook] Email send error | event=${event.id} |`, err.message);
-    // Stripeへは200を返す（サーバーエラーにするとStripeがリトライし続ける）
-    // 重大な失敗はVercelのログアラートで検知すること
-    return res.status(200).json({ received: true, emailError: err.message });
+
+    // ── 送信失敗 → Supabase に記録 ──
+    const { error: failErr } = await supabase
+      .from('benkyokai_registrations')
+      .update({
+        email_status: 'failed',
+        email_error:  err.message,
+      })
+      .eq('stripe_event_id', event.id);
+
+    if (failErr) {
+      console.error('[webhook] DB update after email failure failed:', failErr.message);
+    }
+
+    // ── Phase 4: 管理者通知 ──
+    await notifyAdmin(resend, fromEmail, 'メール送信失敗',
+      [
+        `Stripe Event ID: ${event.id}`,
+        `Registration ID: ${registration.id}`,
+        `エラー: ${err.message}`,
+        '',
+        'Stripe が自動再試行します。',
+        'Supabase で email_status を確認してください。',
+        '次回の再試行時、email_status が "failed" であれば再送を試みます。',
+        '再試行が尽きた場合は、手動でメールを送信してください。',
+      ].join('\n'));
+
+    // 500 を返して Stripe に再試行させる
+    // 再試行時: INSERT は 23505 で失敗 → SELECT で既存レコード取得 → email_status='failed' → 再送試行
+    return res.status(500).json({ error: 'Email send failed, Stripe will retry' });
   }
 }
