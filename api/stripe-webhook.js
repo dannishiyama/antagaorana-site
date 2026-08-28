@@ -78,7 +78,24 @@ function getSessionConfig() {
   }
 
   const timeRange = timeEnd ? `${timeStart}〜${timeEnd}` : timeStart;
-  return { date, timeRange, meetUrl };
+
+  // 前日リマインド送信日時を計算（SESSION_DATE_ISO: "2026-08-30" 形式）
+  // 前日の朝9時JST = 前日の 00:00 UTC
+  let reminderScheduledAt = null;
+  const dateIso = process.env.SESSION_DATE_ISO; // 例: "2026-08-30"
+  if (dateIso && /^\d{4}-\d{2}-\d{2}$/.test(dateIso)) {
+    // イベント日の前日 09:00 JST = 前日 00:00 UTC
+    const eventDate = new Date(`${dateIso}T00:00:00+09:00`);
+    const reminderDate = new Date(eventDate.getTime() - 24 * 60 * 60 * 1000);
+    reminderDate.setUTCHours(0, 0, 0, 0); // 前日00:00 UTC = 前日09:00 JST
+    const now = new Date();
+    // リマインド予定日時が未来の場合のみスケジュール
+    if (reminderDate > now) {
+      reminderScheduledAt = reminderDate.toISOString();
+    }
+  }
+
+  return { date, timeRange, meetUrl, reminderScheduledAt };
 }
 
 // ── 管理者へのエラー通知（Resendでメール送信） ─────────────────────
@@ -317,6 +334,160 @@ https://antagaorana.com/benkyokai-terms.html
 `;
 }
 
+// ── 前日リマインドメール HTML ──────────────────────────────────────
+function buildReminderHtml({ customerName, session: sess }) {
+  const name = customerName ? `${customerName}` : 'ご参加者';
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{margin:0;padding:0;background:#f5f2ed;font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif}
+  .wrap{max-width:560px;margin:32px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)}
+  .hd{background:#c8602a;padding:28px 36px;text-align:center}
+  .hd-sub{color:rgba(255,255,255,.8);font-size:11px;letter-spacing:.2em;margin:0 0 4px}
+  .hd-brand{color:#fff;font-size:18px;font-weight:700;margin:0}
+  .bd{padding:36px}
+  .remind-badge{background:#fff3ee;border:2px solid #c8602a;border-radius:8px;padding:14px 20px;text-align:center;margin-bottom:24px;font-size:15px;color:#c8602a;font-weight:700}
+  .greeting{font-size:16px;margin-bottom:16px;color:#222;font-weight:700}
+  .lead{font-size:15px;color:#444;line-height:2;margin-bottom:24px}
+  .steps-box{background:#f0f6f0;border-radius:8px;padding:20px 24px;margin-bottom:24px}
+  .steps-box h3{margin:0 0 16px;font-size:13px;color:#3e5739;letter-spacing:.1em;border-bottom:1px solid #c8ddc8;padding-bottom:8px;font-weight:700}
+  .step{display:flex;align-items:flex-start;margin-bottom:14px;font-size:14px;line-height:1.8}
+  .step-num{flex-shrink:0;width:28px;height:28px;background:#3e5739;color:#fff;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:12px;margin-top:2px}
+  .step-text{color:#333}
+  .step-text strong{color:#3e5739;display:block;margin-bottom:2px}
+  .info-box{background:#f8f5f0;border-radius:8px;padding:16px 20px;margin-bottom:20px;font-size:14px;color:#333;line-height:2}
+  .meet-btn{display:block;text-align:center;background:#c8602a;color:#fff !important;font-size:17px;font-weight:700;text-decoration:none;padding:20px 24px;border-radius:7px;letter-spacing:.03em}
+  .meet-url{text-align:center;font-size:12px;color:#aaa;word-break:break-all;margin:8px 0 0}
+  .note{background:#fffaf5;border-left:3px solid #c8602a;padding:14px 18px;border-radius:0 6px 6px 0;font-size:13px;color:#666;line-height:2;margin-bottom:24px}
+  .closing{font-size:14px;color:#555;line-height:2}
+  .ft{background:#f5f2ed;padding:16px 36px;text-align:center;font-size:11px;color:#999}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <p class="hd-sub">教育支援団体 あんたがおらな</p>
+    <p class="hd-brand">🔔 共育ゼミ｜明日開催のご案内</p>
+  </div>
+  <div class="bd">
+    <div class="remind-badge">⏰ 明日開催です！ご準備をお忘れなく</div>
+    <p class="greeting">${name} 様</p>
+    <p class="lead">
+      明日は「共育ゼミ」の開催日です。<br>
+      お申し込みいただきありがとうございます。<br><br>
+      当日の参加方法を改めてご案内します。<br>
+      <strong>3ステップで簡単に参加できます。</strong>
+    </p>
+
+    <div class="info-box">
+      📅 <strong>開催日時：</strong>${sess.date}　${sess.timeRange}<br>
+      💻 <strong>開催方法：</strong>オンライン（スマホ・パソコン）
+    </div>
+
+    <div class="steps-box">
+      <h3>📱 当日の参加方法（3ステップ）</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>このメールを開く</strong>
+          開催時刻になったら、このメールをもう一度開いてください。
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>下のオレンジのボタンをタップする</strong>
+          タップするだけで会議室に入れます。アプリは不要です。
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>「参加」または「今すぐ参加」をタップする</strong>
+          画面が開いたらそのままお待ちください。<br>
+          ※カメラ・マイクの許可を求められたら「許可」を選んでください。
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:#333;font-weight:700;margin-bottom:8px;text-align:center">▼ 開始時刻になったらここをタップ！</p>
+    <a href="${sess.meetUrl}" class="meet-btn">▶ Google Meetに参加する</a>
+    <p class="meet-url">ボタンが押せない場合はこちらのURLをコピーして<br>ブラウザに貼り付けてください<br>${sess.meetUrl}</p>
+
+    <br>
+    <div class="note">
+      ✅ 開始5〜10分前にアクセスするとスムーズです<br>
+      ✅ Wi-Fiや電波の安定した場所からご参加ください<br>
+      ✅ 入れない・音が聞こえないなどがあればすぐにご連絡ください
+    </div>
+
+    <p class="closing">
+      教育支援団体 あんたがおらな 事務局<br>
+      info@antagaorana.com　/ 090-3435-0306
+    </p>
+  </div>
+  <div class="ft">
+    教育支援団体 あんたがおらな | 代表 大久保 俊輝<br>
+    このメールはお申し込みいただいた方にお送りしています。
+  </div>
+</div>
+</body>
+</html>`;
+}
+
+// ── 前日リマインドメール テキスト ───────────────────────────────────
+function buildReminderText({ customerName, session: sess }) {
+  const name = customerName ? `${customerName}` : 'ご参加者';
+  return `${name} 様
+
+⏰ 明日は「共育ゼミ」の開催日です！
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 開催日時
+${sess.date}
+${sess.timeRange}
+
+■ 開催方法
+オンライン（スマホ・パソコンから参加できます）
+━━━━━━━━━━━━━━━━━━━━━━
+
+■ 当日の参加方法（3ステップ）
+
+【STEP 1】このメールを開く
+　開催時刻になったら、このメールをもう一度開いてください。
+
+【STEP 2】下のURLをタップ（クリック）する
+　タップするだけで入室できます。アプリは不要です。
+
+${sess.meetUrl}
+
+【STEP 3】「参加」または「今すぐ参加」をタップする
+　画面が開いたらそのままお待ちください。
+　※カメラ・マイクの使用許可を求められたら「許可」を選んでください。
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ ご参加前にご確認ください
+
+・開始時刻の5〜10分前にご参加いただくとスムーズです
+・スマホの場合、「Google Meet」アプリがなくてもブラウザから参加できます
+・Wi-Fiや電波の安定した場所からご参加ください
+・うまく入れない・音が聞こえないなどがあればすぐにご連絡ください
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+ご不明な点がございましたら、お気軽にご連絡ください。
+明日、お会いできることを楽しみにしております。
+
+教育支援団体 あんたがおらな
+info@antagaorana.com
+090-3435-0306
+https://antagaorana.com
+`;
+}
+
 // ── メインハンドラ ───────────────────────────────────────────────
 export default async function handler(req, res) {
   // POSTのみ受け付ける
@@ -492,6 +663,32 @@ export default async function handler(req, res) {
     });
 
     if (emailErr) throw emailErr;
+
+    // ── 前日リマインドメールのスケジュール送信 ──────────────────────
+    if (sess.reminderScheduledAt) {
+      try {
+        const { error: reminderErr } = await resend.emails.send({
+          from:        `株式会社あんたがおらな <${fromEmail}>`,
+          to:          [customerEmail],
+          replyTo:     fromEmail,
+          subject:     `【共育ゼミ】明日開催です！参加URLのご案内`,
+          html:        buildReminderHtml({ customerName, session: sess }),
+          text:        buildReminderText({ customerName, session: sess }),
+          scheduledAt: sess.reminderScheduledAt,
+          headers:     { 'X-Idempotency-Key': `${event.id}-reminder` },
+        });
+        if (reminderErr) {
+          // リマインド失敗は致命的ではない → ログのみ
+          console.warn(`[webhook] Reminder schedule failed | event=${event.id} |`, reminderErr.message);
+        } else {
+          console.log(`[webhook] Reminder scheduled at ${sess.reminderScheduledAt} | event=${event.id}`);
+        }
+      } catch (reminderEx) {
+        console.warn(`[webhook] Reminder schedule error | event=${event.id} |`, reminderEx.message);
+      }
+    } else {
+      console.log(`[webhook] Reminder not scheduled (no SESSION_DATE_ISO or date already past) | event=${event.id}`);
+    }
 
     // ── 送信成功 → Supabase を更新 ──
     const { error: updateErr } = await supabase
