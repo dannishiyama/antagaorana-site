@@ -122,21 +122,27 @@ function buildEmailHtml({ customerName, session: sess }) {
   .hd-sub{color:rgba(255,255,255,.7);font-size:11px;letter-spacing:.2em;margin:0 0 4px}
   .hd-brand{color:#fff;font-size:18px;font-weight:700;margin:0}
   .bd{padding:36px}
-  .greeting{font-size:15px;margin-bottom:20px;line-height:1.85;color:#222}
-  .thanks{font-size:14px;color:#555;line-height:1.9;margin-bottom:28px}
+  .greeting{font-size:16px;margin-bottom:20px;line-height:1.85;color:#222;font-weight:700}
+  .thanks{font-size:15px;color:#444;line-height:2;margin-bottom:28px}
   .divider{border:none;border-top:1px solid #e5e0d8;margin:24px 0}
   .info-box{background:#f8f5f0;border-radius:8px;padding:20px 24px;margin-bottom:24px}
-  .info-box h3{margin:0 0 14px;font-size:12px;color:#3e5739;letter-spacing:.12em;border-bottom:1px solid #ddd8cf;padding-bottom:8px}
-  .info-row{display:table;width:100%;margin-bottom:8px;font-size:14px}
-  .info-label{display:table-cell;color:#888;width:80px;vertical-align:top}
-  .info-val{display:table-cell;color:#222;font-weight:500;vertical-align:top}
+  .info-box h3{margin:0 0 14px;font-size:13px;color:#3e5739;letter-spacing:.1em;border-bottom:1px solid #ddd8cf;padding-bottom:8px;font-weight:700}
+  .info-row{display:table;width:100%;margin-bottom:10px;font-size:15px}
+  .info-label{display:table-cell;color:#888;width:90px;vertical-align:top}
+  .info-val{display:table-cell;color:#222;font-weight:600;vertical-align:top}
+  .steps-box{background:#f0f6f0;border-radius:8px;padding:20px 24px;margin-bottom:24px}
+  .steps-box h3{margin:0 0 16px;font-size:13px;color:#3e5739;letter-spacing:.1em;border-bottom:1px solid #c8ddc8;padding-bottom:8px;font-weight:700}
+  .step{display:flex;align-items:flex-start;margin-bottom:14px;font-size:14px;line-height:1.8}
+  .step-num{flex-shrink:0;width:28px;height:28px;background:#3e5739;color:#fff;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:12px;margin-top:2px}
+  .step-text{color:#333}
+  .step-text strong{color:#3e5739;display:block;margin-bottom:2px}
   .meet-wrap{margin:20px 0 8px}
-  .meet-btn{display:block;text-align:center;background:#3e5739;color:#fff;font-size:15px;font-weight:700;text-decoration:none;padding:16px 24px;border-radius:7px;letter-spacing:.03em}
-  .meet-url{text-align:center;font-size:11px;color:#aaa;word-break:break-all;margin:6px 0 0;padding:0}
-  .note-box{background:#fffaf5;border-left:3px solid #c8602a;border-radius:0 6px 6px 0;padding:14px 18px;margin-bottom:28px}
-  .note-box p{margin:0 0 6px;font-size:13px;color:#c8602a;font-weight:700}
-  .note-box ul{margin:0;padding:0 0 0 16px;font-size:13px;color:#555;line-height:1.9}
-  .closing{font-size:14px;color:#555;line-height:1.9;margin-bottom:0}
+  .meet-btn{display:block;text-align:center;background:#3e5739;color:#fff !important;font-size:16px;font-weight:700;text-decoration:none;padding:18px 24px;border-radius:7px;letter-spacing:.03em}
+  .meet-url{text-align:center;font-size:12px;color:#aaa;word-break:break-all;margin:8px 0 0;padding:0}
+  .note-box{background:#fffaf5;border-left:3px solid #c8602a;border-radius:0 6px 6px 0;padding:16px 18px;margin-bottom:28px}
+  .note-box p{margin:0 0 8px;font-size:14px;color:#c8602a;font-weight:700}
+  .note-box ul{margin:0;padding:0 0 0 18px;font-size:14px;color:#555;line-height:2}
+  .closing{font-size:14px;color:#555;line-height:2;margin-bottom:0}
   .closing a{color:#3e5739;text-decoration:none}
   .ft{background:#f5f2ed;padding:20px 36px;text-align:center;font-size:11px;color:#999;border-top:1px solid #e8e3db}
   .ft a{color:#3e5739;text-decoration:none}
@@ -152,9 +158,11 @@ function buildEmailHtml({ customerName, session: sess }) {
   <div class="bd">
     <p class="greeting">${name} 様</p>
     <p class="thanks">
-      このたびは、「共育ゼミ」にお申し込みいただき、ありがとうございます。<br>
-      ご参加いただけることを、心よりうれしく思います。<br>
-      当日のご案内をお送りします。
+      このたびは、「共育ゼミ」にお申し込みいただき、<br>
+      ありがとうございます。<br><br>
+      お支払いが完了しました。<br>
+      当日のご参加方法をご案内いたします。<br>
+      どうぞ最後までお読みください。
     </p>
 
     <hr class="divider">
@@ -167,38 +175,65 @@ function buildEmailHtml({ customerName, session: sess }) {
       </div>
       <div class="info-row">
         <span class="info-label">開催方法</span>
-        <span class="info-val">Google Meetによるオンライン開催</span>
+        <span class="info-val">オンライン（スマホ・パソコンから参加できます）</span>
       </div>
       <div class="info-row">
         <span class="info-label">参加費</span>
-        <span class="info-val">1,000円（税込・決済済み）</span>
+        <span class="info-val">1,000円（税込・お支払い済み）</span>
       </div>
     </div>
 
-    <p style="font-size:13px;color:#555;margin-bottom:8px;">■ 参加URL</p>
+    <div class="steps-box">
+      <h3>📱 当日の参加方法（3ステップ）</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>このメールを開く</strong>
+          開催日に、このメールをもう一度開いてください。
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>下のボタンをタップ（クリック）する</strong>
+          緑色の「Google Meetに参加する」ボタンを<br>
+          タップするだけで入室できます。
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>「参加」または「今すぐ参加」をタップする</strong>
+          画面が開いたらそのままお待ちください。<br>
+          ※カメラ・マイクの使用許可を求められたら「許可」を選んでください。
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:#555;font-weight:700;margin-bottom:8px;">▼ 参加ボタン（当日タップしてください）</p>
     <div class="meet-wrap">
       <a href="${sess.meetUrl}" class="meet-btn">▶ Google Meetに参加する</a>
-      <p class="meet-url">${sess.meetUrl}</p>
+      <p class="meet-url">※ボタンが押せない場合はこちらをコピーしてブラウザに貼り付けてください<br>${sess.meetUrl}</p>
     </div>
 
     <hr class="divider">
 
     <div class="note-box">
-      <p>当日のお願い</p>
+      <p>ご参加前にご確認ください</p>
       <ul>
-        <li>開始時刻の5分前を目安に上記URLからご参加ください</li>
-        <li>落ち着いてお話を聞ける環境からのご参加をおすすめします</li>
-        <li>ご不明な点はチャット欄またはメールでご連絡ください</li>
+        <li>開始時刻の<strong>5〜10分前</strong>にご参加いただくとスムーズです</li>
+        <li>スマホの場合、「Google Meet」アプリが入っていなくてもブラウザから参加できます</li>
+        <li>Wi-Fiや電波の安定した場所からご参加ください</li>
+        <li>うまく入れない・音が聞こえないなどがあればすぐにご連絡ください</li>
       </ul>
     </div>
 
     <p class="closing">
-      ご不明な点や、参加案内が正しく表示されない場合は、<br>
-      以下までご連絡ください。<br><br>
-      教育支援団体 あんたがおらな<br>
+      ご不明な点がございましたら、お気軽にご連絡ください。<br>
+      当日お会いできることを楽しみにしております。<br><br>
+      教育支援団体 あんたがおらな 事務局<br>
       <a href="mailto:info@antagaorana.com">info@antagaorana.com</a><br>
-      090-3435-0306<br><br>
-      それでは、当日お会いできることを楽しみにしております。
+      090-3435-0306
     </p>
   </div>
   <div class="ft">
@@ -221,7 +256,8 @@ function buildEmailText({ customerName, session: sess }) {
   return `${name} 様
 
 このたびは、「共育ゼミ」にお申し込みいただき、ありがとうございます。
-ご参加いただけることを、心よりうれしく思います。
+お支払いが完了しました。
+当日のご参加方法をご案内いたします。
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -230,20 +266,39 @@ ${sess.date}
 ${sess.timeRange}
 
 ■ 開催方法
-Google Meetによるオンライン開催
-
-■ 参加URL
-${sess.meetUrl}
+オンライン（スマホ・パソコンから参加できます）
 
 ■ 参加費
-1,000円（税込・決済済み）
+1,000円（税込・お支払い済み）
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 当日の参加方法（3ステップ）
+━━━━━━━━━━━━━━━━━━━━━━
+
+【STEP 1】このメールを開く
+　開催日に、このメールをもう一度開いてください。
+
+【STEP 2】下のURLをタップ（クリック）する
+　タップするだけで入室できます。
+
+${sess.meetUrl}
+
+【STEP 3】「参加」または「今すぐ参加」をタップする
+　画面が開いたらそのままお待ちください。
+　※カメラ・マイクの使用許可を求められたら「許可」を選んでください。
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ ご参加前にご確認ください
+━━━━━━━━━━━━━━━━━━━━━━
+
+・開始時刻の5〜10分前にご参加いただくとスムーズです
+・スマホの場合、「Google Meet」アプリが入っていなくてもブラウザから参加できます
+・Wi-Fiや電波の安定した場所からご参加ください
+・うまく入れない・音が聞こえないなどがあればすぐにご連絡ください
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-開始時刻の5分前を目安に上記URLからご参加ください。
-落ち着いてお話を聞ける環境からのご参加をおすすめします。
-
-ご不明な点や、参加案内が正しく表示されない場合は、以下までご連絡ください。
+ご不明な点や、うまく参加できない場合は、お気軽にご連絡ください。
 
 教育支援団体 あんたがおらな
 info@antagaorana.com
