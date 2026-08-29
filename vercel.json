@@ -1,5 +1,11 @@
 {
   "cleanUrls": true,
+  "crons": [
+    {
+      "path": "/api/monthly-setup-reminder",
+      "schedule": "0 0 1 * *"
+    }
+  ],
   "functions": {
     "api/stripe-webhook.js": {
       "memory": 256,
