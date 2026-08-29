@@ -652,7 +652,7 @@ export default async function handler(req, res) {
   // ──────────────────────────────────────────────────────────────────
   try {
     const { data: emailData, error: emailErr } = await resend.emails.send({
-      from:    `株式会社あんたがおらな <${fromEmail}>`,
+      from:    `教育支援団体 あんたがおらな <${fromEmail}>`,
       to:      [customerEmail],
       replyTo: fromEmail,
       subject: '【共育ゼミ】お申し込みありがとうございます｜参加のご案内',
@@ -668,7 +668,7 @@ export default async function handler(req, res) {
     if (sess.reminderScheduledAt) {
       try {
         const { error: reminderErr } = await resend.emails.send({
-          from:        `株式会社あんたがおらな <${fromEmail}>`,
+          from:        `教育支援団体 あんたがおらな <${fromEmail}>`,
           to:          [customerEmail],
           replyTo:     fromEmail,
           subject:     `【共育ゼミ】明日開催です！参加URLのご案内`,
