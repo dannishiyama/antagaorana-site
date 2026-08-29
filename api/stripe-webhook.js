@@ -39,6 +39,7 @@
  */
 
 import { Resend } from 'resend';
+import crypto from 'node:crypto';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
@@ -647,6 +648,58 @@ export default async function handler(req, res) {
     return res.status(200).json({ received: true, testMode: true });
   }
 
+  // 同じ参加者が同じ開催回を複数回決済しても、参加案内は1通だけ送る。
+  // 決済レコードは registrations に全件残し、送信権だけを専用台帳で排他的に取得する。
+  const normalizedEmail = customerEmail.trim().toLowerCase();
+  const deliveryKey = crypto
+    .createHash('sha256')
+    .update(`${normalizedEmail}|${sess.date || ''}|共育ゼミ`)
+    .digest('hex');
+
+  const { error: claimErr } = await supabase
+    .from('benkyokai_email_deliveries')
+    .insert({
+      delivery_key: deliveryKey,
+      owner_event_id: event.id,
+      customer_email: normalizedEmail,
+      event_date: sess.date,
+      product_name: '共育ゼミ',
+      status: 'pending',
+    });
+
+  if (claimErr && claimErr.code !== '23505') {
+    console.error('[webhook] Email delivery claim error:', claimErr.message, '| event:', event.id);
+    return res.status(500).json({ error: 'Email delivery claim error' });
+  }
+
+  const { data: delivery, error: deliveryFetchErr } = await supabase
+    .from('benkyokai_email_deliveries')
+    .select('owner_event_id,status')
+    .eq('delivery_key', deliveryKey)
+    .single();
+
+  if (deliveryFetchErr || !delivery) {
+    console.error('[webhook] Email delivery fetch error:', deliveryFetchErr?.message, '| event:', event.id);
+    return res.status(500).json({ error: 'Email delivery fetch error' });
+  }
+
+  if (delivery.owner_event_id !== event.id) {
+    await supabase
+      .from('benkyokai_registrations')
+      .update({
+        email_status: 'duplicate_skipped',
+        email_error: '同一メールアドレス・同一開催回の案内メール送信済みまたは送信処理中',
+      })
+      .eq('stripe_event_id', event.id);
+    console.log(`[webhook] Duplicate participant delivery skipped | event=${event.id}`);
+    return res.status(200).json({ received: true, duplicateParticipantSkipped: true });
+  }
+
+  if (delivery.status === 'sent') {
+    console.log(`[webhook] Delivery ledger already sent, skip | event=${event.id}`);
+    return res.status(200).json({ received: true, emailAlreadySent: true });
+  }
+
   // ──────────────────────────────────────────────────────────────────
   // Phase 3: メール送信
   // ──────────────────────────────────────────────────────────────────
@@ -700,6 +753,20 @@ export default async function handler(req, res) {
       })
       .eq('stripe_event_id', event.id);
 
+    const { error: deliveryUpdateErr } = await supabase
+      .from('benkyokai_email_deliveries')
+      .update({
+        status: 'sent',
+        resend_email_id: emailData?.id || null,
+        error_message: null,
+      })
+      .eq('delivery_key', deliveryKey)
+      .eq('owner_event_id', event.id);
+
+    if (deliveryUpdateErr) {
+      console.error('[webhook] Delivery ledger update failed:', deliveryUpdateErr.message, '| event:', event.id);
+    }
+
     if (updateErr) {
       // メールは送れているが DB 更新失敗 → ログだけ（200を返す）
       console.error('[webhook] DB update after email success failed:', updateErr.message, '| event:', event.id);
@@ -720,6 +787,12 @@ export default async function handler(req, res) {
         email_error:  err.message,
       })
       .eq('stripe_event_id', event.id);
+
+    await supabase
+      .from('benkyokai_email_deliveries')
+      .update({ status: 'failed', error_message: err.message })
+      .eq('delivery_key', deliveryKey)
+      .eq('owner_event_id', event.id);
 
     if (failErr) {
       console.error('[webhook] DB update after email failure failed:', failErr.message);
