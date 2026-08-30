@@ -328,19 +328,18 @@ function buildSameDayEmailHtml({ customerName, session: sess }) {
     <p class="thanks">
       このたびは、「共育ゼミ」にお申し込みいただき、<br>
       ありがとうございます。お支払いが正常に完了しました。<br><br>
-      <strong>本日開催です。</strong>下のボタンから参加できます。
+      <strong>本日開催です。</strong><br>
+      参加URLは事務局より<strong>開始30分前までに</strong>あらためてメールでお送りします。<br>
+      しばらくお待ちください。
     </p>
     <div class="info-box">
       📅 <strong>開催日時：</strong>${sess.date}　${sess.timeRange}<br>
       💻 <strong>開催方法：</strong>オンライン（スマホ・パソコン）
     </div>
-    <p style="font-size:14px;color:#333;font-weight:700;margin-bottom:8px;text-align:center">▼ 開始時刻になったらここをタップ！</p>
-    <a href="${sess.meetUrl}" class="meet-btn">▶ Google Meetに参加する</a>
-    <p class="meet-url">ボタンが押せない場合はこのURLをコピーしてブラウザに貼り付けてください<br>${sess.meetUrl}</p>
     <div class="note">
-      ✅ 開始5〜10分前にアクセスするとスムーズです<br>
-      ✅ アプリ不要。スマホのブラウザからそのまま参加できます<br>
-      ✅ カメラ・マイクの許可を求められたら「許可」を選んでください
+      ✅ 参加URLは開始30分前までにメールでお送りします<br>
+      ✅ 届かない場合はinfo@antagaorana.comへご連絡ください<br>
+      ✅ アプリ不要。スマホのブラウザからそのまま参加できます
     </div>
     <p class="closing">
       当日お会いできることを楽しみにしております。<br><br>
@@ -364,22 +363,19 @@ function buildSameDayEmailText({ customerName, session: sess }) {
 
 ⏰ 本日開催です！
 
+参加URLは事務局より開始30分前までにあらためてメールでお送りします。
+しばらくお待ちください。
+
 ━━━━━━━━━━━━━━━━━━━━━━
 ■ 開催日時
 ${sess.date}
 ${sess.timeRange}
 
-■ 参加URL（タップするだけで入室できます）
-
-${sess.meetUrl}
-
+■ 開催方法
+オンライン（スマホ・パソコンから参加できます）
 ━━━━━━━━━━━━━━━━━━━━━━
 
-・開始5〜10分前にアクセスするとスムーズです
-・アプリ不要。スマホのブラウザからそのまま参加できます
-・カメラ・マイクの許可を求められたら「許可」を選んでください
-
-当日お会いできることを楽しみにしております。
+届かない場合はinfo@antagaorana.comへご連絡ください。
 
 教育支援団体 あんたがおらな 事務局
 info@antagaorana.com
@@ -756,9 +752,9 @@ export default async function handler(req, res) {
   // Phase 3: メール送信
   // ──────────────────────────────────────────────────────────────────
   try {
-    // 当日申し込みかどうかでメール内容を切り替え
+    // 当日申し込みかどうかで確認メールの文言を切り替え（URLは一切含めない）
     const emailSubject = sess.isSameDay
-      ? '【共育ゼミ】お申し込みありがとうございます｜本日開催の参加URLをお送りします'
+      ? '【共育ゼミ】お申し込みありがとうございます｜本日開催・参加URLはまもなくお送りします'
       : '【共育ゼミ】お申し込みありがとうございます｜参加URLは前日にお送りします';
     const emailHtml = sess.isSameDay
       ? buildSameDayEmailHtml({ customerName, session: sess })
@@ -774,36 +770,37 @@ export default async function handler(req, res) {
       subject: emailSubject,
       html:    emailHtml,
       text:    emailText,
-      // 同一 event.id で何度リクエストしても Resend 側で重複送信を防ぐ
       headers: { 'X-Idempotency-Key': event.id },
     });
 
     if (emailErr) throw emailErr;
 
-    // ── 前日リマインドメールのスケジュール送信 ──────────────────────
-    if (sess.reminderScheduledAt) {
-      try {
-        const { error: reminderErr } = await resend.emails.send({
-          from:        `教育支援団体 あんたがおらな <${fromEmail}>`,
-          to:          [customerEmail],
-          replyTo:     fromEmail,
-          subject:     `【共育ゼミ】明日開催です！参加URLのご案内`,
-          html:        buildReminderHtml({ customerName, session: sess }),
-          text:        buildReminderText({ customerName, session: sess }),
-          scheduledAt: sess.reminderScheduledAt,
-          headers:     { 'X-Idempotency-Key': `${event.id}-reminder` },
-        });
-        if (reminderErr) {
-          // リマインド失敗は致命的ではない → ログのみ
-          console.warn(`[webhook] Reminder schedule failed | event=${event.id} |`, reminderErr.message);
-        } else {
-          console.log(`[webhook] Reminder scheduled at ${sess.reminderScheduledAt} | event=${event.id}`);
-        }
-      } catch (reminderEx) {
-        console.warn(`[webhook] Reminder schedule error | event=${event.id} |`, reminderEx.message);
-      }
-    } else {
-      console.log(`[webhook] Reminder not scheduled (no SESSION_DATE_ISO or date already past) | event=${event.id}`);
+    // ── 管理者へ申し込み通知（BCC下書き更新を促す） ──────────────────
+    // scheduledAt リマインドは廃止。参加URLはすべて弾さんが手動BCC送信。
+    // 申し込みのたびに管理者へ通知し、下書き更新を促す。
+    try {
+      const sameDayNote = sess.isSameDay
+        ? '⚠️ 当日申し込みです。開始30分前にBCC下書きを確認して送信してください。'
+        : '📋 前日までの申し込みです。開催当日にBCC下書きを確認して送信してください。';
+
+      await resend.emails.send({
+        from:    `共育ゼミ自動通知 <${fromEmail}>`,
+        to:      [fromEmail],
+        subject: `【共育ゼミ申し込み通知】${customerName || customerEmail} 様`,
+        text:    [
+          '新しい申し込みがありました。',
+          '',
+          `氏名: ${customerName || '（未取得）'}`,
+          `日時: ${sess.date} ${sess.timeRange}`,
+          `種別: ${sess.isSameDay ? '当日申し込み' : '事前申し込み'}`,
+          '',
+          sameDayNote,
+          '',
+          '→ ClaudeにBCC下書きの更新を依頼してください。',
+        ].join('\n'),
+      });
+    } catch (notifyEx) {
+      console.warn('[webhook] Admin notify error:', notifyEx.message);
     }
 
     // ── 送信成功 → Supabase を更新 ──
