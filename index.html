@@ -518,18 +518,19 @@ section{padding:88px 5%}
 .attitude{background:#3e5739;padding:72px 0}
 .attitude .stag{color:#c9aa6a}
 .attitude .stitle{color:#fff;margin-bottom:36px}
-.attitude-lead{font-size:clamp(13px,1.5vw,15px);color:rgba(255,255,255,.75);margin-top:18px;margin-bottom:44px;line-height:1.9}
-.attitude-lead strong{color:#fff;font-weight:700}
 .attitude-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.attitude-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:36px 28px;text-align:left;transition:background .2s}
+.attitude-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:36px 28px;text-align:left;transition:background .2s;display:flex;flex-direction:column}
 .attitude-card:hover{background:rgba(255,255,255,.1)}
-.attitude-card:nth-child(2){background:rgba(255,255,255,.095);border-color:rgba(255,255,255,.14)}
-.attitude-card:nth-child(3){background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.12)}
+.attitude-card--kibou{background:rgba(255,255,255,.095);border-color:rgba(255,255,255,.14)}
+.attitude-card--kyoku{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)}
+.attitude-card--shinken{background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.12)}
 .attitude-num{font-size:11px;font-weight:700;letter-spacing:.18em;color:#c9aa6a;margin-bottom:18px;text-transform:uppercase}
 .attitude-name{font-family:'Noto Serif JP',serif;font-size:clamp(20px,2.4vw,26px);font-weight:700;color:#fff;margin:0 0 4px}
 .attitude-en{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.38);margin:0 0 22px;text-transform:uppercase}
-.attitude-catch{font-family:'Noto Serif JP',serif;font-size:clamp(19px,2.3vw,22px);font-weight:500;color:#fff;line-height:1.6;margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.attitude-catch{font-family:'Noto Serif JP',serif;font-size:clamp(19px,2.3vw,22px);font-weight:500;color:#fff;line-height:1.6;margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12);min-height:4.8em;display:flex;align-items:flex-start}
 .attitude-body{font-size:14px;line-height:2.05;color:rgba(255,255,255,.72);margin:0;max-width:38em}
+.attitude-body p{margin:0 0 1em}
+.attitude-body p:last-child{margin-bottom:0}
 
 .kunxun{background:#f4f1ea}
 .kunxun-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
@@ -1059,9 +1060,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 @media(max-width:900px){
   nav .nav-links{display:none}
   .creed-grid,.india-grid,.msg-grid,.ft-inner{grid-template-columns:1fr}
-  .attitude-grid{grid-template-columns:1fr;gap:16px}
-  .attitude-card{padding:28px 22px}
-  .attitude-lead{margin-bottom:32px}
+  .attitude-grid{grid-template-columns:1fr;gap:16px;padding:0 18px}
+  .attitude-card{padding:28px 20px}
+  .attitude-catch{min-height:unset;font-size:clamp(18px,5vw,22px)}
+  .attitude-body{font-size:15px}
+  .attitude .stitle{padding:0 18px}
+  .attitude .stag{padding:0 18px}
   .hero-message{max-width:none}
   .hero-content{flex-direction:column;align-items:center;justify-content:center;gap:0}
   .hero-visual{
@@ -1287,14 +1291,15 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="sub">MENU</div>
-  <a href="#creed">私たちについて</a>
+  <a href="#creed">理念・3つの姿勢</a>
   <a href="#services">支援内容</a>
-  <a href="#message">挨拶</a>
-  <a href="#voice">実際の声</a>
+  <a href="#message">ご挨拶</a>
+  <a href="#voice">ご利用者の声</a>
   <a href="#faq">よくあるご質問</a>
   <a href="./news.html">お知らせ</a>
-  <a href="https://calendar.app.google/ZvDyFhuG5TE3zzCw9" target="_blank" rel="noopener">まず、相談してみる</a>
+  <a href="#contact">お問い合わせ</a>
   <div class="nav-drawer-divider"></div>
+  <a href="https://calendar.app.google/ZvDyFhuG5TE3zzCw9" target="_blank" rel="noopener">まず、相談してみる</a>
   <a href="./community.html" class="nav-drawer-member">コミュニティへ入る</a>
 </div>
 
@@ -1372,20 +1377,32 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <div class="stag">Our Attitude</div>
     <h2 class="stitle">私たちが大切にする3つの姿勢</h2>
     <div class="attitude-grid">
-      <div class="attitude-card">
+      <div class="attitude-card attitude-card--kibou">
         <div class="attitude-num">01</div>
-        <p class="attitude-catch">誰かの味方であり続ける、共苦の心。</p>
-        <p class="attitude-body">悩みや苦しみを受け止め、労い、<br>味方であり続けます。<br>共感するだけではなく、ともに悩み、ともに考える。<br>その心が安心を生み、新たな一歩を踏み出す力になると、<br>私たちは信じています。</p>
+        <h3 class="attitude-catch">元気と希望の発信源。</h3>
+        <div class="attitude-body">
+          <p>私たちは明るさをもって、子どもやご家庭へ元気と希望を届けます。</p>
+          <p>「この人たちと一緒なら、なんとかなるかもしれない。」</p>
+          <p>そう思っていただける存在を目指しています。</p>
+        </div>
       </div>
-      <div class="attitude-card">
+      <div class="attitude-card attitude-card--kyoku">
         <div class="attitude-num">02</div>
-        <p class="attitude-catch">元気と希望の発信源。</p>
-        <p class="attitude-body">私たちは明るさをもって、<br>子どもやご家庭へ元気と希望を届けます。<br>「この人たちと一緒なら、なんとかなるかもしれない。」<br>そう思っていただける存在を目指しています。</p>
+        <h3 class="attitude-catch">誰かの味方であり続ける、共苦の心。</h3>
+        <div class="attitude-body">
+          <p>悩みや苦しみを受け止め、労い、味方であり続けます。</p>
+          <p>共感するだけではなく、ともに悩み、ともに考える。</p>
+          <p>その心が安心を生み、新たな一歩を踏み出す力になると、私たちは信じています。</p>
+        </div>
       </div>
-      <div class="attitude-card">
+      <div class="attitude-card attitude-card--shinken">
         <div class="attitude-num">03</div>
-        <p class="attitude-catch">真剣勝負で築き上げる信頼関係。</p>
-        <p class="attitude-body">本気で向き合うからこそ、<br>耳の痛いことも必要であれば誠実に伝えます。<br>表面的な優しさではなく、<br>目の前の人の人生に責任を持つ。<br>その積み重ねが、本当の信頼関係を築くと<br>私たちは信じています。</p>
+        <h3 class="attitude-catch">真剣勝負で築き上げる信頼関係。</h3>
+        <div class="attitude-body">
+          <p>本気で向き合うからこそ、耳の痛いことも必要であれば誠実に伝えます。</p>
+          <p>表面的な優しさではなく、目の前の人の人生に責任を持つ。</p>
+          <p>その積み重ねが、本当の信頼関係を築くと私たちは信じています。</p>
+        </div>
       </div>
     </div>
   </div>

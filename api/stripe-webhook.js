@@ -123,7 +123,7 @@ async function notifyAdmin(resend, fromEmail, subject, body) {
   }
 }
 
-// ── HTMLメール本文 ───────────────────────────────────────────────
+// ── HTMLメール本文（申し込み完了。URLは前日送付） ───────────────────
 function buildEmailHtml({ customerName, session: sess }) {
   const name = customerName ? `${customerName}` : 'ご参加者';
   const termsUrl = 'https://antagaorana.com/benkyokai-terms.html';
@@ -148,15 +148,9 @@ function buildEmailHtml({ customerName, session: sess }) {
   .info-row{display:table;width:100%;margin-bottom:10px;font-size:15px}
   .info-label{display:table-cell;color:#888;width:90px;vertical-align:top}
   .info-val{display:table-cell;color:#222;font-weight:600;vertical-align:top}
-  .steps-box{background:#f0f6f0;border-radius:8px;padding:20px 24px;margin-bottom:24px}
-  .steps-box h3{margin:0 0 16px;font-size:13px;color:#3e5739;letter-spacing:.1em;border-bottom:1px solid #c8ddc8;padding-bottom:8px;font-weight:700}
-  .step{display:flex;align-items:flex-start;margin-bottom:14px;font-size:14px;line-height:1.8}
-  .step-num{flex-shrink:0;width:28px;height:28px;background:#3e5739;color:#fff;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-right:12px;margin-top:2px}
-  .step-text{color:#333}
-  .step-text strong{color:#3e5739;display:block;margin-bottom:2px}
-  .meet-wrap{margin:20px 0 8px}
-  .meet-btn{display:block;text-align:center;background:#3e5739;color:#fff !important;font-size:16px;font-weight:700;text-decoration:none;padding:18px 24px;border-radius:7px;letter-spacing:.03em}
-  .meet-url{text-align:center;font-size:12px;color:#aaa;word-break:break-all;margin:8px 0 0;padding:0}
+  .url-notice{background:#f0f6f0;border-radius:8px;padding:20px 24px;margin-bottom:24px;text-align:center}
+  .url-notice p{margin:0;font-size:15px;color:#3e5739;font-weight:700;line-height:1.9}
+  .url-notice small{font-size:13px;color:#666;font-weight:normal}
   .note-box{background:#fffaf5;border-left:3px solid #c8602a;border-radius:0 6px 6px 0;padding:16px 18px;margin-bottom:28px}
   .note-box p{margin:0 0 8px;font-size:14px;color:#c8602a;font-weight:700}
   .note-box ul{margin:0;padding:0 0 0 18px;font-size:14px;color:#555;line-height:2}
@@ -171,16 +165,16 @@ function buildEmailHtml({ customerName, session: sess }) {
 <div class="wrap">
   <div class="hd">
     <p class="hd-sub">教育支援団体 あんたがおらな</p>
-    <p class="hd-brand">共育ゼミ｜参加のご案内</p>
+    <p class="hd-brand">共育ゼミ｜お申し込み完了</p>
   </div>
   <div class="bd">
     <p class="greeting">${name} 様</p>
     <p class="thanks">
       このたびは、「共育ゼミ」にお申し込みいただき、<br>
       ありがとうございます。<br><br>
-      お支払いが完了しました。<br>
-      当日のご参加方法をご案内いたします。<br>
-      どうぞ最後までお読みください。
+      お支払いが正常に完了しました。<br>
+      当日の参加URLは、<strong>前日にあらためてメールでお送りします</strong>ので、<br>
+      しばらくお待ちください。
     </p>
 
     <hr class="divider">
@@ -201,37 +195,9 @@ function buildEmailHtml({ customerName, session: sess }) {
       </div>
     </div>
 
-    <div class="steps-box">
-      <h3>📱 当日の参加方法（3ステップ）</h3>
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-text">
-          <strong>このメールを開く</strong>
-          開催日に、このメールをもう一度開いてください。
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-text">
-          <strong>下のボタンをタップ（クリック）する</strong>
-          緑色の「Google Meetに参加する」ボタンを<br>
-          タップするだけで入室できます。
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-text">
-          <strong>「参加」または「今すぐ参加」をタップする</strong>
-          画面が開いたらそのままお待ちください。<br>
-          ※カメラ・マイクの使用許可を求められたら「許可」を選んでください。
-        </div>
-      </div>
-    </div>
-
-    <p style="font-size:14px;color:#555;font-weight:700;margin-bottom:8px;">▼ 参加ボタン（当日タップしてください）</p>
-    <div class="meet-wrap">
-      <a href="${sess.meetUrl}" class="meet-btn">▶ Google Meetに参加する</a>
-      <p class="meet-url">※ボタンが押せない場合はこちらをコピーしてブラウザに貼り付けてください<br>${sess.meetUrl}</p>
+    <div class="url-notice">
+      <p>🔔 参加URLは前日にメールでお送りします<br>
+      <small>届いたメールのボタンをタップするだけで入室できます</small></p>
     </div>
 
     <hr class="divider">
@@ -239,15 +205,14 @@ function buildEmailHtml({ customerName, session: sess }) {
     <div class="note-box">
       <p>ご参加前にご確認ください</p>
       <ul>
-        <li>開始時刻の<strong>5〜10分前</strong>にご参加いただくとスムーズです</li>
+        <li>前日に参加URLをメールでお送りします。届かない場合はご連絡ください</li>
         <li>スマホの場合、「Google Meet」アプリが入っていなくてもブラウザから参加できます</li>
         <li>Wi-Fiや電波の安定した場所からご参加ください</li>
-        <li>うまく入れない・音が聞こえないなどがあればすぐにご連絡ください</li>
+        <li>ご不明な点はいつでもinfo@antagaorana.comへご連絡ください</li>
       </ul>
     </div>
 
     <p class="closing">
-      ご不明な点がございましたら、お気軽にご連絡ください。<br>
       当日お会いできることを楽しみにしております。<br><br>
       教育支援団体 あんたがおらな 事務局<br>
       <a href="mailto:info@antagaorana.com">info@antagaorana.com</a><br>
@@ -268,14 +233,16 @@ function buildEmailHtml({ customerName, session: sess }) {
 </html>`;
 }
 
-// ── プレーンテキスト版 ────────────────────────────────────────────
+// ── プレーンテキスト版（申し込み完了。URLは前日送付） ─────────────
 function buildEmailText({ customerName, session: sess }) {
   const name = customerName ? `${customerName}` : 'ご参加者';
   return `${name} 様
 
 このたびは、「共育ゼミ」にお申し込みいただき、ありがとうございます。
-お支払いが完了しました。
-当日のご参加方法をご案内いたします。
+お支払いが正常に完了しました。
+
+当日の参加URLは、前日にあらためてメールでお送りします。
+しばらくお待ちください。
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
@@ -290,42 +257,19 @@ ${sess.timeRange}
 1,000円（税込・お支払い済み）
 
 ━━━━━━━━━━━━━━━━━━━━━━
-■ 当日の参加方法（3ステップ）
-━━━━━━━━━━━━━━━━━━━━━━
 
-【STEP 1】このメールを開く
-　開催日に、このメールをもう一度開いてください。
-
-【STEP 2】下のURLをタップ（クリック）する
-　タップするだけで入室できます。
-
-${sess.meetUrl}
-
-【STEP 3】「参加」または「今すぐ参加」をタップする
-　画面が開いたらそのままお待ちください。
-　※カメラ・マイクの使用許可を求められたら「許可」を選んでください。
-
-━━━━━━━━━━━━━━━━━━━━━━
-■ ご参加前にご確認ください
-━━━━━━━━━━━━━━━━━━━━━━
-
-・開始時刻の5〜10分前にご参加いただくとスムーズです
-・スマホの場合、「Google Meet」アプリが入っていなくてもブラウザから参加できます
-・Wi-Fiや電波の安定した場所からご参加ください
-・うまく入れない・音が聞こえないなどがあればすぐにご連絡ください
+【参加URLについて】
+前日にメールでお送りします。
+届いたメールのURLをタップするだけで入室できます。
+届かない場合はinfo@antagaorana.comまでご連絡ください。
 
 ━━━━━━━━━━━━━━━━━━━━━━
 
-ご不明な点や、うまく参加できない場合は、お気軽にご連絡ください。
+当日お会いできることを楽しみにしております。
 
-教育支援団体 あんたがおらな
+教育支援団体 あんたがおらな 事務局
 info@antagaorana.com
 090-3435-0306
-
-それでは、当日お会いできることを楽しみにしております。
-
-教育支援団体 あんたがおらな
-代表 大久保 俊輝
 https://antagaorana.com
 
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -708,7 +652,7 @@ export default async function handler(req, res) {
       from:    `教育支援団体 あんたがおらな <${fromEmail}>`,
       to:      [customerEmail],
       replyTo: fromEmail,
-      subject: '【共育ゼミ】お申し込みありがとうございます｜参加のご案内',
+      subject: '【共育ゼミ】お申し込みありがとうございます｜参加URLは前日にお送りします',
       html:    buildEmailHtml({ customerName, session: sess }),
       text:    buildEmailText({ customerName, session: sess }),
       // 同一 event.id で何度リクエストしても Resend 側で重複送信を防ぐ
