@@ -80,23 +80,32 @@ function getSessionConfig() {
 
   const timeRange = timeEnd ? `${timeStart}〜${timeEnd}` : timeStart;
 
-  // 前日リマインド送信日時を計算（SESSION_DATE_ISO: "2026-08-30" 形式）
+  // 前日リマインド送信日時を計算（SESSION_DATE_ISO: "2026-09-27" 形式）
   // 前日の朝9時JST = 前日の 00:00 UTC
   let reminderScheduledAt = null;
-  const dateIso = process.env.SESSION_DATE_ISO; // 例: "2026-08-30"
+  let isSameDay = false;
+  const dateIso = process.env.SESSION_DATE_ISO; // 例: "2026-09-27"
   if (dateIso && /^\d{4}-\d{2}-\d{2}$/.test(dateIso)) {
-    // イベント日の前日 09:00 JST = 前日 00:00 UTC
-    const eventDate = new Date(`${dateIso}T00:00:00+09:00`);
-    const reminderDate = new Date(eventDate.getTime() - 24 * 60 * 60 * 1000);
-    reminderDate.setUTCHours(0, 0, 0, 0); // 前日00:00 UTC = 前日09:00 JST
     const now = new Date();
-    // リマインド予定日時が未来の場合のみスケジュール
-    if (reminderDate > now) {
-      reminderScheduledAt = reminderDate.toISOString();
+    // 当日判定: 日本時間でイベント日と今日が同じか
+    const todayJST = new Date(now.getTime() + 9 * 60 * 60 * 1000)
+      .toISOString().slice(0, 10);
+    isSameDay = (todayJST === dateIso);
+
+    if (!isSameDay) {
+      // 通常: イベント前日 09:00 JST にリマインドをスケジュール
+      const eventDate = new Date(`${dateIso}T00:00:00+09:00`);
+      const reminderDate = new Date(eventDate.getTime() - 24 * 60 * 60 * 1000);
+      reminderDate.setUTCHours(0, 0, 0, 0); // 前日00:00 UTC = 前日09:00 JST
+      // リマインド予定日時が未来の場合のみスケジュール
+      if (reminderDate > now) {
+        reminderScheduledAt = reminderDate.toISOString();
+      }
     }
+    // isSameDay=true の場合: リマインドなし。確認メールに即時URLを含める
   }
 
-  return { date, timeRange, meetUrl, reminderScheduledAt };
+  return { date, timeRange, meetUrl, reminderScheduledAt, isSameDay };
 }
 
 // ── 管理者へのエラー通知（Resendでメール送信） ─────────────────────
@@ -276,6 +285,105 @@ https://antagaorana.com
 キャンセル・返金条件については以下をご確認ください。
 https://antagaorana.com/benkyokai-terms.html
 このメールはお申し込みいただいた方にお送りしています。
+`;
+}
+
+// ── HTMLメール本文（当日申し込み。URLを即時記載） ────────────────────
+function buildSameDayEmailHtml({ customerName, session: sess }) {
+  const name = customerName ? `${customerName}` : 'ご参加者';
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{margin:0;padding:0;background:#f5f2ed;font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif}
+  .wrap{max-width:560px;margin:32px auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08)}
+  .hd{background:#c8602a;padding:28px 36px;text-align:center}
+  .hd-sub{color:rgba(255,255,255,.8);font-size:11px;letter-spacing:.2em;margin:0 0 4px}
+  .hd-brand{color:#fff;font-size:18px;font-weight:700;margin:0}
+  .bd{padding:36px}
+  .badge{background:#fff3ee;border:2px solid #c8602a;border-radius:8px;padding:14px 20px;text-align:center;margin-bottom:24px;font-size:15px;color:#c8602a;font-weight:700}
+  .greeting{font-size:16px;margin-bottom:16px;color:#222;font-weight:700}
+  .thanks{font-size:15px;color:#444;line-height:2;margin-bottom:24px}
+  .divider{border:none;border-top:1px solid #e5e0d8;margin:24px 0}
+  .info-box{background:#f8f5f0;border-radius:8px;padding:16px 20px;margin-bottom:20px;font-size:14px;color:#333;line-height:2}
+  .meet-btn{display:block;text-align:center;background:#c8602a;color:#fff !important;font-size:17px;font-weight:700;text-decoration:none;padding:20px 24px;border-radius:7px;letter-spacing:.03em}
+  .meet-url{text-align:center;font-size:12px;color:#aaa;word-break:break-all;margin:8px 0 24px}
+  .note{background:#fffaf5;border-left:3px solid #c8602a;padding:14px 18px;border-radius:0 6px 6px 0;font-size:13px;color:#666;line-height:2;margin-bottom:24px}
+  .closing{font-size:14px;color:#555;line-height:2}
+  .closing a{color:#3e5739;text-decoration:none}
+  .ft{background:#f5f2ed;padding:16px 36px;text-align:center;font-size:11px;color:#999}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hd">
+    <p class="hd-sub">教育支援団体 あんたがおらな</p>
+    <p class="hd-brand">🔔 共育ゼミ｜本日開催のご案内</p>
+  </div>
+  <div class="bd">
+    <div class="badge">⏰ 本日開催です！</div>
+    <p class="greeting">${name} 様</p>
+    <p class="thanks">
+      このたびは、「共育ゼミ」にお申し込みいただき、<br>
+      ありがとうございます。お支払いが正常に完了しました。<br><br>
+      <strong>本日開催です。</strong>下のボタンから参加できます。
+    </p>
+    <div class="info-box">
+      📅 <strong>開催日時：</strong>${sess.date}　${sess.timeRange}<br>
+      💻 <strong>開催方法：</strong>オンライン（スマホ・パソコン）
+    </div>
+    <p style="font-size:14px;color:#333;font-weight:700;margin-bottom:8px;text-align:center">▼ 開始時刻になったらここをタップ！</p>
+    <a href="${sess.meetUrl}" class="meet-btn">▶ Google Meetに参加する</a>
+    <p class="meet-url">ボタンが押せない場合はこのURLをコピーしてブラウザに貼り付けてください<br>${sess.meetUrl}</p>
+    <div class="note">
+      ✅ 開始5〜10分前にアクセスするとスムーズです<br>
+      ✅ アプリ不要。スマホのブラウザからそのまま参加できます<br>
+      ✅ カメラ・マイクの許可を求められたら「許可」を選んでください
+    </div>
+    <p class="closing">
+      当日お会いできることを楽しみにしております。<br><br>
+      教育支援団体 あんたがおらな 事務局<br>
+      <a href="mailto:info@antagaorana.com">info@antagaorana.com</a><br>
+      090-3435-0306
+    </p>
+  </div>
+  <div class="ft">教育支援団体 あんたがおらな | このメールはお申し込みいただいた方にお送りしています。</div>
+</div>
+</body>
+</html>`;
+}
+
+function buildSameDayEmailText({ customerName, session: sess }) {
+  const name = customerName ? `${customerName}` : 'ご参加者';
+  return `${name} 様
+
+このたびは、「共育ゼミ」にお申し込みいただき、ありがとうございます。
+お支払いが正常に完了しました。
+
+⏰ 本日開催です！
+
+━━━━━━━━━━━━━━━━━━━━━━
+■ 開催日時
+${sess.date}
+${sess.timeRange}
+
+■ 参加URL（タップするだけで入室できます）
+
+${sess.meetUrl}
+
+━━━━━━━━━━━━━━━━━━━━━━
+
+・開始5〜10分前にアクセスするとスムーズです
+・アプリ不要。スマホのブラウザからそのまま参加できます
+・カメラ・マイクの許可を求められたら「許可」を選んでください
+
+当日お会いできることを楽しみにしております。
+
+教育支援団体 あんたがおらな 事務局
+info@antagaorana.com
+090-3435-0306
 `;
 }
 
@@ -648,13 +756,24 @@ export default async function handler(req, res) {
   // Phase 3: メール送信
   // ──────────────────────────────────────────────────────────────────
   try {
+    // 当日申し込みかどうかでメール内容を切り替え
+    const emailSubject = sess.isSameDay
+      ? '【共育ゼミ】お申し込みありがとうございます｜本日開催の参加URLをお送りします'
+      : '【共育ゼミ】お申し込みありがとうございます｜参加URLは前日にお送りします';
+    const emailHtml = sess.isSameDay
+      ? buildSameDayEmailHtml({ customerName, session: sess })
+      : buildEmailHtml({ customerName, session: sess });
+    const emailText = sess.isSameDay
+      ? buildSameDayEmailText({ customerName, session: sess })
+      : buildEmailText({ customerName, session: sess });
+
     const { data: emailData, error: emailErr } = await resend.emails.send({
       from:    `教育支援団体 あんたがおらな <${fromEmail}>`,
       to:      [customerEmail],
       replyTo: fromEmail,
-      subject: '【共育ゼミ】お申し込みありがとうございます｜参加URLは前日にお送りします',
-      html:    buildEmailHtml({ customerName, session: sess }),
-      text:    buildEmailText({ customerName, session: sess }),
+      subject: emailSubject,
+      html:    emailHtml,
+      text:    emailText,
       // 同一 event.id で何度リクエストしても Resend 側で重複送信を防ぐ
       headers: { 'X-Idempotency-Key': event.id },
     });
