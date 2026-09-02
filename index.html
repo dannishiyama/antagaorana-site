@@ -563,6 +563,7 @@ section{padding:88px 5%}
 .sv-body{padding:26px}
 .sv-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;background:var(--gp);color:var(--g);letter-spacing:.08em}
 .sv-name{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:900;color:var(--g);margin-bottom:4px}
+.sv-sub-name{font-size:12px;color:var(--tm);font-weight:500;margin-bottom:10px;letter-spacing:.02em}
 .sv-txt{font-size:14px;color:var(--tm);line-height:1.9;margin-bottom:18px}
 .sv-for {
   font-size: 12px;
@@ -578,9 +579,15 @@ section{padding:88px 5%}
   font-weight: 700;
   font-size: 11px;
   letter-spacing: .08em;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: var(--gd);
 }
+.sv-for-list{list-style:none;padding:0;margin:0}
+.sv-for-list li{position:relative;padding-left:14px;font-size:12px;color:var(--g);line-height:1.8;margin-bottom:2px}
+.sv-for-list li::before{content:'·';position:absolute;left:2px;color:var(--g);font-weight:700}
+/* PC専用改行 */
+br.pc-only{display:none}
+@media(min-width:901px){br.pc-only{display:initial}}
 .sv-lnk{
   display:inline-flex;
   align-items:center;
@@ -1392,27 +1399,27 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="attitude-num">01</div>
         <h3 class="attitude-catch">元気と希望の発信源。</h3>
         <div class="attitude-body">
-          <p>私たちは明るさをもって、子どもやご家庭へ元気と希望を届けます。</p>
-          <p>「この人たちと一緒なら、なんとかなるかもしれない。」</p>
-          <p>そう思っていただける存在を目指しています。</p>
+          <p>私たちは明るさをもって、<br class="pc-only">子どもやご家庭へ元気と希望を届けます。</p>
+          <p>「この人たちと一緒なら、<br class="pc-only">なんとかなるかもしれない。」</p>
+          <p>そう思っていただける存在を<br class="pc-only">目指しています。</p>
         </div>
       </div>
       <div class="attitude-card attitude-card--kyoku">
         <div class="attitude-num">02</div>
-        <h3 class="attitude-catch">誰かの味方であり続ける、共苦の心。</h3>
+        <h3 class="attitude-catch">誰かの味方であり続ける、<br class="pc-only">共苦の心。</h3>
         <div class="attitude-body">
-          <p>悩みや苦しみを受け止め、労い、味方であり続けます。</p>
-          <p>共感するだけではなく、ともに悩み、ともに考える。</p>
-          <p>その心が安心を生み、新たな一歩を踏み出す力になると、私たちは信じています。</p>
+          <p>悩みや苦しみを受け止め、労い、<br class="pc-only">味方であり続けます。</p>
+          <p>共感するだけではなく、<br class="pc-only">ともに悩み、ともに考える。</p>
+          <p>その心が安心を生み、<br class="pc-only">新たな一歩を踏み出す力になると、<br class="pc-only">私たちは信じています。</p>
         </div>
       </div>
       <div class="attitude-card attitude-card--shinken">
         <div class="attitude-num">03</div>
-        <h3 class="attitude-catch">真剣勝負で築き上げる信頼関係。</h3>
+        <h3 class="attitude-catch">真剣勝負で築き上げる<br class="pc-only">信頼関係。</h3>
         <div class="attitude-body">
-          <p>本気で向き合うからこそ、耳の痛いことも必要であれば誠実に伝えます。</p>
-          <p>表面的な優しさではなく、目の前の人の人生に責任を持つ。</p>
-          <p>その積み重ねが、本当の信頼関係を築くと私たちは信じています。</p>
+          <p>本気で向き合うからこそ、<br class="pc-only">耳の痛いことも必要であれば<br class="pc-only">誠実に伝えます。</p>
+          <p>表面的な優しさではなく、<br class="pc-only">目の前の人の人生に責任を持つ。</p>
+          <p>その積み重ねが、<br class="pc-only">本当の信頼関係を築くと<br class="pc-only">私たちは信じています。</p>
         </div>
       </div>
     </div>
@@ -1424,7 +1431,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="si">
     <div class="stag">Services</div>
     <h2 class="stitle">支援内容</h2>
-    <p class="slead">私たちは多角的な支援の体制で、子どもとご家族の未来をつくります。</p>
+    <p class="slead">子ども、親御様、そして自分の人生を歩み直したい方へ。<br class="pc-only">一人ひとりに必要な「味方」と支援を届けます。</p>
     <div class="sv-grid">
       <div class="sv">
         <div class="sv-img"><img src="./lp-assets/service-mei-20260502.jpg?v=20260502a" alt="家庭教師 子どもとの関わり"></div>
@@ -1432,8 +1439,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <span class="sv-badge">家庭教師事業</span>
           <div class="sv-name">芽（メイ）</div>
           <div class="sv-for">
-            <span>こんなご家庭へ</span>
-            「学校に行けない日が続いている」「普通の家庭教師では合わなかった」「まず自信を取り戻してほしい」
+            <span>こんなお子様・ご家庭へ</span>
+            <ul class="sv-for-list">
+              <li>学校に行けない日が続き、勉強にも自信を失っている</li>
+              <li>一般的な塾や家庭教師では合わなかった</li>
+              <li>成績より先に、「自分にもできる」という感覚を取り戻してほしい</li>
+            </ul>
           </div>
           <div class="sv-txt">不登校・引きこもり・発達特性のお子様へ。勉強を教えるだけでなく、生きる力・自己肯定感・「自分にもできる」という確信を育てます。</div>
           <div class="sv-actions">
@@ -1448,8 +1459,12 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <span class="sv-badge">教育コンサルティング</span>
           <div class="sv-name">導（シルべ）</div>
           <div class="sv-for">
-            <span>こんな親御様へ</span>
-            「どう声をかければいいかわからない」「怒ってしまう自分が嫌になる」「夫婦でこの問題について意見が合わない」
+            <span>こんな親御様・ご家庭へ</span>
+            <ul class="sv-for-list">
+              <li>子どもにどう声をかければよいか分からない</li>
+              <li>相談先を回っても、具体的な関わり方が見つからない</li>
+              <li>夫婦で意見が合わず、家庭全体が苦しくなっている</li>
+            </ul>
           </div>
           <div class="sv-txt">子どもとの関わり方に悩む親御様へ。心理学的な分析とロードマップで、家庭の空気から変えていきます。親が変われば、家庭が変わる。</div>
           <div class="sv-actions">
@@ -1461,11 +1476,16 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="sv">
         <div class="sv-img"><img src="./lp-assets/service-haku.png?v=20260501a" alt="コーチング"></div>
         <div class="sv-body">
-          <span class="sv-badge">社会人コーチング</span>
+          <span class="sv-badge">社会人向けコーチング</span>
           <div class="sv-name">拓（ハク）</div>
+          <div class="sv-sub-name">人間力育成プログラム</div>
           <div class="sv-for">
-            <span>こんな方へ</span>
-            「このままでいいのかと感じている」「本当にやりたいことがわからなくなった」「人生を変えたいが何から始めればいいかわからない」
+            <span>こんな社会人の方へ</span>
+            <ul class="sv-for-list">
+              <li>頑張っているのに、仕事の成果や自信につながらない</li>
+              <li>職場や家庭の人間関係で、同じ悩みを繰り返している</li>
+              <li>本当に望む生き方や、これから進む方向を見つけたい</li>
+            </ul>
           </div>
           <div class="sv-txt">「こんなものだ」という枠を外し、本当に生きたい人生へ。可能性を拓き、自分の人生に拍手を送れる在り方へ。</div>
           <div class="sv-actions">
@@ -1479,9 +1499,13 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         <div class="sv-body">
           <span class="sv-badge" style="background:rgba(196,133,106,.12);color:var(--rose)">海外体験プロジェクト</span>
           <div class="sv-name">越（エツ）</div>
-          <div class="sv-for">
-            <span>こんなお子様へ</span>
-            「日本の環境から一度離れてみたい」「自分が必要とされる感覚を体験したい」「不登校・ひきこもりから抜け出すきっかけが欲しい」
+          <div class="sv-for" style="background:rgba(196,133,106,.08)">
+            <span style="color:var(--rose)">こんなお子様・ご家庭へ</span>
+            <ul class="sv-for-list" style="color:var(--rose)">
+              <li>今いる環境の中で、自信や可能性を失いかけている</li>
+              <li>誰かに必要とされる経験を通して、自分の価値を感じてほしい</li>
+              <li>学校や日常の外に、人生を動かすきっかけを求めている</li>
+            </ul>
           </div>
           <div class="sv-txt">インド・ガンジス川×ブッダガヤへ。言葉が通じなくても「ありがとう」が伝わる瞬間が、人生を変えます。</div>
           <div class="sv-actions">
@@ -1655,7 +1679,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <details class="t-card">
         <summary class="t-summary">
           <div class="t-head">
-            <span class="t-cat">社会人コーチング</span>
+            <span class="t-cat">社会人向けコーチング</span>
             <span class="t-attr">20代 男性</span>
           </div>
           <p class="t-frag">自分でも知らなかった自分に出会えた。</p>
@@ -1676,7 +1700,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <details class="t-card">
         <summary class="t-summary">
           <div class="t-head">
-            <span class="t-cat">社会人コーチング</span>
+            <span class="t-cat">社会人向けコーチング</span>
             <span class="t-attr">30代 女性</span>
           </div>
           <p class="t-frag">“どこへ向かうのか”が初めて見えた。</p>
@@ -1945,7 +1969,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       <div class="ft-h">支援内容</div>
       <a class="ft-a" href="/?consult=mei#contact">芽（メイ）— 家庭教師</a>
       <a class="ft-a" href="/?consult=shirube#contact">導（シルべ）— 教育コンサル</a>
-      <a class="ft-a" href="/?consult=haku#contact">拓（ハク）— コーチング</a>
+      <a class="ft-a" href="/?consult=haku#contact">拓（ハク）— 社会人向けコーチング</a>
       <a class="ft-a" href="/?consult=etsu#contact">越（エツ）— 社会貢献・海外体験</a>
     </div>
     <div>
