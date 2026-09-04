@@ -1222,6 +1222,70 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   .msg-line{font-size:14px;line-height:2.1}
   .sp{display:inline}
 }
+
+/* 追記: お問い合わせセクション見出し */
+.contact-headline {
+  text-wrap: balance;
+  max-width: 560px;
+  margin-inline: auto;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 追記: 送信ボタン高コントラスト */
+.contact-submit {
+  background: var(--sand);
+  color: var(--gd);
+  border: 2px solid var(--g);
+  min-height: 52px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: .06em;
+  transition: background .2s, color .2s;
+  display: block;
+  margin: 24px auto 0;
+}
+.contact-submit:hover { background: var(--gp); }
+.contact-submit:focus-visible { outline: 3px solid var(--g); outline-offset: 3px; }
+.contact-submit:active { background: var(--sand2); }
+.contact-submit:disabled { opacity: .5; cursor: not-allowed; }
+@media(min-width:901px){
+  .contact-submit { width: auto; padding: 0 48px; }
+}
+
+/* 追記: フォームセクションラベル */
+.form-section-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,.85);
+  margin: 8px 0 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,.2);
+}
+
+/* 追記: Attitudeカード見出し */
+.attitude-catch { text-wrap: balance; }
+.creed-card h3 { text-wrap: balance; }
+
+/* 追記: SERVICESセクション - HAKUテーマ */
+.haku-themes { margin: 18px 0 0; border-top: 1px solid var(--line-soft); padding-top: 18px; }
+.haku-theme-item { margin-bottom: 16px; }
+.haku-theme-kanji { font-size: 22px; font-weight: 700; font-family: 'Zen Old Mincho', serif; color: var(--g); }
+.haku-theme-cat { font-size: 11px; color: var(--tm); margin-bottom: 4px; }
+.haku-theme-copy { font-size: 13px; font-weight: 600; color: var(--gd); margin-bottom: 4px; }
+.haku-theme-desc { font-size: 12px; color: var(--tm); line-height: 1.7; }
+.haku-theme-note { margin-top: 18px; padding: 16px; background: rgba(70,98,70,.06); border-radius: 8px; border-left: 3px solid var(--g); }
+.haku-theme-note h4 { font-size: 13px; font-weight: 700; color: var(--gd); margin-bottom: 8px; }
+.haku-theme-note p { font-size: 12px; color: var(--tm); line-height: 1.7; }
+
+/* 追記: SERVICESセクション - SHIRUBEフロー */
+.shirube-flow { display: flex; align-items: center; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.shirube-flow-item { font-size: 12px; font-weight: 600; color: var(--g); background: rgba(70,98,70,.08); padding: 4px 10px; border-radius: 20px; }
+.shirube-flow-arrow { color: var(--gl); font-size: 12px; }
 </style>
 
 <meta name="description" content="不登校・引きこもり・発達特性に寄り添う家庭教師/教育コンサル。無料相談から、お子様のペースに合わせて学びと自己肯定感を育てます。">
@@ -1298,10 +1362,9 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="nav-links">
     <a href="#creed">私たちについて</a>
     <a href="#services">支援内容</a>
-    <a href="#message">挨拶</a>
     <a href="#voice">実際の声</a>
+    <a href="./news.html">お知らせ</a>
     <a href="#faq">よくあるご質問</a>
-    <a href="#contact">お問い合わせ</a>
   </div>
   <button class="nav-burger" type="button" aria-label="メニューを開く" aria-expanded="false"><span></span></button>
   <a href="https://calendar.app.google/ZvDyFhuG5TE3zzCw9" target="_blank" rel="noopener" class="nav-cta">まず、相談してみる</a>
@@ -1309,12 +1372,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="sub">MENU</div>
-  <a href="#creed">理念・3つの姿勢</a>
+  <a href="#creed">私たちについて</a>
   <a href="#services">支援内容</a>
-  <a href="#message">ご挨拶</a>
-  <a href="#voice">ご利用者の声</a>
-  <a href="#faq">よくあるご質問</a>
+  <a href="#voice">実際の声</a>
   <a href="./news.html">お知らせ</a>
+  <a href="#faq">よくあるご質問</a>
   <div class="nav-drawer-divider"></div>
   <a href="https://calendar.app.google/ZvDyFhuG5TE3zzCw9" target="_blank" rel="noopener">まず、相談してみる</a>
 </div>
@@ -1394,30 +1456,30 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <h2 class="stitle">私たちが大切にする3つの姿勢</h2>
     <div class="attitude-grid">
       <div class="attitude-card attitude-card--kibou">
-        <div class="attitude-num">01</div>
+        <div class="attitude-num">01｜希望</div>
         <h3 class="attitude-catch">元気と希望の発信源。</h3>
         <div class="attitude-body">
-          <p>私たちは明るさをもって、<br class="pc-only">子どもやご家庭へ元気と希望を届けます。</p>
-          <p>「この人たちと一緒なら、<br class="pc-only">なんとかなるかもしれない。」</p>
-          <p>そう思っていただける存在を<br class="pc-only">目指しています。</p>
+          <p>私たちは明るさをもって、子どもやご家庭へ元気と希望を届けます。</p>
+          <p>「この人たちと一緒なら、なんとかなるかもしれない。」</p>
+          <p>そう思っていただける存在を目指しています。</p>
         </div>
       </div>
       <div class="attitude-card attitude-card--kyoku">
-        <div class="attitude-num">02</div>
-        <h3 class="attitude-catch">誰かの味方であり続ける、<br class="pc-only">共苦の心。</h3>
+        <div class="attitude-num">02｜共苦</div>
+        <h3 class="attitude-catch">誰かの味方であり続ける、共苦の心。</h3>
         <div class="attitude-body">
-          <p>悩みや苦しみを受け止め、労い、<br class="pc-only">味方であり続けます。</p>
-          <p>共感するだけではなく、<br class="pc-only">ともに悩み、ともに考える。</p>
-          <p>その心が安心を生み、<br class="pc-only">新たな一歩を踏み出す力になると、<br class="pc-only">私たちは信じています。</p>
+          <p>悩みや苦しみを受け止め、労い、味方であり続けます。</p>
+          <p>共感するだけではなく、ともに悩み、ともに考える。</p>
+          <p>その心が安心を生み、新たな一歩を踏み出す力になると、私たちは信じています。</p>
         </div>
       </div>
       <div class="attitude-card attitude-card--shinken">
-        <div class="attitude-num">03</div>
-        <h3 class="attitude-catch">真剣勝負で築き上げる<br class="pc-only">信頼関係。</h3>
+        <div class="attitude-num">03｜真剣勝負</div>
+        <h3 class="attitude-catch">真剣勝負で築き上げる信頼関係。</h3>
         <div class="attitude-body">
-          <p>本気で向き合うからこそ、<br class="pc-only">耳の痛いことも必要であれば<br class="pc-only">誠実に伝えます。</p>
-          <p>表面的な優しさではなく、<br class="pc-only">目の前の人の人生に責任を持つ。</p>
-          <p>その積み重ねが、<br class="pc-only">本当の信頼関係を築くと<br class="pc-only">私たちは信じています。</p>
+          <p>本気で向き合うからこそ、耳の痛いことも必要であれば誠実に伝えます。</p>
+          <p>表面的な優しさではなく、目の前の人の人生に責任を持つ。</p>
+          <p>その積み重ねが、本当の信頼関係を築くと私たちは信じています。</p>
         </div>
       </div>
     </div>
@@ -1427,85 +1489,104 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- SERVICES -->
 <section class="services" id="services">
   <div class="si">
-    <div class="stag">Services</div>
-    <h2 class="stitle">支援内容</h2>
-    <p class="slead">子ども、親御様、そして自分の人生を歩み直したい方へ。<br class="pc-only">一人ひとりに必要な「味方」と支援を届けます。</p>
+    <div class="sec-label stag">SERVICES</div>
+    <h2 class="sec-title stitle">一人ひとりの人生に、必要な「味方」を。</h2>
+    <p class="sec-desc slead">子どもにも、親にも、社会人にも。<br class="pc-only">今いる場所や抱えている悩みは違っても、<br class="pc-only">その人が持つ可能性を信じ、次の一歩をともに考える。<br><br>あんたがおらなには、4つのサービスがあります。</p>
     <div class="sv-grid">
+      <!-- 01 芽｜MEI -->
       <div class="sv">
         <div class="sv-img"><img src="./lp-assets/service-mei-20260502.jpg?v=20260502a" alt="家庭教師 子どもとの関わり"></div>
         <div class="sv-body">
-          <span class="sv-badge">家庭教師事業</span>
-          <div class="sv-name">芽（メイ）</div>
+          <span class="sv-badge">個別教育支援</span>
+          <div class="sv-sub-name">子どもの可能性を育てる</div>
+          <div class="sv-name">芽｜MEI</div>
           <div class="sv-for">
-            <span>こんなお子様・ご家庭へ</span>
-            <ul class="sv-for-list">
-              <li>学校に行けない日が続き、勉強にも自信を失っている</li>
-              <li>一般的な塾や家庭教師では合わなかった</li>
-              <li>成績より先に、「自分にもできる」という感覚を取り戻してほしい</li>
-            </ul>
+            <span>「できない」を、「できるかもしれない」へ。</span>
           </div>
-          <div class="sv-txt">不登校・引きこもり・発達特性のお子様へ。勉強を教えるだけでなく、生きる力・自己肯定感・「自分にもできる」という確信を育てます。</div>
+          <div class="sv-txt">不登校・ひきこもり・発達特性など、一人ひとり違う背景を持つ子どもたちへ。勉強を教えることだけを目的にせず、信頼できる大人との関わりを通して、自信、生きる力、自分から一歩踏み出す力を育てます。</div>
           <div class="sv-actions">
             <a href="./mei.html" class="sv-lnk">概要を見る →</a>
             <a href="/?consult=mei#contact" class="sv-cta">この支援について相談する</a>
           </div>
         </div>
       </div>
+      <!-- 02 導｜SHIRUBE -->
       <div class="sv">
         <div class="sv-img"><img src="./lp-assets/service-shirube.png?v=20260501a" alt="親御さん向けコンサル"></div>
         <div class="sv-body">
-          <span class="sv-badge">教育コンサルティング</span>
-          <div class="sv-name">導（シルべ）</div>
+          <span class="sv-badge">家庭教育支援</span>
+          <div class="sv-sub-name">家族のこれからを、ともに考える</div>
+          <div class="sv-name">導｜SHIRUBE</div>
           <div class="sv-for">
-            <span>こんな親御様・ご家庭へ</span>
-            <ul class="sv-for-list">
-              <li>子どもにどう声をかければよいか分からない</li>
-              <li>相談先を回っても、具体的な関わり方が見つからない</li>
-              <li>夫婦で意見が合わず、家庭全体が苦しくなっている</li>
-            </ul>
+            <span>家庭の現在地を知り、進む道を見つける。</span>
           </div>
-          <div class="sv-txt">子どもとの関わり方に悩む親御様へ。心理学的な分析とロードマップで、家庭の空気から変えていきます。親が変われば、家庭が変わる。</div>
+          <div class="sv-txt">「なぜ学校に行けないのか」だけを見るのではありません。お子さまの状態、保護者さまの心理状態、親子関係、生育歴、家庭環境などを総合的に捉え、今起きていることの背景と、これからの関わり方を一緒に明らかにしていきます。</div>
+          <div class="shirube-flow">
+            <span class="shirube-flow-item">家庭総合診断</span>
+            <span class="shirube-flow-arrow">→</span>
+            <span class="shirube-flow-item">個別の支援方針</span>
+            <span class="shirube-flow-arrow">→</span>
+            <span class="shirube-flow-item">継続伴走</span>
+          </div>
+          <div class="sv-txt" style="margin-top:8px">家庭が少しずつ自分たちの力で歩めるようになるところまで、ともに考え、伴走します。</div>
           <div class="sv-actions">
             <a href="./shirube.html" class="sv-lnk">概要を見る →</a>
             <a href="/?consult=shirube#contact" class="sv-cta">この支援について相談する</a>
           </div>
         </div>
       </div>
+      <!-- 03 拓｜HAKU -->
       <div class="sv">
-        <div class="sv-img"><img src="./lp-assets/service-haku.png?v=20260501a" alt="コーチング"></div>
+        <div class="sv-img"><img src="./lp-assets/service-haku.png?v=20260501a" alt="人間力育成コーチング"></div>
         <div class="sv-body">
-          <span class="sv-badge">社会人向けコーチング</span>
-          <div class="sv-name">拓（ハク）</div>
-          <div class="sv-sub-name">人間力育成プログラム</div>
+          <span class="sv-badge">人間力育成</span>
+          <div class="sv-sub-name">大人の可能性を拓く</div>
+          <div class="sv-name">拓｜HAKU</div>
           <div class="sv-for">
-            <span>こんな社会人の方へ</span>
-            <ul class="sv-for-list">
-              <li>頑張っているのに、仕事の成果や自信につながらない</li>
-              <li>職場や家庭の人間関係で、同じ悩みを繰り返している</li>
-              <li>本当に望む生き方や、これから進む方向を見つけたい</li>
-            </ul>
+            <span>変えたい未来から、人間力を育てる。</span>
           </div>
-          <div class="sv-txt">「こんなものだ」という枠を外し、本当に生きたい人生へ。可能性を拓き、自分の人生に拍手を送れる在り方へ。</div>
+          <div class="sv-txt">仕事で結果を出したい。人との関係をもっと豊かにしたい。自分自身をもっと深く知りたい。HAKUは、一人ひとりが望む未来から逆算し、自己理解とコミュニケーションを土台に、思考・行動・習慣、そしてその人自身の思想・哲学まで育てていく人間力育成サービスです。</div>
+          <div class="haku-themes">
+            <div class="haku-theme-item">
+              <div class="haku-theme-kanji">選</div>
+              <div class="haku-theme-cat">仕事・営業</div>
+              <div class="haku-theme-copy">売る力より、選ばれる力を。</div>
+              <div class="haku-theme-desc">営業、仕事、ビジネスで結果を出したい方へ。テクニックだけではなく、相手を理解する力、言葉、信頼、人としてのあり方から育てます。</div>
+            </div>
+            <div class="haku-theme-item">
+              <div class="haku-theme-kanji">繋</div>
+              <div class="haku-theme-cat">恋愛・人間関係</div>
+              <div class="haku-theme-copy">人との関係を、もっと豊かに。</div>
+              <div class="haku-theme-desc">恋愛、結婚、職場、友人など、さまざまな人間関係をより良くしたい方へ。相手を理解し、自分を伝え、よりよい関係を築く力を育てます。</div>
+            </div>
+            <div class="haku-theme-item">
+              <div class="haku-theme-kanji">己</div>
+              <div class="haku-theme-cat">自己理解・人生</div>
+              <div class="haku-theme-copy">自分を知り、自分の人生を生きる。</div>
+              <div class="haku-theme-desc">自分は何を大切にしているのか。何を望み、どう生きたいのか。自己理解から、自分なりの価値観・思想・人生の方向性を築いていきます。</div>
+            </div>
+            <div class="haku-theme-note">
+              <h4>入口は違っても、育てるものは同じです。</h4>
+              <p>「選・繋・己」は、別々の3つのコースではありません。一人ひとりが今、変えたい未来に合わせてHAKUを始めるための3つのテーマです。仕事、人間関係、自分自身は、本来切り離されたものではありません。一人ひとりに必要なテーマを横断しながら、その人自身の人間力を総合的に育てていきます。</p>
+            </div>
+          </div>
           <div class="sv-actions">
             <a href="./haku.html" class="sv-lnk">概要を見る →</a>
             <a href="/?consult=haku#contact" class="sv-cta">この支援について相談する</a>
           </div>
         </div>
       </div>
+      <!-- 04 越｜ETSU -->
       <div class="sv">
         <div class="sv-img"><img src="./lp-assets/india-01.png?v=20260501a" alt="インドプロジェクト"></div>
         <div class="sv-body">
-          <span class="sv-badge" style="background:rgba(196,133,106,.12);color:var(--rose)">海外体験プロジェクト</span>
-          <div class="sv-name">越（エツ）</div>
+          <span class="sv-badge" style="background:rgba(196,133,106,.12);color:var(--rose)">越境教育</span>
+          <div class="sv-sub-name">世界を越えて、自分を越える</div>
+          <div class="sv-name">越｜ETSU</div>
           <div class="sv-for" style="background:rgba(196,133,106,.08)">
-            <span style="color:var(--rose)">こんなお子様・ご家庭へ</span>
-            <ul class="sv-for-list" style="color:var(--rose)">
-              <li>今いる環境の中で、自信や可能性を失いかけている</li>
-              <li>誰かに必要とされる経験を通して、自分の価値を感じてほしい</li>
-              <li>学校や日常の外に、人生を動かすきっかけを求めている</li>
-            </ul>
+            <span style="color:var(--rose)">知らなかった世界が、知らなかった自分を連れてくる。</span>
           </div>
-          <div class="sv-txt">インド・ガンジス川×ブッダガヤへ。言葉が通じなくても「ありがとう」が伝わる瞬間が、人生を変えます。</div>
+          <div class="sv-txt">日常や学校という環境から一度離れ、異なる文化、人、価値観と出会う。誰かに必要とされる経験や、自分の常識が通用しない環境への挑戦を通して、自分自身の可能性を体感する越境教育です。</div>
           <div class="sv-actions">
             <a href="./etsu.html" class="sv-lnk">プロジェクトの概要を見る →</a>
             <a href="/?consult=etsu#contact" class="sv-cta">このプロジェクトについて相談する</a>
@@ -1864,7 +1945,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 <!-- CTA -->
 <section class="cta" id="contact">
   <div class="cta-inner">
-    <h2 class="cta-h">一緒に始めましょう。<br>お子様の可能性を、私たちと拓きませんか。</h2>
+    <h2 class="cta-h contact-headline">一緒に始めましょう。<br class="pc-only">お子様の可能性を、私たちと拓きませんか。</h2>
     <p class="cta-lead">まずは無料相談から。「もう少し様子を見ようか」と思っているなら、まず話してみてください。<br>「話してよかった」と思っていただける40分を約束します。</p>
     <div class="cta-form-wrap">
       <form id="contactForm" class="cta-form" action="https://formsubmit.co/info@antagaorana.com" method="POST">
@@ -1885,7 +1966,6 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <option value="海外体験やインドの取り組みに興味がある" data-topic="etsu">海外体験やインドの取り組みに興味がある</option>
             <option value="まだ迷っているので、まずは相談したい" data-topic="other">まだ迷っているので、まずは相談したい</option>
           </select>
-          <p class="cta-form-note" style="margin-top:8px">事業ページから「相談する」を押すと、種類が自動で選ばれます。</p>
         </div>
 
         <div class="cta-form-row2">
@@ -1898,7 +1978,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
             <input id="cf_kana" name="ふりがな" type="text" autocomplete="off">
           </div>
         </div>
-        <p class="cta-form-note" style="margin:4px 0 0;font-weight:700;color:rgba(255,255,255,.75)">【ご連絡先】</p>
+        <p class="form-section-label">ご連絡先</p>
         <div>
           <label for="cf_address">お住まいの都道府県</label>
           <select id="cf_address" name="都道府県">
@@ -1924,11 +2004,11 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
         </div>
 
         <div>
-          <label for="cf_body">【ご相談内容】ご相談内容（差し支えなければ詳細に）</label>
+          <label for="cf_body">ご相談内容（差し支えなければ詳細に）</label>
           <textarea id="cf_body" name="ご相談内容" required placeholder="お気持ちやご状況をご記入ください" maxlength="2000"></textarea>
         </div>
 
-        <p class="cta-form-note" style="margin:8px 0 0;font-weight:700;color:rgba(255,255,255,.75)">【可能ならご記入ください】</p>
+        <p class="form-section-label">任意の項目</p>
         <div>
           <label for="cf_child">お子様の学年／状況（該当する場合）</label>
           <input id="cf_child" name="お子様の学年／状況" type="text">
@@ -1948,7 +2028,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
           <span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に基づき、お問い合わせ対応のために個人情報を利用することに同意します。</span>
         </label>
 
-        <button type="submit" class="cta-submit">この内容で送信する</button>
+        <button type="submit" class="cta-submit contact-submit">無料相談を送信する</button>
       </form>
     </div>
     <div class="cta-btns">
