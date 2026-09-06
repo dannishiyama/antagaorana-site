@@ -1292,8 +1292,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   50%{transform:scale(1.018);filter:saturate(.94)}
 }
 @keyframes inkSettle{
-  from{opacity:0;clip-path:inset(0 52% 0 48%);filter:blur(3px)}
-  to{opacity:.96;clip-path:inset(0);filter:blur(0)}
+  from{opacity:0;transform:translateY(6px) scale(.995);filter:blur(1.5px)}
+  to{opacity:.96;transform:translateY(0) scale(1);filter:blur(0)}
 }
 @keyframes heroWordIn{
   from{opacity:0;transform:translateY(8px)}
@@ -1310,8 +1310,8 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 .motion-ready .motion-reveal{opacity:0;transform:translateY(12px);transition:opacity .9s cubic-bezier(.22,.75,.24,1),transform .9s cubic-bezier(.22,.75,.24,1)}
 .motion-ready .motion-reveal.is-visible{opacity:1;transform:none}
 .attitude-grid{position:relative}
-.motion-ready .attitude-grid::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:rgba(216,177,90,.62);transform:scaleX(0);transform-origin:left;transition:transform 1.15s cubic-bezier(.22,.75,.24,1)}
-.motion-ready .attitude-grid.is-line-visible::before{transform:scaleX(1)}
+.motion-ready .attitude-grid::before{content:none}
+.motion-ready .attitude-grid.is-line-visible::before{content:none}
 .sv{transform:none}
 .sv:hover{transform:none}
 .sv-img img{transition:transform .7s cubic-bezier(.22,.75,.24,1),filter .7s ease}
@@ -1510,7 +1510,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       </div>
       <div class="attitude-card attitude-card--kyoku">
         <div class="attitude-num">02</div>
-        <h3 class="attitude-catch">誰かの味方であり続ける、共苦の心。</h3>
+        <h3 class="attitude-catch">誰かの味方であり続ける、<br>共苦の心。</h3>
         <div class="attitude-body">
           <p>悩みや苦しみを受け止め、労い、味方であり続けます。</p>
           <p>共感するだけではなく、ともに悩み、ともに考える。</p>
@@ -1519,7 +1519,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
       </div>
       <div class="attitude-card attitude-card--shinken">
         <div class="attitude-num">03</div>
-        <h3 class="attitude-catch">真剣勝負で築き上げる信頼関係。</h3>
+        <h3 class="attitude-catch">真剣勝負で<br>築き上げる信頼関係。</h3>
         <div class="attitude-body">
           <p>本気で向き合うからこそ、耳の痛いことも必要であれば誠実に伝えます。</p>
           <p>表面的な優しさではなく、目の前の人の人生に責任を持つ。</p>
@@ -2035,7 +2035,7 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <div class="ft-inner">
     <div>
       <div class="ft-logo"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="あんたがおらな"></div>
-      <p class="ft-brand-b">「子どもの人生に味方を。」<br>© 2026 あんたがおらな株式会社</p>
+      <p class="ft-brand-b">「子どもの人生に味方を。」<br>© 2026 株式会社あんたがおらな</p>
     </div>
     <div>
       <div class="ft-h">支援内容</div>
