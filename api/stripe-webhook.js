@@ -110,11 +110,12 @@ function getSessionConfig() {
 
 // ── 管理者へのエラー通知（Resendでメール送信） ─────────────────────
 // 失敗しても握りつぶす（通知失敗でメイン処理を止めない）
-async function notifyAdmin(resend, fromEmail, subject, body) {
+async function notifyAdmin(resend, fromEmail, subject, body, adminEmails) {
+  const to = adminEmails?.length ? adminEmails : [fromEmail];
   try {
     await resend.emails.send({
       from:    `共育ゼミ自動通知 <${fromEmail}>`,
-      to:      [fromEmail],
+      to,
       subject: `【共育ゼミ決済処理エラー】${subject}`,
       text:    [
         'このメールは共育ゼミ決済処理の自動エラー通知です。',
@@ -612,6 +613,10 @@ export default async function handler(req, res) {
   const testModeEnv = process.env.TEST_MODE === 'true';
   const resend      = new Resend(process.env.RESEND_API_KEY);
   const fromEmail   = process.env.FROM_EMAIL || 'info@antagaorana.com';
+  // ADMIN_EMAILS: カンマ区切りで複数指定可。未設定なら fromEmail のみ。
+  const adminEmails = process.env.ADMIN_EMAILS
+    ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim()).filter(Boolean)
+    : [fromEmail];
   const supabase    = getSupabase();
 
   // 開催回設定を取得
@@ -621,7 +626,7 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error('[webhook] Session config error:', err.message);
     await notifyAdmin(resend, fromEmail, 'セッション設定エラー',
-      `Stripe Event ID: ${event.id}\nエラー: ${err.message}\n\nSESSION_MEET_URL が Vercel 環境変数に設定されているか確認してください。`);
+      `Stripe Event ID: ${event.id}\nエラー: ${err.message}\n\nSESSION_MEET_URL が Vercel 環境変数に設定されているか確認してください。`, adminEmails);
     return res.status(500).json({ error: 'Session config error' });
   }
 
@@ -653,7 +658,7 @@ export default async function handler(req, res) {
     // UNIQUE違反以外のエラーは障害 → 500でStripeに再試行させる
     console.error('[webhook] Supabase insert error:', insertErr.message, '| event:', event.id);
     await notifyAdmin(resend, fromEmail, 'Supabase登録エラー',
-      `Stripe Event ID: ${event.id}\nエラーコード: ${insertErr.code}\nエラー: ${insertErr.message}`);
+      `Stripe Event ID: ${event.id}\nエラーコード: ${insertErr.code}\nエラー: ${insertErr.message}`, adminEmails);
     return res.status(500).json({ error: 'Database insert error' });
   }
 
@@ -667,7 +672,7 @@ export default async function handler(req, res) {
   if (fetchErr || !registration) {
     console.error('[webhook] Supabase fetch error:', fetchErr?.message, '| event:', event.id);
     await notifyAdmin(resend, fromEmail, 'Supabase取得エラー',
-      `Stripe Event ID: ${event.id}\nエラー: ${fetchErr?.message}`);
+      `Stripe Event ID: ${event.id}\nエラー: ${fetchErr?.message}`, adminEmails);
     return res.status(500).json({ error: 'Database fetch error' });
   }
 
@@ -785,7 +790,7 @@ export default async function handler(req, res) {
 
       await resend.emails.send({
         from:    `共育ゼミ自動通知 <${fromEmail}>`,
-        to:      [fromEmail],
+        to:      adminEmails,
         subject: `【共育ゼミ申し込み通知】${customerName || customerEmail} 様`,
         text:    [
           '新しい申し込みがありました。',
@@ -869,7 +874,7 @@ export default async function handler(req, res) {
         'Supabase で email_status を確認してください。',
         '次回の再試行時、email_status が "failed" であれば再送を試みます。',
         '再試行が尽きた場合は、手動でメールを送信してください。',
-      ].join('\n'));
+      ].join('\n'), adminEmails);
 
     // 500 を返して Stripe に再試行させる
     // 再試行時: INSERT は 23505 で失敗 → SELECT で既存レコード取得 → email_status='failed' → 再送試行
