@@ -540,6 +540,13 @@ https://antagaorana.com
 
 // ── メインハンドラ ───────────────────────────────────────────────
 export default async function handler(req, res) {
+  // ── 本番化前バックアップ専用deployment向けの安全装置 ──────────────
+  // このファイルはbackup-readonly-before-hakuブランチ専用の変更であり、
+  // main/Productionへは一切マージしない。BACKUP_READ_ONLY環境変数の値に関わらず、
+  // このブランチにデプロイされたコードは常にこのAPIを無効化する（誤設定・環境変数
+  // 未設定であっても安全側に倒れる設計）。決済・DB書き込み・メール送信を一切発生させない。
+  return res.status(403).json({ error: 'このバックアップ環境は表示確認専用です（読み取り専用）。' });
+
   // POSTのみ受け付ける
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');

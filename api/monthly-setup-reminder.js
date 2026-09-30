@@ -16,6 +16,10 @@
 import { Resend } from 'resend';
 
 export default async function handler(req, res) {
+  // ── 本番化前バックアップ専用deployment向けの安全装置（backup-readonly-before-haku
+  // ブランチ専用の変更。main/Productionへは一切マージしない）。メール送信を発生させない。
+  return res.status(403).json({ error: 'このバックアップ環境は表示確認専用です（読み取り専用）。' });
+
   // Vercel Cron からの呼び出し検証
   const authHeader = req.headers['authorization'];
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
