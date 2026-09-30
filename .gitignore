@@ -8,3 +8,6 @@ node_modules/
 .vercel/
 .cursor/
 .env*
+.vercel
+test-results/
+playwright-report/

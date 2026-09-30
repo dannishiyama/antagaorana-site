@@ -1,8 +1,15 @@
 {
   "type": "module",
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2",
+    "ioredis": "^6.0.0",
     "resend": "^3.2.0",
     "stripe": "^14.25.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
   }
 }

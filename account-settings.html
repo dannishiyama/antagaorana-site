@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>アカウント設定｜あんたがおらな</title>
+<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<style>
+:root{color-scheme:light;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.top{padding:20px 8%;background:var(--color-green-dark);color:#fff;display:flex;justify-content:space-between;align-items:center}
+.top a{color:rgba(255,255,255,.7);font-size:12.5px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3)}
+.wrap{max-width:560px;margin:0 auto;padding:36px 20px 80px}
+h1{font-family:var(--font-serif);font-size:20px;margin-bottom:6px;color:var(--color-green-dark)}
+.lead{font-size:12.5px;color:var(--color-text-muted);margin-bottom:32px}
+.card{background:var(--color-surface);border:1px solid var(--color-border);padding:24px;margin-bottom:20px}
+.card h2{font-size:14px;letter-spacing:.06em;margin-bottom:16px;color:var(--color-green-dark)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;letter-spacing:.06em;color:var(--color-text-muted);margin-bottom:6px}
+.field input{width:100%;min-height:42px;padding:10px 12px;border:1px solid var(--color-border);font-size:14px;font-family:inherit;background:#fff}
+.field input[readonly]{background:#f2efe8;color:var(--color-text-muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{min-height:42px;padding:10px 20px;border:1px solid var(--color-green-dark);background:var(--color-green-dark);color:#fff;font-size:13px;cursor:pointer;font-family:inherit}
+.btn.ghost{background:none;color:var(--color-green-dark)}
+.btn.danger{border-color:#9A3B1F;color:#9A3B1F;background:none}
+.btn[disabled]{opacity:.6;cursor:progress}
+.msg{font-size:12.5px;margin-top:10px;min-height:16px}
+.msg.err{color:#9A3B1F}
+.msg.ok{color:#3d6b2f}
+.membership-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--color-border-soft)}
+.membership-row:last-child{border-bottom:0}
+.tag{font-size:11px;padding:2px 8px;border-radius:999px;background:#e9e4d8;color:var(--color-text-muted)}
+.tag.active{background:#dcecd3;color:#2f5d24}
+#gate{padding:60px 20px;text-align:center;color:var(--color-text-muted)}
+#content{display:none}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span>アカウント設定</span>
+  <a href="#" id="logoutLink">ログアウト</a>
+</div>
+
+<div id="gate"><p>読み込み中…</p></div>
+
+<div class="wrap" id="content">
+  <h1>アカウント設定</h1>
+  <p class="lead">HAKU Community / 教育者のサロン 灯 共通のアカウント情報です。</p>
+
+  <div class="card">
+    <h2>ご所属</h2>
+    <div id="memberships"></div>
+  </div>
+
+  <div class="card">
+    <h2>プロフィール</h2>
+    <div class="field"><label for="fullName">氏名</label><input id="fullName"></div>
+    <div class="field"><label for="fullNameKana">ふりがな</label><input id="fullNameKana"></div>
+    <div class="field"><label for="displayName">表示名</label><input id="displayName"></div>
+    <div class="field"><label>メールアドレス</label><input id="emailReadonly" readonly></div>
+    <button class="btn" id="saveProfile">プロフィールを保存</button>
+    <p class="msg" id="profileMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>パスワード変更</h2>
+    <div class="field"><label for="currentPassword">現在のパスワード</label><input id="currentPassword" type="password" autocomplete="current-password"></div>
+    <div class="field"><label for="newPassword">新しいパスワード（8文字以上）</label><input id="newPassword" type="password" autocomplete="new-password"></div>
+    <div class="field"><label for="newPassword2">新しいパスワード（確認）</label><input id="newPassword2" type="password" autocomplete="new-password"></div>
+    <button class="btn" id="savePassword">パスワードを変更</button>
+    <p class="msg" id="passwordMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>メールアドレス変更</h2>
+    <div class="field"><label for="emailChangePassword">現在のパスワード</label><input id="emailChangePassword" type="password" autocomplete="current-password"></div>
+    <div class="field"><label for="newEmail">新しいメールアドレス</label><input id="newEmail" type="email" autocomplete="email"></div>
+    <button class="btn" id="saveEmail">メールアドレスを変更</button>
+    <p class="msg" id="emailMsg"></p>
+  </div>
+
+  <div class="card">
+    <h2>退会・解約</h2>
+    <p class="lead" style="margin-bottom:16px">退会してもプロフィール情報は運営側の記録として一定期間保持されます。個人情報の完全削除をご希望の場合は、お問い合わせよりご連絡ください。</p>
+    <div class="row">
+      <button class="btn danger" id="withdrawHaku">HAKU Communityを解約</button>
+      <button class="btn danger" id="withdrawTomoshibi">灯を退会</button>
+    </div>
+    <p class="msg" id="withdrawMsg"></p>
+  </div>
+</div>
+
+<script>
+var me = null;
+
+function api(path, opts) {
+  return fetch(path, Object.assign({ headers: { 'Content-Type': 'application/json' } }, opts))
+    .then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); });
+}
+
+function showMsg(el, text, isErr) {
+  el.textContent = text;
+  el.className = 'msg ' + (isErr ? 'err' : 'ok');
+}
+
+api('/api/community-auth?action=me', { method: 'GET' }).then(function(res){
+  if (res.status !== 200 || !res.data.ok) {
+    document.getElementById('gate').innerHTML = '<p>ログインが必要です。 <a href="./haku-community-login.html">HAKUログイン</a> ／ <a href="./tomoshibi-login.html">灯ログイン</a></p>';
+    return;
+  }
+  me = res.data;
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+  document.getElementById('fullName').value = me.fullName || '';
+  document.getElementById('fullNameKana').value = me.fullNameKana || '';
+  document.getElementById('displayName').value = me.displayName || '';
+  document.getElementById('emailReadonly').value = me.email || '';
+
+  var m = document.getElementById('memberships');
+  var rows = [
+    ['HAKU Community', me.memberships.haku, 'haku-community-home.html'],
+    ['教育者のサロン 灯', me.memberships.tomoshibi, 'tomoshibi-post.html'],
+  ];
+  m.innerHTML = rows.map(function(r){
+    return '<div class="membership-row"><span>' + r[0] + '</span>' +
+      (r[1] ? '<span class="tag active">会員 ／ <a href="./' + r[2] + '">ページへ</a></span>' : '<span class="tag">未所属</span>') +
+      '</div>';
+  }).join('');
+});
+
+document.getElementById('logoutLink').addEventListener('click', function(e){
+  e.preventDefault();
+  fetch('/api/community-auth?action=logout', { method: 'POST' }).finally(function(){
+    location.href = './haku-community-login.html';
+  });
+});
+
+document.getElementById('saveProfile').addEventListener('click', function(){
+  var btn = this; btn.disabled = true;
+  var msgEl = document.getElementById('profileMsg');
+  api('/api/community-auth?action=update-profile', {
+    method: 'POST',
+    body: JSON.stringify({
+      fullName: document.getElementById('fullName').value,
+      fullNameKana: document.getElementById('fullNameKana').value,
+      displayName: document.getElementById('displayName').value,
+    }),
+  }).then(function(res){
+    btn.disabled = false;
+    if (res.status !== 200) { showMsg(msgEl, res.data.error || '保存に失敗しました。', true); return; }
+    showMsg(msgEl, '保存しました。', false);
+  });
+});
+
+document.getElementById('savePassword').addEventListener('click', function(){
+  var btn = this; btn.disabled = true;
+  var msgEl = document.getElementById('passwordMsg');
+  api('/api/community-auth?action=change-password', {
+    method: 'POST',
+    body: JSON.stringify({
+      currentPassword: document.getElementById('currentPassword').value,
+      newPassword: document.getElementById('newPassword').value,
+      newPassword2: document.getElementById('newPassword2').value,
+    }),
+  }).then(function(res){
+    btn.disabled = false;
+    if (res.status !== 200) { showMsg(msgEl, res.data.error || '変更に失敗しました。', true); return; }
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('newPassword2').value = '';
+    showMsg(msgEl, 'パスワードを変更しました（他の端末はログアウトされました）。', false);
+  });
+});
+
+document.getElementById('saveEmail').addEventListener('click', function(){
+  var btn = this; btn.disabled = true;
+  var msgEl = document.getElementById('emailMsg');
+  api('/api/community-auth?action=change-email', {
+    method: 'POST',
+    body: JSON.stringify({
+      currentPassword: document.getElementById('emailChangePassword').value,
+      newEmail: document.getElementById('newEmail').value,
+    }),
+  }).then(function(res){
+    btn.disabled = false;
+    if (res.status !== 200) { showMsg(msgEl, res.data.error || '変更に失敗しました。', true); return; }
+    document.getElementById('emailReadonly').value = res.data.email;
+    document.getElementById('emailChangePassword').value = '';
+    document.getElementById('newEmail').value = '';
+    showMsg(msgEl, 'メールアドレスを変更しました。次回から新しいメールアドレスでログインしてください。', false);
+  });
+});
+
+function withdraw(community) {
+  var msgEl = document.getElementById('withdrawMsg');
+  var confirmMsg = community === 'haku'
+    ? 'HAKU Communityを解約しますか？\n現在お支払い済みの期間の終了日まで引き続きご利用いただけます。以降の月額料金は発生しません。'
+    : '灯を退会しますか？';
+  if (!confirm(confirmMsg)) return;
+  // HAKU Communityの解約は、MY HAKU内の「解約する」ボタンと完全に同じサーバー処理
+  // （action=withdraw が内部でaction=cancel-membershipと同じ関数に委譲する）を通る。
+  api('/api/community-auth?action=withdraw', { method: 'POST', body: JSON.stringify({ community: community }) }).then(function(res){
+    if (res.status !== 200) { showMsg(msgEl, res.data.error || '処理に失敗しました。', true); return; }
+    if (community === 'haku') {
+      var endLabel = res.data.currentPeriodEnd ? new Date(res.data.currentPeriodEnd).toLocaleDateString('ja-JP') : null;
+      showMsg(msgEl, endLabel ? ('解約手続きを受け付けました。' + endLabel + 'まで引き続きご利用いただけます。') : '解約手続きを受け付けました。', false);
+    } else {
+      showMsg(msgEl, '退会処理が完了しました。', false);
+    }
+    location.reload();
+  });
+}
+document.getElementById('withdrawHaku').addEventListener('click', function(){ withdraw('haku'); });
+document.getElementById('withdrawTomoshibi').addEventListener('click', function(){ withdraw('tomoshibi'); });
+</script>
+</body>
+</html>

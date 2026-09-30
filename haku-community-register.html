@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>新規登録｜HAKU Community</title>
+<meta name="description" content="HAKU Community の新規登録ページです。">
+<link rel="canonical" href="https://antagaorana.com/haku-community-register.html">
+<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<style>
+:root{color-scheme:light;box-sizing:border-box}
+body{margin:0;padding:0}
+[hidden]{display:none!important}
+
+:root{
+  --green:var(--color-green);
+  --green-dk:var(--color-green-dark);
+  --cream:var(--color-bg);
+  --paper:var(--color-surface);
+  --ink:var(--color-text);
+  --mid:var(--color-text-muted);
+  --terra:#8c692c;
+  --gold:var(--color-gold);
+  --line:var(--color-border);
+  --serif:var(--font-serif);
+  --sans:var(--font-sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--green-dk);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit}
+input,textarea{font-family:inherit;font-size:14px}
+
+.top{padding:20px 8%}
+.top a{color:rgba(255,255,255,.7);font-size:12.5px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3)}
+.top a:hover{color:#fff}
+.top a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 24px 60px;color:#fff}
+.card{width:100%;max-width:420px;text-align:center;opacity:0;transform:translateY(12px)}
+.card.is-ready{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.mark{font-family:var(--serif);font-size:22px;letter-spacing:.14em;margin-bottom:10px}
+.sub{font-size:12px;letter-spacing:.05em;color:#b9c7b2;margin-bottom:36px;line-height:1.9}
+
+.field{text-align:left;margin-bottom:20px}
+.field-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.field label{display:block;font-size:12px;letter-spacing:.1em;color:#b9c7b2}
+.field-head label{margin-bottom:0}
+.field input,.field textarea{width:100%;min-height:44px;padding:12px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.35);color:#fff;outline:none;transition:border-color .15s ease,background-color .15s ease;resize:vertical}
+.field input:hover,.field textarea:hover{border-color:rgba(255,255,255,.5)}
+.field input:focus-visible,.field textarea:focus-visible{border-color:var(--gold);outline:2px solid var(--gold);outline-offset:1px}
+.hint{font-size:11.5px;color:rgba(255,255,255,.5);margin-top:6px;text-align:left}
+.toggle-pw{background:none;border:0;color:#b9c7b2;font-size:11.5px;letter-spacing:.04em;cursor:pointer;text-decoration:underline;padding:0;min-height:24px;font-family:var(--sans)}
+.toggle-pw:hover{color:#fff}
+.toggle-pw:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.agree{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:12.5px;color:#dfe8da;line-height:1.8;margin-bottom:24px;cursor:pointer}
+.agree input{width:16px;height:16px;margin-top:3px;accent-color:var(--gold);flex:none}
+.agree a{color:#fff;text-decoration:underline}
+
+.go{width:100%;min-height:48px;margin-top:4px;padding:14px;background:var(--terra);border:1px solid var(--terra);color:#fff;font-size:14px;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);transition:transform .18s ease}
+.go:hover{transform:translateY(-1px)}
+.go:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.go[disabled]{opacity:.65;cursor:progress}
+.err{font-size:12px;color:#f0c2a8;margin-top:12px;min-height:18px;opacity:0}
+.err.show{opacity:1}
+
+.already{margin-top:40px;padding-top:24px;border-top:1px solid rgba(255,255,255,.2);font-size:12.5px;color:#b9c7b2;line-height:1.9}
+.already a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px}
+
+.mock-note{margin-top:36px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.9;text-align:left}
+
+footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4);line-height:2.2}
+footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
+footer a:hover{color:rgba(255,255,255,.8)}
+
+@media(max-width:600px){ .stage{padding:10px 22px 40px} }
+
+@media(prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .card{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a href="./haku-community.html">← HAKU Community 紹介ページへ</a>
+</div>
+
+<div class="stage">
+  <div class="card" id="card">
+    <div class="mark">HAKU COMMUNITY</div>
+    <p class="sub">新規登録<br>ご登録後、管理者の確認・承認を経てお支払いへ進みます。</p>
+    <p style="font-size:12.5px;color:#dfe8da;line-height:1.9;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);padding:12px 14px;margin-bottom:28px">HAKU Communityは完全紹介制のコミュニティです。ご紹介者のお名前をご入力のうえ、お申し込みください。内容を運営が確認したうえで、承認された方にお支払いのご案内をお送りします。</p>
+
+    <div id="pendingNotice" hidden>
+      <p style="font-size:15px;color:#fff;line-height:2;margin-bottom:20px">お申し込みを受け付けました。<br>運営が内容を確認し、承認され次第、<br>ご登録のメールアドレスへご案内をお送りします。</p>
+      <p style="font-size:12.5px;color:#b9c7b2;line-height:1.9">今しばらくお待ちください。</p>
+    </div>
+
+    <form id="f" novalidate>
+      <div class="field">
+        <label for="fullname">氏名</label>
+        <input id="fullname" name="fullname" type="text" autocomplete="name" placeholder="例：山田 花子" maxlength="60">
+        <div class="hint">本名をご入力ください（一般会員には表示されません）</div>
+      </div>
+      <div class="field">
+        <label for="fullnamekana">ふりがな</label>
+        <input id="fullnamekana" name="fullnamekana" type="text" autocomplete="off" placeholder="例：やまだ はなこ" maxlength="60">
+        <div class="hint">ひらがなでご入力ください</div>
+      </div>
+      <div class="field">
+        <label for="nickname">表示名</label>
+        <input id="nickname" name="nickname" type="text" autocomplete="nickname" placeholder="例：はな" maxlength="30">
+        <div class="hint">コミュニティ内で他の会員に表示される名前です</div>
+      </div>
+      <div class="field">
+        <label for="email">メールアドレス</label>
+        <input id="email" name="email" type="email" autocomplete="username" placeholder="you@example.com">
+        <div class="hint">ログインIDとして使用します</div>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="password">パスワード</label>
+          <button type="button" class="toggle-pw" data-target="password" aria-pressed="false">表示</button>
+        </div>
+        <input id="password" name="password" type="password" autocomplete="new-password" placeholder="••••••••">
+        <div class="hint">8文字以上でご設定ください</div>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="password2">パスワード（確認）</label>
+          <button type="button" class="toggle-pw" data-target="password2" aria-pressed="false">表示</button>
+        </div>
+        <input id="password2" name="password2" type="password" autocomplete="new-password" placeholder="••••••••">
+      </div>
+      <div class="field">
+        <label for="referrer">紹介者名</label>
+        <input id="referrer" name="referrer" type="text" autocomplete="off" placeholder="例：山田 太郎" maxlength="60">
+        <div class="hint">あなたをご紹介した方のお名前をご入力ください</div>
+      </div>
+      <div class="field">
+        <label for="reason">HAKU Communityに参加したい理由</label>
+        <textarea id="reason" name="reason" rows="3" maxlength="600" placeholder="きっかけや、期待していることをお聞かせください"></textarea>
+      </div>
+      <label class="agree">
+        <input type="checkbox" id="terms">
+        <span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、内容に同意します。</span>
+      </label>
+      <button class="go" type="submit" id="go">申し込む</button>
+      <p class="err" id="err" role="alert" aria-live="polite"></p>
+    </form>
+
+    <div class="already">
+      すでにアカウントをお持ちの方は<br>
+      <a href="./haku-community-login.html">こちらからログイン →</a>
+    </div>
+
+    <p class="mock-note">※ これはPreview確認用のテスト環境です。ご入力いただいたパスワードはサーバー側でハッシュ化して保存され、平文では保存されません。決済はStripeのテストモードで行われ、実際の請求は発生しません。</p>
+  </div>
+</div>
+
+<footer>
+  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  © 株式会社あんたがおらな
+</footer>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var segment = params.get('segment') === 'teacher' ? 'teacher' : 'professional';
+  var plan = params.get('plan') === 'monthly' ? 'monthly' : 'monthly';
+
+  var form = document.getElementById('f');
+  var err = document.getElementById('err');
+  var go = document.getElementById('go');
+  var GO_LABEL = go.textContent;
+
+  function showError(msg){ err.textContent = msg; err.classList.add('show'); }
+  function reset(){ go.disabled = false; go.textContent = GO_LABEL; }
+  window.addEventListener('pageshow', reset);
+
+  document.querySelectorAll('.toggle-pw').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(btn.dataset.target);
+      var showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      btn.setAttribute('aria-pressed', String(!showing));
+      btn.textContent = showing ? '表示' : '非表示';
+    });
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fullname = (document.getElementById('fullname').value || '').trim();
+    var kana = (document.getElementById('fullnamekana').value || '').trim();
+    var nickname = (document.getElementById('nickname').value || '').trim();
+    var email = (document.getElementById('email').value || '').trim();
+    var pw = document.getElementById('password').value || '';
+    var pw2 = document.getElementById('password2').value || '';
+    var referrer = (document.getElementById('referrer').value || '').trim();
+    var reason = (document.getElementById('reason').value || '').trim();
+    var terms = document.getElementById('terms').checked;
+
+    if(!fullname){ showError('氏名をご入力ください。'); return; }
+    if(!kana){ showError('ふりがなをご入力ください。'); return; }
+    if(!/^[぀-ゟ゠-ヿーー\s　]+$/.test(kana)){ showError('ふりがなはひらがな（またはカタカナ）でご入力ください。'); return; }
+    if(!nickname){ showError('表示名をご入力ください。'); return; }
+    if(!email){ showError('メールアドレスをご入力ください。'); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError('メールアドレスの形式をご確認ください。'); return; }
+    if(!pw){ showError('パスワードをご入力ください。'); return; }
+    if(pw.length < 8){ showError('パスワードは8文字以上でご設定ください。'); return; }
+    if(pw !== pw2){ showError('パスワードが一致しません。'); return; }
+    if(!referrer){ showError('紹介者名をご入力ください。HAKU Communityは完全紹介制です。'); return; }
+    if(!reason){ showError('参加したい理由をご入力ください。'); return; }
+    if(!terms){ showError('プライバシーポリシー等への同意が必要です。'); return; }
+
+    err.textContent = ''; err.classList.remove('show');
+    go.disabled = true; go.textContent = '登録しています…';
+
+    fetch('/api/community-auth?action=register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        community: 'haku', fullName: fullname, fullNameKana: kana, displayName: nickname,
+        email: email, password: pw, password2: pw2, referrerName: referrer, reason: reason, termsAccepted: terms,
+      }),
+    }).then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); })
+      .then(function(res){
+        if(res.status !== 200){ showError(res.data.error || '登録に失敗しました。'); reset(); return; }
+
+        // 完全紹介制：管理者の承認（status:'approved'）が既に済んでいる場合のみ、
+        // このタイミングで決済へ進める（res.data.resumed）。新規・審査中の申込は
+        // ここでは決済へ進まず、「お申し込みを受け付けました」画面を表示する。
+        if(!res.data.resumed){
+          form.hidden = true;
+          document.querySelector('.sub').hidden = true;
+          document.getElementById('pendingNotice').hidden = false;
+          return;
+        }
+
+        go.textContent = '決済画面を準備しています…';
+        return fetch('/api/haku-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: res.data.email, segment: segment, plan: plan, agree: true }),
+        }).then(function(r2){ return r2.json().then(function(d2){ return { status: r2.status, data: d2 }; }); })
+          .then(function(checkoutRes){
+            var url = checkoutRes.data && checkoutRes.data.url;
+            if(checkoutRes.status === 200 && typeof url === 'string' && url.indexOf('https://checkout.stripe.com/') === 0){
+              location.href = url;
+              return;
+            }
+            showError((checkoutRes.data && checkoutRes.data.error) || '決済画面を開けませんでした。時間をおいて再度お試しください。');
+            reset();
+          });
+      })
+      .catch(function(){ showError('通信に失敗しました。時間をおいて再度お試しください。'); reset(); });
+  });
+})();
+</script>
+
+<script type="module">
+(async () => {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { animate } = await import('./lp-assets/vendor/motion.js');
+    document.getElementById('card').classList.add('is-ready');
+    const err = document.getElementById('err');
+    new MutationObserver(() => {
+      if (err.classList.contains('show')) animate(err, { opacity: [0, 1] }, { duration: 0.25, easing: 'ease-out' });
+    }).observe(err, { attributes: true, attributeFilter: ['class'] });
+  } catch (e) {
+    document.getElementById('card').classList.add('is-ready');
+    console.warn('[motion] animations skipped:', e);
+  }
+})();
+</script>
+
+</body>
+</html>

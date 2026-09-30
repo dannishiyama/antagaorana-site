@@ -156,16 +156,19 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .content::-webkit-scrollbar{width:3px}
 .content::-webkit-scrollbar-thumb{background:rgba(42,74,62,.18);border-radius:3px}
 
-/* TABBAR */
+/* TABBAR — 8タブ化のため横スクロール対応（既存4タブ時の見た目は維持しつつ、
+   390px幅で無理に詰め込まない）。現在地はactiveのアンダーラインで示す。 */
 .tabbar{
   position:fixed;bottom:0;left:0;right:0;background:var(--white);
   display:flex;border-top:1px solid rgba(0,0,0,.06);
   box-shadow:0 -4px 20px rgba(0,0,0,.07);z-index:100;
   padding-bottom:env(safe-area-inset-bottom);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
+.tabbar::-webkit-scrollbar{display:none}
 .tab{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:8px 2px 11px;background:none;border:none;cursor:pointer;
+  flex:0 0 auto;min-width:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 6px 11px;background:none;border:none;cursor:pointer;
   color:var(--text-soft);transition:color .18s;position:relative;gap:3px;
 }
 .tab.active{color:var(--green)}
@@ -564,6 +567,65 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 .admin-empty{text-align:center;padding:40px 16px;color:var(--text-soft);font-size:14px;line-height:2.2}
 .admin-hint{background:rgba(200,146,42,.08);border:1px solid rgba(200,146,42,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--text-mid);line-height:1.85}
 .admin-hint a{color:var(--green);font-weight:600}
+
+/* ═══════════════════════════
+   HAKU COMMUNITY 統合機能
+   （学ぶ／集う／ことば／TANE／マイページ拡張）
+   既存トークン（--green / --gold / --terra / --white / --sh-s 等）をそのまま使い、
+   新しいデザイン言語を持ち込まない。
+═══════════════════════════ */
+.haku-locked{background:var(--white);border-radius:var(--r);padding:22px 18px;text-align:center;box-shadow:var(--sh-s);margin-bottom:14px}
+.haku-locked p{font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:14px}
+.haku-locked .btn-haku-login{display:inline-block;padding:11px 22px;background:var(--green);color:var(--ivory);border-radius:10px;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;border:none}
+.haku-login-form{max-width:280px;margin:0 auto;text-align:left}
+.haku-login-form input{width:100%;padding:10px 12px;margin-bottom:8px;background:var(--green-pale);border:1.5px solid transparent;border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);outline:none}
+.haku-login-form input:focus{border-color:var(--green)}
+.haku-login-err{font-size:12px;color:#C44A3A;margin:4px 0 8px;min-height:14px}
+.haku-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;color:#8A6018;background:rgba(200,146,42,.14);border-radius:20px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+
+.haku-card{border:1px solid rgba(42,74,62,.1);background:var(--white);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;box-shadow:var(--sh-s)}
+.haku-card b{display:block;font-size:14px;color:var(--text);margin-bottom:3px;font-family:'Noto Serif JP',serif}
+.haku-card span{font-size:12px;color:var(--text-soft)}
+.haku-card .go{margin-top:8px;padding:8px 14px;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.haku-card .go:disabled{opacity:.5;cursor:default}
+.haku-empty{text-align:center;padding:22px 14px;color:var(--text-soft);font-size:13px;line-height:1.9}
+
+.haku-note-card{border-top:1px solid rgba(42,74,62,.08);padding:14px 2px}
+.haku-note-cat{display:inline-block;font-size:10.5px;color:#8A6018;border:1px solid rgba(200,146,42,.3);border-radius:20px;padding:1px 9px;margin-bottom:7px}
+.haku-note-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.haku-note-who{font-size:12.5px;font-weight:700;color:var(--green)}
+.haku-note-meta{font-size:11px;color:var(--text-soft)}
+.haku-note-title{font-family:'Noto Serif JP',serif;font-size:14px;color:var(--text);margin-bottom:5px}
+.haku-note-body{font-size:13px;color:var(--text-mid);line-height:1.8;white-space:pre-wrap}
+.haku-note-actions{margin-top:8px;display:flex;gap:14px}
+.haku-note-actions button{background:none;border:0;font-size:12px;color:var(--text-soft);cursor:pointer;padding:0;text-decoration:underline}
+.haku-write-btn{display:block;width:100%;text-align:center;border:1.5px solid var(--green);color:var(--green);background:none;padding:12px;font-family:'Noto Serif JP',serif;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:18px;border-radius:10px}
+
+.haku-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.haku-stat{background:var(--white);border-radius:14px;padding:14px 8px;text-align:center;box-shadow:var(--sh-s)}
+.haku-stat b{display:block;font-family:'Noto Serif JP',serif;font-size:19px;font-weight:900;color:var(--green)}
+.haku-stat .soon{font-size:10px;color:var(--text-soft)}
+.haku-stat span{font-size:10.5px;color:var(--text-soft);margin-top:2px;display:block}
+
+.haku-tane-hero{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);border-radius:20px;padding:20px;margin-bottom:16px;color:var(--ivory)}
+.haku-tane-hero .lbl{font-size:11px;letter-spacing:.14em;color:rgba(247,240,230,.6)}
+.haku-tane-hero .memo{font-size:11.5px;color:rgba(247,240,230,.55);margin-top:10px;line-height:1.8}
+.haku-stub{border:1px dashed rgba(42,74,62,.25);background:var(--green-pale);border-radius:var(--r);padding:20px;text-align:center;color:var(--text-mid);font-size:12.5px;line-height:1.9}
+
+/* 投稿モーダル（ことば） */
+.haku-modal-overlay{position:fixed;inset:0;background:rgba(20,30,20,.45);display:flex;align-items:flex-end;justify-content:center;z-index:999}
+.haku-modal-overlay[hidden]{display:none}
+.haku-modal-sheet{background:var(--ivory);width:100%;max-width:440px;max-height:88vh;overflow-y:auto;padding:24px 22px 26px;border-radius:20px 20px 0 0}
+.haku-modal-sheet h3{font-family:'Noto Serif JP',serif;font-size:16px;color:var(--green);margin-bottom:14px}
+.haku-modal-sheet label{display:block;font-size:11.5px;color:var(--text-soft);margin:14px 0 6px}
+.haku-modal-sheet input[type=text],.haku-modal-sheet select,.haku-modal-sheet textarea{width:100%;border:1.5px solid transparent;background:var(--white);padding:10px 12px;font-family:inherit;font-size:13.5px;color:var(--text);border-radius:8px;outline:none}
+.haku-modal-sheet textarea{min-height:110px;resize:vertical}
+.haku-modal-charcount{font-size:11px;color:var(--text-soft);text-align:right;margin-top:4px}
+.haku-modal-err{font-size:12px;color:#C44A3A;margin-top:8px;min-height:16px}
+.haku-modal-actions{display:flex;gap:10px;margin-top:18px}
+.haku-modal-actions button{flex:1;padding:12px;font-family:inherit;font-size:13px;cursor:pointer;border-radius:10px;border:1.5px solid var(--green)}
+.haku-modal-actions .primary{background:var(--green);color:var(--ivory);border:none}
+.haku-modal-actions .ghost{background:none;color:var(--green)}
 </style>
 </head>
 <body>
@@ -666,6 +728,14 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
       <div id="homeTimeline" style="margin-bottom:20px">
         <div class="tl-loading">読み込み中…</div>
       </div>
+
+      <!-- ここから下：HAKU Community（session valid + HAKU Membership active の会員のみ実データ表示） -->
+      <div id="hakuHomeSection" style="margin-top:8px"></div>
+    </div>
+
+    <!-- 学ぶ（HAKU NOTE。session valid + HAKU Membership active のみ） -->
+    <div class="page" id="p-learn">
+      <div id="hakuLearnSection"><div class="haku-empty">読み込み中…</div></div>
     </div>
 
     <!-- GOALS -->
@@ -703,6 +773,21 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
       </div>
     </div>
 
+    <!-- 集う（Event: HAKU MORNING/MEET/ボランティア。session valid + HAKU Membership active のみ） -->
+    <div class="page" id="p-gather">
+      <div id="hakuGatherSection"><div class="haku-empty">読み込み中…</div></div>
+    </div>
+
+    <!-- ことば（振り返り共有。session valid + HAKU Membership active のみ） -->
+    <div class="page" id="p-notes">
+      <div id="hakuNotesSection"><div class="haku-empty">読み込み中…</div></div>
+    </div>
+
+    <!-- 種 / TANE（器のみ。ロジックは元設計未確定のため今回実装しない） -->
+    <div class="page" id="p-tane">
+      <div id="hakuTaneSection"><div class="haku-empty">読み込み中…</div></div>
+    </div>
+
     <!-- PROFILE -->
     <div class="page" id="p-profile">
       <div class="profile-hero">
@@ -715,6 +800,10 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
         <div class="stat-c"><div class="stat-n" id="statGoals">0</div><div class="stat-l">目標数</div></div>
         <div class="stat-c"><div class="stat-n" id="statSess">3</div><div class="stat-l">セッション数</div></div>
       </div>
+
+      <!-- HAKU Community拡張（session valid + HAKU Membership active のみ実データ表示） -->
+      <div id="hakuProfileSection" style="margin-bottom:4px"></div>
+
       <div class="sec-hd"><h2>メニュー</h2></div>
       <div class="menu">
         <div class="mi" id="adminMenuItem" style="display:none" onclick="showAdminPage()"><div class="mi-dot" style="background:var(--gold)"></div><span class="mi-lbl" style="color:var(--green);font-weight:700">管理者パネル（参加申請）</span><span class="mi-arr">›</span></div>
@@ -863,11 +952,15 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
     </div>
   </div>
 
-  <!-- TABBAR -->
+  <!-- TABBAR（横スクロール対応。8タブ：ホーム/学ぶ/行動目標/セッション/集う/ことば/種/マイページ） -->
   <div class="tabbar">
     <button class="tab active" onclick="goTab('home',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg>
       <span class="tab-lbl">ホーム</span>
+    </button>
+    <button class="tab" onclick="goTab('learn',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c2-1 5-1 7 0v14c-2-1-5-1-7 0z"/><path d="M20 5c-2-1-5-1-7 0v14c2-1 5-1 7 0z"/></svg>
+      <span class="tab-lbl">学ぶ</span>
     </button>
     <button class="tab" onclick="goTab('goals',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
@@ -877,10 +970,41 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
       <span class="tab-lbl">セッション</span>
     </button>
+    <button class="tab" onclick="goTab('gather',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg>
+      <span class="tab-lbl">集う</span>
+    </button>
+    <button class="tab" onclick="goTab('notes',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      <span class="tab-lbl">ことば</span>
+    </button>
+    <button class="tab" onclick="goTab('tane',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 2 7 6 7 10a7 7 0 0 1-14 0c0-4 3-8 7-10z"/><path d="M12 21V9"/></svg>
+      <span class="tab-lbl">種</span>
+    </button>
     <button class="tab" onclick="goTab('profile',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="tab-lbl">マイページ</span>
     </button>
+  </div>
+</div>
+
+<!-- HAKU Community「ことば」投稿モーダル（既存デザイントークンに合わせる） -->
+<div class="haku-modal-overlay" id="hakuComposerOverlay" hidden>
+  <div class="haku-modal-sheet">
+    <h3 id="hakuComposerHeading">ことばを書く</h3>
+    <label for="hakuComposerTitle">タイトル（任意）</label>
+    <input type="text" id="hakuComposerTitle" maxlength="60" placeholder="（つけなくても大丈夫です）">
+    <label for="hakuComposerCategory">カテゴリ</label>
+    <select id="hakuComposerCategory"></select>
+    <label for="hakuComposerBody">本文</label>
+    <textarea id="hakuComposerBody" maxlength="1000" placeholder="今日できたこと、気づいたこと、考えていること……。誰かと比べず、ただ自分の言葉で。"></textarea>
+    <div class="haku-modal-charcount"><span id="hakuComposerCount">0</span> / 1000</div>
+    <div class="haku-modal-err" id="hakuComposerErr"></div>
+    <div class="haku-modal-actions">
+      <button class="ghost" type="button" onclick="hakuCloseComposer()">やめる</button>
+      <button class="primary" type="button" id="hakuComposerSubmitBtn" onclick="hakuSubmitComposer()">残す</button>
+    </div>
   </div>
 </div>
 
@@ -999,6 +1123,9 @@ function enterAppAfterAuth(fbUser) {
   document.getElementById('applyScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
   showLoginError('');
+  // HAKU Community統合（既存Firebaseログインとは別の認証。ここでは呼び出すだけで、
+  // 既存goals/sessions等の初期化には一切影響しない）。
+  hakuInit();
 }
 
 // file:// で開くと auth/unauthorized-domain になりログインできないことがある
@@ -1091,6 +1218,12 @@ function goTab(name, btn) {
   document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
   document.getElementById('p-' + name).classList.add('active');
   btn.classList.add('active');
+  // HAKU Community統合タブ：開いたときに読み込む（既存タブの初期化方式は変更しない）。
+  if (name === 'learn') hakuRenderLearn();
+  if (name === 'gather') hakuRenderGather();
+  if (name === 'notes') hakuRenderNotes();
+  if (name === 'tane') hakuRenderTane();
+  if (name === 'profile') hakuRenderProfile();
 }
 
 /* GOALS — Firestore: users/{uid}/goals/{goalId}
@@ -2202,6 +2335,362 @@ window.showAdminPage = showAdminPage;
 window.loadAdminPanel = loadAdminPanel;
 window.approveApplication = approveApplication;
 window.rejectApplication = rejectApplication;
+</script>
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HAKU Community 統合（学ぶ／集う／ことば／種／マイページ拡張）
+//
+// 認証は既存Firebase Authとは完全に別（/api/community-auth の ht_session Cookie、
+// Redisバックエンド）。既存/community会員であっても、HAKU Community（月額2,980円・
+// 完全紹介制）へは別途申込＋決済＋Membership activeが必要で、自動付与はしない。
+// 「session valid + HAKU Membership active」の場合のみ実データを表示し、
+// それ以外は常にログイン／参加導線カードを表示する（フェイクデータは出さない）。
+//
+// 既存のuser/goals/currentUid等の変数・関数には一切触れない。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+let hakuStatus = null; // /api/community-auth?action=me の結果（ok:falseまたはmemberships.haku:falseなら未参加）
+let hakuPostsCache = {};
+let hakuComposerMode = 'create';
+let hakuComposerEditId = null;
+
+const HAKU_CATEGORY_OPTIONS = [
+  ['today_did', '今日できたこと'],
+  ['today_noticed', '今日気づいたこと'],
+  ['this_week_thinking', '今週考えていること'],
+  ['learned_from_someone', '誰かから学んだこと'],
+  ['tried_something', 'やってみたこと'],
+  ['question_to_self', '自分への問い'],
+  ['valuing_now', '今大切にしていること'],
+  ['challenging_now', '今挑戦していること'],
+];
+const HAKU_EVENT_STATUS_LABEL = { ended: '終了', registered: '参加予定', full: '満席', open: '募集中' };
+
+function hakuEsc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function hakuApi(path, opts) {
+  return fetch(path, Object.assign({ headers: { 'Content-Type': 'application/json' } }, opts))
+    .then((r) => r.json().then((data) => ({ status: r.status, data })));
+}
+function hakuFmtDate(ms) {
+  if (!ms) return '';
+  return new Date(ms).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+function hakuFmtEventDate(iso) {
+  if (!iso) return '日程調整中';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('ja-JP', { month: 'long', day: 'numeric', weekday: 'short' }) + ' ' +
+    d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+}
+
+async function hakuInit() {
+  const res = await hakuApi('/api/community-auth?action=me', { method: 'GET' });
+  hakuStatus = (res.status === 200 && res.data.ok) ? res.data : { ok: false };
+  hakuRenderHome();
+  // マイページ／学ぶ／集う／ことば／種は該当タブを開いたときに描画する（goTab参照）。
+  // ただしマイページが既にDOM上に描画済みの場合の二重fetchを避けるため、初回のみここでも描画する。
+  if (!document.getElementById('hakuProfileSection').innerHTML) hakuRenderProfile();
+}
+
+function hakuIsActive() {
+  return !!(hakuStatus && hakuStatus.ok && hakuStatus.memberships && hakuStatus.memberships.haku);
+}
+
+// 未参加／未ログイン時に各タブへ共通で表示するログイン・参加導線カード。
+function hakuLoginCardHtml(suffix, message) {
+  return `
+    <div class="haku-locked">
+      <p>${hakuEsc(message || 'この機能はHAKU Community（月額2,980円・完全紹介制）の会員限定です。既存の拓アカウントとは別に、参加申込とお支払いが必要です。')}</p>
+      <div class="haku-login-form">
+        <input type="email" id="hakuLoginEmail_${suffix}" placeholder="HAKU Communityのメールアドレス" autocomplete="username">
+        <input type="password" id="hakuLoginPassword_${suffix}" placeholder="パスワード" autocomplete="current-password">
+        <div class="haku-login-err" id="hakuLoginErr_${suffix}"></div>
+        <button type="button" class="btn-haku-login" style="width:100%;margin-bottom:8px" onclick="hakuDoLogin('${suffix}')">HAKU Communityにログイン</button>
+      </div>
+      <a href="./haku-community.html" target="_blank" style="font-size:12px;color:var(--green);text-decoration:underline">HAKU Communityについて詳しく見る・申し込む →</a>
+    </div>`;
+}
+
+async function hakuDoLogin(suffix) {
+  const email = document.getElementById('hakuLoginEmail_' + suffix).value.trim();
+  const password = document.getElementById('hakuLoginPassword_' + suffix).value;
+  const errEl = document.getElementById('hakuLoginErr_' + suffix);
+  errEl.textContent = '';
+  const res = await hakuApi('/api/community-auth?action=login', {
+    method: 'POST',
+    body: JSON.stringify({ community: 'haku', email, password }),
+  });
+  if (res.status !== 200) { errEl.textContent = res.data.error || 'ログインに失敗しました。'; return; }
+  await hakuInit();
+  hakuRenderLearn(); hakuRenderGather(); hakuRenderNotes(); hakuRenderTane(); hakuRenderProfile();
+}
+
+// ── HOME拡張：今週の問い（静的）＋ NEXT HAKU MORNING/MEET（実データ）＋ みんなの最近のことば（実データ） ──
+async function hakuRenderHome() {
+  const el = document.getElementById('hakuHomeSection');
+  if (!el) return;
+  if (!hakuIsActive()) {
+    el.innerHTML = hakuLoginCardHtml('home', 'HAKU Community会員の方は、ここにHAKU MORNING/MEETの予定やみんなのことばが表示されます。');
+    return;
+  }
+  el.innerHTML = `
+    <div class="sec-hd" style="margin-top:20px"><h2>今週の問い <span class="haku-tag">HAKU</span></h2></div>
+    <div class="haku-card"><b>最近、誰かの美点を見つけましたか？</b><span>HAKU NOTE ・ 音声5分</span></div>
+    <div class="sec-hd" style="margin-top:20px"><h2>NEXT HAKU MORNING</h2></div>
+    <div id="hakuHomeNextMorning"><div class="haku-empty">読み込み中…</div></div>
+    <div class="sec-hd" style="margin-top:20px"><h2>NEXT HAKU MEET</h2></div>
+    <div id="hakuHomeNextMeet"><div class="haku-empty">読み込み中…</div></div>
+    <div class="sec-hd" style="margin-top:20px"><h2>みんなの最近のことば</h2></div>
+    <div id="hakuHomeNotesPreview"><div class="haku-empty">読み込み中…</div></div>`;
+
+  const evRes = await hakuApi('/api/community-auth?action=events-list', { method: 'GET' });
+  if (evRes.status === 200) {
+    const events = evRes.data.events || [];
+    const nextMorning = events.find((e) => e.type === 'morning' && !e.isPast);
+    const nextMeet = events.find((e) => (e.type === 'meet' || e.type === 'volunteer') && !e.isPast);
+    document.getElementById('hakuHomeNextMorning').innerHTML = nextMorning ? hakuRenderEventCard(nextMorning, { showJoin: true }) : '<div class="haku-empty">現在、予定しているHAKU MORNINGはありません。</div>';
+    document.getElementById('hakuHomeNextMeet').innerHTML = nextMeet ? hakuRenderEventCard(nextMeet, { showJoin: true }) : '<div class="haku-empty">現在、予定しているイベントはありません。</div>';
+  }
+  const postsRes = await hakuApi('/api/community-auth?action=posts-list&limit=3', { method: 'GET' });
+  const previewEl = document.getElementById('hakuHomeNotesPreview');
+  if (postsRes.status === 200) {
+    const posts = postsRes.data.posts || [];
+    previewEl.innerHTML = posts.length ? posts.map(hakuRenderPostCard).join('') : '<div class="haku-empty">まだ、ことばが残されていません。</div>';
+  }
+}
+
+// ── 学ぶ（HAKU NOTE）：既存バックエンドを持たない静的コンテンツ。カテゴリのみ明示 ──
+function hakuRenderLearn() {
+  const el = document.getElementById('hakuLearnSection');
+  if (!el) return;
+  if (!hakuIsActive()) { el.innerHTML = hakuLoginCardHtml('learn'); return; }
+  el.innerHTML = `
+    <div class="sec-hd"><h2>今週の一つ</h2></div>
+    <div class="haku-card"><b>最近、誰かの美点を見つけましたか？</b><span>人間関係 ・ HAKU NOTE ・ 音声5分12秒</span></div>
+    <div class="sec-hd" style="margin-top:20px"><h2>アーカイブ</h2></div>
+    <div class="haku-card"><b>「何のために」を思い出す3つの問い</b><span>仕事 ・ 先週</span></div>
+    <div class="haku-card"><b>言葉が先か、行動が先か</b><span>コミュニケーション ・ 2週間前</span></div>
+    <div class="haku-card"><b>断られた日の捉え方</b><span>営業 ・ 3週間前</span></div>`;
+}
+
+// ── 集う（Event：HAKU MORNING/MEET/ボランティア） ──
+function hakuRenderEventCard(e, opts) {
+  opts = opts || {};
+  const metaBits = [hakuFmtEventDate(e.startsAt)];
+  if (e.location) metaBits.push(e.location);
+  if (e.capacity != null) metaBits.push(`定員${e.capacity}名・残り${Math.max(0, e.capacity - e.participantCount)}席`);
+  if (e.fee) metaBits.push(e.fee);
+  let btn = '';
+  if (opts.showJoin && !e.isPast) {
+    if (e.joined) btn = `<button class="go" onclick="hakuLeaveEvent('${e.id}')">参加を取り消す</button>`;
+    else if (e.full) btn = '<button class="go" disabled>満席</button>';
+    else btn = `<button class="go" onclick="hakuJoinEvent('${e.id}')">参加する</button>`;
+  }
+  const statusLabel = HAKU_EVENT_STATUS_LABEL[e.status] || '';
+  return `<div class="haku-card"><b>${hakuEsc(e.title)}${statusLabel ? ' <span class="haku-tag">' + statusLabel + '</span>' : ''}</b>` +
+    `<span>${hakuEsc(metaBits.join('・'))}</span>` +
+    (e.description ? `<span style="display:block;margin-top:4px">${hakuEsc(e.description)}</span>` : '') +
+    (e.itemsToBring ? `<span style="display:block;margin-top:4px">持ち物：${hakuEsc(e.itemsToBring)}</span>` : '') +
+    (btn ? `<div>${btn}</div>` : '') + `</div>`;
+}
+
+async function hakuRenderGather() {
+  const el = document.getElementById('hakuGatherSection');
+  if (!el) return;
+  if (!hakuIsActive()) { el.innerHTML = hakuLoginCardHtml('gather'); return; }
+  el.innerHTML = `
+    <div class="sec-hd"><h2>これから</h2></div>
+    <div id="hakuGatherUpcoming"><div class="haku-empty">読み込み中…</div></div>
+    <div class="sec-hd" style="margin-top:20px"><h2>過去の集まり</h2></div>
+    <div id="hakuGatherPast"></div>`;
+  const res = await hakuApi('/api/community-auth?action=events-list', { method: 'GET' });
+  if (res.status !== 200) { document.getElementById('hakuGatherUpcoming').innerHTML = '<div class="haku-empty">読み込みに失敗しました。</div>'; return; }
+  const events = res.data.events || [];
+  const upcoming = events.filter((e) => !e.isPast);
+  const past = events.filter((e) => e.isPast);
+  document.getElementById('hakuGatherUpcoming').innerHTML = upcoming.length ? upcoming.map((e) => hakuRenderEventCard(e, { showJoin: true })).join('') : '<div class="haku-empty">現在、予定しているイベントはありません。</div>';
+  document.getElementById('hakuGatherPast').innerHTML = past.length ? past.map((e) => hakuRenderEventCard(e, { showJoin: false })).join('') : '<div class="haku-empty">過去の開催履歴はまだありません。</div>';
+}
+
+function hakuJoinEvent(id) {
+  hakuApi('/api/community-auth?action=events-join', { method: 'POST', body: JSON.stringify({ eventId: id }) }).then((res) => {
+    if (res.status !== 200) { alert(res.data.error || '参加に失敗しました。'); return; }
+    hakuRenderHome();
+    if (document.getElementById('p-gather').classList.contains('active')) hakuRenderGather();
+    if (document.getElementById('p-profile').classList.contains('active')) hakuRenderProfile();
+  });
+}
+function hakuLeaveEvent(id) {
+  if (!confirm('参加を取り消しますか？')) return;
+  hakuApi('/api/community-auth?action=events-leave', { method: 'POST', body: JSON.stringify({ eventId: id }) }).then((res) => {
+    if (res.status !== 200) { alert(res.data.error || '取消に失敗しました。'); return; }
+    hakuRenderHome();
+    if (document.getElementById('p-gather').classList.contains('active')) hakuRenderGather();
+    if (document.getElementById('p-profile').classList.contains('active')) hakuRenderProfile();
+  });
+}
+
+// ── ことば（振り返り共有） ──
+function hakuRenderPostCard(p) {
+  hakuPostsCache[p.id] = p;
+  const actions = p.isMine
+    ? `<div class="haku-note-actions"><button onclick="hakuEditPostById('${p.id}')">編集</button><button onclick="hakuDeletePostConfirm('${p.id}')">削除</button></div>`
+    : '';
+  const hiddenBadge = p.status === 'hidden' ? '<span class="haku-tag">非表示（管理者）</span>' : '';
+  return `<div class="haku-note-card">
+    <span class="haku-note-cat">${hakuEsc(p.categoryLabel)}</span>${hiddenBadge}
+    <div class="haku-note-head"><span class="haku-note-who">${hakuEsc(p.displayName)}</span><span class="haku-note-meta">${hakuFmtDate(p.createdAt)}</span></div>
+    ${p.title ? `<div class="haku-note-title">${hakuEsc(p.title)}</div>` : ''}
+    <div class="haku-note-body">${hakuEsc(p.body)}</div>
+    ${actions}
+  </div>`;
+}
+
+async function hakuRenderNotes() {
+  const el = document.getElementById('hakuNotesSection');
+  if (!el) return;
+  if (!hakuIsActive()) { el.innerHTML = hakuLoginCardHtml('notes', '会員同士がことばを書き残し、静かに読み合う場所です。HAKU Community会員限定です。'); return; }
+  el.innerHTML = `
+    <div class="greet-card" style="margin-bottom:14px">
+      <div class="greet-tag">ことば</div>
+      <div class="greet-main" style="font-size:15px">人のことばに触れながら、<br>少し自分に戻る場所。</div>
+    </div>
+    <button class="haku-write-btn" onclick="hakuOpenComposer()">ことばを書く</button>
+    <div id="hakuNotesList"><div class="haku-empty">読み込み中…</div></div>`;
+  const res = await hakuApi('/api/community-auth?action=posts-list&limit=30', { method: 'GET' });
+  const listEl = document.getElementById('hakuNotesList');
+  if (res.status !== 200) { listEl.innerHTML = '<div class="haku-empty">読み込みに失敗しました。</div>'; return; }
+  const posts = res.data.posts || [];
+  listEl.innerHTML = posts.length ? posts.map(hakuRenderPostCard).join('') : '<div class="haku-empty">まだ、ことばはありません。今日感じたことを、ひとつ残してみませんか。</div>';
+}
+
+function hakuOpenComposer() {
+  hakuComposerMode = 'create'; hakuComposerEditId = null;
+  document.getElementById('hakuComposerHeading').textContent = 'ことばを書く';
+  document.getElementById('hakuComposerTitle').value = '';
+  document.getElementById('hakuComposerBody').value = '';
+  document.getElementById('hakuComposerCount').textContent = '0';
+  document.getElementById('hakuComposerErr').textContent = '';
+  document.getElementById('hakuComposerSubmitBtn').textContent = '残す';
+  document.getElementById('hakuComposerOverlay').hidden = false;
+  document.getElementById('hakuComposerBody').focus();
+}
+function hakuEditPostById(id) {
+  const p = hakuPostsCache[id];
+  if (!p) return;
+  hakuComposerMode = 'edit'; hakuComposerEditId = id;
+  document.getElementById('hakuComposerHeading').textContent = 'ことばを編集';
+  document.getElementById('hakuComposerTitle').value = p.title || '';
+  document.getElementById('hakuComposerBody').value = p.body || '';
+  document.getElementById('hakuComposerCount').textContent = String((p.body || '').length);
+  document.getElementById('hakuComposerCategory').value = p.category;
+  document.getElementById('hakuComposerErr').textContent = '';
+  document.getElementById('hakuComposerSubmitBtn').textContent = '更新する';
+  document.getElementById('hakuComposerOverlay').hidden = false;
+}
+function hakuCloseComposer() { document.getElementById('hakuComposerOverlay').hidden = true; }
+
+async function hakuSubmitComposer() {
+  const title = document.getElementById('hakuComposerTitle').value.trim();
+  const body = document.getElementById('hakuComposerBody').value.trim();
+  const category = document.getElementById('hakuComposerCategory').value;
+  const errEl = document.getElementById('hakuComposerErr');
+  errEl.textContent = '';
+  if (!body) { errEl.textContent = '本文を入力してください。'; return; }
+  if (body.length > 1000) { errEl.textContent = '本文は1000文字以内でご入力ください。'; return; }
+  const action = hakuComposerMode === 'edit' ? 'posts-update' : 'posts-create';
+  const payload = hakuComposerMode === 'edit' ? { id: hakuComposerEditId, title, body, category } : { title, body, category };
+  const res = await hakuApi('/api/community-auth?action=' + action, { method: 'POST', body: JSON.stringify(payload) });
+  if (res.status !== 200) { errEl.textContent = res.data.error || '保存に失敗しました。'; return; }
+  hakuCloseComposer();
+  hakuRenderHome();
+  if (document.getElementById('p-notes').classList.contains('active')) hakuRenderNotes();
+  if (document.getElementById('p-profile').classList.contains('active')) hakuRenderProfile();
+}
+function hakuDeletePostConfirm(id) {
+  if (!confirm('この投稿を削除しますか？元に戻せません。')) return;
+  hakuApi('/api/community-auth?action=posts-delete', { method: 'POST', body: JSON.stringify({ id }) }).then((res) => {
+    if (res.status !== 200) { alert(res.data.error || '削除に失敗しました。'); return; }
+    hakuRenderHome();
+    if (document.getElementById('p-notes').classList.contains('active')) hakuRenderNotes();
+    if (document.getElementById('p-profile').classList.contains('active')) hakuRenderProfile();
+  });
+}
+document.getElementById('hakuComposerBody').addEventListener('input', function () {
+  document.getElementById('hakuComposerCount').textContent = String(this.value.length);
+});
+(function hakuInitComposerCategories() {
+  document.getElementById('hakuComposerCategory').innerHTML =
+    HAKU_CATEGORY_OPTIONS.map((c) => `<option value="${c[0]}">${c[1]}</option>`).join('');
+})();
+
+// ── 種 / TANE：器のみ（換算率・有効期限・譲渡等は元設計未確定のため未実装） ──
+function hakuRenderTane() {
+  const el = document.getElementById('hakuTaneSection');
+  if (!el) return;
+  if (!hakuIsActive()) { el.innerHTML = hakuLoginCardHtml('tane'); return; }
+  el.innerHTML = `
+    <div class="haku-tane-hero">
+      <div class="lbl">あなたのTANE</div>
+      <div class="memo">TANEの残高・育てる・使う・履歴・つながりの機能は、換算率や有効期限など元設計で未確定の事項が解消され次第、実装予定です。</div>
+    </div>
+    <div class="haku-stub">種（TANE）は現在準備中です。<br>「貢献」「紹介」「学び」などの行動が、将来ここに記録・還元される予定です。</div>`;
+}
+
+// ── マイページ拡張（HAKU歴・参加履歴・過去のことば） ──
+async function hakuRenderProfile() {
+  const el = document.getElementById('hakuProfileSection');
+  if (!el) return;
+  if (!hakuIsActive()) {
+    el.innerHTML = `<div class="haku-locked" style="margin-top:14px">
+      <p>HAKU Community（月額2,980円・完全紹介制）にもご参加いただくと、朝会・イベント・ことば等の活動履歴がここに表示されます。</p>
+      <a href="./haku-community.html" target="_blank" class="btn-haku-login">HAKU Communityについて見る</a>
+    </div>`;
+    return;
+  }
+  const stats = hakuStatus.hakuStats || {};
+  const since = stats.joinedAt ? hakuFormatDuration(stats.joinedAt) : '—';
+  el.innerHTML = `
+    <div class="sec-hd" style="margin-top:18px"><h2>MY HAKU <span class="haku-tag">HAKU歴 ${hakuEsc(since)}</span></h2></div>
+    <div class="haku-stat-grid">
+      <div class="haku-stat"><b>${stats.morningCount ?? 0}</b><span>参加した朝会</span></div>
+      <div class="haku-stat"><b>${stats.meetCount ?? 0}</b><span>参加したイベント</span></div>
+      <div class="haku-stat"><b>${stats.volunteerCount ?? 0}</b><span>ボランティア</span></div>
+    </div>
+    <div class="haku-stat-grid">
+      <div class="haku-stat"><b>―</b><span class="soon" style="display:block">近日公開</span><span>つないだ仲間</span></div>
+      <div class="haku-stat"><b>―</b><span class="soon" style="display:block">近日公開</span><span>累計TANE</span></div>
+      <div class="haku-stat"><b>${hakuEsc(since)}</b><span>HAKU歴</span></div>
+    </div>
+    <div class="sec-hd"><h2>過去に書いたことば</h2></div>
+    <button class="haku-write-btn" onclick="hakuOpenComposer()">今日を残す</button>
+    <div id="hakuProfileNotes"><div class="haku-empty">読み込み中…</div></div>`;
+  const res = await hakuApi('/api/community-auth?action=posts-mine', { method: 'GET' });
+  const notesEl = document.getElementById('hakuProfileNotes');
+  if (res.status === 200) {
+    const posts = (res.data.posts || []).slice(0, 5);
+    notesEl.innerHTML = posts.length ? posts.map(hakuRenderPostCard).join('') : '<div class="haku-empty">まだ自分のことばがありません。「今日を残す」から書いてみましょう。</div>';
+  }
+}
+function hakuFormatDuration(startMs) {
+  const months = Math.max(0, Math.floor((Date.now() - startMs) / (1000 * 60 * 60 * 24 * 30.44)));
+  const y = Math.floor(months / 12);
+  const m = months % 12;
+  if (y === 0 && m === 0) return '1ヶ月未満';
+  return (y > 0 ? y + '年' : '') + (m > 0 ? m + 'ヶ月' : '');
+}
+
+window.hakuDoLogin = hakuDoLogin;
+window.hakuJoinEvent = hakuJoinEvent;
+window.hakuLeaveEvent = hakuLeaveEvent;
+window.hakuOpenComposer = hakuOpenComposer;
+window.hakuEditPostById = hakuEditPostById;
+window.hakuCloseComposer = hakuCloseComposer;
+window.hakuSubmitComposer = hakuSubmitComposer;
+window.hakuDeletePostConfirm = hakuDeletePostConfirm;
 </script>
 
 </body>
