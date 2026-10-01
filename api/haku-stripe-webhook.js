@@ -217,7 +217,8 @@ async function handlePaymentFailed(event, res, req) {
     await logAudit({ actorId: 'stripe-webhook', action: 'membership_past_due', targetId: email, metadata: { community: 'haku', event: event.id } });
     console.log(`[haku-webhook] Membership marked past_due | event=${event.id}`);
     const user = await getUser(email);
-    const baseUrlForEmail = resolveBaseUrl(req) || 'https://antagaorana-haku-tomoshibi-preview.vercel.app';
+    const baseUrlForEmail = resolveBaseUrl(req)
+      || (process.env.VERCEL_ENV === 'production' ? 'https://www.antagaorana.com' : 'https://antagaorana-haku-tomoshibi-preview.vercel.app');
     await sendPaymentFailedEmail({ email, displayName: user?.displayName, baseUrl: baseUrlForEmail });
     await markEventProcessed(event.id);
     return res.status(200).json({ received: true });
