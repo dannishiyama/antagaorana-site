@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>HAKU Community｜あんたがおらな</title>
+<meta name="description" content="拓（HAKU）コーチングとは別に、日々の実践とつながりを積み重ねる社会人向けの小さなコミュニティ「HAKU Community」。月額2,980円。">
+<link rel="canonical" href="https://antagaorana.com/haku-community.html">
+<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<style>
+:root{color-scheme:light;box-sizing:border-box}
+body{margin:0;padding:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+:root{
+  --green:var(--color-green);
+  --green-dk:var(--color-green-dark);
+  --green-lt:var(--color-green-light);
+  --cream:var(--color-bg);
+  --paper:var(--color-surface);
+  --ink:var(--color-text);
+  --mid:var(--color-text-muted);
+  --faint:var(--color-text-faint);
+  --terra:#8c692c;
+  --gold:var(--color-gold);
+  --accent-ink:#8a5a1f;
+  --line:var(--color-border);
+  --line-soft:var(--color-border-soft);
+  --serif:var(--font-serif);
+  --sans:var(--font-sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:.04em}
+a{color:inherit}
+input{font-family:inherit;font-size:14px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 8%}
+.narrow{max-width:760px;margin:0 auto;padding:0 8%}
+
+/* ---- サイト共通ナビ（未ログイン） ---- */
+.top{position:sticky;top:0;z-index:50;background:var(--green-dk);color:#fff;display:flex;align-items:center;gap:18px;padding:14px 8%;flex-wrap:wrap}
+.top .logo{font-family:var(--serif);font-size:14px;letter-spacing:.08em;text-decoration:none;white-space:nowrap}
+.top .primary-nav{display:flex;gap:22px;margin-left:24px;flex-wrap:wrap}
+.top .primary-nav a{font-size:12.5px;letter-spacing:.04em;color:rgba(255,255,255,.68);text-decoration:none}
+.top .primary-nav a:hover{color:#fff}
+.top .primary-nav a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.top .top-ctas{margin-left:auto;display:flex;align-items:center;gap:14px}
+.top .top-login{font-size:12.5px;color:rgba(255,255,255,.75);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:1px;white-space:nowrap}
+.top .top-login:hover{color:#fff}
+.top .top-login:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.top .btn{padding:9px 18px;font-size:12.5px}
+@media(max-width:900px){
+  .top .primary-nav{display:none}
+  .top{gap:12px}
+}
+
+.hero{background:var(--green-dk);color:#fff;padding:96px 0 80px}
+.hero .eyebrow{font-size:12px;letter-spacing:.2em;color:#b9c7b2;margin-bottom:34px}
+.hero h1{font-size:40px;line-height:1.55;margin-bottom:12px}
+.hero .en{font-family:var(--serif);font-size:13px;letter-spacing:.26em;color:#b9c7b2;margin-bottom:30px}
+.hero p{max-width:32em;color:rgba(255,255,255,.85);font-size:15px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:14px 30px;font-size:14px;letter-spacing:.08em;border:1px solid currentColor;background:none;color:inherit;cursor:pointer;font-family:var(--sans);text-decoration:none}
+.btn-solid{background:var(--terra);border-color:var(--terra);color:#fff}
+.btn-ghost{border-color:rgba(255,255,255,.5);color:#fff}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.invite-line{font-size:12.5px;color:#b9c7b2;letter-spacing:.02em;margin-bottom:22px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:40px;margin-top:64px;padding-top:28px;border-top:1px solid rgba(255,255,255,.2)}
+.hero-meta div{min-width:110px}
+.hero-meta b{display:block;font-family:var(--serif);font-size:26px;font-weight:500;line-height:1.3;color:#fff}
+.hero-meta span{font-size:12px;color:#b9c7b2}
+
+section{padding:88px 0}
+.sec-label{font-size:11px;letter-spacing:.24em;color:var(--faint);margin-bottom:26px}
+h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
+.lede{color:var(--mid);max-width:36em}
+.note{font-size:12px;color:var(--faint);margin-top:16px}
+
+.chain{border-top:1px solid var(--line);margin-top:38px}
+.chain .step{display:grid;grid-template-columns:52px 1fr;gap:24px;padding:20px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.chain .n{font-family:var(--serif);font-size:13px;color:var(--accent-ink);letter-spacing:.1em}
+.chain b{font-size:16px;font-family:var(--serif);display:block;margin-bottom:4px}
+.chain p{font-size:13.5px;color:var(--mid)}
+.chain .last b{color:var(--accent-ink)}
+.verdict{font-family:var(--serif);font-size:24px;line-height:1.9;color:var(--green-dk);margin-top:40px}
+
+.can{display:grid;grid-template-columns:repeat(2,1fr);gap:0 56px}
+.can > div{padding:24px 0;border-top:1px solid var(--line-soft)}
+.can h4{font-size:17px;margin-bottom:8px}
+.can p{font-size:13.5px;color:var(--mid)}
+
+.flowline{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin-top:8px}
+.flowline div{padding:26px 20px 26px 0;border-right:1px solid var(--line-soft)}
+.flowline div:last-child{border-right:0}
+.flowline b{display:block;font-family:var(--serif);font-size:13px;color:var(--accent-ink);margin-bottom:10px;letter-spacing:.1em}
+.flowline p{font-size:13px;color:var(--mid)}
+
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.plan{background:var(--paper);padding:34px 28px}
+.plan .tag{font-size:11px;letter-spacing:.18em;color:var(--faint);margin-bottom:14px}
+.plan h3{font-size:21px;margin-bottom:4px}
+.plan .for{font-size:12px;color:var(--mid)}
+.plan .price{font-family:var(--serif);font-size:32px;line-height:1.4;margin:14px 0 2px;color:var(--ink)}
+.plan .price span{font-size:13px;font-family:var(--sans);color:var(--mid)}
+.plan ul{list-style:none;font-size:13px;margin-top:20px;border-top:1px solid var(--line-soft);color:var(--mid)}
+.plan ul li{padding:9px 0;border-bottom:1px solid var(--line-soft)}
+.plan.pick{position:relative;border:1px solid var(--green-dk)}
+.plan.pick::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--green-dk)}
+.plan.pick .tag{color:var(--accent-ink)}
+
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{padding:20px 0;cursor:pointer;font-family:var(--serif);font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"＋";color:var(--accent-ink);font-size:14px}
+.faq details[open] summary::after{content:"−"}
+.faq summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.faq p{padding:0 0 22px;color:var(--mid);font-size:14px;max-width:44em}
+
+.closing{background:var(--green-dk);color:#fff;text-align:center;padding:96px 0}
+.closing h2{font-size:28px;line-height:1.8;margin-bottom:20px}
+.closing p{color:rgba(255,255,255,.8);max-width:30em;margin:0 auto 34px}
+.closing .ctas{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.site-footer{background:var(--green-dk);border-top:1px solid rgba(255,255,255,.14);padding:22px 0 30px;text-align:center}
+.site-footer .teacher-link{font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);padding-bottom:1px}
+.site-footer .teacher-link:hover{color:rgba(255,255,255,.85)}
+.site-footer .copy{font-size:11px;color:rgba(255,255,255,.35);margin-top:14px}
+
+/* ---- PEOPLE：ここにいる人たち ＋ HAKU MEETの記録（画像は使わず、文章の余白と罫線だけで構成） ---- */
+.people{border-top:1px solid var(--line)}
+.people-list{list-style:none;border-top:1px solid var(--line);margin-top:48px;max-width:680px}
+.people-list li{position:relative;padding:22px 0 22px 0;border-bottom:1px solid var(--line-soft);transition:padding-left .3s ease}
+.people-list li::before{content:"";position:absolute;left:0;top:30px;width:0;height:1px;background:var(--gold);transition:width .3s ease}
+.people-list li.on{padding-left:20px}
+.people-list li.on::before{width:12px}
+.people-list .name{font-family:var(--serif);font-size:17px;color:var(--ink)}
+.people-list .role{display:block;font-size:11px;letter-spacing:.18em;color:var(--faint);margin-top:2px}
+.people-list .value{font-size:13.5px;color:var(--mid);margin-top:8px}
+.people-list .open .name{color:var(--green-dk)}
+.is-ph{color:var(--faint)}
+.meet{margin-top:80px;padding-top:48px;border-top:1px solid var(--line)}
+.meet h3{font-size:21px;margin-bottom:10px}
+
+/* ---- VOICES：ご本人の許可を得た言葉だけを載せる ---- */
+.voices{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.voice-main{margin-top:40px}
+.voice-main .rule{display:block;width:40px;height:1px;background:var(--gold);transform-origin:left center;margin-bottom:28px}
+.voice-main blockquote{font-family:var(--serif);font-size:24px;line-height:2;color:var(--green-dk);margin:0}
+.voice-main blockquote.is-ph{font-size:18px;color:var(--faint)}
+.voice-by{display:block;font-size:12px;color:var(--faint);letter-spacing:.08em;margin-top:18px;font-style:normal}
+.voice-sub{display:grid;grid-template-columns:repeat(2,1fr);gap:0 56px;margin-top:72px;border-top:1px solid var(--line-soft)}
+.voice-sub figure{margin:0;padding-top:28px}
+.voice-sub blockquote{font-family:var(--serif);font-size:16px;line-height:1.95;color:var(--ink);margin:0}
+.voice-sub blockquote.is-ph{font-size:14px;color:var(--faint)}
+.voice-sub .voice-by{font-size:11px;margin-top:12px}
+.voices .note{margin-top:48px}
+
+@media(max-width:900px){
+  .people-list{margin-top:32px}
+  .people-list li{padding:18px 0}
+  .people-list li.on{padding-left:0}
+  .people-list li.on::before{width:0}
+  .meet{margin-top:56px;padding-top:36px}
+  .voice-main{margin-top:28px}
+  .voice-main blockquote{font-size:19px}
+  .voice-main blockquote.is-ph{font-size:16px}
+  .voice-sub{grid-template-columns:1fr;margin-top:48px}
+  .voice-sub figure + figure{border-top:1px solid var(--line-soft);margin-top:28px}
+}
+
+/* ---- FOR：社会人の方への訴求 ---- */
+.for{border-top:1px solid var(--line)}
+.for-card{max-width:640px;margin-top:40px}
+.for-card .tag{font-size:11px;letter-spacing:.2em;color:var(--accent-ink);margin-bottom:18px}
+.for-card h3{font-size:21px;line-height:1.7;color:var(--green-dk);margin-bottom:16px}
+.for-card p{font-size:13.5px;color:var(--mid)}
+.for-card ul{list-style:none;font-size:13px;color:var(--mid);margin:22px 0 28px;border-top:1px solid var(--line-soft)}
+.for-card li{padding:9px 0;border-bottom:1px solid var(--line-soft)}
+.for-card .btn{margin-top:8px}
+
+/* ---- APPLY：申込みフォーム ---- */
+.apply{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.test-note{font-size:12.5px;color:var(--mid);border:1px dashed var(--line);background:var(--cream);padding:14px 18px;margin:8px 0 40px;line-height:1.9}
+.test-note b{display:inline-block;font-weight:500;font-size:11px;letter-spacing:.16em;color:#fff;background:var(--accent-ink);padding:1px 8px;margin-right:10px}
+.test-note code{font-family:inherit;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
+.ap-step{border:0;border-top:1px solid var(--line);padding:28px 0 32px;min-width:0}
+.ap-step legend{float:left;width:100%;font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:18px;padding:0}
+.ap-step legend + *{clear:both}
+.ap-step legend .n{font-size:13px;color:var(--accent-ink);letter-spacing:.1em;margin-right:14px}
+.choice{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.choice.one{grid-template-columns:1fr}
+.choice label{position:relative;display:block;cursor:pointer;border:1px solid var(--line);background:var(--paper);padding:18px 20px;transition:border-color .18s ease,box-shadow .18s ease}
+.choice input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.choice label span{display:block;padding-left:28px;position:relative}
+.choice label span::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border:1px solid var(--line);border-radius:50%;background:var(--paper);transition:border-color .18s ease,box-shadow .18s ease}
+.choice b{display:block;font-family:var(--serif);font-weight:500;font-size:16px;color:var(--ink)}
+.choice small{display:block;font-size:12px;color:var(--mid);margin-top:2px}
+.choice em{display:block;font-style:normal;font-family:var(--serif);font-size:24px;color:var(--ink);margin-top:8px}
+.choice em i{font-style:normal;font-family:var(--sans);font-size:12px;color:var(--mid);margin-left:4px}
+.choice label:has(input:checked){border-color:var(--green-dk);box-shadow:inset 0 3px 0 var(--green-dk)}
+.choice label:has(input:checked) span::before{border-color:var(--green-dk);box-shadow:inset 0 0 0 3px var(--paper);background:var(--green-dk)}
+.choice label:has(input:focus-visible){outline:2px solid var(--gold);outline-offset:2px}
+@media (hover:hover) and (pointer:fine){.choice label:hover{border-color:var(--green-lt)}}
+.confirm{border-top:1px solid var(--line-soft);font-size:13.5px}
+.confirm div{display:grid;grid-template-columns:96px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.confirm dt{color:var(--faint);font-size:12px;letter-spacing:.08em;padding-top:2px}
+.confirm dd{color:var(--ink)}
+.agree{display:flex;gap:12px;align-items:flex-start;margin-top:24px;font-size:13.5px;color:var(--ink);cursor:pointer}
+.agree input{margin-top:6px;width:16px;height:16px;accent-color:var(--green-dk);flex:none}
+.agree input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.agree a{color:var(--green-dk)}
+.agree small{display:block;font-size:12px;margin-top:4px}
+.ap-err{min-height:22px;font-size:13px;color:#9a3b1f;margin:4px 0 12px}
+.ap-go{width:100%;padding:17px 30px;font-size:15px;letter-spacing:.14em}
+.ap-go[disabled]{opacity:.6;cursor:progress;transform:none}
+
+@media(max-width:900px){
+  .wrap,.narrow{padding:0 7%}
+  .hero{padding:64px 0 56px}
+  .hero h1{font-size:27px}
+  section{padding:60px 0}
+  h2.lead{font-size:22px}
+  .verdict{font-size:19px}
+  .can{grid-template-columns:1fr}
+  .flowline{grid-template-columns:1fr}
+  .flowline div{border-right:0;border-bottom:1px solid var(--line-soft);padding:20px 0}
+  .plans{grid-template-columns:1fr!important}
+  .for-card{margin-top:28px}
+  .for-card h3{font-size:19px}
+  .choice{grid-template-columns:1fr}
+  .confirm div{grid-template-columns:80px 1fr;gap:12px}
+  .test-note{margin-bottom:28px}
+}
+
+/* ---- micro interactions (CSS-only; safe even if the Motion script below fails to load) ---- */
+.btn{transition:transform .18s ease,opacity .18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.plan{transition:transform .18s ease,box-shadow .18s ease}
+@media (hover:hover) and (pointer:fine){
+  .plan:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(43,41,38,.07)}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="logo" href="./haku-community.html">HAKU COMMUNITY</a>
+  <nav class="primary-nav" aria-label="サイト内ナビゲーション">
+    <a href="#h-pillars">サービスについて</a>
+    <a href="#h-people">特徴</a>
+    <a href="#h-price">料金</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <div class="top-ctas">
+    <a class="top-login" href="./haku-community-login.html">ログイン</a>
+    <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">株式会社あんたがおらな ｜ HAKU COMMUNITY</div>
+    <p class="invite-line">文化やつながりを大切にするため、現在は完全紹介制で運営しています。</p>
+    <h1>人は、人の中で、磨かれる。</h1>
+    <div class="en">HAKU COMMUNITY</div>
+    <p>「こんなものだ」と諦めていた枠を外し、自分の未来を自分の手で拓いていく——そのための日常の環境です。個別に深く伴走する「拓（HAKU）コーチング」とは別に、日々の実践とつながりを積み重ねる小さな共同体を、月額2,980円でご用意しました。</p>
+    <div class="ctas">
+      <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
+      <a href="./haku-community-login.html" class="btn btn-ghost">ログイン</a>
+    </div>
+    <div class="hero-meta">
+      <div><b>週1回</b><span>HAKU NOTE・今週の問い</span></div>
+      <div><b>週1回</b><span>HAKU MORNING（30分）</span></div>
+      <div><b>月1回</b><span>HAKU MEET（リアル）</span></div>
+      <div><b>完全紹介制</b><span>小さく、文化から育てる</span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="narrow">
+    <div class="sec-label">WHY HAKU</div>
+    <h2 class="lead">枝葉のノウハウより先に、<br>根っこを育てます。</h2>
+    <p class="lede">「営業ではこう話す」「こう行動する」——そうした技術も必要です。ただし本人の中の「人をどう見るか」「何を大切にするか」が変わらなければ、特定の場面でしか使えません。HAKUが育てたいのは、次の循環そのものです。</p>
+    <div class="chain">
+      <div class="step"><div class="n">01</div><div><b>思想・哲学</b><p>人をどう見るか、何を大切にするか。すべての土台になる部分。</p></div></div>
+      <div class="step"><div class="n">02</div><div><b>思考</b><p>目の前の出来事を、どう捉えるか。</p></div></div>
+      <div class="step"><div class="n">03</div><div><b>行動・選択</b><p>実際に、何を選ぶか。</p></div></div>
+      <div class="step"><div class="n">04</div><div><b>習慣</b><p>積み重ねの中で、それが自分になっていく。</p></div></div>
+      <div class="step last"><div class="n">05</div><div><b>新しい経験</b><p>習慣が生んだ経験が、また思想・哲学を育てていく。</p></div></div>
+    </div>
+    <p class="verdict">大きく変わろうとしなくていい。<br>この循環を、日常の中で少しずつ回し続けること。</p>
+  </div>
+</section>
+
+<section style="border-top:1px solid var(--line)" id="h-pillars">
+  <div class="wrap">
+    <div class="sec-label">4 PILLARS</div>
+    <h2 class="lead">4つの柱</h2>
+    <p class="lede">大量のコンテンツを消費させることが目的ではありません。ひとつの問いを持ち帰り、日常の中で考え、動かしてみること。</p>
+    <div class="can">
+      <div><h4>学ぶ｜HAKU NOTE</h4><p>週1回、5〜10分の音声・短い文章・動画で「今週の問い」を届けます。過去分は静かにアーカイブされ、いずれ思想のライブラリになります。</p></div>
+      <div><h4>整える｜HAKU MORNING</h4><p>週1回・30分。5分で問いを受け取り、10分で自分と向き合い、10分で対話し、5分で今週の一歩を決める。週に一度、自分に戻る時間です。</p></div>
+      <div><h4>つながる｜HAKU MEET</h4><p>月1回のリアルな集まり。対話会・焚き火・自然体験など。普段会わない人と、普段しない経験と、普段しない話をします。</p></div>
+      <div><h4>循環する｜TANE</h4><p>人をつなぐ・助ける・貢献する——そうした行動が「TANE」として積み重なる仕組み。誰かのための行動が、次の誰かの挑戦につながります。</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-label">TANE</div>
+    <h2 class="lead">TANEは、ポイントではありません。</h2>
+    <p class="lede" style="margin-bottom:30px">貯めることより、何から生まれ、何に使ったかという物語を大事にしています。「稼げるコミュニティ」を目指しているわけではないので、増やすこと自体を競う設計にはしていません。</p>
+    <div class="can">
+      <div><h4>育てる</h4><p>人をつなぐ、ボランティアに参加する、イベントを手伝う、仲間をサポートする。</p></div>
+      <div><h4>つかう</h4><p>自分のために、挑戦のために（インド体験など）、誰かに贈る、社会に還す（富士登山プロジェクト等）。</p></div>
+    </div>
+    <p class="note">※ TANEの換算価値・有効期限・譲渡可否は現在検討中です。資金決済法等の確認が済み次第、あらためてご案内します。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">A WEEK HERE</div>
+    <h2 class="lead">一週間の流れ</h2>
+    <p class="lede">特別な日ではなく、いつもの一週間の中に、こんなリズムが流れています。</p>
+    <div class="flowline">
+      <div><b>週はじめ</b><p>HAKU NOTEで今週の問いが届く。読む、聴く。それだけでもいい。</p></div>
+      <div><b>週なかば</b><p>HAKU MORNINGで、その問いを持ち寄って対話する。</p></div>
+      <div><b>気づいたとき</b><p>誰かをつないだり、支えたりした行動が、TANEとして積み重なる。</p></div>
+      <div><b>月に一度</b><p>HAKU MEETで、画面の外の人たちと実際に会う。</p></div>
+    </div>
+  </div>
+</section>
+
+<!--
+  PEOPLE / VOICES — 差し替えメモ
+  ・掲載は、名前・言葉すべてご本人の同意を得たものだけ。架空の人物・声は載せない。
+  ・紹介制度（TANE）の関係がある方の声には、その旨を併記する（ステマ規制対応）。
+  ・.is-ph は「未確定のプレースホルダー」の印。実データに置き換えたらクラスごと外す。
+  ・写真は現時点で使用しない方針（運営側で用意ができるまでは、文章のみで構成する）。
+-->
+<section class="people" id="h-people">
+  <div class="wrap">
+    <div class="sec-label">PEOPLE</div>
+    <h2 class="lead">同じ問いを、違う場所から<br>持ち寄る人たち。</h2>
+    <p class="lede">年齢も仕事もばらばらです。共通しているのは、ノウハウより先に、自分の根っこに向き合おうとしていること。当面は直接紹介で、50人ほどの小さな輪から始めます。</p>
+
+    <ul class="people-list">
+      <li>
+        <span class="name is-ph">［お名前］</span>
+        <span class="role">運営</span>
+        <p class="value is-ph">［今、大切にしていること］</p>
+      </li>
+      <li>
+        <span class="name is-ph">［お名前］</span>
+        <span class="role">HAKU MORNING ファシリテーター</span>
+        <p class="value is-ph">［今、大切にしていること］</p>
+      </li>
+      <li class="open">
+        <span class="name">これから出会う方</span>
+        <span class="role">FIRST 50</span>
+        <p class="value">最初の50人を、直接紹介で少しずつお迎えしています。</p>
+      </li>
+    </ul>
+
+    <div class="meet">
+      <div class="sec-label">HAKU MEET — RECORD</div>
+      <h3>画面の外で、会う。</h3>
+      <p class="lede">開催のたびに、その日の記録をここに残していきます。まずは、はじめての回から。</p>
+    </div>
+  </div>
+</section>
+
+<section class="voices" id="h-voices">
+  <div class="narrow">
+    <div class="sec-label">VOICES</div>
+    <h2 class="lead">ここで過ごした人の言葉</h2>
+    <p class="lede">掲載するのは、ご本人の許可をいただいた言葉だけです。成果や数字ではなく、日々の中での気づきを残していきます。</p>
+
+    <figure class="voice-main">
+      <span class="rule" aria-hidden="true"></span>
+      <blockquote class="is-ph">これから、ここに積み重なっていきます。<br>参加された方ご本人の許可をいただいた言葉だけを、少しずつ掲載していきます。</blockquote>
+      <figcaption class="voice-by is-ph">はじめての声は、もうすぐここに届きます</figcaption>
+    </figure>
+
+    <div class="voice-sub">
+      <figure>
+        <blockquote class="is-ph">これから、少しずつ。</blockquote>
+        <figcaption class="voice-by is-ph">はじめての声は、もうすぐここに届きます</figcaption>
+      </figure>
+      <figure>
+        <blockquote class="is-ph">これから、少しずつ。</blockquote>
+        <figcaption class="voice-by is-ph">はじめての声は、もうすぐここに届きます</figcaption>
+      </figure>
+    </div>
+    <p class="note">※ 紹介制度（TANE）でつながりのある方の言葉には、その旨を併記します。</p>
+  </div>
+</section>
+
+<!-- FOR：社会人の方への訴求。HAKU Communityは社会人向けコミュニティとして統一（教師向けは別ブランド「灯」に分離） -->
+<section class="for" id="h-for">
+  <div class="wrap">
+    <div class="sec-label">FOR YOU</div>
+    <h2 class="lead">こんな日常を送っている方へ。</h2>
+    <p class="lede">業種も役職も、ばらばらでかまいません。共通しているのは、日々の判断の軸を、自分の中に育てたいという思いです。</p>
+    <article class="for-card">
+      <div class="tag">FOR PROFESSIONALS</div>
+      <h3>仕事の技術より先に、<br>根っこを育てる。</h3>
+      <p>役割や責任が増えるほど、「自分は何を大切にしているか」を考える時間は減っていきます。業種も立場も違う人と同じ問いを持ち寄ることで、日々の判断の軸を、自分の中に育てていきます。</p>
+      <ul>
+        <li>業種の違う人との対話</li>
+        <li>週に一度、自分に戻る30分</li>
+        <li>月に一度、画面の外で会う</li>
+      </ul>
+      <a href="#h-apply" class="btn btn-solid">申し込みへ進む</a>
+    </article>
+  </div>
+</section>
+
+<section id="h-price">
+  <div class="wrap">
+    <div class="sec-label">PRICE</div>
+    <h2 class="lead">個別の伴走と、日常の環境は、<br>別々にご用意しています。</h2>
+    <p class="lede" style="margin-bottom:40px">深く自分と向き合いたいときは拓（HAKU）コーチングへ。日常の中で磨かれ続けたいときはHAKU Communityへ。両方でも、どちらか一方でも。</p>
+    <div class="plans" style="grid-template-columns:repeat(2,1fr)">
+      <div class="plan">
+        <div class="tag">拓｜HAKU COACHING</div>
+        <h3>個別伴走</h3>
+        <div class="for">深く自分と向き合いたい方</div>
+        <div class="price">要相談<span>無料体験1.5h×2回から</span></div>
+        <ul>
+          <li>90分×複数回の個別対話</li>
+          <li>価値観分析・人生軸分析</li>
+          <li>本人固有の悩みに深く伴走</li>
+        </ul>
+        <a href="./haku.html" class="btn" style="margin-top:22px;width:100%;text-align:center">拓（HAKU）コーチングを見る</a>
+      </div>
+      <div class="plan pick">
+        <div class="tag">HAKU COMMUNITY</div>
+        <h3>日常の環境</h3>
+        <div class="for">日々の中で磨かれ続けたい方</div>
+        <div class="price">2,980<span>円／月（税込）</span></div>
+        <ul>
+          <li>HAKU NOTE・HAKU MORNING</li>
+          <li>HAKU MEET（月1・リアル）</li>
+          <li>TANE（貢献・つながりの記録）</li>
+          <li>当面は直接紹介制</li>
+        </ul>
+        <a href="#h-apply" class="btn btn-solid" style="margin-top:22px;width:100%;text-align:center">HAKUに参加する</a>
+      </div>
+    </div>
+    <p class="note">※ 紹介制について：友人を紹介すると、その方が在籍している間、毎月わずかなTANEが育ちます。「紹介した瞬間に報酬」ではなく、「つないだ人が続けているぶんだけ、少しずつ育つ」という文化を大事にしたいためです。割合・期間は検討中です。二次紹介以降の報酬はありません。</p>
+  </div>
+</section>
+
+<!--
+  APPLY：プラン選択 → haku-community-register.html（新規登録：氏名・パスワード等の入力）
+  → Application作成（status:'pending'）→ 管理者承認（完全紹介制のため必須）
+  → 承認メール内のCTAから /api/haku-checkout が生成したStripe Checkout（テストモードのみ）
+  → Webhook確認 → Membership active。
+  つまりこのボタンはStripeへ直接遷移しない（次の画面は新規登録フォーム）。
+  秘密情報・Price ID はサーバー側の環境変数にのみ存在し、このページには一切書かない。
+  個人情報の入力は次の新規登録ページで行う（このページでは扱わない）。
+-->
+<section class="apply" id="h-apply">
+  <div class="narrow">
+    <div class="sec-label">APPLY</div>
+    <h2 class="lead">お申し込み</h2>
+    <p class="test-note"><b>テスト環境</b>実際の請求は発生しません。参加申請は運営の承認後にお支払いへ進みます。決済画面に進んだ際は、テストカード <code>4242 4242 4242 4242</code>（有効期限は未来の日付・セキュリティコードは任意の3桁）をご利用ください。</p>
+
+    <form id="apply-form" novalidate>
+      <input type="hidden" name="segment" value="professional">
+
+      <fieldset class="ap-step">
+        <legend><span class="n">01</span>プラン</legend>
+        <div class="choice one">
+          <label><input type="radio" name="plan" value="monthly" checked><span><b>HAKU Community 月額プラン</b><small>HAKU NOTE・HAKU MORNING・HAKU MEET</small><em>2,980<i>円／月（税込）</i></em></span></label>
+        </div>
+        <p class="note">個別に深く伴走する拓（HAKU）コーチングは、<a href="./haku.html">こちら</a>から別途ご相談ください。</p>
+      </fieldset>
+
+      <fieldset class="ap-step">
+        <legend><span class="n">02</span>ご確認</legend>
+        <dl class="confirm">
+          <div><dt>サービス</dt><dd>HAKU Community 月額プラン</dd></div>
+          <div><dt>金額</dt><dd>2,980円／月（税込）</dd></div>
+          <div><dt>お支払い</dt><dd>クレジットカード。運営の承認後にお支払いのご案内をお送りします。初回のお支払い完了後、以降は毎月自動で更新されます。</dd></div>
+          <div><dt>解約</dt><dd>いつでも解約できます。<span class="is-ph">（解約の手続き方法・返金の扱いは確認中）</span></dd></div>
+        </dl>
+        <label class="agree"><input type="checkbox" name="agree"><span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、上記の内容に同意します。<small class="is-ph">HAKU Community 利用規約は準備中です。</small></span></label>
+      </fieldset>
+
+      <p class="ap-err" id="ap-err" role="alert" aria-live="polite"></p>
+      <button type="submit" class="btn btn-solid ap-go" id="ap-go">参加申請をする</button>
+      <p class="note">次の画面で、お名前・メールアドレス・パスワード・紹介者名などをご入力いただきます。HAKU Communityは完全紹介制のため、運営が内容を確認したうえで、承認された方にお支払いのご案内をメールでお送りします。</p>
+    </form>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="narrow">
+    <div class="sec-label">FAQ</div>
+    <h2 class="lead" style="margin-bottom:30px">よくあるご質問</h2>
+    <details open><summary>拓（HAKU）コーチングとの違いは何ですか。</summary><p>コーチングは個人に深く入る個別サービスです。HAKU Communityは個別コンサルではなく、学び・振り返り・実践・つながりを日常の中で繰り返すための環境です。Community側で個別の診断や分析を提供することはありません。</p></details>
+    <details><summary>既存の「拓」コミュニティアプリ（555チャレンジなど）とは違うのですか。</summary><p>別のものです。思想の根っこは近いですが、機能は独立しており、現時点では統合の予定はありません。</p></details>
+    <details><summary>紹介コードがないと入会できませんか。</summary><p>当面は直接紹介を基本に、小さく文化を育てていきたいと考えています。一般募集に切り替えるかどうかは検討中です。</p></details>
+    <details><summary>TANEは現金化できますか。</summary><p>現時点では未定です。資金決済法・税務等の確認を経てから正式にご案内します。「1TANE＝1円」のような固定の換算は行っていません。</p></details>
+    <details><summary>合わないと感じたら、辞められますか。</summary><p>いつでも解約できます。引き止めることはしません。</p></details>
+  </div>
+</section>
+
+<div class="closing">
+  <div class="narrow">
+    <h2>今日から少しずつ、<br>自分の手で拓いていく。</h2>
+    <p>大きな決意はいりません。今週の問いを、ひとつ持ち帰るところから。</p>
+    <div class="ctas">
+      <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
+      <a href="./haku-community-login.html" class="btn btn-ghost">ログイン</a>
+    </div>
+  </div>
+</div>
+<div class="site-footer">
+  <a class="teacher-link" href="./tomoshibi.html">教育者の方へ — 教育者のサロン 灯</a>
+  <p class="copy">© 株式会社あんたがおらな</p>
+</div>
+
+<script>
+// PEOPLE：名前の行にホバーすると、細い金線が伸びる（マウス環境のみ・Motion不要）
+(function(){
+  if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  document.querySelectorAll('.people-list li').forEach(function(li){
+    li.addEventListener('mouseenter', function(){ li.classList.add('on'); });
+    li.addEventListener('mouseleave', function(){ li.classList.remove('on'); });
+  });
+})();
+
+// APPLY：プラン選択 → 新規登録フォーム（氏名・パスワード等を先に確定）へ遷移するのみ。
+// 完全紹介制のため、このボタンでStripe Checkoutへ直接は飛ばさない
+// （登録→Application作成→管理者承認→承認メール内のCTAから決済、という順を必ず守る）。
+(function(){
+  var form = document.getElementById('apply-form');
+  if(!form) return;
+  var err = document.getElementById('ap-err');
+  var go = document.getElementById('ap-go');
+  var GO_LABEL = go.textContent;
+
+  function reset(){ go.disabled = false; go.textContent = GO_LABEL; }
+
+  // Stripe から「戻る」で帰ってきたとき（bfcache）にボタンを戻す
+  window.addEventListener('pageshow', reset);
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var seg = form.querySelector('input[name="segment"]');
+    var plan = form.querySelector('input[name="plan"]:checked');
+    if(!plan){ err.textContent = 'プランを選択してください。'; return; }
+    if(!form.agree.checked){ err.textContent = '内容をご確認のうえ、同意にチェックしてください。'; return; }
+    err.textContent = '';
+    go.disabled = true; go.textContent = '登録フォームへ進んでいます…';
+    location.href = './haku-community-register.html?segment=' + encodeURIComponent(seg.value) + '&plan=' + encodeURIComponent(plan.value);
+  });
+})();
+</script>
+
+<!--
+  Motion animations — purely additive progressive enhancement.
+  - Self-hosted at ./lp-assets/vendor/motion.js (Motion v11.15.0, single self-contained ES module,
+    no external network calls at runtime).
+  - Loaded via dynamic import() inside try/catch: if the file is missing or fails to evaluate,
+    the catch block runs and the page is left exactly as it was before this block existed.
+  - Skips everything if the user has prefers-reduced-motion: reduce.
+-->
+<script type="module">
+(async () => {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const { animate, inView, stagger } = await import('./lp-assets/vendor/motion.js');
+
+    // 1) Hero — quiet staggered entrance (eyebrow → h1 → en → lead → the 4 stat blocks)
+    animate(
+      '.hero .eyebrow, .hero h1, .hero .en, .hero > .wrap > p, .hero-meta > div',
+      { opacity: [0, 1], y: [12, 0] },
+      { duration: 0.6, delay: stagger(0.08), easing: 'ease-out' }
+    );
+
+    // 2) Scroll-reveal for each major section (fires once per element, per Motion's inView default)
+    //    PEOPLE / VOICES reveal their own children below, so they're excluded here to avoid double motion.
+    inView('section:not(.people):not(.voices), .closing', (entry) => {
+      animate(entry.target, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, easing: 'ease-out' });
+    }, { amount: 0.2 });
+
+    // 3) WHY HAKU chain — the 5 steps reveal in sequence, echoing the 循環 narrative
+    inView('.chain', (entry) => {
+      animate(entry.target.querySelectorAll('.step'), { opacity: [0, 1], y: [10, 0] },
+        { duration: 0.4, delay: stagger(0.08), easing: 'ease-out' });
+    }, { amount: 0.3 });
+
+    // 4) 4 Pillars / TANE 育てる・つかう — items stagger in together
+    document.querySelectorAll('.can').forEach((el) => {
+      inView(el, () => {
+        animate(el.children, { opacity: [0, 1], y: [10, 0] },
+          { duration: 0.4, delay: stagger(0.08), easing: 'ease-out' });
+      }, { amount: 0.3 });
+    });
+
+    // 5) PEOPLE / VOICES — opacity + small rise, ease-out, once.
+    const rise = (els, opts = {}) => animate(els, { opacity: [0, 1], y: [10, 0] },
+      { duration: 0.4, delay: stagger(0.08, { startDelay: opts.start || 0 }), ease: 'easeOut' });
+
+    inView('.people > .wrap > .sec-label, .people > .wrap > h2.lead, .people > .wrap > .lede', (entry) => {
+      animate(entry.target, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, ease: 'easeOut' });
+    }, { amount: 0.2 });
+
+    inView('.people-list', (entry) => { rise(entry.target.children, { start: 0.2 }); }, { amount: 0.2 });
+
+    inView('.meet', (entry) => {
+      rise(entry.target.querySelectorAll('.sec-label, h3, .lede'));
+    }, { amount: 0.2 });
+
+    inView('.voices', (entry) => {
+      rise(entry.target.querySelectorAll('.sec-label, h2.lead, .narrow > .lede'));
+    }, { amount: 0.2 });
+
+    inView('.voice-main', (entry) => {
+      const el = entry.target;
+      const rule = el.querySelector('.rule');
+      if (rule) animate(rule, { scaleX: [0, 1] }, { duration: 0.5, ease: 'easeOut' });
+      animate(el.querySelectorAll('blockquote, .voice-by'), { opacity: [0, 1] },
+        { duration: 0.8, delay: stagger(0.15, { startDelay: 0.2 }), ease: 'easeOut' });
+    }, { amount: 0.4 });
+
+    inView('.voice-sub', (entry) => { rise(entry.target.children); }, { amount: 0.3 });
+
+  } catch (err) {
+    console.warn('[motion] animations skipped:', err);
+  }
+})();
+</script>
+
+</body>
+</html>

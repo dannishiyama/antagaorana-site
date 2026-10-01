@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>教育者のサロン 灯｜あんたがおらな</title>
+<meta name="description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝が毎日いる、預かる側のためのコミュニティです。">
+<link rel="canonical" href="https://antagaorana.com/tomoshibi.html">
+<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<style>
+:root{
+  --green:var(--color-green);
+  --green-dk:var(--color-green-dark);
+  --cream:var(--color-bg);
+  --paper:var(--color-surface);
+  --ink:var(--color-text);
+  --mid:var(--color-text-muted);
+  --faint:var(--color-text-faint);
+  --terra:#B4552F;
+  --gold:var(--color-gold);
+  --line:var(--color-border);
+  --line-soft:var(--color-border-soft);
+  --serif:var(--font-serif);
+  --sans:var(--font-sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:.04em}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:1040px;margin:0 auto;padding:0 8%}
+.narrow{max-width:760px;margin:0 auto;padding:0 8%}
+
+.top{position:sticky;top:0;z-index:50;background:var(--green);color:#fff;display:flex;align-items:center;gap:16px;padding:14px 8%;border-bottom:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.top .logo{font-family:var(--serif);font-size:14px;letter-spacing:.08em;text-decoration:none;white-space:nowrap}
+.top .logo span{font-size:10px;letter-spacing:.2em;color:var(--gold);margin-left:8px}
+.top .primary-nav{display:flex;gap:20px;margin-left:20px;flex-wrap:wrap}
+.top .primary-nav a{font-size:12.5px;letter-spacing:.04em;color:rgba(255,255,255,.68);text-decoration:none}
+.top .primary-nav a:hover{color:#fff}
+.top .primary-nav a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.top .top-ctas{margin-left:auto;display:flex;align-items:center;gap:14px}
+.top .login-link{font-size:12.5px;letter-spacing:.06em;color:rgba(255,255,255,.75);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:1px;white-space:nowrap}
+.top .login-link:hover{color:#fff}
+.top .login-link:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.top .btn{padding:9px 18px;font-size:12.5px}
+@media(max-width:900px){ .top .primary-nav{display:none} .top{gap:12px} }
+
+.hero{background:var(--green);color:#fff;padding:96px 0 80px;opacity:0;transform:translateY(14px)}
+.hero.is-ready{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
+.hero .eyebrow{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.55);margin-bottom:34px}
+.hero h1{font-size:40px;line-height:1.55;margin-bottom:12px}
+.hero .en{font-family:var(--serif);font-size:13px;letter-spacing:.26em;color:rgba(255,255,255,.5);margin-bottom:30px}
+.hero p{max-width:32em;color:rgba(255,255,255,.8);font-size:15px}
+.ctas{display:flex;flex-wrap:wrap;gap:14px}
+.hero .ctas{margin-top:40px}
+.closing .ctas{justify-content:center;margin-top:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:14px 30px;font-size:14px;letter-spacing:.08em;border:1px solid currentColor;background:none;color:inherit;cursor:pointer;font-family:var(--sans);text-decoration:none;transition:transform .18s ease,opacity .18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btn-solid{background:var(--terra);border-color:var(--terra);color:#fff}
+.btn-ghost{border-color:rgba(255,255,255,.45);color:#fff}
+.hero-meta{display:flex;flex-wrap:wrap;gap:40px;margin-top:64px;padding-top:28px;border-top:1px solid rgba(255,255,255,.2)}
+.hero-meta div{min-width:110px}
+.hero-meta b{display:block;font-family:var(--serif);font-size:26px;font-weight:500;line-height:1.3}
+.hero-meta span{font-size:12px;color:rgba(255,255,255,.6)}
+
+section{padding:88px 0}
+.sec-label{font-size:11px;letter-spacing:.24em;color:var(--faint);margin-bottom:26px}
+h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
+.lede{color:var(--mid);max-width:36em}
+.note{font-size:12px;color:var(--faint);margin-top:16px}
+
+.chain{border-top:1px solid var(--line);margin-top:38px}
+.chain .step{display:grid;grid-template-columns:52px 1fr;gap:24px;padding:20px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.chain .n{font-family:var(--serif);font-size:13px;color:var(--gold);letter-spacing:.1em}
+.chain b{font-size:16px;font-family:var(--serif);display:block;margin-bottom:4px}
+.chain p{font-size:13.5px;color:var(--mid)}
+.chain .last b{color:var(--terra)}
+.verdict{font-family:var(--serif);font-size:24px;line-height:1.9;color:var(--green);margin-top:40px}
+
+.creed{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;border-top:1px solid var(--line);margin-top:38px}
+.creed .c{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.creed .c .no{font-family:var(--serif);font-size:12.5px;color:var(--gold);letter-spacing:.1em}
+.creed .c .t{font-family:var(--serif);font-size:16px;line-height:1.75}
+.creed .c.now{background:var(--paper)}
+.creed .c.now .no{color:var(--terra)}
+
+.att{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:40px}
+.att > div{padding:30px 30px 30px 0;border-right:1px solid var(--line-soft)}
+.att > div:last-child{border-right:0}
+.att small{display:block;font-size:11px;letter-spacing:.2em;color:var(--terra);margin-bottom:12px}
+.att b{display:block;font-family:var(--serif);font-size:21px;font-weight:500;color:var(--green);margin-bottom:10px}
+.att p{font-size:13.5px;color:var(--mid)}
+.att .mine{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--ink)}
+
+.room{display:grid;grid-template-columns:230px 1fr 270px;gap:36px;padding:0;border-top:1px solid var(--line);margin-top:40px;align-items:start}
+.room .name{font-family:var(--serif);font-size:23px;color:var(--green);padding-top:40px}
+.room .name .kana{display:block;font-size:12px;letter-spacing:.24em;color:var(--gold);margin-top:8px;font-family:var(--serif)}
+.room .name small{display:block;font-size:11px;letter-spacing:.16em;color:var(--faint);margin-top:10px;font-family:var(--sans);line-height:1.7}
+.room .who{font-size:13px;color:var(--terra);margin-bottom:10px;padding-top:40px}
+.room .desc{color:var(--mid);font-size:14px}
+.room ul{list-style:none;font-size:13px;color:var(--mid);padding-top:40px}
+.room ul li{padding:5px 0 5px 14px;position:relative}
+.room ul li::before{content:"";position:absolute;left:0;top:15px;width:6px;height:1px;background:var(--faint)}
+
+.can{display:grid;grid-template-columns:repeat(2,1fr);gap:0 56px}
+.can > div{padding:24px 0;border-top:1px solid var(--line-soft)}
+.can h4{font-size:17px;margin-bottom:8px}
+.can p{font-size:13.5px;color:var(--mid)}
+
+.map{border-top:1px solid var(--line);margin-top:34px}
+.map .head{font-size:11px;letter-spacing:.18em;color:var(--faint);padding:12px 0;border-bottom:1px solid var(--line-soft);display:grid;grid-template-columns:210px 1fr 210px;gap:28px}
+.map .row{display:grid;grid-template-columns:210px 1fr 210px;gap:28px;padding:20px 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.map .row .s{font-family:var(--serif);font-size:16px;color:var(--green)}
+.map .row .s small{display:block;font-family:var(--sans);font-size:11.5px;color:var(--faint);letter-spacing:.06em;margin-top:2px}
+.map .row .d{font-size:13.5px;color:var(--mid)}
+.map .row .r{font-size:13px;color:var(--terra)}
+
+.flowline{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin-top:8px}
+.flowline div{padding:26px 20px 26px 0;border-right:1px solid var(--line-soft)}
+.flowline div:last-child{border-right:0}
+.flowline b{display:block;font-family:var(--serif);font-size:13px;color:var(--terra);margin-bottom:10px;letter-spacing:.1em}
+.flowline p{font-size:13px;color:var(--mid)}
+
+.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.plan{background:var(--paper);padding:34px 28px}
+.plan.pick{background:var(--green);color:#fff}
+.plan .tag{font-size:11px;letter-spacing:.18em;color:var(--faint);margin-bottom:14px}
+.plan.pick .tag{color:var(--gold)}
+.plan h3{font-size:21px;margin-bottom:4px}
+.plan .for{font-size:12px;color:var(--mid)}
+.plan.pick .for{color:rgba(255,255,255,.6)}
+.plan .price{font-family:var(--serif);font-size:32px;line-height:1.4;margin:14px 0 2px}
+.plan .price span{font-size:13px;font-family:var(--sans);color:var(--mid)}
+.plan.pick .price span{color:rgba(255,255,255,.65)}
+.plan ul{list-style:none;font-size:13px;margin-top:20px;border-top:1px solid var(--line-soft);color:var(--mid)}
+.plan.pick ul{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.85)}
+.plan ul li{padding:9px 0;border-bottom:1px solid var(--line-soft)}
+.plan.pick ul li{border-color:rgba(255,255,255,.14)}
+
+.faq{border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{padding:20px 0;cursor:pointer;font-family:var(--serif);font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"＋";color:var(--terra);font-size:14px}
+.faq details[open] summary::after{content:"−"}
+.faq summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.faq p{padding:0 0 22px;color:var(--mid);font-size:14px;max-width:44em}
+
+.closing{background:var(--green);color:#fff;text-align:center;padding:96px 0}
+.closing h2{font-size:28px;line-height:1.8;margin-bottom:20px}
+.closing p{color:rgba(255,255,255,.75);max-width:30em;margin:0 auto 34px}
+
+footer{background:var(--green-dk);color:rgba(255,255,255,.55);text-align:center;padding:26px 24px 34px;font-size:11.5px;line-height:2.2}
+footer a{color:rgba(255,255,255,.7);text-decoration:none;margin:0 10px}
+footer a:hover{color:#fff}
+
+@media(max-width:900px){
+  .wrap,.narrow{padding:0 7%}
+  .hero{padding:64px 0 56px}
+  .hero h1{font-size:27px}
+  section{padding:60px 0}
+  h2.lead{font-size:22px}
+  .verdict{font-size:19px}
+  .creed{grid-template-columns:1fr;gap:0}
+  .att{grid-template-columns:1fr}
+  .att > div{border-right:0;border-bottom:1px solid var(--line-soft);padding:22px 0}
+  .room{grid-template-columns:1fr;gap:14px}
+  .room .name,.room .who,.room ul{padding-top:0}
+  .can{grid-template-columns:1fr}
+  .map .row{grid-template-columns:1fr;gap:8px}
+  .map .head{display:none}
+  .flowline{grid-template-columns:1fr}
+  .flowline div{border-right:0;border-bottom:1px solid var(--line-soft);padding:20px 0}
+  .plans{grid-template-columns:1fr}
+}
+
+@media(prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .hero{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a class="logo" href="./tomoshibi.html">教育者のサロン 灯<span>TOMOSHIBI</span></a>
+  <nav class="primary-nav" aria-label="サイト内ナビゲーション">
+    <a href="#room">サロンについて</a>
+    <a href="#curriculum">十ヶ条</a>
+    <a href="#price">料金</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <div class="top-ctas">
+    <a class="login-link" href="./tomoshibi-login.html">ログイン</a>
+    <a href="#price" class="btn btn-solid">灯に参加する</a>
+  </div>
+</div>
+
+<div class="hero" id="hero">
+  <div class="wrap">
+    <div class="eyebrow">株式会社あんたがおらな ｜ ONLINE COMMUNITY</div>
+    <h1>居場所は、つくれた。<br>そのあとが、わからない。</h1>
+    <div class="en">灯｜TOMOSHIBI</div>
+    <p>理念は「子どもの人生に、味方を。」<br>子どもの居場所をつくる教育者のためのサロン「灯」。3万件の教育相談に立ち会ってきた大久保俊輝（教育学者）が毎日います。</p>
+    <div class="ctas">
+      <a href="#price" class="btn btn-solid">灯に参加する</a>
+      <a href="./tomoshibi-login.html" class="btn btn-ghost">ログイン</a>
+    </div>
+    <div class="hero-meta">
+      <div><b>週3回</b><span>大久保からの投稿</span></div>
+      <div><b>月1回</b><span>実践講義</span></div>
+      <div><b>十ヶ条</b><span>毎月ひとつを学ぶ</span></div>
+      <div><b>匿名可</b><span>運営の相談</span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="narrow">
+    <div class="sec-label">WHY</div>
+    <h2 class="lead">場所があれば続く、<br>というわけではありませんでした。</h2>
+    <p class="lede">教室に不登校の子が来るようになった。フリースクールを開いた。クラスに居場所をつくった。そこまでは、できる人が増えています。問題はそのあとです。</p>
+    <div class="chain">
+      <div class="step"><div class="n">01</div><div><b>居場所はできた</b><p>安心して過ごせる場所ができ、子どもが来るようになる。</p></div></div>
+      <div class="step"><div class="n">02</div><div><b>過ごすだけになる</b><p>何をどう伸ばせばいいかがわからず、見守るしかできない日が続く。</p></div></div>
+      <div class="step"><div class="n">03</div><div><b>成長が見えない</b><p>子ども本人にも保護者にも、変化が説明できない。</p></div></div>
+      <div class="step"><div class="n">04</div><div><b>来なくなる</b><p>「ここにいても仕方ない」と感じた子から、静かに離れていく。</p></div></div>
+      <div class="step last"><div class="n">05</div><div><b>続けられなくなる</b><p>人数が減り、月謝が立たず、いちばん必要としている子の場所がなくなる。</p></div></div>
+    </div>
+    <p class="verdict">足りないのは、場所ではなく教育力です。<br>それは、ひとりで学べるものではありません。</p>
+  </div>
+</section>
+
+<section style="border-top:1px solid var(--line)" id="curriculum">
+  <div class="wrap">
+    <div class="sec-label">CURRICULUM</div>
+    <h2 class="lead">負の連鎖を止める心得十ヶ条</h2>
+    <p class="lede">大久保が現場で積み上げてきた十ヶ条を、サロンの背骨にします。毎月ひとつを取り上げ、投稿・講義すべてをその条に沿って進めます。10ヶ月で一巡し、また同じ条に戻ってきます。そのとき自分の答えが変わっていることが、いちばんわかりやすい成長の記録になります。</p>
+    <div class="creed">
+      <div class="c"><div class="no">第一条</div><div class="t">「不登校・いじめ」に負けない・気にしない技</div></div>
+      <div class="c"><div class="no">第二条</div><div class="t">「何のために」を常に自己に問い、志を堅実する</div></div>
+      <div class="c"><div class="no">第三条</div><div class="t">リフレクションして、自らの力を客観する</div></div>
+      <div class="c"><div class="no">第四条</div><div class="t">背水・不退転の覚悟を決めて臨む</div></div>
+      <div class="c"><div class="no">第五条</div><div class="t">決めつけない・慣習にとらわれない</div></div>
+      <div class="c now"><div class="no">第六条</div><div class="t">時に「ひと呼吸」して待つ</div></div>
+      <div class="c"><div class="no">第七条</div><div class="t">後継を自分以上に育てる覚悟で鍛える</div></div>
+      <div class="c"><div class="no">第八条</div><div class="t">「責任は我にあり」と受け止める</div></div>
+      <div class="c"><div class="no">第九条</div><div class="t">率直な意見を聞ける寛容性と度量の鍛錬</div></div>
+      <div class="c"><div class="no">第十条</div><div class="t">なすべきことはなす誠実さと丁寧さ</div></div>
+    </div>
+    <p class="note">※ 9月の第六条「ひと呼吸して待つ」は、灯では「保護者への報告をどう待たせるか」として扱います。</p>
+  </div>
+</section>
+
+<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-label">ATTITUDE</div>
+    <h2 class="lead">ブランドの3つの姿勢を、<br>そのまま場のルールにしています。</h2>
+    <div class="att">
+      <div>
+        <small>ATTITUDE 01</small>
+        <b>希望</b>
+        <p>元気と希望の発信源であること。どんな状況にあっても、前を向く力を灯し続ける。</p>
+        <div class="mine">だから、うまくいかない報告にも必ず返事があります。「今日も動かなかった」も、ここでは報告になります。</div>
+      </div>
+      <div>
+        <small>ATTITUDE 02</small>
+        <b>共苦</b>
+        <p>誰かの味方であり続ける、共苦の心。痛みを共に感じながら、そっと寄り添う。</p>
+        <div class="mine">だから、リアクションは「いいね」ではなく「そばにいます」。急かす仕組みは置きません。</div>
+      </div>
+      <div>
+        <small>ATTITUDE 03</small>
+        <b>真剣勝負</b>
+        <p>真剣勝負で築き上げる信頼関係。その人の人生に、本気で向き合う。</p>
+        <div class="mine">だから、耳の痛いことも書きます。合わないと感じたら、引き止めずに退会できます。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="room">
+  <div class="wrap">
+    <div class="sec-label">TOMOSHIBI</div>
+    <h2 class="lead">灯は、こういう場所です。</h2>
+    <p class="lede" style="margin-bottom:44px">習い事・塾・フリースクールの運営者や学校の先生など、子どもの居場所に関わる大人のための、預かる側のサロンです。</p>
+
+    <div class="room">
+      <div class="name">教育者のサロン<span class="kana">灯｜TOMOSHIBI</span><small>習い事・塾・フリースクールの運営者／学校の先生／子どもの居場所に関わる大人</small></div>
+      <div>
+        <div class="who">預かる側のサロン</div>
+        <div class="desc">「今日も来てくれた」で終わらせないための場所です。目の前の子に何が起きているのかを読み、次の一手を決める。元校長・元大学教授として3万件の相談に立ち会ってきた視点を、あなたの教室の具体的な場面に当てはめて考えます。運営として続けるための話——保護者への説明、月謝、辞めていく子への向き合い方まで、ここで扱います。</div>
+      </div>
+      <ul>
+        <li>ケース検討（教室名・学校名は伏せて投稿）</li>
+        <li>「ただ居るだけ」から抜ける関わり方</li>
+        <li>成長を保護者に説明する言葉のつくり方</li>
+        <li>月1の実践講義とアーカイブ</li>
+        <li>募集・月謝・続け方など運営の相談</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">CONTENTS</div>
+    <h2 class="lead">灯にあるもの</h2>
+    <div class="can">
+      <div><h4>大久保の投稿を読む</h4><p>週3回。現場の相談から、そのまま投稿します。</p></div>
+      <div><h4>自分のケースで聞く</h4><p>実際に関わっている子のことを、名前を伏せて相談できます。回答はサロン内に残ります。</p></div>
+      <div><h4>月1の学びの場</h4><p>実践講義。カメラオフ・聴くだけ参加を歓迎します。</p></div>
+      <div><h4>アーカイブを見る</h4><p>過去の講義をライブラリから視聴。入会前の回もさかのぼれます。</p></div>
+      <div><h4>同じ立場とつながる</h4><p>混ざらないからこそ書けることがあります。地域ごとのオフ会も不定期に開催します。</p></div>
+      <div><h4>先に知らせが届く</h4><p>研修・講演・インドプロジェクトの案内が先行します。優待価格の対象にもなります。</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-label">POSITION</div>
+    <h2 class="lead">既存のサービスと、どう並ぶか。</h2>
+    <p class="lede">芽・導・拓・越は、いずれも「その人に向き合う」個別の支援です。灯はその手前にあり、終わったあとも続く、いちばん外側の層にあたります。</p>
+    <div class="map">
+      <div class="head"><div>サービス</div><div>いま担っていること</div><div>灯との関係</div></div>
+      <div class="row">
+        <div class="s">芽（MEI）<small>子ども向け／個別教育支援</small></div>
+        <div class="d">不登校・発達特性のある子どもへの家庭教師・個別学習支援。信頼できる大人との関係構築を重視。</div>
+        <div class="r">灯の教室から子どもを紹介いただく導線に</div>
+      </div>
+      <div class="row">
+        <div class="s">導（SHIRUBE）<small>保護者向け／家庭教育コンサル</small></div>
+        <div class="d">家庭環境・親子関係・生育歴を踏まえ、支援方針を一緒に考える。</div>
+        <div class="r">保護者向けの別サービス</div>
+      </div>
+      <div class="row">
+        <div class="s">拓（HAKU）<small>社会人向け／人間力育成</small></div>
+        <div class="d">自己理解・コミュニケーション・思考・習慣・人生設計まで。</div>
+        <div class="r">別コミュニティとして分けて設計</div>
+      </div>
+      <div class="row">
+        <div class="s">越（ETSU）<small>越境・体験／越境教育</small></div>
+        <div class="d">インドでの7泊8日。異なる文化・人・価値観との出会い。</div>
+        <div class="r">募集と帰国後の記録を共有。教室単位の参加も</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">A MONTH HERE</div>
+    <h2 class="lead">ひと月の流れ</h2>
+    <div class="flowline">
+      <div><b>第1週</b><p>その月の一条が示されます。大久保が自身の失敗から書き起こします。</p></div>
+      <div><b>第2週</b><p>相談が動く週。その条に照らして、自分の現場を持ち寄ります。</p></div>
+      <div><b>第3週</b><p>実践講義。日程に沿って開催。</p></div>
+      <div><b>第4週</b><p>アーカイブ公開とふりかえり。その条で何が変わったかを書き残します。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="price">
+  <div class="wrap">
+    <div class="sec-label">PRICE</div>
+    <h2 class="lead">教育者のためのサロンです。</h2>
+    <p class="lede" style="margin-bottom:40px">合わないと感じたらいつでも退会できます。引き止めることはしません。</p>
+    <div class="plans">
+      <div class="plan">
+        <div class="tag">FREE</div>
+        <h3>お試し</h3>
+        <div class="for">どなたでも</div>
+        <div class="price">0<span>円／月</span></div>
+        <ul>
+          <li>大久保の投稿 月1本</li>
+          <li>十ヶ条のその月の条</li>
+          <li>お知らせの受け取り</li>
+        </ul>
+        <a href="./tomoshibi-register.html" class="btn" style="margin-top:22px;width:100%;text-align:center">登録する</a>
+      </div>
+      <div class="plan pick">
+        <div class="tag">灯｜TOMOSHIBI</div>
+        <h3>教育者のサロン</h3>
+        <div class="for">教室・スクール運営者／先生</div>
+        <div class="price">3,300<span>円／月（税込）</span></div>
+        <ul>
+          <li>大久保の投稿すべて（週3回）</li>
+          <li>ケース検討スレッドの利用</li>
+          <li>月1の実践講義＋アーカイブ</li>
+          <li>運営相談（募集・月謝・撤退判断）</li>
+          <li>研修・講演の優待価格</li>
+        </ul>
+        <a href="./tomoshibi-register.html" class="btn btn-solid" style="margin-top:22px;width:100%;text-align:center">灯に参加する</a>
+      </div>
+    </div>
+    <p class="note">※ 金額は叩き台です。スタッフを複数名登録できる教室単位プラン（月9,900円／3名まで等）を置くと法人契約として通しやすくなります。十ヶ条が一巡するのは10ヶ月なので、年額プラン（2ヶ月分割引）とも相性がよく、「一巡して戻ってくる」ことを継続の理由として説明できます。</p>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="narrow">
+    <div class="sec-label">FAQ</div>
+    <h2 class="lead" style="margin-bottom:30px">よくあるご質問</h2>
+    <details open><summary>同業の人に、教室の内情を見られたくありません。</summary><p>教室名・学校名は伏せて投稿できます。相談は匿名でも可能です。近隣で競合する可能性がある場合は、事務局にお申し出いただければ配慮します。</p></details>
+    <details><summary>教育の専門家ではありません。ついていけますか。</summary><p>むしろその方を想定しています。資格や経歴は問いません。「この子にどう関わればいいか」という具体的な場面から始めます。</p></details>
+    <details><summary>退会はすぐできますか。</summary><p>いつでも可能です。手続きはサロン内で完結し、理由をお聞きすることもありません。</p></details>
+  </div>
+</section>
+
+<div class="closing">
+  <div class="narrow">
+    <h2>自分のままで居ていいんだ、と思えた時、<br>可能性はもう一度動き始める。</h2>
+    <p>ダメな子なんて、いない。——そう言い切れる大人を増やすことが、いちばん確実な居場所のつくり方だと考えています。</p>
+    <div class="ctas" style="justify-content:center">
+      <a href="#price" class="btn btn-solid">灯に参加する</a>
+      <a href="./tomoshibi-login.html" class="btn btn-ghost">ログイン</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>
+  <a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>
+  <a href="mailto:info@antagaorana.com">お問い合わせ</a>
+  <br>© 株式会社あんたがおらな
+</footer>
+
+<script type="module">
+(async () => {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { animate, inView, stagger } = await import('./lp-assets/vendor/motion.js');
+
+    document.getElementById('hero').classList.add('is-ready');
+
+    inView('section, .closing', (entry) => {
+      animate(entry.target, { opacity: [0, 1], y: [16, 0] }, { duration: 0.5, easing: 'ease-out' });
+    }, { amount: 0.15 });
+
+    inView('.chain', (entry) => {
+      animate(entry.target.querySelectorAll('.step'), { opacity: [0, 1], y: [10, 0] },
+        { duration: 0.4, delay: stagger(0.06), easing: 'ease-out' });
+    }, { amount: 0.3 });
+
+    document.querySelectorAll('.can, .att').forEach((el) => {
+      inView(el, () => {
+        animate(el.children, { opacity: [0, 1], y: [10, 0] },
+          { duration: 0.4, delay: stagger(0.06), easing: 'ease-out' });
+      }, { amount: 0.3 });
+    });
+  } catch (e) {
+    document.getElementById('hero').classList.add('is-ready');
+    console.warn('[motion] animations skipped:', e);
+  }
+})();
+</script>
+
+</body>
+</html>

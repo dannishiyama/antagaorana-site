@@ -66,6 +66,40 @@
     .hero-img{aspect-ratio:16/9;background:#f0ede4;border-top:1px solid rgba(0,0,0,.06);overflow:hidden}
     .hero-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
     @media(max-width:860px){.points{grid-template-columns:1fr}}
+
+    /* ── HAKU Community（月額オンラインコミュニティ）── 上記コーチングとは別サービス。
+       同じ .hero カード構造を再利用しつつ、別サービスであることが一目で分かるよう
+       見出し上に注記と、上部にアクセントの区切り線を追加する。 */
+    .svc-divider{display:flex;align-items:center;gap:14px;margin:56px 0 22px;color:rgba(0,0,0,.32)}
+    .svc-divider::before,.svc-divider::after{content:"";flex:1;height:1px;background:rgba(0,0,0,.1)}
+    .svc-divider span{font-size:11px;letter-spacing:.16em;font-weight:700;white-space:nowrap}
+    .hero.hero-community{border-top:3px solid var(--g)}
+    .tag.tag-community{background:rgba(92,122,90,.14);color:var(--g)}
+    .price-line{display:flex;align-items:baseline;gap:6px;margin-top:14px}
+    .price-line .amt{font-family:'Noto Serif JP',serif;font-size:28px;font-weight:900;color:var(--gd)}
+    .price-line .unit{font-size:13px;color:var(--tm)}
+    /* HAKU Community 参加方法 3STEP（既存 .points/.pt と同系統の見た目で統一） */
+    .steps3{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+    .step3{border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,.06);padding:16px}
+    .step3 b{display:block;font-family:'Noto Serif JP',serif;font-size:12px;letter-spacing:.1em;color:var(--g)}
+    .step3 strong{display:block;margin-top:6px;font-size:13.5px;color:var(--gd);font-weight:900}
+    .step3 span{display:block;margin-top:6px;font-size:12.5px;color:var(--tm);line-height:1.85}
+    @media(max-width:860px){.steps3{grid-template-columns:1fr}}
+
+    .cta-meta{display:flex;gap:16px;flex-wrap:wrap;align-items:baseline;margin-top:20px;font-size:12.5px;color:var(--tm)}
+    .already-member{margin-top:14px;font-size:12.5px;color:var(--tm)}
+    .already-member a{color:var(--g);text-decoration:underline;text-underline-offset:2px}
+
+    /* 完全紹介制の早期・肯定的な告知バッジ（見出し直下） */
+    .invite-badge{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--g);background:rgba(92,122,90,.1);border:1px solid rgba(92,122,90,.22);border-radius:999px;padding:6px 14px;margin-top:12px}
+    .invite-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
+
+    /* HAKU Community見出しの右に置く、控えめな「詳しく見る」CTA（新規登録/ログインより一段控えめ） */
+    .community-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:10px}
+    .community-head h1{margin-top:0}
+    .btn-detail{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--g);border:1.5px solid rgba(92,122,90,.45);border-radius:999px;padding:8px 16px;white-space:nowrap;transition:background .2s,color .2s}
+    .btn-detail:hover{background:var(--g);color:#fff}
+    @media(max-width:480px){.community-head{margin-top:8px}}
   </style>
 </head>
 <body>
@@ -111,9 +145,50 @@
       <p class="note">※このページでは金額の提示は行いません。</p>
       <div class="cta">
         <a class="btn prim" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0ih-XFXI8VrKKKbvtx_05nYFpTdI4C7RoIVSmpr5dMhOfGjnl2DSeltdJgmswsN_9HOjSL2DGY" target="_blank" rel="noopener noreferrer">まず、話してみる</a>
-        <a class="btn ghost" href="./taku-login.html">コミュニティ（ログイン）へ</a>
       </div>
     </section>
+
+    <div class="svc-divider"><span>拓（ハク）ブランドのもう一つのサービス</span></div>
+
+    <div class="hero hero-community" id="haku-community">
+      <div class="hero-top">
+        <div class="hero-txt">
+          <span class="tag tag-community">ONLINE COMMUNITY</span>
+          <div class="community-head">
+            <h1>HAKU Community</h1>
+            <a class="btn-detail" href="./haku-community.html">HAKU Communityを詳しく見る</a>
+          </div>
+          <p class="lead">上記のコーチングとは別サービスです。<br>学び・つながり・新しい経験を通して、<br>自分らしい生き方を育てる月額制オンラインコミュニティ。</p>
+          <div><span class="invite-badge">文化やつながりを大切にするため、現在は完全紹介制で運営しています</span></div>
+          <div class="price-line"><span class="amt">2,980</span><span class="unit">円／月（税込）</span></div>
+        </div>
+      </div>
+      <div class="hero-btm">
+        <p style="margin:0;color:var(--tm);font-size:13px;line-height:1.9">一人で頑張るのではなく、<b style="color:var(--gd)">同じ方向を向く仲間</b>と日々を積み上げる場です。</p>
+        <div class="points" aria-label="特徴">
+          <div class="pt"><b>WHO</b><span>まず仲間とゆるやかにつながりながら、自分を育てていきたい方へ</span></div>
+          <div class="pt"><b>WHAT</b><span>HAKU NOTE（週1回の問い）・HAKU MORNING（週1回の対話）・HAKU MEET（月1回のリアルな集まり）</span></div>
+          <div class="pt"><b>GET</b><span>一人では続かないことを、仲間となら続けられる環境</span></div>
+        </div>
+        <h2 style="margin-top:34px">参加方法</h2>
+        <div class="steps3" aria-label="参加方法">
+          <div class="step3"><b>STEP 01</b><strong>ログイン／新規会員登録</strong><span>すでに会員の方はログインへ。初めて参加される方は新規会員登録へお進みください。</span></div>
+          <div class="step3"><b>STEP 02</b><strong>参加申請を送信</strong><span>お名前・表示名・メールアドレス・パスワード・紹介者名などをご入力のうえ、参加を申請してください。</span></div>
+          <div class="step3"><b>STEP 03</b><strong>運営による確認・承認</strong><span>完全紹介制のため、運営が内容を確認します。承認された方にはメールでご案内します。</span></div>
+          <div class="step3"><b>STEP 04</b><strong>お支払い・利用開始</strong><span>承認メールから月額2,980円のお支払いを完了すると、ご利用を開始できます。会員の方はログイン後、そのままCommunity HOMEへ進めます。</span></div>
+        </div>
+        <p class="note">HAKU Communityは完全紹介制のオンラインコミュニティです。ご参加には、ご紹介者のお名前が必要です。</p>
+
+        <div class="cta" style="margin-top:22px">
+          <a class="btn prim" href="./haku-community-register.html">新規会員登録</a>
+          <a class="btn ghost" href="./haku-community-login.html">ログイン</a>
+        </div>
+        <div class="cta-meta">
+          <span>完全紹介制</span>
+        </div>
+        <p class="already-member">既に会員の方は<a href="./haku-community-login.html">こちらからログイン</a>。既にコーチングをご利用中の方も、HAKU Communityは別途新規登録・お申し込みが必要です。</p>
+      </div>
+    </div>
   </div>
 <style>
 .float-cta{position:fixed;bottom:0;left:0;right:0;z-index:999;background:rgba(47,58,47,.97);backdrop-filter:blur(12px);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);transform:translateY(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);}

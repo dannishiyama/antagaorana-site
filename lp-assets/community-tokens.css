@@ -1,0 +1,30 @@
+/*
+ * HAKU Community / 教育者のサロン「灯」共通デザイントークン。
+ * 両サービスは同じブランドファミリーの色・タイポグラフィを共有し、
+ * 各サービス固有の --terra（アクセント色）だけをページ側の :root で上書きして
+ * 「同じ系列だが別サービス」という見分けをつける。
+ */
+:root{
+  --color-bg:#F6F2EA;
+  --color-surface:#FFFDF8;
+  --color-text:#2B2A24;
+  --color-text-muted:#635E52;
+  --color-text-faint:#948D7D;
+  --color-green:#3D5A42;
+  --color-green-dark:#2E4030;
+  --color-green-light:#5C7A5A;
+  --color-gold:#C9A54A;
+  --color-gold-light:#DDBE72;
+  --color-border:#D9CFB8;
+  --color-border-soft:#E7DFCB;
+  --radius-sm:2px;
+  --radius-md:4px;
+  --space-1:8px;
+  --space-2:16px;
+  --space-3:24px;
+  --space-4:40px;
+  --space-5:64px;
+  --space-6:96px;
+  --font-serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","HiraMinProN-W3","游明朝",serif;
+  --font-sans:"Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+}

@@ -10,8 +10,24 @@
     "api/stripe-webhook.js": {
       "memory": 256,
       "maxDuration": 10
+    },
+    "api/haku-stripe-webhook.js": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "api/haku-home.js": {
+      "includeFiles": "api/_templates/haku-community-home.html"
+    },
+    "api/tomoshibi-post-page.js": {
+      "includeFiles": "api/_templates/tomoshibi-post.html"
     }
   },
+  "rewrites": [
+    { "source": "/haku-community-home.html", "destination": "/api/haku-home" },
+    { "source": "/haku-community-home", "destination": "/api/haku-home" },
+    { "source": "/tomoshibi-post.html", "destination": "/api/tomoshibi-post-page" },
+    { "source": "/tomoshibi-post", "destination": "/api/tomoshibi-post-page" }
+  ],
   "trailingSlash": false,
   "headers": [
     {

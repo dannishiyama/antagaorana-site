@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>ログイン｜HAKU Community</title>
+<meta name="description" content="HAKU Community 会員の方のログインページです。">
+<link rel="canonical" href="https://antagaorana.com/haku-community-login.html">
+<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<style>
+:root{color-scheme:light;box-sizing:border-box}
+body{margin:0;padding:0}
+[hidden]{display:none!important}
+
+/* 既存 /community のログイン画面（深緑グラデーション＋あんたがおらなロゴ）に色味・トーンを合わせる。
+   HAKU Community固有の差分はcalli-sub（「HAKU COMMUNITY」表記）だけに留める。 */
+:root{
+  --green:#5C7A5A; --green-mid:#4A6349; --green-lt:#7A9A78;
+  --ivory:#F5EFE6; --gold:#D4A843; --gold-lt:#E8C060; --terra:#C4856A;
+  --serif:'Noto Serif JP',serif; --sans:'Noto Sans JP',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:linear-gradient(170deg,#3A5A38 0%,#2A4A28 55%,#1A3018 100%);
+  color:var(--ivory);font-family:var(--sans);font-size:15px;line-height:1.9;
+  -webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;
+  position:relative;overflow-x:hidden;
+}
+body::before{
+  content:'';position:absolute;top:-100px;right:-80px;
+  width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,146,42,.14) 0%,transparent 70%);
+  pointer-events:none;
+}
+body::after{
+  content:'';position:absolute;bottom:-70px;left:-60px;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,98,58,.10) 0%,transparent 70%);
+  pointer-events:none;
+}
+a{color:inherit}
+input{font-family:inherit;font-size:14px}
+
+.top{padding:20px 8%;position:relative;z-index:1}
+.top a{color:rgba(247,240,230,.7);font-size:12.5px;text-decoration:none;border-bottom:1px solid rgba(247,240,230,.3)}
+.top a:hover{color:#fff}
+.top a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.login{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 24px 60px;color:var(--ivory);position:relative;z-index:1}
+.loginbox{width:100%;max-width:360px;text-align:center;opacity:0;transform:translateY(12px)}
+.loginbox.is-ready{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.login-calli{display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:26px;width:100%}
+.login-calli img{width:180px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 3px 16px rgba(200,146,42,.3))}
+.login-calli .calli-divider{width:60px;height:1px;background:rgba(200,146,42,.4);margin:10px 0}
+.login-calli .calli-sub{font-family:var(--serif);font-size:12px;color:rgba(247,240,230,.5);letter-spacing:.2em}
+.login-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ivory);margin-bottom:5px}
+.login-sub{font-size:13px;color:rgba(247,240,230,.55);margin-bottom:28px}
+.field{text-align:left;margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--gold-lt);margin-bottom:6px;letter-spacing:.05em}
+.field-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+.field-head label{margin-bottom:0}
+.toggle-pw{background:none;border:0;color:rgba(247,240,230,.5);font-size:11.5px;letter-spacing:.04em;cursor:pointer;text-decoration:underline;padding:0;min-height:24px;font-family:var(--sans)}
+.toggle-pw:hover{color:#fff}
+.toggle-pw:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.field input{width:100%;min-height:44px;padding:12px 14px;background:rgba(247,240,230,.07);border:1px solid rgba(247,240,230,.14);border-radius:10px;color:var(--ivory);outline:none;transition:border-color .2s ease,background-color .2s ease}
+.field input::placeholder{color:rgba(247,240,230,.25)}
+.field input:hover{border-color:rgba(247,240,230,.3)}
+.field input:focus-visible{border-color:var(--gold);outline:2px solid var(--gold);outline-offset:1px}
+.loginbox .go{
+  width:100%;min-height:48px;margin-top:8px;padding:14px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--terra) 100%);
+  border:none;border-radius:10px;color:var(--ivory);
+  font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.08em;
+  cursor:pointer;box-shadow:0 4px 20px rgba(200,146,42,.28);transition:transform .14s ease,box-shadow .14s ease;
+}
+.loginbox .go:hover{transform:translateY(-1px)}
+.loginbox .go:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.loginbox .go[disabled]{opacity:.65;cursor:progress}
+.loginbox .links{margin-top:20px;font-size:12px;color:rgba(247,240,230,.5);display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.loginbox .links a{text-decoration:none;border-bottom:1px solid rgba(247,240,230,.3);padding-bottom:1px}
+.loginbox .links a:hover{color:#fff}
+.err{font-size:12px;color:#ffb4a8;margin-top:12px;min-height:18px;opacity:0}
+.err.show{opacity:1}
+
+.new-here{margin-top:36px;padding-top:22px;border-top:1px solid rgba(247,240,230,.18);font-size:12.5px;color:rgba(247,240,230,.5);line-height:1.9}
+.new-here a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(247,240,230,.4);padding-bottom:1px}
+
+footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(247,240,230,.35);line-height:2.2;position:relative;z-index:1}
+footer a{color:rgba(247,240,230,.5);text-decoration:none;margin:0 10px}
+footer a:hover{color:rgba(247,240,230,.8)}
+
+@media(max-width:600px){ .login{padding:20px 22px 40px} }
+
+@media(prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .loginbox{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <a href="./haku-community.html">← HAKU Community 紹介ページへ</a>
+</div>
+
+<div class="login">
+  <div class="loginbox" id="box">
+    <div class="login-calli">
+      <img src="./lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="180" height="115" alt="あんたがおらな" decoding="async">
+      <div class="calli-divider"></div>
+      <span class="calli-sub">HAKU COMMUNITY</span>
+    </div>
+    <h1 class="login-title">おかえりなさい</h1>
+    <p class="login-sub">HAKU Communityにログイン</p>
+
+    <form id="f" novalidate>
+      <div class="field">
+        <label for="uid">ID（メールアドレス）</label>
+        <input id="uid" name="email" type="email" autocomplete="username" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="pw">パスワード</label>
+          <button type="button" class="toggle-pw" data-target="pw" aria-pressed="false">表示</button>
+        </div>
+        <input id="pw" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button class="go" type="submit" id="go">ログイン</button>
+      <div class="err" id="err" role="alert" aria-live="polite"></div>
+    </form>
+    <div class="links">
+      <a href="./forgot-password.html">パスワードをお忘れの方</a>
+    </div>
+
+    <div class="new-here">
+      はじめての方はこちら<br>
+      <a href="./haku-community-register.html">新規登録に進む →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  © 株式会社あんたがおらな
+</footer>
+
+<script>
+// サーバー側API（api/community-auth.js?action=login）でメールアドレス・パスワードとHAKU membershipを
+// 確認する。Cookie（HttpOnly）はサーバー側が発行するため、ここでは何も保存しない。
+(function(){
+  var form = document.getElementById('f');
+  var err = document.getElementById('err');
+  var go = document.getElementById('go');
+  var GO_LABEL = go.textContent;
+
+  function showError(msg){ err.textContent = msg; err.classList.add('show'); }
+  function reset(){ go.disabled = false; go.textContent = GO_LABEL; }
+  window.addEventListener('pageshow', reset);
+
+  document.querySelectorAll('.toggle-pw').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(btn.dataset.target);
+      var showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      btn.setAttribute('aria-pressed', String(!showing));
+      btn.textContent = showing ? '表示' : '非表示';
+    });
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('uid').value.trim();
+    var pw = document.getElementById('pw').value;
+    if(!id || !pw){ showError('IDとパスワードをご入力ください。'); return; }
+    if(id.indexOf('@') === -1){ showError('メールアドレスの形式をご確認ください。'); return; }
+    err.textContent = ''; err.classList.remove('show');
+    go.disabled = true; go.textContent = 'ログインしています…';
+
+    fetch('/api/community-auth?action=login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ community: 'haku', email: id, password: pw }),
+    }).then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); })
+      .then(function(res){
+        if(res.status !== 200){
+          if(res.data && res.data.canResumeCheckout){
+            err.innerHTML = (res.data.error || 'お支払いが完了していません。') + '<br><a href="./haku-community-register.html" style="color:#fff;text-decoration:underline">お支払いへ進む →</a>';
+            err.classList.add('show');
+          } else {
+            showError(res.data.error || 'ログインに失敗しました。');
+          }
+          reset(); return;
+        }
+        location.href = './haku-community-home.html';
+      })
+      .catch(function(){ showError('通信に失敗しました。時間をおいて再度お試しください。'); reset(); });
+  });
+})();
+</script>
+
+<script type="module">
+(async () => {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { animate } = await import('./lp-assets/vendor/motion.js');
+    document.getElementById('box').classList.add('is-ready');
+    const err = document.getElementById('err');
+    new MutationObserver(() => {
+      if (err.classList.contains('show')) animate(err, { opacity: [0, 1] }, { duration: 0.25, easing: 'ease-out' });
+    }).observe(err, { attributes: true, attributeFilter: ['class'] });
+  } catch (e) {
+    document.getElementById('box').classList.add('is-ready');
+    console.warn('[motion] animations skipped:', e);
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ログイン｜教育者のサロン 灯｜あんたがおらな</title>
+<meta name="description" content="教育者のためのサロン「灯（TOMOSHIBI）」のログインページです。株式会社あんたがおらなが運営する、教室・スクール運営者や先生のための小さなコミュニティです。">
+<link rel="canonical" href="https://antagaorana.com/tomoshibi-login.html">
+<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<style>
+:root{
+  --green:var(--color-green);
+  --green-dk:var(--color-green-dark);
+  --cream:var(--color-bg);
+  --paper:var(--color-surface);
+  --ink:var(--color-text);
+  --mid:var(--color-text-muted);
+  --faint:var(--color-text-faint);
+  --terra:#B4552F;
+  --gold:var(--color-gold);
+  --line:var(--color-border);
+  --serif:var(--font-serif);
+  --sans:var(--font-sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--green);color:#fff;font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit}
+input{font-family:inherit;font-size:14px}
+
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:64px 24px}
+.box{width:100%;max-width:392px;opacity:0;transform:translateY(12px)}
+.box.is-ready{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.mark{text-align:center;margin-bottom:48px}
+.mark .co{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.5);margin-bottom:14px}
+.mark .name{font-family:var(--serif);font-size:30px;letter-spacing:.14em;line-height:1.5}
+.mark .en{font-family:var(--serif);font-size:11.5px;letter-spacing:.3em;color:var(--gold);margin-top:8px}
+.mark .sub{font-size:12.5px;color:rgba(255,255,255,.55);margin-top:16px}
+
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.62);margin-bottom:8px}
+.field-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.field-head label{margin-bottom:0}
+.toggle-pw{background:none;border:0;color:rgba(255,255,255,.55);font-size:11.5px;letter-spacing:.04em;cursor:pointer;text-decoration:underline;padding:0;min-height:24px;font-family:var(--sans)}
+.toggle-pw:hover{color:#fff}
+.toggle-pw:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.field input[type=text],.field input[type=email],.field input[type=password]{width:100%;min-height:44px;padding:12px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);color:#fff;outline:none;transition:border-color .15s ease,background-color .15s ease}
+.field input::placeholder{color:rgba(255,255,255,.3)}
+.field input:hover{border-color:rgba(255,255,255,.45)}
+.field input:focus-visible{border-color:var(--gold);background:rgba(255,255,255,.1);outline:2px solid var(--gold);outline-offset:1px}
+.row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.row label{display:flex;align-items:center;gap:7px;cursor:pointer;min-height:24px}
+.row input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold)}
+.row input[type=checkbox]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row a{color:rgba(255,255,255,.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);padding-bottom:1px}
+.row a:hover{color:#fff}
+.go{width:100%;min-height:48px;padding:14px;background:var(--terra);border:1px solid var(--terra);color:#fff;font-size:14px;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);transition:background-color .15s ease,border-color .15s ease}
+.go:hover{background:#9E4726;border-color:#9E4726}
+.go:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.go[disabled]{opacity:.65;cursor:progress}
+.err{font-size:12.5px;color:#EDB9A6;margin-top:14px;min-height:20px;opacity:0}
+.err.show{opacity:1}
+
+.alt{margin-top:40px;padding-top:26px;border-top:1px solid rgba(255,255,255,.2);font-size:13px;color:rgba(255,255,255,.62);text-align:center;line-height:2}
+.alt a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px}
+
+footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4);line-height:2.2}
+footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
+footer a:hover{color:rgba(255,255,255,.8)}
+
+@media(max-width:600px){ .page{padding:40px 22px} .mark{margin-bottom:36px} .mark .name{font-size:25px} }
+
+@media(prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .box{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="box" id="box">
+    <div class="mark">
+      <div class="co">株式会社あんたがおらな</div>
+      <div class="name">教育者のサロン 灯</div>
+      <div class="en">TOMOSHIBI</div>
+      <div class="sub">会員の方はログインしてください</div>
+    </div>
+
+    <form id="f" novalidate>
+      <div class="field">
+        <label for="uid">メールアドレス</label>
+        <input id="uid" name="email" type="email" autocomplete="username" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <label for="pw">パスワード</label>
+          <button type="button" class="toggle-pw" data-target="pw" aria-pressed="false">表示</button>
+        </div>
+        <input id="pw" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="keep" checked> ログインしたままにする</label>
+        <a href="./forgot-password.html">パスワードをお忘れの方</a>
+      </div>
+      <button class="go" type="submit" id="go">ログイン</button>
+      <div class="err" id="err" role="alert" aria-live="polite"></div>
+    </form>
+
+    <div class="alt">
+      はじめての方はこちら<br>
+      <a href="./tomoshibi-register.html">新規登録に進む →</a><br>
+      <a href="./tomoshibi.html">サロンの紹介ページを見る</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  © 株式会社あんたがおらな
+</footer>
+
+<script>
+// サーバー側API（api/community-auth.js?action=login）でメールアドレス・パスワードと灯 membershipを
+// 確認する。Cookie（HttpOnly）はサーバー側が発行するため、ここでは何も保存しない。
+(function(){
+  var form = document.getElementById('f');
+  var err = document.getElementById('err');
+  var go = document.getElementById('go');
+  var GO_LABEL = go.textContent;
+
+  function showError(msg){ err.textContent = msg; err.classList.add('show'); }
+  function reset(){ go.disabled = false; go.textContent = GO_LABEL; }
+  window.addEventListener('pageshow', reset);
+
+  document.querySelectorAll('.toggle-pw').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(btn.dataset.target);
+      var showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      btn.setAttribute('aria-pressed', String(!showing));
+      btn.textContent = showing ? '表示' : '非表示';
+    });
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('uid').value.trim();
+    var pw = document.getElementById('pw').value;
+    if(!id || !pw){ showError('メールアドレスとパスワードをご入力ください。'); return; }
+    if(id.indexOf('@') === -1){ showError('メールアドレスの形式をご確認ください。'); return; }
+    err.textContent = ''; err.classList.remove('show');
+    go.disabled = true; go.textContent = 'ログインしています…';
+
+    fetch('/api/community-auth?action=login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ community: 'tomoshibi', email: id, password: pw }),
+    }).then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); })
+      .then(function(res){
+        if(res.status !== 200){ showError(res.data.error || 'ログインに失敗しました。'); reset(); return; }
+        location.href = './tomoshibi-post.html';
+      })
+      .catch(function(){ showError('通信に失敗しました。時間をおいて再度お試しください。'); reset(); });
+  });
+})();
+</script>
+
+<script type="module">
+(async () => {
+  try {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const { animate } = await import('./lp-assets/vendor/motion.js');
+    document.getElementById('box').classList.add('is-ready');
+    const err = document.getElementById('err');
+    new MutationObserver(() => {
+      if (err.classList.contains('show')) animate(err, { opacity: [0, 1] }, { duration: 0.25, easing: 'ease-out' });
+    }).observe(err, { attributes: true, attributeFilter: ['class'] });
+  } catch (e) {
+    document.getElementById('box').classList.add('is-ready');
+    console.warn('[motion] animations skipped:', e);
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>管理画面｜HAKU Community / 教育者のサロン 灯</title>
+<!-- 既存 /community (Firebase) 管理機能を同一画面から使うためのSDK。
+     設定値は community.html に埋め込まれているものと同一（クライアント公開鍵のため機密ではない）。 -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;font-size:14px;line-height:1.8;color:#2b2926;background:#f7f3ec}
+.wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px}
+h1{font-size:18px;margin-bottom:4px}
+.note{font-size:12px;color:#8a8574;margin-bottom:28px}
+.loginbox{max-width:320px;margin:60px auto;background:#fff;border:1px solid #ddd8cf;padding:28px}
+.loginbox input{width:100%;min-height:40px;padding:8px 10px;border:1px solid #ccc;margin-bottom:12px;font-size:14px}
+.loginbox button{width:100%;min-height:40px;background:#33472f;color:#fff;border:0;font-size:14px;cursor:pointer}
+.err{color:#9A3B1F;font-size:12.5px;margin-top:8px;min-height:16px}
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tabs button{padding:8px 16px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:13px}
+.tabs button.on{background:#33472f;color:#fff;border-color:#33472f}
+.statusfilter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.statusfilter button{padding:6px 14px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:12.5px;border-radius:20px}
+.statusfilter button.on{background:#2f3a2f;color:#fff;border-color:#2f3a2f}
+.app{background:#fff;border:1px solid #ddd8cf;padding:16px 20px;margin-bottom:12px}
+.app .cat{display:inline-block;font-size:10.5px;font-weight:700;border-radius:20px;padding:2px 10px;margin-bottom:8px}
+.app .cat.st-pending{color:#8a5a1f;background:#fdf3e2;border:1px solid #e8d3a6}
+.app .cat.st-approved{color:#2f5a3a;background:#e9f2ea;border:1px solid #bcd8c1}
+.app .cat.st-rejected{color:#9A3B1F;background:#fbeae5;border:1px solid #edc4b6}
+.app b{display:block;font-size:14.5px}
+.app .meta{font-size:12px;color:#8a8574;margin:2px 0 10px}
+.app .reason{font-size:13px;color:#4a473f;margin-bottom:12px;white-space:pre-wrap}
+.app .row{display:flex;gap:8px}
+.app button{padding:7px 16px;font-size:12.5px;cursor:pointer;border:1px solid #33472f;background:#fff;color:#33472f}
+.app button.approve{background:#33472f;color:#fff}
+.app button.reject{border-color:#9A3B1F;color:#9A3B1F}
+.empty{color:#8a8574;text-align:center;padding:40px 0}
+#adminPanel{display:none}
+.modetabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.modetabs button{padding:8px 16px;border:1px solid #33472f;background:#fff;color:#33472f;cursor:pointer;font-size:13px}
+.modetabs button.on{background:#33472f;color:#fff}
+.evform{background:#fff;border:1px solid #ddd8cf;padding:16px 20px;margin-bottom:20px}
+.evform label{display:block;font-size:11.5px;color:#8a8574;margin:10px 0 4px}
+.evform input,.evform select,.evform textarea{width:100%;padding:8px 10px;border:1px solid #ccc;font-size:13px;font-family:inherit}
+.evform .row2{display:flex;gap:10px}
+.evform .row2>div{flex:1}
+.evform button.submit{margin-top:14px;padding:9px 18px;background:#33472f;color:#fff;border:0;font-size:13px;cursor:pointer}
+.ev{background:#fff;border:1px solid #ddd8cf;padding:14px 18px;margin-bottom:10px}
+.ev b{display:block;font-size:14px}
+.ev .meta{font-size:12px;color:#8a8574;margin-top:2px}
+.post{background:#fff;border:1px solid #ddd8cf;padding:14px 18px;margin-bottom:10px}
+.post .meta{font-size:12px;color:#8a8574;margin-bottom:6px}
+.post .cat{display:inline-block;font-size:10.5px;color:#8a5a1f;border:1px solid #ddd8cf;border-radius:20px;padding:1px 8px;margin-bottom:6px}
+.post .body{font-size:13px;white-space:pre-wrap;margin-bottom:10px}
+.post .row button{padding:6px 14px;font-size:12px;margin-right:8px;cursor:pointer;border:1px solid #33472f;background:#fff;color:#33472f}
+.post .row button.danger{border-color:#9A3B1F;color:#9A3B1F}
+.post .hidden-badge{display:inline-block;font-size:10.5px;color:#9A3B1F;border:1px solid #9A3B1F;border-radius:20px;padding:1px 8px;margin-left:6px}
+.fb-login{background:#fff;border:1px solid #ddd8cf;padding:20px;max-width:360px;margin-bottom:20px}
+.fb-login input{width:100%;min-height:38px;padding:8px 10px;border:1px solid #ccc;margin-bottom:10px;font-size:13px}
+.fb-login button{width:100%;min-height:38px;background:#33472f;color:#fff;border:0;font-size:13px;cursor:pointer}
+.fb-status{font-size:12.5px;color:#8a8574;margin-bottom:16px}
+.audit{background:#fff;border:1px solid #ddd8cf;padding:10px 14px;margin-bottom:6px;font-size:12.5px}
+.audit b{color:#33472f}
+.audit .meta{color:#8a8574;font-size:11px}
+.stub{border:1px dashed #ccc;background:#fffdf8;padding:24px;text-align:center;color:#8a8574;font-size:13px;line-height:1.9}
+.safe-setup{background:#fff;border:1px solid #ddd8cf;padding:16px;margin-bottom:16px;font-size:12.5px;color:#4a473f;line-height:1.8}
+.safe-setup button{margin-top:10px;padding:8px 16px;background:#8c692c;color:#fff;border:0;font-size:12.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="loginbox" id="loginbox">
+    <h1 style="margin-bottom:16px">管理画面ログイン</h1>
+    <input type="email" id="adminemail" placeholder="管理者メールアドレス（個別アカウント作成後）" autocomplete="username">
+    <input type="password" id="adminpw" placeholder="パスワード" autocomplete="current-password">
+    <button id="loginbtn">ログイン</button>
+    <div class="err" id="loginerr"></div>
+    <p style="font-size:11.5px;color:#8a8574;margin-top:18px;text-align:center;line-height:1.8">
+      dan.nishiyama@antagaorana.com の初回セットアップは
+      <span style="cursor:pointer;text-decoration:underline;color:#33472f" id="safeSetupToggle">こちら</span>
+      （メールで設定リンクを送付・パスワードは画面や運営に一切表示されません）
+    </p>
+    <p style="font-size:11.5px;color:#8a8574;margin-top:10px;text-align:center;cursor:pointer;text-decoration:underline" id="bootstrapToggle">共有パスワードをお持ちの方はこちら（旧方式・将来廃止予定）</p>
+  </div>
+
+  <div class="loginbox" id="safeSetupBox" style="display:none">
+    <h1 style="margin-bottom:6px">管理者アカウントのセットアップ</h1>
+    <p class="note" style="margin-bottom:16px">dan.nishiyama@antagaorana.com 宛にパスワード設定リンクを送信します。パスワードはここでは入力しません（メール内のリンク先で本人が設定します）。</p>
+    <button id="safeSetupBtn">設定リンクを送信する</button>
+    <div class="err" id="safeSetupErr"></div>
+    <p class="ok" id="safeSetupOk" style="display:none;color:#33472f;font-size:12.5px;margin-top:10px">送信しました。メールをご確認ください。</p>
+    <p style="font-size:11.5px;color:#8a8574;margin-top:14px;text-align:center;cursor:pointer;text-decoration:underline" id="safeSetupCancel">ログイン画面に戻る</p>
+  </div>
+
+  <div class="loginbox" id="bootstrapbox" style="display:none">
+    <h1 style="margin-bottom:6px">初回管理者アカウント作成</h1>
+    <p class="note" style="margin-bottom:16px">共有パスワード（旧方式）を知っている方のみ、最初の個別管理者アカウントを1件だけ作成できます。以後は共有パスワードでのログインは無効になります。</p>
+    <input type="password" id="bsShared" placeholder="共有パスワード（HT_ADMIN_PASSWORD）" autocomplete="off">
+    <input type="email" id="bsEmail" placeholder="新しい管理者のメールアドレス" autocomplete="off">
+    <input type="password" id="bsPassword" placeholder="新しいパスワード（8文字以上）" autocomplete="new-password">
+    <button id="bootstrapbtn">作成してログイン</button>
+    <div class="err" id="bootstraperr"></div>
+    <p style="font-size:11.5px;color:#8a8574;margin-top:14px;text-align:center;cursor:pointer;text-decoration:underline" id="bootstrapCancel">ログイン画面に戻る</p>
+  </div>
+
+  <div id="adminPanel">
+    <h1>管理画面</h1>
+    <p class="note">Preview環境専用。承認するとRedisにmembershipを作成し、パスワード設定メールを送信します。</p>
+    <div class="modetabs">
+      <button class="on" data-mode="applications">会員申請</button>
+      <button data-mode="members">会員一覧</button>
+      <button data-mode="firebase">拓（既存Community）管理</button>
+      <button data-mode="events">HAKUイベント管理</button>
+      <button data-mode="words">HAKUからのことば</button>
+      <button data-mode="notes">HAKU NOTE / 今週の問い</button>
+      <button data-mode="posts">みんなのことば</button>
+      <button data-mode="sessions">セッション（Preview fixture）</button>
+      <button data-mode="tane">TANE（準備中）</button>
+      <button data-mode="audit">操作履歴</button>
+    </div>
+
+    <div id="applicationsPanel">
+      <div class="tabs">
+        <button class="on" data-c="tomoshibi">教育者のサロン 灯</button>
+        <button data-c="haku">HAKU Community</button>
+      </div>
+      <div class="statusfilter">
+        <button class="on" data-status="pending">審査中</button>
+        <button data-status="approved">承認済み</button>
+        <button data-status="rejected">却下</button>
+        <button data-status="all">すべて</button>
+      </div>
+      <div id="list"><div class="empty">読み込み中…</div></div>
+    </div>
+
+    <div id="membersPanel" style="display:none">
+      <p class="note">User / Application / Membershipを横断で確認できる会員一覧です。同一メールアドレスは常に1件のUserに紐づく設計のため、行を開くと両コミュニティ（HAKU Community / 教育者のサロン 灯）の申込・会員状態をまとめて確認できます。</p>
+      <div class="tabs">
+        <button class="on" data-mc="tomoshibi">教育者のサロン 灯</button>
+        <button data-mc="haku">HAKU Community</button>
+      </div>
+      <div class="statusfilter">
+        <button class="on" data-mstatus="all">すべて</button>
+        <button data-mstatus="pending">審査中</button>
+        <button data-mstatus="approved">承認済み</button>
+        <button data-mstatus="active">有効会員</button>
+        <button data-mstatus="unpaid">未決済</button>
+        <button data-mstatus="rejected">却下</button>
+        <button data-mstatus="inactive">退会/inactive</button>
+      </div>
+      <div id="membersList"><div class="empty">読み込み中…</div></div>
+
+      <div id="resetToolWrap" style="display:none;margin-top:36px;border-top:2px dashed #c98a6b;padding-top:20px">
+        <h3 style="font-size:14px;color:#9A3B1F;margin-bottom:6px">⚠ テストユーザーをリセット（super_admin限定・Preview限定）</h3>
+        <p class="note">「+tag付きメールアドレスで毎回新規申込する」運用を推奨します。この機能は、特定のテストアドレスをどうしても使い切ってしまった場合の最終手段です。User・Application・Membership・Session・ことば投稿・イベント参加を完全に削除し、元に戻せません。Stripeのtest subscriptionが残っている場合はキャンセルを試みます。</p>
+        <div class="evform">
+          <label for="resetEmail">リセット対象のメールアドレス</label>
+          <input type="email" id="resetEmail" placeholder="test+e2e001@example.com">
+          <label for="resetConfirm">確認のため、同じメールアドレスをもう一度入力してください</label>
+          <input type="email" id="resetConfirm" placeholder="もう一度入力">
+          <div class="err" id="resetErr"></div>
+          <button class="submit" id="resetSubmitBtn" style="background:#9A3B1F">このテストユーザーを完全にリセットする</button>
+          <div id="resetResult" style="margin-top:10px;font-size:12.5px;color:#33472f"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="eventsPanel" style="display:none">
+      <div class="evform">
+        <label for="evTitle">タイトル</label>
+        <input type="text" id="evTitle" placeholder="例：HAKU MORNING｜今週の問いを持ち寄って">
+        <div class="row2">
+          <div>
+            <label for="evType">種別</label>
+            <select id="evType">
+              <option value="morning">HAKU MORNING</option>
+              <option value="meet">HAKU MEET</option>
+              <option value="volunteer">ボランティア</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+          <div>
+            <label for="evStartsAt">日時</label>
+            <input type="datetime-local" id="evStartsAt">
+          </div>
+        </div>
+        <div class="row2">
+          <div>
+            <label for="evLocation">場所</label>
+            <input type="text" id="evLocation" placeholder="オンライン／現地名">
+          </div>
+          <div>
+            <label for="evCapacity">定員（任意）</label>
+            <input type="number" id="evCapacity" min="1" placeholder="例：16">
+          </div>
+        </div>
+        <label for="evFee">参加費（任意）</label>
+        <input type="text" id="evFee" placeholder="例：実費2,000円／無料">
+        <label for="evItems">持ち物（任意）</label>
+        <input type="text" id="evItems" placeholder="例：動きやすい服装">
+        <label for="evDescription">内容</label>
+        <textarea id="evDescription" rows="3" placeholder="イベントの内容"></textarea>
+        <div class="err" id="evErr"></div>
+        <button class="submit" id="evSubmitBtn">作成する</button>
+      </div>
+      <div id="eventsList"><div class="empty">読み込み中…</div></div>
+    </div>
+
+    <div id="wordsPanel" style="display:none">
+      <p class="note">会員の「言葉」ページ上部に表示される、運営からのメッセージです。本文または音声URLのどちらか一方は必須です。音声はファイルアップロードではなくURL入力方式です（既存のセッション音声URL方式と同じ考え方）。</p>
+      <div class="evform">
+        <input type="hidden" id="wordEditId" value="">
+        <label for="wordTitle">タイトル（任意）</label>
+        <input type="text" id="wordTitle" maxlength="80" placeholder="例：今週、少し立ち止まってみませんか">
+        <label for="wordBody">本文（任意・本文か音声のどちらかは必須）</label>
+        <textarea id="wordBody" rows="4" maxlength="2000" placeholder="今日考えたこと、届けたい言葉を書いてください"></textarea>
+        <label for="wordAudioUrl">音声URL（任意・https://から始まるURL）</label>
+        <input type="url" id="wordAudioUrl" placeholder="https://...">
+        <div class="row2">
+          <div>
+            <label for="wordAuthor">投稿者表記</label>
+            <input type="text" id="wordAuthor" maxlength="40" placeholder="HAKU運営" value="HAKU運営">
+          </div>
+          <div>
+            <label for="wordStatus">公開状態</label>
+            <select id="wordStatus">
+              <option value="published">公開</option>
+              <option value="hidden">非公開</option>
+            </select>
+          </div>
+        </div>
+        <div class="err" id="wordErr"></div>
+        <button class="submit" id="wordSubmitBtn">作成する</button>
+        <button class="submit" id="wordCancelEditBtn" type="button" style="display:none;background:#8a8574;margin-left:8px">編集をやめる</button>
+      </div>
+      <div id="wordsList"><div class="empty">読み込み中…</div></div>
+    </div>
+
+    <div id="notesPanel" style="display:none">
+      <p class="note">「学ぶ」タブとHOMEに表示する、運営からの「今週の問い」／HAKU NOTEです。公開開始日時に達し、かつ公開終了日時を過ぎていない公開中の投稿のうち、最新の1件が「今週の問い」として表示されます。それ以外の公開済み投稿は「過去のHAKU NOTE」として自動的にアーカイブされます。</p>
+      <div class="evform">
+        <input type="hidden" id="noteEditId" value="">
+        <label for="noteTitle">タイトル（任意）</label>
+        <input type="text" id="noteTitle" maxlength="100" placeholder="例：今週の問い">
+        <label for="noteBody">問い本文（必須）</label>
+        <textarea id="noteBody" rows="3" maxlength="2000" placeholder="例：最近、自分が少し変わったと思う瞬間はありましたか？"></textarea>
+        <label for="noteSupplement">補足文（任意）</label>
+        <textarea id="noteSupplement" rows="2" maxlength="1000" placeholder="問いの背景や、考えるヒントなど"></textarea>
+        <div class="row2">
+          <div>
+            <label for="noteCategory">カテゴリ（任意）</label>
+            <select id="noteCategory"><option value="">未設定</option></select>
+          </div>
+          <div>
+            <label for="noteStatus">公開状態</label>
+            <select id="noteStatus">
+              <option value="published">公開</option>
+              <option value="hidden">非公開</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div>
+            <label for="notePublishFrom">公開開始日時</label>
+            <input type="datetime-local" id="notePublishFrom">
+          </div>
+          <div>
+            <label for="notePublishUntil">公開終了日時（任意）</label>
+            <input type="datetime-local" id="notePublishUntil">
+          </div>
+        </div>
+        <div class="err" id="noteErr"></div>
+        <button class="submit" id="noteSubmitBtn">作成する</button>
+        <button class="submit" id="noteCancelEditBtn" type="button" style="display:none;background:#8a8574;margin-left:8px">編集をやめる</button>
+      </div>
+      <div id="notesList"><div class="empty">読み込み中…</div></div>
+    </div>
+
+    <div id="postsPanel" style="display:none">
+      <p class="note">非表示にすると一般会員のフィードから消えます（本人からは「非表示（管理者）」表示で見えます）。削除は元に戻せません。</p>
+      <div id="postsList"><div class="empty">読み込み中…</div></div>
+    </div>
+
+    <div id="sessionsPanel" style="display:none">
+      <p class="note">/haku-community-home（統合完成形プレビュー）専用のセッション音声フィクスチャです。本番Firebase/Firestoreのセッションデータとは無関係です。</p>
+      <div class="evform">
+        <label for="sessTargetEmail">対象メンバーのメールアドレス</label>
+        <input type="email" id="sessTargetEmail" placeholder="member@example.com">
+        <label for="sessTitle">セッションタイトル</label>
+        <input type="text" id="sessTitle" placeholder="例：矢野様｜導 分析セッション 第1回">
+        <div class="row2">
+          <div>
+            <label for="sessType">種別</label>
+            <select id="sessType">
+              <option value="personal">マイセッション</option>
+              <option value="do">導</option>
+              <option value="haku">拓</option>
+              <option value="me">芽</option>
+              <option value="etsu">越</option>
+              <option value="morning">朝のメッセージ</option>
+            </select>
+          </div>
+          <div>
+            <label for="sessDur">時間（例：45:30）</label>
+            <input type="text" id="sessDur" placeholder="45:30">
+          </div>
+        </div>
+        <label for="sessUrl">音声URL（任意・空欄なら簡易デモ再生になります）</label>
+        <input type="url" id="sessUrl" placeholder="https://...">
+        <label for="sessDesc">説明（任意）</label>
+        <textarea id="sessDesc" rows="2"></textarea>
+        <label for="sessChapters">チャプター（任意）― 1行ずつ「秒数|タイトル」</label>
+        <textarea id="sessChapters" rows="3" placeholder="0|オープニング&#10;480|テーマ設定"></textarea>
+        <div class="err" id="sessErr"></div>
+        <button class="submit" id="sessSubmitBtn">追加する</button>
+      </div>
+      <div id="sessionsFixtureList"><div class="empty">対象メールアドレスを指定して追加すると、ここに反映されます。</div></div>
+    </div>
+
+    <div id="firebasePanel" style="display:none">
+      <p class="note">既存 /community（Firebase）の管理機能です。認証基盤はHAKU Community側とは別（Firebase Auth）のため、こちらは個別にログインが必要です。既存の権限・データ処理は変更していません。</p>
+      <div id="fbLoginBox" class="fb-login">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">既存Communityアカウントでログイン</div>
+        <input type="email" id="fbEmail" placeholder="メールアドレス" autocomplete="username">
+        <input type="password" id="fbPassword" placeholder="パスワード" autocomplete="current-password">
+        <button id="fbLoginBtn">ログイン</button>
+        <div class="err" id="fbLoginErr"></div>
+      </div>
+      <div id="fbAdminArea" style="display:none">
+        <div class="fb-status" id="fbStatus"></div>
+        <div class="sec-title" style="font-weight:600;margin:18px 0 10px">参加申請（拓）</div>
+        <div id="fbAppsList"><div class="empty">読み込み中…</div></div>
+        <div class="sec-title" style="font-weight:600;margin:24px 0 10px">🎵 セッション音声を追加</div>
+        <div class="evform">
+          <label for="fbSessEmail">対象メンバーのメールアドレス</label>
+          <input type="email" id="fbSessEmail" placeholder="member@example.com">
+          <label for="fbSessTitle">セッションタイトル</label>
+          <input type="text" id="fbSessTitle" placeholder="例：矢野様｜導 分析セッション 第1回">
+          <div class="row2">
+            <div>
+              <label for="fbSessType">種別</label>
+              <select id="fbSessType">
+                <option value="personal">マイセッション</option>
+                <option value="do">導</option>
+                <option value="haku">拓</option>
+                <option value="me">芽</option>
+                <option value="etsu">越</option>
+                <option value="morning">朝のメッセージ</option>
+              </select>
+            </div>
+            <div>
+              <label for="fbSessDur">時間（例：45:30）</label>
+              <input type="text" id="fbSessDur" placeholder="45:30">
+            </div>
+          </div>
+          <label for="fbSessUrl">音声URL（直接アップロードは既存community.html側をご利用ください）</label>
+          <input type="url" id="fbSessUrl" placeholder="https://...">
+          <label for="fbSessDesc">説明（任意）</label>
+          <textarea id="fbSessDesc" rows="2"></textarea>
+          <label for="fbSessChapters">チャプター（任意）― 1行ずつ「秒数|タイトル」</label>
+          <textarea id="fbSessChapters" rows="3" placeholder="0|オープニング&#10;480|テーマ設定"></textarea>
+          <div class="err" id="fbSessErr"></div>
+          <button class="submit" id="fbSessSubmitBtn">追加する</button>
+        </div>
+        <button style="margin-top:16px;padding:8px 16px;background:none;border:1px solid #9A3B1F;color:#9A3B1F;font-size:12.5px;cursor:pointer" id="fbLogoutBtn">既存Communityからログアウト</button>
+      </div>
+    </div>
+
+    <div id="tanePanel" style="display:none">
+      <div class="stub">
+        種／TANEの本格ロジック（換算率・有効期限・譲渡・紹介割合等）は、
+        元設計書で未確定のため今回は実装していません。<br>
+        残高・育てる・使う・履歴・つながりを将来実装できる器（データ構造）のみ用意されています。
+      </div>
+    </div>
+
+    <div id="auditPanel" style="display:none">
+      <p class="note">HAKU Community側（Redis）の管理者操作履歴です。既存/community（Firebase）側の操作は現状ログが無く、既存実装からの変更もしていません。</p>
+      <div id="auditList"><div class="empty">読み込み中…</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var community = 'tomoshibi';
+var currentAdminRole = null;
+function applyAdminRoleUi(){
+  document.getElementById('resetToolWrap').style.display = (currentAdminRole === 'super_admin') ? 'block' : 'none';
+}
+
+function api(path, opts) {
+  return fetch(path, Object.assign({ headers: { 'Content-Type': 'application/json' } }, opts))
+    .then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); });
+}
+
+document.getElementById('loginbtn').addEventListener('click', function(){
+  var email = document.getElementById('adminemail').value.trim();
+  var pw = document.getElementById('adminpw').value;
+  var err = document.getElementById('loginerr');
+  err.textContent = '';
+  api('/api/admin?action=login', { method: 'POST', body: JSON.stringify({ email: email, password: pw }) }).then(function(res){
+    if (res.status !== 200) { err.textContent = res.data.error || 'ログインに失敗しました。'; return; }
+    currentAdminRole = res.data.role || null;
+    document.getElementById('loginbox').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadList();
+  });
+});
+
+document.getElementById('bootstrapToggle').addEventListener('click', function(){
+  document.getElementById('loginbox').style.display = 'none';
+  document.getElementById('bootstrapbox').style.display = 'block';
+});
+document.getElementById('bootstrapCancel').addEventListener('click', function(){
+  document.getElementById('bootstrapbox').style.display = 'none';
+  document.getElementById('loginbox').style.display = 'block';
+});
+document.getElementById('bootstrapbtn').addEventListener('click', function(){
+  var sharedPassword = document.getElementById('bsShared').value;
+  var email = document.getElementById('bsEmail').value.trim();
+  var password = document.getElementById('bsPassword').value;
+  var err = document.getElementById('bootstraperr');
+  err.textContent = '';
+  api('/api/admin?action=bootstrap-admin', { method: 'POST', body: JSON.stringify({ sharedPassword: sharedPassword, email: email, password: password }) }).then(function(res){
+    if (res.status !== 200) { err.textContent = res.data.error || '作成に失敗しました。'; return; }
+    currentAdminRole = 'super_admin';
+    document.getElementById('bootstrapbox').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadList();
+  });
+});
+
+var appStatusFilter = 'pending';
+
+document.querySelectorAll('.tabs button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tabs button').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    community = btn.dataset.c;
+    loadList();
+  });
+});
+
+document.querySelectorAll('.statusfilter button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.statusfilter button').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    appStatusFilter = btn.dataset.status;
+    loadList();
+  });
+});
+
+var APP_STATUS_LABEL = { pending: '審査中', approved: '承認済み', paid: '承認済み（決済完了）', rejected: '却下' };
+var APP_STATUS_CLASS = { pending: 'st-pending', approved: 'st-approved', paid: 'st-approved', rejected: 'st-rejected' };
+var APP_EMPTY_LABEL = { pending: '審査中の申請はありません。', approved: '承認済みの申請はありません。', rejected: '却下した申請はありません。', all: '申請はありません。' };
+
+function loadList() {
+  var list = document.getElementById('list');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=applications&community=' + community + '&status=' + appStatusFilter, { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var apps = res.data.applications || [];
+    if (!apps.length) { list.innerHTML = '<div class="empty">' + (APP_EMPTY_LABEL[appStatusFilter] || '申請はありません。') + '</div>'; return; }
+    list.innerHTML = '';
+    apps.forEach(function(a){
+      var el = document.createElement('div');
+      el.className = 'app';
+      var statusLabel = APP_STATUS_LABEL[a.status] || a.status;
+      var statusClass = APP_STATUS_CLASS[a.status] || '';
+      el.innerHTML =
+        '<span class="cat ' + statusClass + '">' + escapeHtml(statusLabel) + '</span>' +
+        '<b>' + escapeHtml(a.fullName) + '（' + escapeHtml(a.fullNameKana) + '）／表示名: ' + escapeHtml(a.displayName) + '</b>' +
+        '<div class="meta">' + escapeHtml(a.email) + ' ・ ' + new Date(a.submittedAt).toLocaleString('ja-JP') + '</div>' +
+        (a.referrerName ? '<div class="meta">紹介者: ' + escapeHtml(a.referrerName) + '</div>' : '') +
+        (a.reason ? '<div class="reason">' + escapeHtml(a.reason) + '</div>' : '') +
+        (a.reviewedAt ? '<div class="meta">審査日時: ' + new Date(a.reviewedAt).toLocaleString('ja-JP') + (a.reviewedBy ? '（' + escapeHtml(a.reviewedBy) + '）' : '') + '</div>' : '') +
+        (a.status === 'pending' ? '<div class="row"><button class="approve">承認する</button><button class="reject">却下する</button></div>' : '');
+      var approveBtn = el.querySelector('.approve');
+      var rejectBtn = el.querySelector('.reject');
+      if (approveBtn) approveBtn.addEventListener('click', function(){ act('approve', a.email, el); });
+      if (rejectBtn) rejectBtn.addEventListener('click', function(){ act('reject', a.email, el); });
+      list.appendChild(el);
+    });
+  });
+}
+
+function act(action, email, el) {
+  api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify({ community: community, email: email }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '処理に失敗しました。'); return; }
+    // 審査中フィルタで承認/却下すると一覧から消える。承認済み/却下/すべてを見ている場合は
+    // ステータス表示を更新するため再読み込みする。
+    if (appStatusFilter === 'pending') { el.remove(); } else { loadList(); }
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 会員一覧（User / Application / Membership 横断確認）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var memberCommunity = 'tomoshibi';
+var memberStatusFilter = 'all';
+var membersCache = {};
+
+document.querySelectorAll('#membersPanel [data-mc]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('#membersPanel [data-mc]').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    memberCommunity = btn.dataset.mc;
+    loadMembers();
+  });
+});
+document.querySelectorAll('#membersPanel [data-mstatus]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('#membersPanel [data-mstatus]').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    memberStatusFilter = btn.dataset.mstatus;
+    loadMembers();
+  });
+});
+
+var APP_ST_LABEL = { pending: '審査中', approved: '承認済み', paid: '承認済み（決済済）', rejected: '却下' };
+var APP_ST_CLASS = { pending: 'st-pending', approved: 'st-approved', paid: 'st-approved', rejected: 'st-rejected' };
+var MEM_ST_LABEL = { active: '有効', canceling: '解約予約中（利用可）', canceled: '解約済み', past_due: '支払い遅延', null: '未作成' };
+var MEM_ST_CLASS = { active: 'st-approved', canceling: 'st-pending', canceled: 'st-rejected', past_due: 'st-rejected' };
+
+function loadMembers(){
+  var list = document.getElementById('membersList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=members&community=' + memberCommunity + '&status=' + memberStatusFilter, { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var members = res.data.members || [];
+    if (!members.length) { list.innerHTML = '<div class="empty">該当する会員がいません。</div>'; return; }
+    list.innerHTML = '';
+    members.forEach(function(m){
+      membersCache[m.email] = m;
+      var el = document.createElement('div');
+      el.className = 'app';
+      var appLabel = APP_ST_LABEL[m.applicationStatus] || m.applicationStatus;
+      var appClass = APP_ST_CLASS[m.applicationStatus] || '';
+      var memLabel = m.membershipStatus ? (MEM_ST_LABEL[m.membershipStatus] || m.membershipStatus) : '未作成';
+      var memClass = m.membershipStatus ? (MEM_ST_CLASS[m.membershipStatus] || '') : '';
+      var stripeLabel = m.stripeSubscriptionId ? 'Stripe連携あり' : '未決済';
+      el.innerHTML =
+        '<span class="cat ' + appClass + '">申込: ' + escapeHtml(appLabel) + '</span> ' +
+        '<span class="cat ' + memClass + '">会員: ' + escapeHtml(memLabel) + '</span> ' +
+        '<span class="cat">' + escapeHtml(stripeLabel) + '</span>' +
+        '<b>' + escapeHtml(m.fullName) + '（' + escapeHtml(m.fullNameKana) + '）／表示名: ' + escapeHtml(m.displayName) + '</b>' +
+        '<div class="meta">' + escapeHtml(m.email) + (m.referrerName ? ' ・ 紹介者: ' + escapeHtml(m.referrerName) : '') + '</div>' +
+        '<div class="meta">申込日時: ' + (m.submittedAt ? new Date(m.submittedAt).toLocaleString('ja-JP') : '—') +
+          (m.reviewedAt ? ' ・ 審査日時: ' + new Date(m.reviewedAt).toLocaleString('ja-JP') : '') +
+          ' ・ 最終ログイン: ' + (m.lastLoginAt ? new Date(m.lastLoginAt).toLocaleString('ja-JP') : '記録なし') + '</div>' +
+        '<div class="row"><button class="detail">詳細を見る</button></div>' +
+        '<div class="detailBox" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#4a473f;white-space:pre-wrap"></div>';
+      el.querySelector('.detail').addEventListener('click', function(){ toggleMemberDetail(m.email, el); });
+      list.appendChild(el);
+    });
+  });
+}
+
+function toggleMemberDetail(email, el){
+  var box = el.querySelector('.detailBox');
+  if (box.style.display === 'block') { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.textContent = '読み込み中…';
+  api('/api/admin?action=member-detail&email=' + encodeURIComponent(email), { method: 'GET' }).then(function(res){
+    if (res.status !== 200) { box.textContent = '読み込みに失敗しました。'; return; }
+    var d = res.data;
+    var lines = [];
+
+    // ── ひと目でわかる状態サマリー（HAKU） ──
+    var hm = d.haku.membership;
+    var ha = d.haku.application;
+    if (ha || hm) {
+      lines.push('■ 状態サマリー（HAKU Community）');
+      lines.push('  申込状態: ' + (APP_ST_LABEL[ha && ha.status] || (ha ? ha.status : 'なし')));
+      lines.push('  会員状態: ' + (MEM_ST_LABEL[hm && hm.status] || (hm ? hm.status : '未作成')));
+      lines.push('  Subscription ID: ' + (hm && hm.stripeSubscriptionId ? hm.stripeSubscriptionId : 'なし'));
+      lines.push('  解約予約(cancel_at_period_end): ' + (hm && hm.cancelAtPeriodEnd ? 'はい' : 'いいえ'));
+      lines.push('  現在の請求期間終了日: ' + (hm && hm.currentPeriodEnd ? new Date(hm.currentPeriodEnd).toLocaleString('ja-JP') : '—'));
+      lines.push('  解約日: ' + (hm && hm.canceledAt ? new Date(hm.canceledAt).toLocaleString('ja-JP') : '—'));
+      lines.push('');
+    }
+
+    lines.push('■ User');
+    lines.push(d.user ? JSON.stringify({ email: d.user.email, fullName: d.user.fullName, fullNameKana: d.user.fullNameKana, displayName: d.user.displayName, createdAt: d.user.createdAt ? new Date(d.user.createdAt).toLocaleString('ja-JP') : null, lastLoginAt: d.user.lastLoginAt ? new Date(d.user.lastLoginAt).toLocaleString('ja-JP') : null }, null, 2) : '(Userレコードなし)');
+    lines.push('');
+    lines.push('■ HAKU Community');
+    lines.push('Application: ' + (d.haku.application ? JSON.stringify(d.haku.application, null, 2) : 'なし'));
+    lines.push('Membership: ' + (d.haku.membership ? JSON.stringify(d.haku.membership, null, 2) : 'なし'));
+    lines.push('');
+    lines.push('■ 教育者のサロン 灯');
+    lines.push('Application: ' + (d.tomoshibi.application ? JSON.stringify(d.tomoshibi.application, null, 2) : 'なし'));
+    lines.push('Membership: ' + (d.tomoshibi.membership ? JSON.stringify(d.tomoshibi.membership, null, 2) : 'なし'));
+    lines.push('');
+    lines.push('■ メール送信履歴（直近30件）');
+    if (d.emailLog && d.emailLog.length) {
+      d.emailLog.forEach(function(e){
+        lines.push('  ' + new Date(e.sentAt).toLocaleString('ja-JP') + '  [' + (e.status === 'sent' ? '送信済' : '失敗') + ']  ' + e.emailType);
+      });
+    } else {
+      lines.push('  送信履歴なし');
+    }
+    box.textContent = lines.join('\n');
+  });
+}
+
+document.getElementById('resetSubmitBtn').addEventListener('click', function(){
+  var errEl = document.getElementById('resetErr');
+  var resultEl = document.getElementById('resetResult');
+  errEl.textContent = ''; resultEl.textContent = '';
+  var email = document.getElementById('resetEmail').value.trim().toLowerCase();
+  var confirmEmail = document.getElementById('resetConfirm').value.trim().toLowerCase();
+  if (!email) { errEl.textContent = 'メールアドレスを入力してください。'; return; }
+  if (email !== confirmEmail) { errEl.textContent = '確認用のメールアドレスが一致しません。'; return; }
+  if (!confirm('本当に ' + email + ' の User / Application / Membership / セッション / ことば投稿 / イベント参加をすべて削除しますか？\nこの操作は元に戻せません。')) return;
+
+  api('/api/admin?action=reset-test-member', { method: 'POST', body: JSON.stringify({ email: email, confirm: confirmEmail }) }).then(function(res){
+    if (res.status !== 200) { errEl.textContent = res.data.error || 'リセットに失敗しました。'; return; }
+    document.getElementById('resetEmail').value = '';
+    document.getElementById('resetConfirm').value = '';
+    resultEl.textContent = 'リセット完了：' + JSON.stringify(res.data.removed) + '（Stripe: ' + res.data.stripeNote + '）';
+    loadMembers();
+  });
+});
+
+// api/_lib/security.js の escapeHtml() と同じ挙動に統一（シングルクォート・ダブルクォートも
+// エスケープする）。
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// モード切替（会員申請 / HAKUイベント管理 / みんなのことば）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'audit'];
+document.querySelectorAll('.modetabs button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.modetabs button').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    var mode = btn.dataset.mode;
+    MODE_PANELS.forEach(function(m){
+      document.getElementById(m + 'Panel').style.display = (m === mode) ? 'block' : 'none';
+    });
+    if (mode === 'events') loadEvents();
+    if (mode === 'words') loadWords();
+    if (mode === 'notes') loadNotes();
+    if (mode === 'posts') loadPosts();
+    if (mode === 'audit') loadAuditLog();
+    if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
+  });
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// dan.nishiyama@antagaorana.com の安全な初回セットアップ
+// （パスワードはここでは一切扱わない。メールのリンク先で本人が設定する）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('safeSetupToggle').addEventListener('click', function(){
+  document.getElementById('loginbox').style.display = 'none';
+  document.getElementById('safeSetupBox').style.display = 'block';
+});
+document.getElementById('safeSetupCancel').addEventListener('click', function(){
+  document.getElementById('safeSetupBox').style.display = 'none';
+  document.getElementById('loginbox').style.display = 'block';
+});
+document.getElementById('safeSetupBtn').addEventListener('click', function(){
+  var err = document.getElementById('safeSetupErr');
+  var ok = document.getElementById('safeSetupOk');
+  err.textContent = ''; ok.style.display = 'none';
+  api('/api/admin?action=bootstrap-super-admin', { method: 'POST', body: JSON.stringify({}) }).then(function(res){
+    if (res.status !== 200) { err.textContent = res.data.error || '送信に失敗しました。'; return; }
+    ok.style.display = 'block';
+  });
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 既存 /community（Firebase）管理機能
+// 認証・データ処理はcommunity.htmlと完全に同じ方式（Firebase Auth + Firestore直接操作）。
+// HAKU Community側（Redis / ht_admin_session）とは別の認証基盤のまま、
+// この画面内に並べて表示することで管理者の入口を1つにまとめている。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var firebaseConfig = {
+  apiKey: "AIzaSyDNJ6Pix3lSNRGzAqJdA9oWPYcXlCo889g",
+  authDomain: "antagaorana-haku.firebaseapp.com",
+  projectId: "antagaorana-haku",
+  storageBucket: "antagaorana-haku.firebasestorage.app",
+  messagingSenderId: "5999305262",
+  appId: "1:5999305262:web:b137b1b13f914c64ccf5bf",
+};
+firebase.initializeApp(firebaseConfig);
+var fbAuth = firebase.auth();
+var fbDb = firebase.firestore();
+
+fbAuth.onAuthStateChanged(function(user){
+  if (!user) {
+    document.getElementById('fbLoginBox').style.display = 'block';
+    document.getElementById('fbAdminArea').style.display = 'none';
+    return;
+  }
+  fbDb.collection('users').doc(user.uid).get().then(function(snap){
+    var data = snap.exists ? snap.data() : {};
+    if (data.role !== 'admin') {
+      document.getElementById('fbStatus').textContent = user.email + ' としてログイン中ですが、既存/communityの管理者権限（role:admin）がありません。';
+      document.getElementById('fbLoginBox').style.display = 'none';
+      document.getElementById('fbAdminArea').style.display = 'block';
+      document.getElementById('fbAppsList').innerHTML = '';
+      return;
+    }
+    document.getElementById('fbStatus').textContent = user.email + '（既存/community 管理者）としてログイン中';
+    document.getElementById('fbLoginBox').style.display = 'none';
+    document.getElementById('fbAdminArea').style.display = 'block';
+    loadFbApps();
+  }).catch(function(e){
+    document.getElementById('fbStatus').textContent = '権限確認に失敗しました: ' + e.message;
+  });
+});
+
+document.getElementById('fbLoginBtn').addEventListener('click', function(){
+  var email = document.getElementById('fbEmail').value.trim();
+  var pw = document.getElementById('fbPassword').value;
+  var err = document.getElementById('fbLoginErr');
+  err.textContent = '';
+  fbAuth.signInWithEmailAndPassword(email, pw).catch(function(e){
+    err.textContent = 'メールアドレスまたはパスワードが違います。';
+  });
+});
+document.getElementById('fbLogoutBtn').addEventListener('click', function(){
+  fbAuth.signOut();
+});
+
+function loadFbApps(){
+  var list = document.getElementById('fbAppsList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  fbDb.collection('pending_members').orderBy('createdAt', 'desc').limit(100).get().then(function(snap){
+    if (snap.empty) { list.innerHTML = '<div class="empty">申請はまだありません。</div>'; return; }
+    var statusLabel = { pending: '審査中', approved: '承認済', rejected: '否認' };
+    list.innerHTML = '';
+    snap.forEach(function(docSnap){
+      var d = docSnap.data() || {};
+      var id = docSnap.id;
+      var st = d.status || 'pending';
+      var el = document.createElement('div');
+      el.className = 'app';
+      el.innerHTML =
+        '<b>' + escapeHtml(d.name) + '（' + statusLabel[st] + '）</b>' +
+        '<div class="meta">' + escapeHtml(d.email) + '</div>' +
+        (d.reason ? '<div class="reason">' + escapeHtml(d.reason) + '</div>' : '') +
+        (st === 'pending' ? '<div class="row"><button class="approve">承認する</button><button class="reject">否認する</button></div>' : '');
+      if (st === 'pending') {
+        el.querySelector('.approve').addEventListener('click', function(){
+          if (!confirm(d.name + '（' + d.email + '）を承認しますか？')) return;
+          fbDb.collection('pending_members').doc(id).update({ status: 'approved', approvedAt: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(function(){ alert('承認しました。Firebase Console でアカウント作成・パスワードリセットメール送信を行ってください。'); loadFbApps(); })
+            .catch(function(e){ alert('更新に失敗しました: ' + e.message); });
+        });
+        el.querySelector('.reject').addEventListener('click', function(){
+          if (!confirm(d.name + '（' + d.email + '）の申請を否認しますか？')) return;
+          fbDb.collection('pending_members').doc(id).update({ status: 'rejected', rejectedAt: firebase.firestore.FieldValue.serverTimestamp() })
+            .then(function(){ loadFbApps(); })
+            .catch(function(e){ alert('更新に失敗しました: ' + e.message); });
+        });
+      }
+      list.appendChild(el);
+    });
+  }).catch(function(e){
+    list.innerHTML = '<div class="empty">読み込みに失敗しました: ' + escapeHtml(e.message) + '</div>';
+  });
+}
+
+document.getElementById('fbSessSubmitBtn').addEventListener('click', function(){
+  var errEl = document.getElementById('fbSessErr');
+  errEl.textContent = '';
+  var targetEmail = document.getElementById('fbSessEmail').value.trim();
+  var title = document.getElementById('fbSessTitle').value.trim();
+  if (!targetEmail) { errEl.textContent = 'メールアドレスを入力してください'; return; }
+  if (!title) { errEl.textContent = 'タイトルを入力してください'; return; }
+  var tagMap = { personal: 'マイセッション', do: '導 — 自己を導く力', haku: '拓 — 未来を拓く行動', me: '芽 — 可能性の芽吹き', etsu: '越 — 枠を越える', morning: '朝のメッセージ' };
+  var type = document.getElementById('fbSessType').value;
+  var chaptersRaw = document.getElementById('fbSessChapters').value.trim();
+  var chapters = chaptersRaw ? chaptersRaw.split('\n').map(function(l){ return l.trim(); }).filter(function(l){ return l && l.indexOf('|') !== -1; }).map(function(line){
+    var sep = line.indexOf('|');
+    var timeSec = parseInt(line.slice(0, sep).trim(), 10);
+    var chTitle = line.slice(sep + 1).trim();
+    return isNaN(timeSec) ? null : { time: timeSec, title: chTitle };
+  }).filter(function(c){ return c !== null; }) : [];
+
+  fbDb.collection('users').where('email', '==', targetEmail).limit(1).get().then(function(snap){
+    if (snap.empty) { errEl.textContent = '"' + targetEmail + '" のユーザーが見つかりません。先にFirebaseでアカウントを作成してください。'; return; }
+    var uid = null;
+    snap.forEach(function(d){ uid = d.id; });
+    var sessDoc = {
+      title: title,
+      tag: tagMap[type] || 'マイセッション',
+      dur: document.getElementById('fbSessDur').value.trim() || '—',
+      url: document.getElementById('fbSessUrl').value.trim() || '',
+      desc: document.getElementById('fbSessDesc').value.trim() || '',
+      date: new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' }),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    if (chapters.length > 0) sessDoc.chapters = chapters;
+    return fbDb.collection('users').doc(uid).collection('sessions').add(sessDoc);
+  }).then(function(ref){
+    if (!ref) return;
+    alert('✅ ' + targetEmail + ' のマイセッションに追加しました！');
+    ['fbSessEmail','fbSessTitle','fbSessDur','fbSessUrl','fbSessDesc','fbSessChapters'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }).catch(function(e){
+    errEl.textContent = '追加に失敗しました: ' + e.message;
+  });
+});
+
+// ── 操作履歴（HAKU Community / Redis側のみ） ────────────────────
+function loadAuditLog(){
+  var list = document.getElementById('auditList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=audit-log', { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var entries = res.data.entries || [];
+    if (!entries.length) { list.innerHTML = '<div class="empty">操作履歴はまだありません。</div>'; return; }
+    list.innerHTML = entries.map(function(e){
+      var targetType = (e.metadata && e.metadata.targetType) || '';
+      return '<div class="audit"><b>' + escapeHtml(e.actorId) + '</b> → ' + escapeHtml(e.action) +
+        (targetType ? ' (' + escapeHtml(targetType) + ')' : '') +
+        (e.targetId ? ' : ' + escapeHtml(e.targetId) : '') +
+        '<div class="meta">' + new Date(e.createdAt).toLocaleString('ja-JP') + '</div></div>';
+    }).join('');
+  });
+}
+
+// ── HAKUイベント管理 ──────────────────────────────────────────
+document.getElementById('evSubmitBtn').addEventListener('click', function(){
+  var errEl = document.getElementById('evErr');
+  errEl.textContent = '';
+  var title = document.getElementById('evTitle').value.trim();
+  if (!title) { errEl.textContent = 'タイトルを入力してください。'; return; }
+  var startsAtLocal = document.getElementById('evStartsAt').value;
+  var payload = {
+    title: title,
+    type: document.getElementById('evType').value,
+    startsAt: startsAtLocal ? new Date(startsAtLocal).toISOString() : null,
+    location: document.getElementById('evLocation').value.trim(),
+    capacity: document.getElementById('evCapacity').value ? Number(document.getElementById('evCapacity').value) : null,
+    fee: document.getElementById('evFee').value.trim(),
+    itemsToBring: document.getElementById('evItems').value.trim(),
+    description: document.getElementById('evDescription').value.trim(),
+  };
+  api('/api/admin?action=events-create', { method: 'POST', body: JSON.stringify(payload) }).then(function(res){
+    if (res.status !== 200) { errEl.textContent = res.data.error || '作成に失敗しました。'; return; }
+    ['evTitle','evLocation','evCapacity','evFee','evItems','evDescription','evStartsAt'].forEach(function(id){
+      document.getElementById(id).value = '';
+    });
+    loadEvents();
+  });
+});
+
+var EVENT_TYPE_LABEL = { morning: 'HAKU MORNING', meet: 'HAKU MEET', volunteer: 'ボランティア', other: 'その他' };
+
+function loadEvents() {
+  var list = document.getElementById('eventsList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=events-list', { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var events = res.data.events || [];
+    if (!events.length) { list.innerHTML = '<div class="empty">まだイベントがありません。</div>'; return; }
+    list.innerHTML = '';
+    events.forEach(function(e){
+      var el = document.createElement('div');
+      el.className = 'ev';
+      var dateStr = e.startsAt ? new Date(e.startsAt).toLocaleString('ja-JP') : '日程調整中';
+      el.innerHTML = '<b>' + escapeHtml(e.title) + '</b>' +
+        '<div class="meta">' + (EVENT_TYPE_LABEL[e.type] || e.type) + ' ・ ' + dateStr +
+        (e.location ? ' ・ ' + escapeHtml(e.location) : '') +
+        ' ・ 参加' + e.participantCount + '名' + (e.capacity != null ? '／定員' + e.capacity + '名' : '') + '</div>';
+      list.appendChild(el);
+    });
+  });
+}
+
+// ── みんなのことば モデレーション ──────────────────────────────
+var POST_CATEGORY_LABEL_MAP = {
+  today_did: '今日できたこと', today_noticed: '今日気づいたこと', this_week_thinking: '今週考えていること',
+  learned_from_someone: '誰かから学んだこと', tried_something: 'やってみたこと', question_to_self: '自分への問い',
+  valuing_now: '今大切にしていること', challenging_now: '今挑戦していること',
+};
+
+function loadPosts() {
+  var list = document.getElementById('postsList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=posts', { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var posts = res.data.posts || [];
+    if (!posts.length) { list.innerHTML = '<div class="empty">まだ投稿はありません。</div>'; return; }
+    list.innerHTML = '';
+    posts.forEach(function(p){
+      var el = document.createElement('div');
+      el.className = 'post';
+      el.innerHTML =
+        '<span class="cat">' + escapeHtml(POST_CATEGORY_LABEL_MAP[p.category] || p.category) + '</span>' +
+        (p.status === 'hidden' ? '<span class="hidden-badge">非表示中</span>' : '') +
+        '<div class="meta">' + escapeHtml(p.displayName) + '（' + escapeHtml(p.authorEmail) + '） ・ ' + new Date(p.createdAt).toLocaleString('ja-JP') + '</div>' +
+        (p.title ? '<b style="display:block;margin-bottom:6px">' + escapeHtml(p.title) + '</b>' : '') +
+        '<div class="body">' + escapeHtml(p.body) + '</div>' +
+        '<div class="row">' +
+          (p.status === 'hidden'
+            ? '<button class="restore">再表示する</button>'
+            : '<button class="hide">非表示にする</button>') +
+          '<button class="danger delete">削除する</button>' +
+        '</div>';
+      var hideBtn = el.querySelector('.hide');
+      var restoreBtn = el.querySelector('.restore');
+      if (hideBtn) hideBtn.addEventListener('click', function(){ moderatePost(p.id, 'hidden', el); });
+      if (restoreBtn) restoreBtn.addEventListener('click', function(){ moderatePost(p.id, 'published', el); });
+      el.querySelector('.delete').addEventListener('click', function(){ deletePostAdmin(p.id, el); });
+      list.appendChild(el);
+    });
+  });
+}
+
+function moderatePost(id, status, el) {
+  api('/api/admin?action=posts-moderate', { method: 'POST', body: JSON.stringify({ id: id, status: status }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '処理に失敗しました。'); return; }
+    loadPosts();
+  });
+}
+
+function deletePostAdmin(id, el) {
+  if (!confirm('この投稿を削除しますか？元に戻せません。')) return;
+  api('/api/admin?action=posts-delete', { method: 'POST', body: JSON.stringify({ id: id }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '削除に失敗しました。'); return; }
+    el.remove();
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// セッション音声（Preview fixture）— /haku-community-home の統合完成形プレビュー専用
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('sessSubmitBtn').addEventListener('click', function(){
+  var errEl = document.getElementById('sessErr');
+  errEl.textContent = '';
+  var targetEmail = document.getElementById('sessTargetEmail').value.trim();
+  var title = document.getElementById('sessTitle').value.trim();
+  if (!targetEmail) { errEl.textContent = 'メールアドレスを入力してください。'; return; }
+  if (!title) { errEl.textContent = 'タイトルを入力してください。'; return; }
+  var payload = {
+    targetEmail: targetEmail,
+    title: title,
+    type: document.getElementById('sessType').value,
+    dur: document.getElementById('sessDur').value.trim(),
+    url: document.getElementById('sessUrl').value.trim(),
+    desc: document.getElementById('sessDesc').value.trim(),
+    chaptersRaw: document.getElementById('sessChapters').value.trim(),
+  };
+  api('/api/admin?action=sessions-create', { method: 'POST', body: JSON.stringify(payload) }).then(function(res){
+    if (res.status !== 200) { errEl.textContent = res.data.error || '追加に失敗しました。'; return; }
+    ['sessTitle','sessDur','sessUrl','sessDesc','sessChapters'].forEach(function(id){ document.getElementById(id).value = ''; });
+    loadSessionsFixture(targetEmail);
+  });
+});
+
+function loadSessionsFixture(email) {
+  var list = document.getElementById('sessionsFixtureList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=sessions-list&email=' + encodeURIComponent(email), { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var sessions = res.data.sessions || [];
+    if (!sessions.length) { list.innerHTML = '<div class="empty">' + escapeHtml(email) + ' 宛のセッションはまだありません。</div>'; return; }
+    list.innerHTML = sessions.map(function(s){
+      return '<div class="ev"><b>' + escapeHtml(s.title) + '</b><div class="meta">' + escapeHtml(s.tag) + ' ・ ' + escapeHtml(s.dur) + (s.url ? ' ・ 音声あり' : ' ・ デモ再生') + '</div></div>';
+    }).join('');
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HAKUからのことば（運営投稿）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var wordsCache = {};
+
+document.getElementById('wordSubmitBtn').addEventListener('click', function(){
+  var errEl = document.getElementById('wordErr');
+  errEl.textContent = '';
+  var editId = document.getElementById('wordEditId').value;
+  var payload = {
+    title: document.getElementById('wordTitle').value.trim(),
+    body: document.getElementById('wordBody').value.trim(),
+    audioUrl: document.getElementById('wordAudioUrl').value.trim(),
+    authorName: document.getElementById('wordAuthor').value.trim(),
+    status: document.getElementById('wordStatus').value,
+  };
+  if (!payload.body && !payload.audioUrl) { errEl.textContent = '本文または音声URLのどちらか一方は必須です。'; return; }
+  var action = editId ? 'words-update' : 'words-create';
+  if (editId) payload.id = editId;
+  api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify(payload) }).then(function(res){
+    if (res.status !== 200) { errEl.textContent = res.data.error || '保存に失敗しました。'; return; }
+    resetWordForm();
+    loadWords();
+  });
+});
+
+document.getElementById('wordCancelEditBtn').addEventListener('click', resetWordForm);
+
+function resetWordForm(){
+  document.getElementById('wordEditId').value = '';
+  document.getElementById('wordTitle').value = '';
+  document.getElementById('wordBody').value = '';
+  document.getElementById('wordAudioUrl').value = '';
+  document.getElementById('wordAuthor').value = 'HAKU運営';
+  document.getElementById('wordStatus').value = 'published';
+  document.getElementById('wordSubmitBtn').textContent = '作成する';
+  document.getElementById('wordCancelEditBtn').style.display = 'none';
+  document.getElementById('wordErr').textContent = '';
+}
+
+function editWord(id){
+  var w = wordsCache[id];
+  if (!w) return;
+  document.getElementById('wordEditId').value = id;
+  document.getElementById('wordTitle').value = w.title || '';
+  document.getElementById('wordBody').value = w.body || '';
+  document.getElementById('wordAudioUrl').value = w.audioUrl || '';
+  document.getElementById('wordAuthor').value = w.authorName || 'HAKU運営';
+  document.getElementById('wordStatus').value = w.status;
+  document.getElementById('wordSubmitBtn').textContent = '更新する';
+  document.getElementById('wordCancelEditBtn').style.display = 'inline-block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function loadWords(){
+  var list = document.getElementById('wordsList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=words-list', { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var words = res.data.words || [];
+    if (!words.length) { list.innerHTML = '<div class="empty">まだ投稿がありません。</div>'; return; }
+    list.innerHTML = '';
+    words.forEach(function(w){
+      wordsCache[w.id] = w;
+      var el = document.createElement('div');
+      el.className = 'post';
+      el.innerHTML =
+        '<span class="cat">' + (w.status === 'published' ? '公開中' : '非公開') + '</span>' +
+        '<div class="meta">' + escapeHtml(w.authorName) + ' ・ ' + new Date(w.publishedAt).toLocaleString('ja-JP') + (w.audioUrl ? ' ・ 音声あり' : '') + '</div>' +
+        (w.title ? '<b style="display:block;margin-bottom:6px">' + escapeHtml(w.title) + '</b>' : '') +
+        (w.body ? '<div class="body">' + escapeHtml(w.body) + '</div>' : '') +
+        '<div class="row">' +
+          '<button class="edit">編集する</button>' +
+          (w.status === 'published' ? '<button class="hide">非公開にする</button>' : '<button class="restore">公開する</button>') +
+          '<button class="danger delete">削除する</button>' +
+        '</div>';
+      el.querySelector('.edit').addEventListener('click', function(){ editWord(w.id); });
+      var hideBtn = el.querySelector('.hide');
+      var restoreBtn = el.querySelector('.restore');
+      if (hideBtn) hideBtn.addEventListener('click', function(){ setWordStatus(w.id, 'hidden'); });
+      if (restoreBtn) restoreBtn.addEventListener('click', function(){ setWordStatus(w.id, 'published'); });
+      el.querySelector('.delete').addEventListener('click', function(){ deleteWord(w.id); });
+      list.appendChild(el);
+    });
+  });
+}
+
+function setWordStatus(id, status){
+  api('/api/admin?action=words-set-status', { method: 'POST', body: JSON.stringify({ id: id, status: status }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '処理に失敗しました。'); return; }
+    loadWords();
+  });
+}
+
+function deleteWord(id){
+  if (!confirm('この投稿を削除しますか？元に戻せません。')) return;
+  api('/api/admin?action=words-delete', { method: 'POST', body: JSON.stringify({ id: id }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '削除に失敗しました。'); return; }
+    loadWords();
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HAKU NOTE（「今週の問い」）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var notesCache = {};
+var noteCategoriesLoaded = false;
+
+function toDatetimeLocalValue(ms){
+  if (!ms) return '';
+  var d = new Date(ms);
+  var pad = function(n){ return String(n).padStart(2, '0'); };
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+
+document.getElementById('noteSubmitBtn').addEventListener('click', function(){
+  var errEl = document.getElementById('noteErr');
+  errEl.textContent = '';
+  var editId = document.getElementById('noteEditId').value;
+  var payload = {
+    title: document.getElementById('noteTitle').value.trim(),
+    body: document.getElementById('noteBody').value.trim(),
+    supplement: document.getElementById('noteSupplement').value.trim(),
+    category: document.getElementById('noteCategory').value,
+    status: document.getElementById('noteStatus').value,
+    publishFrom: document.getElementById('notePublishFrom').value,
+    publishUntil: document.getElementById('notePublishUntil').value,
+  };
+  if (!payload.body) { errEl.textContent = '問い本文は必須です。'; return; }
+  var action = editId ? 'notes-update' : 'notes-create';
+  if (editId) payload.id = editId;
+  api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify(payload) }).then(function(res){
+    if (res.status !== 200) { errEl.textContent = res.data.error || '保存に失敗しました。'; return; }
+    resetNoteForm();
+    loadNotes();
+  });
+});
+
+document.getElementById('noteCancelEditBtn').addEventListener('click', resetNoteForm);
+
+function resetNoteForm(){
+  document.getElementById('noteEditId').value = '';
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteBody').value = '';
+  document.getElementById('noteSupplement').value = '';
+  document.getElementById('noteCategory').value = '';
+  document.getElementById('noteStatus').value = 'published';
+  document.getElementById('notePublishFrom').value = toDatetimeLocalValue(Date.now());
+  document.getElementById('notePublishUntil').value = '';
+  document.getElementById('noteSubmitBtn').textContent = '作成する';
+  document.getElementById('noteCancelEditBtn').style.display = 'none';
+  document.getElementById('noteErr').textContent = '';
+}
+
+function editNote(id){
+  var n = notesCache[id];
+  if (!n) return;
+  document.getElementById('noteEditId').value = id;
+  document.getElementById('noteTitle').value = n.title || '';
+  document.getElementById('noteBody').value = n.body || '';
+  document.getElementById('noteSupplement').value = n.supplement || '';
+  document.getElementById('noteCategory').value = n.category || '';
+  document.getElementById('noteStatus').value = n.status;
+  document.getElementById('notePublishFrom').value = toDatetimeLocalValue(n.publishFrom);
+  document.getElementById('notePublishUntil').value = toDatetimeLocalValue(n.publishUntil);
+  document.getElementById('noteSubmitBtn').textContent = '更新する';
+  document.getElementById('noteCancelEditBtn').style.display = 'inline-block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function loadNotes(){
+  var list = document.getElementById('notesList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=notes-list', { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    if (!noteCategoriesLoaded && res.data.categories) {
+      var catSel = document.getElementById('noteCategory');
+      res.data.categories.forEach(function(c){
+        var opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        catSel.appendChild(opt);
+      });
+      noteCategoriesLoaded = true;
+    }
+    if (!document.getElementById('notePublishFrom').value) {
+      document.getElementById('notePublishFrom').value = toDatetimeLocalValue(Date.now());
+    }
+    var notes = res.data.notes || [];
+    if (!notes.length) { list.innerHTML = '<div class="empty">まだ問いが登録されていません。</div>'; return; }
+    var now = Date.now();
+    list.innerHTML = '';
+    notes.forEach(function(n){
+      notesCache[n.id] = n;
+      var isCurrent = n.status === 'published' && n.publishFrom <= now && (n.publishUntil == null || n.publishUntil >= now);
+      var windowLabel = new Date(n.publishFrom).toLocaleString('ja-JP') + (n.publishUntil ? ' 〜 ' + new Date(n.publishUntil).toLocaleString('ja-JP') : ' 〜 （終了日時なし）');
+      var el = document.createElement('div');
+      el.className = 'post';
+      el.innerHTML =
+        '<span class="cat">' + (n.status === 'published' ? (isCurrent ? '公開中・今週の問い' : '公開中') : '非公開') + '</span>' +
+        (n.category ? '<span class="cat" style="background:#eee;color:#555;margin-left:6px">' + escapeHtml(n.category) + '</span>' : '') +
+        '<div class="meta">' + windowLabel + '</div>' +
+        (n.title ? '<b style="display:block;margin-bottom:6px">' + escapeHtml(n.title) + '</b>' : '') +
+        '<div class="body">' + escapeHtml(n.body) + '</div>' +
+        (n.supplement ? '<div class="body" style="color:#8a8574;font-size:12.5px;margin-top:4px">' + escapeHtml(n.supplement) + '</div>' : '') +
+        '<div class="row">' +
+          '<button class="edit">編集する</button>' +
+          (n.status === 'published' ? '<button class="hide">非公開にする</button>' : '<button class="restore">公開する</button>') +
+          '<button class="danger delete">削除する</button>' +
+        '</div>';
+      el.querySelector('.edit').addEventListener('click', function(){ editNote(n.id); });
+      var hideBtn = el.querySelector('.hide');
+      var restoreBtn = el.querySelector('.restore');
+      if (hideBtn) hideBtn.addEventListener('click', function(){ setNoteStatus(n.id, 'hidden'); });
+      if (restoreBtn) restoreBtn.addEventListener('click', function(){ setNoteStatus(n.id, 'published'); });
+      el.querySelector('.delete').addEventListener('click', function(){ deleteNote(n.id); });
+      list.appendChild(el);
+    });
+  });
+}
+
+function setNoteStatus(id, status){
+  api('/api/admin?action=notes-set-status', { method: 'POST', body: JSON.stringify({ id: id, status: status }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '処理に失敗しました。'); return; }
+    loadNotes();
+  });
+}
+
+function deleteNote(id){
+  if (!confirm('この問いを削除しますか？元に戻せません。')) return;
+  api('/api/admin?action=notes-delete', { method: 'POST', body: JSON.stringify({ id: id }) }).then(function(res){
+    if (res.status !== 200) { alert(res.data.error || '削除に失敗しました。'); return; }
+    loadNotes();
+  });
+}
+</script>
+</body>
+</html>
