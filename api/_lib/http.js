@@ -28,11 +28,15 @@ export function blockProductionForCommunity(res, community) {
   return false;
 }
 
-// success_url等と同じ考え方: Hostヘッダー由来の値は許可したホストだけ使う（オープンリダイレクト防止）
+// success_url等と同じ考え方: Hostヘッダー由来の値は許可したホストだけ使う（オープンリダイレクト防止）。
+// 本番ドメイン（www.antagaorana.com / antagaorana.com）は固定の許可リストとして列挙する
+// （ワイルドカードにしないことで、オープンリダイレクト対策の安全性を維持する）。
+const PRODUCTION_HOSTS = new Set(['www.antagaorana.com', 'antagaorana.com']);
 export function resolveBaseUrl(req) {
   const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').toLowerCase();
   if (/^(localhost|127\.0\.0\.1)(:\d{1,5})?$/.test(host)) return `http://${host}`;
   if (/^[a-z0-9-]+\.vercel\.app$/.test(host)) return `https://${host}`;
+  if (PRODUCTION_HOSTS.has(host)) return `https://${host}`;
   return null;
 }
 
