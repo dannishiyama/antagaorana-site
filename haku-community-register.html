@@ -159,7 +159,14 @@ footer a:hover{color:rgba(255,255,255,.8)}
       <a href="./haku-community-login.html">こちらからログイン →</a>
     </div>
 
-    <p class="mock-note">※ これはPreview確認用のテスト環境です。ご入力いただいたパスワードはサーバー側でハッシュ化して保存され、平文では保存されません。決済はStripeのテストモードで行われ、実際の請求は発生しません。</p>
+    <p class="mock-note" id="test-env-notice" style="display:none">※ これはPreview確認用のテスト環境です。ご入力いただいたパスワードはサーバー側でハッシュ化して保存され、平文では保存されません。決済はStripeのテストモードで行われ、実際の請求は発生しません。</p>
+    <script>
+      (function () {
+        var PRODUCTION_HOSTS = ['www.antagaorana.com', 'antagaorana.com'];
+        var el = document.getElementById('test-env-notice');
+        if (el && PRODUCTION_HOSTS.indexOf(location.hostname) === -1) el.style.display = '';
+      })();
+    </script>
   </div>
 </div>
 

@@ -48,7 +48,14 @@ p{color:var(--mid);max-width:34em}
       <li><span class="n">02</span><span>最初の「今週の問い」<small>HAKU NOTEのお届け方法は、現在準備中です。</small></span></li>
     </ol>
 
-    <p class="test">※ これはテスト環境です。実際の請求は発生していません。</p>
+    <p class="test" id="test-env-notice" style="display:none">※ これはテスト環境です。実際の請求は発生していません。</p>
+    <script>
+      (function () {
+        var PRODUCTION_HOSTS = ['www.antagaorana.com', 'antagaorana.com'];
+        var el = document.getElementById('test-env-notice');
+        if (el && PRODUCTION_HOSTS.indexOf(location.hostname) === -1) el.style.display = '';
+      })();
+    </script>
     <a href="./haku-community-login.html" class="btn" id="backBtn">HAKU Communityに戻る</a>
   </div>
 </main>

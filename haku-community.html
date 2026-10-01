@@ -483,7 +483,16 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   <div class="narrow">
     <div class="sec-label">APPLY</div>
     <h2 class="lead">お申し込み</h2>
-    <p class="test-note"><b>テスト環境</b>実際の請求は発生しません。参加申請は運営の承認後にお支払いへ進みます。決済画面に進んだ際は、テストカード <code>4242 4242 4242 4242</code>（有効期限は未来の日付・セキュリティコードは任意の3桁）をご利用ください。</p>
+    <p class="test-note" id="test-env-notice" style="display:none"><b>テスト環境</b>実際の請求は発生しません。参加申請は運営の承認後にお支払いへ進みます。決済画面に進んだ際は、テストカード <code>4242 4242 4242 4242</code>（有効期限は未来の日付・セキュリティコードは任意の3桁）をご利用ください。</p>
+    <script>
+      // 本番ドメイン（www.antagaorana.com / antagaorana.com）では絶対に表示しない。
+      // Preview（*.vercel.app）やlocalhostなど、それ以外のホストでのみテスト環境案内を表示する。
+      (function () {
+        var PRODUCTION_HOSTS = ['www.antagaorana.com', 'antagaorana.com'];
+        var el = document.getElementById('test-env-notice');
+        if (el && PRODUCTION_HOSTS.indexOf(location.hostname) === -1) el.style.display = '';
+      })();
+    </script>
 
     <form id="apply-form" novalidate>
       <input type="hidden" name="segment" value="professional">
