@@ -70,6 +70,26 @@ h1{font-size:18px;margin-bottom:4px}
 .stub{border:1px dashed #ccc;background:#fffdf8;padding:24px;text-align:center;color:#8a8574;font-size:13px;line-height:1.9}
 .safe-setup{background:#fff;border:1px solid #ddd8cf;padding:16px;margin-bottom:16px;font-size:12.5px;color:#4a473f;line-height:1.8}
 .safe-setup button{margin-top:10px;padding:8px 16px;background:#8c692c;color:#fff;border:0;font-size:12.5px;cursor:pointer}
+/* HAKU POINT（会員カード内パネル／履歴タブ）。既存の管理画面と同じ静かな配色に揃える */
+.ptBox{margin-top:12px;padding-top:12px;border-top:1px solid #eee;font-size:12.5px;color:#4a473f}
+.ptBox .ptnow{font-size:13px;margin-bottom:10px}
+.ptBox .ptnow b{display:inline;font-size:18px;color:#33472f}
+.ptBox label{display:block;font-size:11.5px;color:#8a8574;margin:10px 0 4px}
+.ptBox input[type=text],.ptBox input[type=number]{width:100%;max-width:340px;padding:7px 10px;border:1px solid #ccc;font-size:13px;font-family:inherit}
+.ptBox .ptq{padding:4px 12px;font-size:12px;margin-right:6px;border:1px solid #ccc;background:#fff;color:#33472f;cursor:pointer;border-radius:20px}
+.ptBox .ptgo{margin-top:12px;padding:8px 18px;background:#33472f;color:#fff;border:0;font-size:13px;cursor:pointer}
+.ptBox .ptgo:disabled,.ptrow .ptrev:disabled{opacity:.5;cursor:default}
+.ptBox .ptmsg{min-height:18px;margin-top:8px;font-size:12.5px;color:#9A3B1F}
+.ptBox .ptmsg.ok{color:#2f5a3a}
+.ptBox details{margin-top:14px;font-size:12.5px}
+.ptBox summary{cursor:pointer;color:#8a8574}
+.ptBox .pthist{margin-top:14px}
+.ptBox .pthist h4{font-size:12px;color:#8a8574;font-weight:400;margin-bottom:6px}
+.ptrow{padding:7px 0;border-bottom:1px solid #f0ece2;font-size:12.5px;line-height:1.7}
+.ptrow.dim{color:#9a9588}
+.ptrow .ptdate{color:#8a8574;margin-right:6px}
+.ptrow .pmeta{color:#8a8574;font-size:11.5px}
+.ptrow .ptrev{margin-left:8px;padding:2px 10px;font-size:11.5px;border:1px solid #9A3B1F;background:#fff;color:#9A3B1F;cursor:pointer}
 </style>
 </head>
 <body>
@@ -120,7 +140,7 @@ h1{font-size:18px;margin-bottom:4px}
       <button data-mode="notes">HAKU NOTE / 今週の問い</button>
       <button data-mode="posts">みんなのことば</button>
       <button data-mode="sessions">セッション（Preview fixture）</button>
-      <button data-mode="tane">TANE（準備中）</button>
+      <button data-mode="tane">HAKU POINT</button>
       <button data-mode="audit">操作履歴</button>
     </div>
 
@@ -372,11 +392,8 @@ h1{font-size:18px;margin-bottom:4px}
     </div>
 
     <div id="tanePanel" style="display:none">
-      <div class="stub">
-        種／TANEの本格ロジック（換算率・有効期限・譲渡・紹介割合等）は、
-        元設計書で未確定のため今回は実装していません。<br>
-        残高・育てる・使う・履歴・つながりを将来実装できる器（データ構造）のみ用意されています。
-      </div>
+      <p class="note" style="margin-bottom:16px">運営が会員へ手動で付与・調整・取消したポイントの記録です（新しい順・直近100件）。付与・調整・取消は「会員一覧」→ HAKU Community → 各会員の「HAKU POINT」から行います。履歴は削除・書き換えできず、間違いは取消の履歴を追加して直します。</p>
+      <div id="pointsRecentList"><div class="empty">読み込み中…</div></div>
     </div>
 
     <div id="auditPanel" style="display:none">
@@ -555,12 +572,144 @@ function loadMembers(){
         '<div class="meta">申込日時: ' + (m.submittedAt ? new Date(m.submittedAt).toLocaleString('ja-JP') : '—') +
           (m.reviewedAt ? ' ・ 審査日時: ' + new Date(m.reviewedAt).toLocaleString('ja-JP') : '') +
           ' ・ 最終ログイン: ' + (m.lastLoginAt ? new Date(m.lastLoginAt).toLocaleString('ja-JP') : '記録なし') + '</div>' +
-        '<div class="row"><button class="detail">詳細を見る</button></div>' +
-        '<div class="detailBox" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#4a473f;white-space:pre-wrap"></div>';
+        '<div class="row"><button class="detail">詳細を見る</button>' +
+          (m.points != null ? '<button class="ptbtn">HAKU POINT ・ ' + fmtPt(m.points) + ' pt</button>' : '') + '</div>' +
+        '<div class="detailBox" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#4a473f;white-space:pre-wrap"></div>' +
+        (m.points != null ? '<div class="ptBox" style="display:none"></div>' : '');
       el.querySelector('.detail').addEventListener('click', function(){ toggleMemberDetail(m.email, el); });
+      if (m.points != null) el.querySelector('.ptbtn').addEventListener('click', function(){ togglePointPanel(m, el); });
       list.appendChild(el);
     });
   });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HAKU POINT（管理者による手動付与・調整・取消）
+// 保存・検証・二重操作防止はサーバー側（台帳）が行う。ここは入力と表示だけ。
+// 操作IDは画面を開いた時点で1つ発行し、成功するまで同じIDを使い続ける
+// （二重クリック・通信の再送でも、サーバー側で1回分としてしか記録されない）。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function fmtPt(n){ return Number(n || 0).toLocaleString('ja-JP'); }
+function newRequestId(){
+  return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('r' + Date.now() + Math.random().toString(36).slice(2, 10));
+}
+var PT_KIND_LABEL = { admin_grant: '付与', admin_adjust: '調整', admin_reversal: '取消' };
+
+function pointRowHtml(e, showEmail){
+  var sign = e.delta > 0 ? '+' : '';
+  var dim = (e.kind === 'admin_reversal' || e.reversed) ? ' dim' : '';
+  var canReverse = !e.reversed && (e.kind === 'admin_grant' || e.kind === 'admin_adjust');
+  return '<div class="ptrow' + dim + '">' +
+    '<span class="ptdate">' + escapeHtml(new Date(e.createdAt).toLocaleString('ja-JP')) + '</span>' +
+    '<b style="display:inline">' + sign + fmtPt(e.delta) + ' pt</b> ' +
+    '<span>' + escapeHtml(PT_KIND_LABEL[e.kind] || e.kind) + (e.reversed ? '（取消済み）' : '') + '</span>' +
+    (e.reason ? ' ・ ' + escapeHtml(e.reason) : '') +
+    '<div class="pmeta">' + (showEmail ? escapeHtml(e.email) + ' ・ ' : '') +
+      (e.balanceAfter != null ? '残高 ' + fmtPt(e.balanceAfter) + ' pt ・ ' : '') + '操作: ' + escapeHtml(e.actorId) +
+      (canReverse && !showEmail ? '<button class="ptrev" data-id="' + escapeHtml(e.id) + '">取消</button>' : '') + '</div>' +
+    '</div>';
+}
+
+function togglePointPanel(m, card){
+  var box = card.querySelector('.ptBox');
+  if (box.style.display === 'block') { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  renderPointPanel(m, card, box, '');
+}
+
+function renderPointPanel(m, card, box, flash){
+  box.innerHTML = '<div class="meta">読み込み中…</div>';
+  api('/api/admin?action=points-member&email=' + encodeURIComponent(m.email), { method: 'GET' }).then(function(res){
+    if (res.status === 401) { box.innerHTML = '<div class="ptmsg">ログインの有効期限が切れました。ページを再読み込みしてログインし直してください。</div>'; return; }
+    if (res.status !== 200) { box.innerHTML = '<div class="ptmsg">' + escapeHtml(res.data.error || '読み込みに失敗しました。') + '</div>'; return; }
+    var d = res.data;
+    m.points = d.balance;
+    var btn = card.querySelector('.ptbtn');
+    if (btn) btn.textContent = 'HAKU POINT ・ ' + fmtPt(d.balance) + ' pt';
+    var name = m.fullName || m.email;
+    var ids = { grant: newRequestId(), adjust: newRequestId() };
+
+    box.innerHTML =
+      '<div class="ptnow">現在ポイント <b>' + fmtPt(d.balance) + '</b> pt</div>' +
+      '<label>付与するポイント数</label>' +
+      '<div style="margin-bottom:6px"><button type="button" class="ptq" data-v="100">+100</button><button type="button" class="ptq" data-v="500">+500</button></div>' +
+      '<input type="number" class="ptamt" min="1" step="1" inputmode="numeric" placeholder="例：300">' +
+      '<label>理由（任意。会員本人の履歴にも表示されます）</label>' +
+      '<input type="text" class="ptreason" maxlength="200" placeholder="例：HAKU MORNINGの運営お手伝いへの感謝">' +
+      '<div><button type="button" class="ptgo ptgrant">ポイントを付与する</button></div>' +
+      '<div class="ptmsg' + (flash ? ' ok' : '') + '">' + escapeHtml(flash || '') + '</div>' +
+      '<details><summary>調整（誤って付与した場合の訂正など）</summary>' +
+        '<label>調整するポイント数（減らす場合はマイナス。例：-100）</label>' +
+        '<input type="number" class="ptadj" step="1" inputmode="numeric" placeholder="例：-100">' +
+        '<label>理由（必須。会員本人の履歴にも表示されます）</label>' +
+        '<input type="text" class="ptadjreason" maxlength="200" placeholder="例：付与数の入力ミスの訂正">' +
+        '<div><button type="button" class="ptgo ptadjust">調整する</button></div>' +
+        '<div class="ptmsg ptadjmsg"></div>' +
+      '</details>' +
+      '<div class="pthist"><h4>履歴（新しい順）</h4>' +
+        ((d.entries && d.entries.length) ? d.entries.map(function(e){ return pointRowHtml(e, false); }).join('') : '<div class="meta">まだ履歴がありません。</div>') +
+      '</div>';
+
+    var msgEl = box.querySelector('.ptmsg');
+    var adjMsg = box.querySelector('.ptadjmsg');
+    function fail(el, res2){
+      el.className = el.className.replace(' ok', '');
+      el.textContent = res2 && res2.status === 401
+        ? 'ログインの有効期限が切れました。ページを再読み込みしてログインし直してください。'
+        : ((res2 && res2.data && res2.data.error) || '通信に失敗しました。もう一度お試しください。');
+    }
+    function send(action, payload, btnEl, msgTarget, okText){
+      btnEl.disabled = true;
+      msgTarget.textContent = '';
+      api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify(payload) }).then(function(res2){
+        if (res2.status !== 200) { btnEl.disabled = false; fail(msgTarget, res2); return; }
+        renderPointPanel(m, card, box, okText(res2.data));
+      }).catch(function(){ btnEl.disabled = false; fail(msgTarget, null); });
+    }
+
+    box.querySelectorAll('.ptq').forEach(function(q){
+      q.addEventListener('click', function(){ box.querySelector('.ptamt').value = q.dataset.v; });
+    });
+    box.querySelector('.ptgrant').addEventListener('click', function(ev){
+      var amt = box.querySelector('.ptamt').value.trim();
+      if (!/^[0-9]+$/.test(amt) || Number(amt) < 1) { fail(msgEl, { data: { error: '付与するポイント数は1以上の整数で入力してください。' } }); return; }
+      if (!confirm(name + ' さんに ' + fmtPt(amt) + ' pt を付与します。よろしいですか？')) return;
+      send('points-grant', { email: m.email, amount: Number(amt), reason: box.querySelector('.ptreason').value.trim(), requestId: ids.grant },
+        ev.currentTarget, msgEl, function(data){ return fmtPt(amt) + ' pt を付与しました（現在 ' + fmtPt(data.balance) + ' pt）。'; });
+    });
+    box.querySelector('.ptadjust').addEventListener('click', function(ev){
+      var amt = box.querySelector('.ptadj').value.trim();
+      var reason = box.querySelector('.ptadjreason').value.trim();
+      if (!/^-?[0-9]+$/.test(amt) || Number(amt) === 0) { fail(adjMsg, { data: { error: '調整するポイント数は0以外の整数で入力してください。' } }); return; }
+      if (!reason) { fail(adjMsg, { data: { error: '調整の理由を入力してください。' } }); return; }
+      if (!confirm(name + ' さんのポイントを ' + (Number(amt) > 0 ? '+' : '') + fmtPt(amt) + ' pt 調整します。よろしいですか？')) return;
+      send('points-adjust', { email: m.email, amount: Number(amt), reason: reason, requestId: ids.adjust },
+        ev.currentTarget, adjMsg, function(data){ return (Number(amt) > 0 ? '+' : '') + fmtPt(amt) + ' pt 調整しました（現在 ' + fmtPt(data.balance) + ' pt）。'; });
+    });
+    box.querySelectorAll('.ptrev').forEach(function(r){
+      r.addEventListener('click', function(){
+        var reason = prompt('この履歴を取り消します。取り消しの理由を入力してください（会員本人の履歴にも表示されます）。');
+        if (reason == null) return;
+        reason = reason.trim();
+        if (!reason) { alert('理由を入力してください。'); return; }
+        r.disabled = true;
+        api('/api/admin?action=points-reverse', { method: 'POST', body: JSON.stringify({ entryId: r.dataset.id, reason: reason, requestId: newRequestId() }) }).then(function(res2){
+          if (res2.status !== 200) { r.disabled = false; alert((res2.data && res2.data.error) || '取消に失敗しました。'); return; }
+          renderPointPanel(m, card, box, '取り消しました（現在 ' + fmtPt(res2.data.balance) + ' pt）。');
+        }).catch(function(){ r.disabled = false; alert('通信に失敗しました。もう一度お試しください。'); });
+      });
+    });
+  }).catch(function(){ box.innerHTML = '<div class="ptmsg">通信に失敗しました。もう一度お試しください。</div>'; });
+}
+
+function loadPointsRecent(){
+  var list = document.getElementById('pointsRecentList');
+  list.innerHTML = '<div class="empty">読み込み中…</div>';
+  api('/api/admin?action=points-recent', { method: 'GET' }).then(function(res){
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    var entries = res.data.entries || [];
+    list.innerHTML = entries.length ? entries.map(function(e){ return pointRowHtml(e, true); }).join('') : '<div class="empty">まだポイントの履歴がありません。</div>';
+  }).catch(function(){ list.innerHTML = '<div class="empty">通信に失敗しました。</div>'; });
 }
 
 function toggleMemberDetail(email, el){
@@ -652,6 +801,7 @@ document.querySelectorAll('.modetabs button').forEach(function(btn){
     if (mode === 'notes') loadNotes();
     if (mode === 'posts') loadPosts();
     if (mode === 'audit') loadAuditLog();
+    if (mode === 'tane') loadPointsRecent();
     if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
   });
 });

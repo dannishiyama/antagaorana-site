@@ -264,6 +264,17 @@ a{color:inherit;text-decoration:none}
 .tane-hero .memo{font-size:11.5px;color:rgba(247,240,230,.55);margin-top:10px;line-height:1.8}
 .stub{border:1px dashed rgba(42,74,62,.25);background:var(--green-pale);border-radius:var(--r);padding:20px;text-align:center;color:var(--text-mid);font-size:12.5px;line-height:1.9}
 .haku-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+/* HAKU POINT（MY HAKU内の静かな表示。ランキング・他会員の情報は一切持たない） */
+.point-quiet{margin:6px 0 24px;padding:16px 4px 0;border-top:1px solid rgba(42,74,62,.12);text-align:center}
+.point-quiet .pq-label{font-size:11px;letter-spacing:.14em;color:var(--text-soft)}
+.point-quiet .pq-now{margin-top:4px;font-family:'Noto Serif JP',serif;font-size:14px;color:var(--text-mid)}
+.point-quiet .pq-now b{font-size:20px;font-weight:700;color:var(--green);margin:0 3px}
+.point-quiet .pq-link{margin-top:6px;background:none;border:0;padding:4px 8px;font-size:12px;color:var(--text-soft);text-decoration:underline;cursor:pointer;font-family:inherit}
+.point-quiet .pq-history{margin-top:10px;text-align:left}
+.pq-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 2px;border-bottom:1px solid rgba(0,0,0,.05);font-size:13px;color:var(--text-mid);line-height:1.6}
+.pq-row .pq-date{font-size:11px;color:var(--text-soft)}
+.pq-row .pq-delta{white-space:nowrap;font-family:'Noto Serif JP',serif;color:var(--text)}
+.pq-empty,.pq-more{padding:14px 4px;text-align:center;font-size:12.5px;color:var(--text-soft);line-height:1.8}
 .haku-stat{background:var(--white);border-radius:14px;padding:14px 8px;text-align:center;box-shadow:var(--sh-s)}
 .haku-stat b{display:block;font-family:'Noto Serif JP',serif;font-size:19px;font-weight:900;color:var(--green)}
 .haku-stat .soon{font-size:9px;color:var(--text-soft);display:block;margin-top:2px}
@@ -467,6 +478,14 @@ a{color:inherit;text-decoration:none}
         <div class="haku-stat"><b>―<span class="soon">近日公開</span></b><span class="lbl">つないだ仲間</span></div>
         <div class="haku-stat"><b>―<span class="soon">近日公開</span></b><span class="lbl">累計TANE</span></div>
         <div class="haku-stat"><b id="myHakuSince">—</b><span class="lbl">HAKU歴</span></div>
+      </div>
+
+      <!-- HAKU POINT：本人の現在ポイントと履歴のみ。付与条件の説明・ランキング・他会員のポイントは表示しない -->
+      <div class="point-quiet" id="pointBlock">
+        <div class="pq-label">HAKU POINT</div>
+        <div class="pq-now">現在 <b id="pointNow">―</b> pt</div>
+        <button class="pq-link" id="pointHistoryBtn" type="button" onclick="togglePointHistory()">履歴を見る</button>
+        <div class="pq-history" id="pointHistory" hidden></div>
       </div>
 
       <!-- 今の目標（旧・独立タブ「行動目標」を統合。既存の目標/スタンプ機能・データはそのまま） -->
@@ -1283,6 +1302,35 @@ document.getElementById('composerBody').addEventListener('input', function(){ do
 /* ══════════════════════════════════════════════
    マイページ（プロフィール変更・MY HAKU統計）
    ══════════════════════════════════════════════ */
+/* ── HAKU POINT（自分の現在ポイントと履歴だけ。読み込みに失敗してもマイページ全体は壊さない） ── */
+let pointData = null;
+async function loadPoints(){
+  const nowEl = document.getElementById('pointNow');
+  try {
+    const res = await api('/api/community-auth?action=points-me', { method: 'GET' });
+    if (res.status !== 200 || !res.data.ok) { nowEl.textContent = '―'; return; }
+    pointData = res.data;
+    nowEl.textContent = Number(res.data.balance || 0).toLocaleString('ja-JP');
+    if (!document.getElementById('pointHistory').hidden) renderPointHistory();
+  } catch (e) { nowEl.textContent = '―'; }
+}
+function renderPointHistory(){
+  const box = document.getElementById('pointHistory');
+  const entries = (pointData && pointData.entries) || [];
+  if (!entries.length) { box.innerHTML = '<div class="pq-empty">まだ履歴はありません。</div>'; return; }
+  box.innerHTML = entries.map((e) =>
+    '<div class="pq-row"><div><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '</div>' +
+    '<div class="pq-date">' + esc(fmtDate(e.createdAt)) + '</div></div>' +
+    '<div class="pq-delta">' + (e.delta > 0 ? '+' : '') + Number(e.delta).toLocaleString('ja-JP') + ' pt</div></div>'
+  ).join('') + (pointData.hasMore ? '<div class="pq-more">直近' + entries.length + '件を表示しています。</div>' : '');
+}
+function togglePointHistory(){
+  const box = document.getElementById('pointHistory');
+  const btn = document.getElementById('pointHistoryBtn');
+  if (box.hidden) { renderPointHistory(); box.hidden = false; btn.textContent = '履歴を閉じる'; }
+  else { box.hidden = true; btn.textContent = '履歴を見る'; }
+}
+
 async function loadProfile(){
   const res = await api('/api/community-auth?action=me', { method: 'GET' });
   if (res.status !== 200 || !res.data.ok) return;
@@ -1309,6 +1357,7 @@ async function loadProfile(){
     cancelBox.style.display = 'none';
   }
 
+  loadPoints();
   loadMyNotesPreview();
 }
 async function loadMyNotesPreview(){

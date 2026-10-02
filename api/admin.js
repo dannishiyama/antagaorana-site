@@ -26,6 +26,11 @@
  * POST /api/admin?action=reset-test-member    { email, confirm }  （Preview限定・super_admin限定）
  * POST /api/admin?action=approve                { community, email }
  * POST /api/admin?action=reject                 { community, email }
+ * GET  /api/admin?action=points-member&email=...     （HAKU POINT：会員1人の現在ポイントと全履歴）
+ * GET  /api/admin?action=points-recent                   （HAKU POINT：全会員の直近の履歴）
+ * POST /api/admin?action=points-grant   { email, amount, reason?, requestId }   （手動付与。管理者）
+ * POST /api/admin?action=points-adjust  { email, amount(±), reason, requestId } （調整。super_admin）
+ * POST /api/admin?action=points-reverse { entryId, reason, requestId }           （取消。super_admin）
  * GET  /api/admin?action=audit-log
  * GET  /api/admin?action=events-list
  * POST /api/admin?action=events-create          { title, type, startsAt, location, capacity, fee, itemsToBring, description }
@@ -58,6 +63,7 @@ import {
 } from './_lib/store.js';
 import { randomToken, hashPassword, verifyPassword } from './_lib/security.js';
 import { createHakuCheckoutSession } from './_lib/stripe-checkout.js';
+import { grantPoints, adjustPoints, reversePoints, getBalance, getAdminMemberView, listRecent, PointError } from './_lib/points.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { sendPasswordSetupEmail, sendRejectionEmail, sendApprovalEmail, sendAdminSetupEmail } from './_lib/notify.js';
 
@@ -143,6 +149,28 @@ export default async function handler(req, res) {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await requireAdminHere(req, res); if (!session) return;
       return await handleMemberDetail(req, res);
+    }
+    // HAKU POINT（管理者による手動付与・調整・取消。会員本人の画面は api/community-auth.js の points-me）。
+    // 閲覧はログイン済みの管理者、付与も管理者。調整・取消は最上位の管理者（super_admin）のみ。
+    if (action === 'points-member') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireAdminHere(req, res); if (!session) return;
+      return await handlePointsMember(req, res);
+    }
+    if (action === 'points-recent') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireAdminHere(req, res); if (!session) return;
+      return res.status(200).json({ ok: true, entries: await listRecent(100) });
+    }
+    if (action === 'points-grant' || action === 'points-adjust' || action === 'points-reverse') {
+      if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+      if (!checkOrigin(req)) return res.status(403).json({ error: 'Invalid origin' });
+      const session = await requireAdminHere(req, res); if (!session) return;
+      if (action !== 'points-grant' && session.role !== 'super_admin') {
+        return res.status(403).json({ error: 'ポイントの調整・取消には最上位の管理者権限が必要です。' });
+      }
+      if (!(await rateLimitGuard(req, res, { key: 'admin-points', limit: 60, windowSeconds: 15 * 60 }))) return;
+      return await handlePointsWrite(req, res, session, action);
     }
     if (action === 'reset-test-member') {
       if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -383,6 +411,7 @@ async function handleMembersList(req, res) {
       reviewedAt: app.reviewedAt,
       reviewedBy: app.reviewedBy,
       lastLoginAt: user?.lastLoginAt || null,
+      points: community === 'haku' ? await getBalance(app.email) : null,
     };
   }));
 
@@ -400,6 +429,45 @@ async function handleMembersList(req, res) {
   filtered.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
 
   return res.status(200).json({ ok: true, community, status: filter, members: filtered });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// HAKU POINT（管理画面側）。保存・検証・二重操作防止は api/_lib/points.js（台帳）が担当し、
+// ここでは「管理者かどうか」「対象がHAKU会員か」の確認と応答の整形だけを行う。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function respondPointError(res, err) {
+  if (err instanceof PointError) return res.status(err.status).json({ error: err.message, code: err.code });
+  throw err;
+}
+
+async function handlePointsMember(req, res) {
+  const email = String(req.query?.email || '').trim().toLowerCase();
+  if (!email) return res.status(400).json({ error: 'メールアドレスを指定してください。' });
+  const membership = await getMembership('haku', email);
+  if (!membership) return res.status(404).json({ error: '対象のHAKU Community会員が見つかりません。' });
+  const view = await getAdminMemberView(email);
+  return res.status(200).json({ ok: true, email, membershipStatus: membership.status, ...view });
+}
+
+async function handlePointsWrite(req, res, session, action) {
+  const body = typeof req.body === 'object' && req.body !== null ? req.body : {};
+  const actorId = session.actorId;
+  try {
+    let result;
+    if (action === 'points-reverse') {
+      result = await reversePoints({ entryId: body.entryId, reason: body.reason, requestId: body.requestId, actorId });
+    } else {
+      const email = String(body.email || '').trim().toLowerCase();
+      if (!email) return res.status(400).json({ error: '対象会員を指定してください。' });
+      const membership = await getMembership('haku', email);
+      if (!membership) return res.status(404).json({ error: '対象のHAKU Community会員が見つかりません。' });
+      const fn = action === 'points-grant' ? grantPoints : adjustPoints;
+      result = await fn({ email, amount: body.amount, reason: body.reason, requestId: body.requestId, actorId });
+    }
+    return res.status(200).json({ ok: true, duplicate: result.duplicate, entry: result.entry, balance: result.balance });
+  } catch (err) {
+    return respondPointError(res, err);
+  }
 }
 
 // 会員詳細：同一emailについて、両コミュニティ（haku/灯）のApplication・Membershipと

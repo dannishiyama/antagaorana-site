@@ -14,6 +14,7 @@
  * POST /api/community-auth?action=change-email            { currentPassword, newEmail }
  * POST /api/community-auth?action=cancel-membership       {}（HAKU限定。Stripe subscriptionをcancel_at_period_end=trueにし、Membershipをcancelingへ）
  * POST /api/community-auth?action=withdraw                 { community }
+ * GET  /api/community-auth?action=points-me                （HAKU POINT：自分の現在ポイントと履歴のみ）
  * GET  /api/community-auth?action=events-list
  * POST /api/community-auth?action=events-join               { eventId }
  * POST /api/community-auth?action=events-leave              { eventId }
@@ -48,6 +49,7 @@ import {
   getCurrentHakuNote, listPastHakuNotes, countPastHakuNotes,
 } from './_lib/store.js';
 import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
+import { getMemberView } from './_lib/points.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { notifyAdminOfApplication, sendPasswordSetupEmail, sendApplicationReceivedEmail, sendCancellationScheduledEmail, sendEmailChangedEmail } from './_lib/notify.js';
 
@@ -99,6 +101,13 @@ export default async function handler(req, res) {
     if (action === 'me') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       return await handleMe(req, res);
+    }
+    // HAKU POINT：会員本人が「自分の」現在ポイントと履歴だけを見る。ランキング・他会員の情報は返さない。
+    // 付与・調整・取消のAPIは管理者専用（api/admin.js）で、この会員用APIには存在しない。
+    if (action === 'points-me') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return res.status(200).json({ ok: true, ...(await getMemberView(session.email, { limit: 50 })) });
     }
     if (action === 'events-list') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
