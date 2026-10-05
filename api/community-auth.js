@@ -47,7 +47,10 @@ import {
   renameGoalFixtureEmail, renameSessionFixtureEmail,
   listPublishedWords, countPublishedWords,
   getCurrentHakuNote, listPastHakuNotes, countPastHakuNotes,
+  claimIdempotentOp, completeIdempotentOp, releaseIdempotentOp,
 } from './_lib/store.js';
+import { computeEventState, joinBlockReason, JOIN_BLOCK_MESSAGES, isEventPast } from './_lib/event-state.js';
+import { cleanUserText, hasInvalidChars, isDisplayablePost, normalizeRequestId } from './_lib/text-safety.js';
 import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
 import { getMemberView } from './_lib/points.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
@@ -559,25 +562,17 @@ async function handleMe(req, res) {
 // イベント（HAKU MORNING / HAKU MEET / ボランティア）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// 表示用ステータス: 終了 / 参加予定 / 満席 / 募集中（この優先順で判定する）。
-function eventStatusLabel({ isPast, joined, full }) {
-  if (isPast) return 'ended';
-  if (joined) return 'registered';
-  if (full) return 'full';
-  return 'open';
-}
-
+// 状態の判定（中止／開催済み／参加予定／受付終了／満席／受付中）は api/_lib/event-state.js に集約。
+// 画面の見た目と、参加・取消APIの実際の挙動を同じ関数で揃えている。
 async function handleEventsList(req, res, session) {
   const events = await listEvents('haku');
-  const now = Date.now();
+  const nowMs = Date.now();
   const enriched = await Promise.all(events.map(async (e) => {
     const [participantCount, joined] = await Promise.all([
       countEventParticipants(e.id),
       isEventParticipant(e.id, session.email),
     ]);
-    const startsAtMs = e.startsAt ? new Date(e.startsAt).getTime() : null;
-    const isPast = startsAtMs != null && !Number.isNaN(startsAtMs) && startsAtMs < now;
-    const full = e.capacity != null && participantCount >= e.capacity && !joined;
+    const { state, isPast, full, registration } = computeEventState({ event: e, participantCount, joined, nowMs });
     return {
       id: e.id,
       type: e.type,
@@ -592,32 +587,43 @@ async function handleEventsList(req, res, session) {
       participantCount,
       full,
       joined,
-      status: eventStatusLabel({ isPast, joined, full }),
+      registration,
+      state,
     };
   }));
   return res.status(200).json({ ok: true, events: enriched });
 }
 
-// 定員判定とSADDをRedis側で原子的に行う（joinEventAtomic）ため、連打・同時アクセスで
-// 定員を超えて登録される心配がない。
+// 参加の流れ：すでに参加済みなら何もせず成功（連打・再送でも二重登録されない）→
+// 中止・開催済み・受付終了は断る → 定員判定とSADDをRedis側で原子的に行う（joinEventAtomic）ため、
+// 同時アクセスでも定員を超えて登録されない。
 async function handleEventsJoin(req, res, body, session) {
   const eventId = String(body.eventId || '').trim();
   if (!eventId) return res.status(400).json({ error: 'イベントを指定してください。' });
   const event = await getEvent(eventId);
   if (!event || event.community !== 'haku') return res.status(404).json({ error: 'イベントが見つかりません。' });
 
+  if (await isEventParticipant(eventId, session.email)) return res.status(200).json({ ok: true, alreadyJoined: true });
+  const blocked = joinBlockReason(event);
+  if (blocked) return res.status(409).json({ error: JOIN_BLOCK_MESSAGES[blocked], code: blocked });
+
   const result = await joinEventAtomic(eventId, session.email, event.capacity);
   if (result === 'already') return res.status(200).json({ ok: true, alreadyJoined: true });
-  if (result === 'full') return res.status(409).json({ error: '満席のため参加できません。' });
+  if (result === 'full') return res.status(409).json({ error: '満席のため参加できません。', code: 'full' });
   await logAudit({ actorId: session.email, action: 'event_joined', targetId: eventId, metadata: { targetType: 'Event' } });
   return res.status(200).json({ ok: true });
 }
 
+// 開催済みの集まりは取り消せない（参加の記録として残す）。参加していない人の取消は何もせず成功。
+// キャンセル期限は未決定のため設けていない（開始前ならいつでも取り消せる）。
 async function handleEventsLeave(req, res, body, session) {
   const eventId = String(body.eventId || '').trim();
   if (!eventId) return res.status(400).json({ error: 'イベントを指定してください。' });
   const event = await getEvent(eventId);
   if (!event || event.community !== 'haku') return res.status(404).json({ error: 'イベントが見つかりません。' });
+
+  if (!(await isEventParticipant(eventId, session.email))) return res.status(200).json({ ok: true, alreadyLeft: true });
+  if (isEventPast(event)) return res.status(409).json({ error: 'この集まりは開催済みのため、取り消せません。', code: 'ended' });
 
   await leaveEvent(eventId, session.email);
   await logAudit({ actorId: session.email, action: 'event_left', targetId: eventId, metadata: { targetType: 'Event' } });
@@ -632,9 +638,14 @@ async function handleEventsLeave(req, res, body, session) {
 const POST_BODY_MAX = 1000;
 const POST_TITLE_MAX = 60;
 
+// 入口の安全化：制御文字・双方向制御文字を除き、文字化け（置換文字）を含む文章は保存を断る。
+// 画面に出すときのHTMLエスケープは、画面側が別途かならず行う（二重の守り）。
 function validatePostFields(body) {
-  const title = String(body.title || '').trim().slice(0, POST_TITLE_MAX);
-  const text = String(body.body || '').trim();
+  const rawTitle = String(body.title || '');
+  const rawBody = String(body.body || '');
+  if (hasInvalidChars(rawTitle) || hasInvalidChars(rawBody)) return { error: '使用できない文字（文字化け）が含まれています。入力し直してください。' };
+  const title = cleanUserText(rawTitle).slice(0, POST_TITLE_MAX);
+  const text = cleanUserText(rawBody);
   const category = String(body.category || '').trim();
   if (!text) return { error: '本文を入力してください。' };
   if (text.length > POST_BODY_MAX) return { error: `本文は${POST_BODY_MAX}文字以内でご入力ください。` };
@@ -661,7 +672,8 @@ async function resolvePostAuthors(posts) {
 
 async function handlePostsList(req, res, session) {
   const limit = Math.min(Math.max(parseInt(req.query?.limit, 10) || 20, 1), 50);
-  const posts = await listPublishedPosts('haku', limit);
+  // 文字化けした投稿（過去に保存されたものを含む）は会員の一覧に出さない。
+  const posts = (await listPublishedPosts('haku', limit + 20)).filter(isDisplayablePost).slice(0, limit);
   const resolved = await resolvePostAuthors(posts);
   // 自分の投稿だけ編集・削除可能にするため isMine を付与する（他人の投稿には触れない）。
   const withOwnership = resolved.map((p, i) => ({ ...p, isMine: posts[i].authorEmail === session.email }));
@@ -669,18 +681,34 @@ async function handlePostsList(req, res, session) {
 }
 
 async function handlePostsMine(req, res, session) {
-  const posts = await listPostsByAuthor('haku', session.email);
+  const posts = (await listPostsByAuthor('haku', session.email)).filter(isDisplayablePost);
   const resolved = await resolvePostAuthors(posts);
   const withStatus = resolved.map((p, i) => ({ ...p, isMine: true, status: posts[i].status }));
   return res.status(200).json({ ok: true, posts: withStatus, categories: POST_CATEGORIES.map((c) => ({ value: c, label: POST_CATEGORY_LABELS[c] })) });
 }
 
+// 二重送信防止：画面が1回の「残す」操作ごとに作る requestId を受け取り、同じ requestId での
+// 2回目以降は新しい投稿を作らず、1回目の結果を返す（通信が不安定で再送されても1件だけ）。
 async function handlePostsCreate(req, res, body, session) {
   const validated = validatePostFields(body);
   if (validated.error) return res.status(400).json({ error: validated.error });
-  const post = await createPost('haku', { authorEmail: session.email, ...validated });
-  await logAudit({ actorId: session.email, action: 'post_created', targetId: post.id });
-  return res.status(200).json({ ok: true, id: post.id });
+
+  const requestId = normalizeRequestId(body.requestId);
+  const scope = `post-create:${String(session.email).toLowerCase()}`;
+  if (requestId) {
+    const claim = await claimIdempotentOp(scope, requestId);
+    if (claim.status === 'done') return res.status(200).json({ ok: true, id: claim.value, duplicate: true });
+    if (claim.status === 'pending') return res.status(200).json({ ok: true, duplicate: true });
+  }
+  try {
+    const post = await createPost('haku', { authorEmail: session.email, ...validated });
+    if (requestId) await completeIdempotentOp(scope, requestId, post.id);
+    await logAudit({ actorId: session.email, action: 'post_created', targetId: post.id });
+    return res.status(200).json({ ok: true, id: post.id });
+  } catch (err) {
+    if (requestId) await releaseIdempotentOp(scope, requestId).catch(() => {});
+    throw err;
+  }
 }
 
 async function handlePostsUpdate(req, res, body, session) {
@@ -864,12 +892,40 @@ async function handleGoalsList(req, res, session) {
   return res.status(200).json({ ok: true, goals, month });
 }
 
+// 今月の約束は最大3つまで（追加時のみ判定。すでに4つ以上ある場合も、既存分はそのまま残る）。
+// 同じ文言の約束は重ねて作らず、二重送信（同じ requestId）も1件だけにする。
+const GOALS_PER_MONTH_MAX = 3;
+
 async function handleGoalsAdd(req, res, body, session) {
-  const text = String(body.text || '').trim();
-  if (!text) return res.status(400).json({ error: '目標を入力してください。' });
-  if (text.length > 100) return res.status(400).json({ error: '目標は100文字以内でご入力ください。' });
-  const goal = await createGoalFixture(session.email, text);
-  return res.status(200).json({ ok: true, goal });
+  const rawText = String(body.text || '');
+  if (hasInvalidChars(rawText)) return res.status(400).json({ error: '使用できない文字（文字化け）が含まれています。入力し直してください。' });
+  const text = cleanUserText(rawText).replace(/\n+/g, ' ');
+  if (!text) return res.status(400).json({ error: '約束を入力してください。' });
+  if (text.length > 100) return res.status(400).json({ error: '約束は100文字以内でご入力ください。' });
+
+  const requestId = normalizeRequestId(body.requestId);
+  const scope = `goal-add:${String(session.email).toLowerCase()}`;
+  if (requestId) {
+    const claim = await claimIdempotentOp(scope, requestId);
+    if (claim.status !== 'new') return res.status(200).json({ ok: true, duplicate: true });
+  }
+  try {
+    const existing = await listGoalFixtures(session.email, currentYYYYMM());
+    if (existing.some((g) => g.text === text)) {
+      if (requestId) await releaseIdempotentOp(scope, requestId).catch(() => {});
+      return res.status(409).json({ error: 'すでに同じ約束があります。', code: 'duplicate' });
+    }
+    if (existing.length >= GOALS_PER_MONTH_MAX) {
+      if (requestId) await releaseIdempotentOp(scope, requestId).catch(() => {});
+      return res.status(409).json({ error: `今月の約束は${GOALS_PER_MONTH_MAX}つまでです。`, code: 'limit' });
+    }
+    const goal = await createGoalFixture(session.email, text);
+    if (requestId) await completeIdempotentOp(scope, requestId, goal.id);
+    return res.status(200).json({ ok: true, goal });
+  } catch (err) {
+    if (requestId) await releaseIdempotentOp(scope, requestId).catch(() => {});
+    throw err;
+  }
 }
 
 async function handleGoalsToggleStamp(req, res, body, session) {
@@ -879,8 +935,10 @@ async function handleGoalsToggleStamp(req, res, body, session) {
   // 「未来日は押せない」判定はUI側（クライアントのローカル日時基準）に委ねる。
   // サーバー（UTC）とクライアント（JST想定）の時刻がずれるため、ここでは
   // サーバー時計を基準にした未来日拒否をしない（本番Firestore版も同様にクライアント任せ）。
-  const goal = await toggleGoalStampFixture(session.email, goalId, day);
-  if (!goal) return res.status(404).json({ error: '目標が見つかりません。' });
+  // done を明示して送る呼び出しは「その状態にする」（連打・再送で二重に反転しない）。省略時は従来どおり反転。
+  const desired = typeof body.done === 'boolean' ? body.done : undefined;
+  const goal = await toggleGoalStampFixture(session.email, goalId, day, desired);
+  if (!goal) return res.status(404).json({ error: '約束が見つかりません。' });
   return res.status(200).json({ ok: true, goal });
 }
 

@@ -32,6 +32,11 @@ export function getRedis() {
   return client;
 }
 
+// ユニットテスト専用：メモリ上のRedisモックを差し込む（本番コードからは呼ばない）。
+export function __setRedisForTests(mockClient) {
+  client = mockClient;
+}
+
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
@@ -401,11 +406,35 @@ export async function checkRateLimit(key, limit, windowSeconds) {
   }
 }
 
+// ── 二重送信防止（クライアントが1回の操作ごとに作る「操作ID」の先着確保） ──
+// 同じ操作ID（同じ会員・同じ種類）での2回目以降は、新しく作らず1回目の結果を返すために使う。
+// 戻り値: { status: 'new' }（初回。続けて処理し、完了時に completeIdempotentOp）
+//       | { status: 'pending' }（同じ操作が処理中）
+//       | { status: 'done', value }（処理済み。valueは1回目の結果ID）
+// 途中で異常終了しても詰まらないよう、処理中の印は120秒で自動的に消える。
+export async function claimIdempotentOp(scope, requestId) {
+  const key = `${PREFIX}idem:${scope}:${requestId}`;
+  const ok = await getRedis().set(key, 'pending', 'EX', 120, 'NX');
+  if (ok === 'OK') return { status: 'new' };
+  const v = await getRedis().get(key);
+  return v && v !== 'pending' ? { status: 'done', value: v } : { status: 'pending' };
+}
+
+export async function completeIdempotentOp(scope, requestId, value) {
+  await getRedis().set(`${PREFIX}idem:${scope}:${requestId}`, String(value), 'EX', 24 * 60 * 60);
+}
+
+export async function releaseIdempotentOp(scope, requestId) {
+  await getRedis().del(`${PREFIX}idem:${scope}:${requestId}`);
+}
+
 // ══════════════════════════════════════════════════════════════════════
 // EVENT（HAKU MORNING / HAKU MEET / ボランティア等）
 // Preview: Redis実装のみ。将来Postgres移行時はUser/Application等と同様に
 // swappableな設計へ寄せる想定だが、v1（50人規模）はRedisで十分なため見送る。
 // ══════════════════════════════════════════════════════════════════════
+export const EVENT_REGISTRATION_VALUES = ['open', 'closed', 'cancelled'];
+
 export async function createEvent(community, fields) {
   const id = `${Date.now()}_${randomToken(4)}`;
   const startsAtMs = fields.startsAt ? new Date(fields.startsAt).getTime() : NaN;
@@ -420,6 +449,9 @@ export async function createEvent(community, fields) {
     capacity: Number.isFinite(Number(fields.capacity)) && fields.capacity !== '' ? Number(fields.capacity) : null,
     fee: fields.fee || '',
     itemsToBring: fields.itemsToBring || '',
+    // 受付状況（運営が手動で切り替える）: open=受付中 / closed=受付終了 / cancelled=中止。
+    // 開始時刻の経過による「開催済み」は保存せず、表示のたびに開始時刻から判定する。
+    registration: EVENT_REGISTRATION_VALUES.includes(fields.registration) ? fields.registration : 'open',
     createdAt: Date.now(),
     createdBy: fields.createdBy || null,
   };
@@ -547,6 +579,9 @@ export async function updateEvent(id, fields) {
   });
   if (fields.capacity !== undefined) {
     updated.capacity = Number.isFinite(Number(fields.capacity)) && fields.capacity !== '' ? Number(fields.capacity) : null;
+  }
+  if (fields.registration !== undefined && EVENT_REGISTRATION_VALUES.includes(fields.registration)) {
+    updated.registration = fields.registration;
   }
   if (fields.startsAt !== undefined) {
     updated.startsAt = fields.startsAt || null;
@@ -732,13 +767,17 @@ export async function listGoalFixtures(email, month) {
   return goals.filter((g) => g && g.month === month);
 }
 
-export async function toggleGoalStampFixture(email, goalId, day) {
+// desired: true=その日を「できた」にする / false=外す / 省略=従来どおり反転。
+// 画面からは desired を明示して送るため、連打・再送しても結果は同じになる（二重反転しない）。
+export async function toggleGoalStampFixture(email, goalId, day, desired) {
   const key = `${PREFIX}fixture:goal:${goalId}`;
   const goal = await readJSON(key);
   if (!goal || goal.email !== normalizeEmail(email)) return null;
   const idx = goal.stamps.indexOf(day);
-  if (idx >= 0) goal.stamps.splice(idx, 1);
-  else goal.stamps.push(day);
+  const want = typeof desired === 'boolean' ? desired : idx < 0;
+  if (want && idx < 0) goal.stamps.push(day);
+  else if (!want && idx >= 0) goal.stamps.splice(idx, 1);
+  else return goal;
   await writeJSON(key, goal);
   return goal;
 }

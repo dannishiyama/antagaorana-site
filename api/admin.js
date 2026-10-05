@@ -33,8 +33,8 @@
  * POST /api/admin?action=points-reverse { entryId, reason, requestId }           （取消。super_admin）
  * GET  /api/admin?action=audit-log
  * GET  /api/admin?action=events-list
- * POST /api/admin?action=events-create          { title, type, startsAt, location, capacity, fee, itemsToBring, description }
- * POST /api/admin?action=events-update          { id, ...同上のうち変更したいフィールドのみ }
+ * POST /api/admin?action=events-create          { title, type, startsAt, location, capacity, fee, itemsToBring, description, registration? }
+ * POST /api/admin?action=events-update          { id, ...同上のうち変更したいフィールドのみ（registration: 'open'|'closed'|'cancelled'）}
  * POST /api/admin?action=events-delete          { id }
  * GET  /api/admin?action=events-participants&eventId=...
  * GET  /api/admin?action=posts
@@ -52,7 +52,7 @@ import {
   createAdminSession, deleteAdminSession, getAdminSession,
   listApplications, getApplication, createApplication, resolveApplication, setMembership, getMembership, createPasswordSetupToken,
   getAdminUser, saveAdminUser, anyAdminUserExists, logAudit, listAuditLog, getUser, saveUser,
-  createEvent, listEvents, getEvent, deleteEvent, updateEvent, countEventParticipants, listEventParticipants,
+  createEvent, listEvents, getEvent, deleteEvent, updateEvent, EVENT_REGISTRATION_VALUES, countEventParticipants, listEventParticipants,
   createAdminSetupToken, consumeAdminSetupToken,
   POST_CATEGORY_LABELS, listPostsForModeration, setPostStatus, deletePost,
   createSessionFixture, listSessionFixtures,
@@ -668,6 +668,7 @@ async function handleEventsCreate(req, res, session) {
     capacity: body.capacity,
     fee: String(body.fee || '').trim(),
     itemsToBring: String(body.itemsToBring || '').trim(),
+    registration: body.registration,
     createdBy: session.actorId,
   });
   await logAudit({ actorId: session.actorId, action: 'event_created', targetId: event.id, metadata: { targetType: 'Event', title } });
@@ -682,11 +683,15 @@ async function handleEventsUpdate(req, res, session) {
   if (!existing || existing.community !== 'haku') return res.status(404).json({ error: 'イベントが見つかりません。' });
 
   const fields = {};
-  ['title', 'type', 'location', 'description', 'fee', 'itemsToBring', 'capacity', 'startsAt'].forEach((f) => {
+  ['title', 'type', 'location', 'description', 'fee', 'itemsToBring', 'capacity', 'startsAt', 'registration'].forEach((f) => {
     if (body[f] !== undefined) fields[f] = typeof body[f] === 'string' ? body[f].trim() : body[f];
   });
+  // 受付状況（open=受付中 / closed=受付終了 / cancelled=中止）。それ以外の値は受け付けない。
+  if (fields.registration !== undefined && !EVENT_REGISTRATION_VALUES.includes(fields.registration)) {
+    return res.status(400).json({ error: '受付状況の値が正しくありません。' });
+  }
   const updated = await updateEvent(id, fields);
-  await logAudit({ actorId: session.actorId, action: 'event_updated', targetId: id, metadata: { targetType: 'Event' } });
+  await logAudit({ actorId: session.actorId, action: 'event_updated', targetId: id, metadata: { targetType: 'Event', ...(fields.registration !== undefined ? { registration: fields.registration } : {}) } });
   return res.status(200).json({ ok: true, event: updated });
 }
 

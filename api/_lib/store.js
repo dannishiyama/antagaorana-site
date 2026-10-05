@@ -76,6 +76,9 @@ export const {
   checkRateLimit,
   acquireCheckoutLock,
   releaseCheckoutLock,
+  claimIdempotentOp,
+  completeIdempotentOp,
+  releaseIdempotentOp,
 } = redisImpl;
 
 // ── EVENT（HAKU MORNING / MEET / ボランティア）: Preview中はRedis実装のみ ──
@@ -87,6 +90,7 @@ export const {
   leaveEvent,
   deleteEvent,
   updateEvent,
+  EVENT_REGISTRATION_VALUES,
   countEventParticipants,
   listEventParticipants,
   isEventParticipant,

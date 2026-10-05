@@ -10,9 +10,9 @@
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { getSession, getMembership, getUser, getApplication } from './_lib/store.js';
+import { getSession, getMembership, getUser, getApplication, getAdminSession } from './_lib/store.js';
 import { parseCookies } from './_lib/cookies.js';
-import { escapeHtml } from './_lib/security.js';
+import { renderHakuHome } from './_lib/haku-home-render.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_PATH = path.join(__dirname, '_templates', 'haku-community-home.html');
@@ -45,9 +45,14 @@ export default async function handler(req, res) {
     }
 
     const user = await getUser(session.email);
-    const displayName = escapeHtml(user?.displayName || session.email.split('@')[0]);
+    const displayName = user?.displayName || session.email.split('@')[0];
 
-    const html = readFileSync(TEMPLATE_PATH, 'utf8').replaceAll('{{DISPLAY_NAME}}', displayName);
+    // 運営の管理画面へのリンクは、サーバー側で「有効な運営ログイン」を確認できた場合だけHTMLに含める
+    // （一般会員のHTMLには、リンクの文字列自体が入らない）。確認に失敗したら安全側（表示しない）に倒す。
+    let isAdmin = false;
+    try { isAdmin = Boolean(await getAdminSession(cookies.ht_admin_session)); } catch { isAdmin = false; }
+
+    const html = renderHakuHome(readFileSync(TEMPLATE_PATH, 'utf8'), { displayName, isAdmin });
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.status(200).send(html);
   } catch (err) {
