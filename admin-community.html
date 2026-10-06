@@ -14,7 +14,7 @@
 :root{color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;font-size:14px;line-height:1.8;color:#2b2926;background:#f7f3ec}
-.wrap{max-width:720px;margin:0 auto;padding:40px 20px 80px}
+.wrap{max-width:840px;margin:0 auto;padding:40px 20px 80px}
 h1{font-size:18px;margin-bottom:4px}
 .note{font-size:12px;color:#8a8574;margin-bottom:28px}
 .loginbox{max-width:320px;margin:60px auto;background:#fff;border:1px solid #ddd8cf;padding:28px}
@@ -90,6 +90,28 @@ h1{font-size:18px;margin-bottom:4px}
 .ptrow .ptdate{color:#8a8574;margin-right:6px}
 .ptrow .pmeta{color:#8a8574;font-size:11.5px}
 .ptrow .ptrev{margin-left:8px;padding:2px 10px;font-size:11.5px;border:1px solid #9A3B1F;background:#fff;color:#9A3B1F;cursor:pointer}
+/* 会員検索・HAKUポイント操作（既存の静かな配色に揃える） */
+.msearch{margin:4px 0 14px}
+.msearch label{display:block;font-size:12px;color:#8a8574;margin-bottom:4px}
+.msearchrow{display:flex;gap:8px}
+.msearchrow input{flex:1;min-height:40px;padding:8px 12px;border:1px solid #bdb7a8;font-size:14px;background:#fff;font-family:inherit}
+.msearchrow input:focus{outline:2px solid #c9b27a;border-color:#8c692c}
+.msearchrow button{padding:0 14px;border:1px solid #ccc;background:#fff;color:#4a473f;cursor:pointer;font-size:12.5px}
+.mscount{min-height:20px;margin-top:6px;font-size:12.5px;color:#6f6a5b}
+.mscount.ok{color:#2f5a3a}
+.mscount.warn{color:#9A3B1F}
+.app[hidden]{display:none}
+.app button.ptbtn{background:#33472f;color:#fff}
+.ptnote{font-size:12px;color:#8a8574;align-self:center}
+.ptBox .ptwho{font-size:12.5px;margin-bottom:6px}
+.ptBox .ptwho b{display:inline}
+.ptBox .ptmode{display:flex;gap:18px;margin:6px 0 2px}
+.ptBox .ptmode label{display:flex;align-items:center;gap:6px;margin:0;font-size:13px;color:#2b2926}
+.ptBox .ptlbl .pthint,.ptBox .ptlbl .ptreasonhint{color:#8a8574;font-size:11px}
+.ptBox .ptq-row{margin-bottom:6px}
+.ptBox .ptrevbox{margin:6px 0 4px;padding:8px 10px;background:#faf7f0;border:1px solid #eee}
+.ptBox .ptrevbox[hidden]{display:none}
+.ptBox .ptamt{max-width:160px}
 </style>
 </head>
 <body>
@@ -159,10 +181,10 @@ h1{font-size:18px;margin-bottom:4px}
     </div>
 
     <div id="membersPanel" style="display:none">
-      <p class="note">User / Application / Membershipを横断で確認できる会員一覧です。同一メールアドレスは常に1件のUserに紐づく設計のため、行を開くと両コミュニティ（HAKU Community / 教育者のサロン 灯）の申込・会員状態をまとめて確認できます。</p>
+      <p class="note">User / Application / Membershipを横断で確認できる会員一覧です。同一メールアドレスは常に1件のUserに紐づく設計のため、行を開くと両コミュニティ（HAKU Community / 教育者のサロン 灯）の申込・会員状態をまとめて確認できます。<br><b>HAKUポイントの付与・調整・取消：</b>「HAKU Community」で会員を検索 → 会員の「HAKUポイントを操作する」を押して行います。</p>
       <div class="tabs">
-        <button class="on" data-mc="tomoshibi">教育者のサロン 灯</button>
-        <button data-mc="haku">HAKU Community</button>
+        <button class="on" data-mc="haku">HAKU Community</button>
+        <button data-mc="tomoshibi">教育者のサロン 灯</button>
       </div>
       <div class="statusfilter">
         <button class="on" data-mstatus="all">すべて</button>
@@ -172,6 +194,14 @@ h1{font-size:18px;margin-bottom:4px}
         <button data-mstatus="unpaid">未決済</button>
         <button data-mstatus="rejected">却下</button>
         <button data-mstatus="inactive">退会/inactive</button>
+      </div>
+      <div class="msearch">
+        <label for="memberSearch">会員を検索</label>
+        <div class="msearchrow">
+          <input type="search" id="memberSearch" placeholder="氏名・ふりがな・表示名・メールアドレスで検索" autocomplete="off">
+          <button type="button" id="memberSearchClear" hidden>クリア</button>
+        </div>
+        <div class="mscount" id="memberCount" role="status" aria-live="polite"></div>
       </div>
       <div id="membersList"><div class="empty">読み込み中…</div></div>
 
@@ -392,7 +422,15 @@ h1{font-size:18px;margin-bottom:4px}
     </div>
 
     <div id="tanePanel" style="display:none">
-      <p class="note" style="margin-bottom:16px">運営が会員へ手動で付与・調整・取消したポイントの記録です（新しい順・直近100件）。付与・調整・取消は「会員一覧」→ HAKU Community → 各会員の「HAKUポイント」から行います。履歴は削除・書き換えできず、間違いは取消の履歴を追加して直します。</p>
+      <p class="note" style="margin-bottom:16px">全会員のHAKUポイント操作履歴です（新しい順・直近100件。確認用）。付与・調整・取消は「会員一覧」→「HAKU Community」で会員を検索して行います。履歴は削除・書き換えできず、間違いは取消の履歴を追加して直します。</p>
+      <div class="msearch">
+        <label for="pointsSearch">履歴を会員で絞り込む</label>
+        <div class="msearchrow">
+          <input type="search" id="pointsSearch" placeholder="氏名・表示名・メールアドレスで絞り込み" autocomplete="off">
+          <button type="button" id="pointsReload">最新に更新</button>
+        </div>
+        <div class="mscount" id="pointsCount" role="status" aria-live="polite"></div>
+      </div>
       <div id="pointsRecentList"><div class="empty">読み込み中…</div></div>
     </div>
 
@@ -410,9 +448,17 @@ function applyAdminRoleUi(){
   document.getElementById('resetToolWrap').style.display = (currentAdminRole === 'super_admin') ? 'block' : 'none';
 }
 
+// 通信に失敗した・遅すぎた場合は status:0 を返す（例外にしない）。JSON以外の応答でも status と空のdataを返す。
 function api(path, opts) {
-  return fetch(path, Object.assign({ headers: { 'Content-Type': 'application/json' } }, opts))
-    .then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); });
+  var o = Object.assign({ headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin' }, opts);
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 20000) : null;
+  if (ctrl) o.signal = ctrl.signal;
+  return fetch(path, o).then(function(r){
+    return r.json().then(function(data){ return { status: r.status, data: data || {} }; }, function(){ return { status: r.status, data: {} }; });
+  }, function(){
+    return { status: 0, data: { error: '通信に失敗しました。' } };
+  }).then(function(res){ if (timer) clearTimeout(timer); return res; });
 }
 
 document.getElementById('loginbtn').addEventListener('click', function(){
@@ -454,18 +500,19 @@ document.getElementById('bootstrapbtn').addEventListener('click', function(){
 
 var appStatusFilter = 'pending';
 
-document.querySelectorAll('.tabs button').forEach(function(btn){
+// 会員申請タブの中のボタンだけに効かせる（会員一覧タブの同名ボタンの操作で、申請側の状態が変わらないように）。
+document.querySelectorAll('#applicationsPanel .tabs button').forEach(function(btn){
   btn.addEventListener('click', function(){
-    document.querySelectorAll('.tabs button').forEach(function(b){ b.classList.remove('on'); });
+    document.querySelectorAll('#applicationsPanel .tabs button').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
     community = btn.dataset.c;
     loadList();
   });
 });
 
-document.querySelectorAll('.statusfilter button').forEach(function(btn){
+document.querySelectorAll('#applicationsPanel .statusfilter button').forEach(function(btn){
   btn.addEventListener('click', function(){
-    document.querySelectorAll('.statusfilter button').forEach(function(b){ b.classList.remove('on'); });
+    document.querySelectorAll('#applicationsPanel .statusfilter button').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
     appStatusFilter = btn.dataset.status;
     loadList();
@@ -519,9 +566,14 @@ function act(action, email, el) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 会員一覧（User / Application / Membership 横断確認）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var memberCommunity = 'tomoshibi';
+// 既定はHAKU Community（HAKUポイントの操作対象）。「教育者のサロン 灯」は切り替えて確認できる。
+var memberCommunity = 'haku';
 var memberStatusFilter = 'all';
+var memberQuery = '';
 var membersCache = {};
+var memberList = [];        // 取得済みの会員（検索は、この取得済みデータに対して行う）
+var memberEls = {};         // email → 会員カードのDOM（検索では作り直さず、表示/非表示だけを切り替える）
+var memberLoadSeq = 0;
 
 document.querySelectorAll('#membersPanel [data-mc]').forEach(function(btn){
   btn.addEventListener('click', function(){
@@ -545,172 +597,352 @@ var APP_ST_CLASS = { pending: 'st-pending', approved: 'st-approved', paid: 'st-a
 var MEM_ST_LABEL = { active: '有効', canceling: '解約予約中（利用可）', canceled: '解約済み', past_due: '支払い遅延', null: '未作成' };
 var MEM_ST_CLASS = { active: 'st-approved', canceling: 'st-pending', canceled: 'st-rejected', past_due: 'st-rejected' };
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 会員検索
+//  - 対象：氏名(fullName)・ふりがな(fullNameKana)・表示名(displayName)・メールアドレス(email)。部分一致。
+//  - 大文字小文字・全角半角（NFKC）・ひらがな／カタカナの違い・前後や途中の空白を区別しない。
+//  - 絞り込みは「表示するかどうか」だけを決める。会員カードの作り直しや会員ID（email）の受け渡しには一切影響しない
+//    （検索結果になっても、詳細・ポイント操作は、そのカードの会員に対して動く）。
+//  - いまは取得済みの会員データをブラウザ内で絞り込む。会員が数千人規模になったら、loadMembers() のAPI呼び出しに
+//    q / limit / offset を渡す形に差し替えるだけでよい（判定は memberMatches() に集約してある）。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function normSearch(s){
+  var t = String(s == null ? '' : s);
+  try { t = t.normalize('NFKC'); } catch (e) {}
+  t = t.toLowerCase();
+  // カタカナ → ひらがな（ふりがなを、どちらの文字でも検索できるように）
+  return t.replace(/[ァ-ヶ]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 96); });
+}
+function memberMatches(m, query){
+  var q = normSearch(query).trim();
+  if (!q) return true;
+  var fields = [m.fullName, m.fullNameKana, m.displayName, m.email].map(normSearch);
+  var all = fields.join(' ');
+  var terms = q.split(/\s+/);
+  if (terms.every(function(t){ return all.indexOf(t) !== -1; })) return true;   // 「西山 太郎」「太郎 西山」など、語の順序を問わず
+  var joined = terms.join('');                                                  // 「西山太郎」のように空白なしで入力された場合
+  return fields.some(function(f){ return f.replace(/\s+/g, '').indexOf(joined) !== -1; });
+}
+
+function memberCardHtml(m){
+  var appLabel = APP_ST_LABEL[m.applicationStatus] || m.applicationStatus;
+  var appClass = APP_ST_CLASS[m.applicationStatus] || '';
+  var memLabel = m.membershipStatus ? (MEM_ST_LABEL[m.membershipStatus] || m.membershipStatus) : '未作成';
+  var memClass = m.membershipStatus ? (MEM_ST_CLASS[m.membershipStatus] || '') : '';
+  var stripeLabel = m.stripeSubscriptionId ? 'Stripe連携あり' : '未決済';
+  var pointArea = '';
+  if (m.community === 'haku') {
+    pointArea = m.canOperatePoints
+      ? '<button class="ptbtn" type="button">HAKUポイントを操作する（現在 ' + fmtPt(m.points) + ' pt）</button>'
+      : '<span class="ptnote">HAKUポイント：' + (m.points != null ? '現在 ' + fmtPt(m.points) + ' pt ・ ' : '') + '現在有効な会員ではないため、付与・調整はできません。</span>';
+  }
+  return '<span class="cat ' + appClass + '">申込: ' + escapeHtml(appLabel) + '</span> ' +
+    '<span class="cat ' + memClass + '">会員: ' + escapeHtml(memLabel) + '</span> ' +
+    '<span class="cat">' + escapeHtml(stripeLabel) + '</span>' +
+    '<b>' + escapeHtml(m.fullName) + '（' + escapeHtml(m.fullNameKana) + '）／表示名: ' + escapeHtml(m.displayName) + '</b>' +
+    '<div class="meta">' + escapeHtml(m.email) + (m.referrerName ? ' ・ 紹介者: ' + escapeHtml(m.referrerName) : '') + '</div>' +
+    '<div class="meta">申込日時: ' + (m.submittedAt ? new Date(m.submittedAt).toLocaleString('ja-JP') : '—') +
+      (m.reviewedAt ? ' ・ 審査日時: ' + new Date(m.reviewedAt).toLocaleString('ja-JP') : '') +
+      ' ・ 最終ログイン: ' + (m.lastLoginAt ? new Date(m.lastLoginAt).toLocaleString('ja-JP') : '記録なし') + '</div>' +
+    '<div class="row" style="flex-wrap:wrap"><button class="detail" type="button">詳細を見る</button>' + pointArea + '</div>' +
+    '<div class="detailBox" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#4a473f;white-space:pre-wrap"></div>' +
+    (m.canOperatePoints ? '<div class="ptBox" style="display:none"></div>' : '');
+}
+
+function setMemberCount(text, kind){
+  var el = document.getElementById('memberCount');
+  el.textContent = text || '';
+  el.className = 'mscount' + (kind ? ' ' + kind : '');
+}
+
+// 検索語に合わせて、会員カードの表示/非表示だけを切り替える（カードは作り直さない）。
+function applyMemberSearch(){
+  var q = memberQuery.trim();
+  document.getElementById('memberSearchClear').hidden = !memberQuery;
+  if (!memberList.length) { setMemberCount(''); return; }   // そもそも会員データがない場合は、一覧側の空表示に任せる
+  var shown = 0;
+  memberList.forEach(function(m){
+    var el = memberEls[m.email];
+    var hit = memberMatches(m, q);
+    if (el) el.hidden = !hit;
+    if (hit) shown++;
+  });
+  var none = document.getElementById('memberNoMatch');
+  if (none) none.hidden = shown !== 0;
+  if (!q) setMemberCount('全' + memberList.length + '件');
+  else if (shown) setMemberCount(shown + '件の会員が見つかりました。', 'ok');
+  else setMemberCount('該当する会員が見つかりません。', 'warn');
+}
+
 function loadMembers(){
   var list = document.getElementById('membersList');
+  var seq = ++memberLoadSeq;
   list.innerHTML = '<div class="empty">読み込み中…</div>';
-  api('/api/admin?action=members&community=' + memberCommunity + '&status=' + memberStatusFilter, { method: 'GET' }).then(function(res){
+  setMemberCount('');
+  return api('/api/admin?action=members&community=' + memberCommunity + '&status=' + memberStatusFilter, { method: 'GET' }).then(function(res){
+    if (seq !== memberLoadSeq) return;   // 後から押した絞り込みの結果を優先する
     if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
-    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
-    var members = res.data.members || [];
-    if (!members.length) { list.innerHTML = '<div class="empty">該当する会員がいません。</div>'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。通信を確認して、もう一度お試しください。</div>'; return; }
+    memberList = res.data.members || [];
+    memberEls = {};
+    if (!memberList.length) { list.innerHTML = '<div class="empty">この条件に当てはまる会員データは、まだありません。</div>'; setMemberCount(''); return; }
     list.innerHTML = '';
-    members.forEach(function(m){
+    memberList.forEach(function(m){
       membersCache[m.email] = m;
       var el = document.createElement('div');
       el.className = 'app';
-      var appLabel = APP_ST_LABEL[m.applicationStatus] || m.applicationStatus;
-      var appClass = APP_ST_CLASS[m.applicationStatus] || '';
-      var memLabel = m.membershipStatus ? (MEM_ST_LABEL[m.membershipStatus] || m.membershipStatus) : '未作成';
-      var memClass = m.membershipStatus ? (MEM_ST_CLASS[m.membershipStatus] || '') : '';
-      var stripeLabel = m.stripeSubscriptionId ? 'Stripe連携あり' : '未決済';
-      el.innerHTML =
-        '<span class="cat ' + appClass + '">申込: ' + escapeHtml(appLabel) + '</span> ' +
-        '<span class="cat ' + memClass + '">会員: ' + escapeHtml(memLabel) + '</span> ' +
-        '<span class="cat">' + escapeHtml(stripeLabel) + '</span>' +
-        '<b>' + escapeHtml(m.fullName) + '（' + escapeHtml(m.fullNameKana) + '）／表示名: ' + escapeHtml(m.displayName) + '</b>' +
-        '<div class="meta">' + escapeHtml(m.email) + (m.referrerName ? ' ・ 紹介者: ' + escapeHtml(m.referrerName) : '') + '</div>' +
-        '<div class="meta">申込日時: ' + (m.submittedAt ? new Date(m.submittedAt).toLocaleString('ja-JP') : '—') +
-          (m.reviewedAt ? ' ・ 審査日時: ' + new Date(m.reviewedAt).toLocaleString('ja-JP') : '') +
-          ' ・ 最終ログイン: ' + (m.lastLoginAt ? new Date(m.lastLoginAt).toLocaleString('ja-JP') : '記録なし') + '</div>' +
-        '<div class="row"><button class="detail">詳細を見る</button>' +
-          (m.points != null ? '<button class="ptbtn">HAKUポイント ・ ' + fmtPt(m.points) + ' pt</button>' : '') + '</div>' +
-        '<div class="detailBox" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#4a473f;white-space:pre-wrap"></div>' +
-        (m.points != null ? '<div class="ptBox" style="display:none"></div>' : '');
+      el.innerHTML = memberCardHtml(m);
       el.querySelector('.detail').addEventListener('click', function(){ toggleMemberDetail(m.email, el); });
-      if (m.points != null) el.querySelector('.ptbtn').addEventListener('click', function(){ togglePointPanel(m, el); });
+      var pb = el.querySelector('.ptbtn');
+      if (pb) pb.addEventListener('click', function(){ togglePointPanel(m, el); });
+      memberEls[m.email] = el;
       list.appendChild(el);
     });
+    var none = document.createElement('div');
+    none.className = 'empty'; none.id = 'memberNoMatch'; none.hidden = true;
+    none.textContent = '該当する会員が見つかりません。検索語を変えるか、上の絞り込みを確認してください。';
+    list.appendChild(none);
+    applyMemberSearch();
   });
 }
 
+(function(){
+  var input = document.getElementById('memberSearch');
+  var timer = null;
+  input.addEventListener('input', function(){
+    memberQuery = input.value;
+    clearTimeout(timer);
+    timer = setTimeout(applyMemberSearch, 120);   // 入力のたびに再計算しすぎないように
+  });
+  input.addEventListener('keydown', function(ev){ if (ev.key === 'Escape') { input.value = ''; memberQuery = ''; applyMemberSearch(); } });
+  document.getElementById('memberSearchClear').addEventListener('click', function(){
+    input.value = ''; memberQuery = ''; applyMemberSearch(); input.focus();
+  });
+})();
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// HAKU POINT（管理者による手動付与・調整・取消）
+// HAKUポイント（管理者による手動の付与・調整・取消）
 // 保存・検証・二重操作防止はサーバー側（台帳）が行う。ここは入力と表示だけ。
-// 操作IDは画面を開いた時点で1つ発行し、成功するまで同じIDを使い続ける
-// （二重クリック・通信の再送でも、サーバー側で1回分としてしか記録されない）。
+// ・操作IDは操作ごとに1つ発行し、成功するまで同じIDを使う。通信が切れた場合は同じIDで自動的に再送する
+//   （サーバーが同じIDを1回分としてしか記録しないため、二重付与にならず、保存されたかどうかの食い違いも起きない）。
+// ・成功したら、サーバーから現在ポイントと履歴を取り直して表示する（画面の数字だけを書き換えない）。
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function fmtPt(n){ return Number(n || 0).toLocaleString('ja-JP'); }
 function newRequestId(){
   return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('r' + Date.now() + Math.random().toString(36).slice(2, 10));
 }
 var PT_KIND_LABEL = { admin_grant: '付与', admin_adjust: '調整', admin_reversal: '取消' };
+var PT_MAX = 1000000;
+function signed(n){ return (n > 0 ? '+' : '') + fmtPt(n) + 'pt'; }
+function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 
-function pointRowHtml(e, showEmail){
-  var sign = e.delta > 0 ? '+' : '';
+function ptKindText(e){
+  return (PT_KIND_LABEL[e.kind] || e.kind) + (e.reversed ? '（取消済み）' : '');
+}
+
+// 会員1人の履歴の1行（取消ボタン付き）
+function pointRowHtml(e){
   var dim = (e.kind === 'admin_reversal' || e.reversed) ? ' dim' : '';
   var canReverse = !e.reversed && (e.kind === 'admin_grant' || e.kind === 'admin_adjust');
-  return '<div class="ptrow' + dim + '">' +
+  return '<div class="ptrow' + dim + '" data-id="' + escapeHtml(e.id) + '">' +
     '<span class="ptdate">' + escapeHtml(new Date(e.createdAt).toLocaleString('ja-JP')) + '</span>' +
-    '<b style="display:inline">' + sign + fmtPt(e.delta) + ' pt</b> ' +
-    '<span>' + escapeHtml(PT_KIND_LABEL[e.kind] || e.kind) + (e.reversed ? '（取消済み）' : '') + '</span>' +
+    '<b style="display:inline">' + signed(e.delta) + '</b> ' +
+    '<span>' + escapeHtml(ptKindText(e)) + '</span>' +
     (e.reason ? ' ・ ' + escapeHtml(e.reason) : '') +
-    '<div class="pmeta">' + (showEmail ? escapeHtml(e.email) + ' ・ ' : '') +
-      (e.balanceAfter != null ? '残高 ' + fmtPt(e.balanceAfter) + ' pt ・ ' : '') + '操作: ' + escapeHtml(e.actorId) +
-      (canReverse && !showEmail ? '<button class="ptrev" data-id="' + escapeHtml(e.id) + '">取消</button>' : '') + '</div>' +
+    '<div class="pmeta">' + (e.balanceAfter != null ? '残高 ' + fmtPt(e.balanceAfter) + ' pt ・ ' : '') + '操作: ' + escapeHtml(e.actorId) +
+      (e.reversalOf ? ' ・ 取消対象ID: ' + escapeHtml(e.reversalOf) : '') + ' ・ ID: ' + escapeHtml(e.id) +
+      (canReverse ? '<button class="ptrev" type="button" data-id="' + escapeHtml(e.id) + '">取消</button>' : '') + '</div>' +
+    '<div class="ptrevbox" hidden></div>' +
     '</div>';
 }
 
 function togglePointPanel(m, card){
   var box = card.querySelector('.ptBox');
+  if (!box) return;
   if (box.style.display === 'block') { box.style.display = 'none'; return; }
   box.style.display = 'block';
-  renderPointPanel(m, card, box, '');
+  renderPointPanel(m, card, box, null);
 }
 
+// flash: { text, kind: 'ok'|'warn' } を操作の結果として表示する
 function renderPointPanel(m, card, box, flash){
   box.innerHTML = '<div class="meta">読み込み中…</div>';
-  api('/api/admin?action=points-member&email=' + encodeURIComponent(m.email), { method: 'GET' }).then(function(res){
+  return api('/api/admin?action=points-member&email=' + encodeURIComponent(m.email), { method: 'GET' }).then(function(res){
     if (res.status === 401) { box.innerHTML = '<div class="ptmsg">ログインの有効期限が切れました。ページを再読み込みしてログインし直してください。</div>'; return; }
-    if (res.status !== 200) { box.innerHTML = '<div class="ptmsg">' + escapeHtml(res.data.error || '読み込みに失敗しました。') + '</div>'; return; }
+    if (res.status !== 200) { box.innerHTML = '<div class="ptmsg">' + escapeHtml((res.data && res.data.error) || '読み込めませんでした。通信を確認して、もう一度お試しください。') + '</div>'; return; }
     var d = res.data;
     m.points = d.balance;
     var btn = card.querySelector('.ptbtn');
-    if (btn) btn.textContent = 'HAKUポイント ・ ' + fmtPt(d.balance) + ' pt';
-    var name = m.fullName || m.email;
-    var ids = { grant: newRequestId(), adjust: newRequestId() };
+    if (btn) btn.textContent = 'HAKUポイントを操作する（現在 ' + fmtPt(d.balance) + ' pt）';
+    var name = m.fullName || m.displayName || m.email;
+    var state = { mode: 'grant', busy: false, ids: { grant: newRequestId(), adjust: newRequestId() } };
 
     box.innerHTML =
+      '<div class="ptwho">対象会員：<b>' + escapeHtml(name) + '</b>（' + escapeHtml(m.email) + '）</div>' +
       '<div class="ptnow">現在ポイント <b>' + fmtPt(d.balance) + '</b> pt</div>' +
-      '<label>付与するポイント数</label>' +
-      '<div style="margin-bottom:6px"><button type="button" class="ptq" data-v="100">+100</button><button type="button" class="ptq" data-v="500">+500</button></div>' +
-      '<input type="number" class="ptamt" min="1" step="1" inputmode="numeric" placeholder="例：300">' +
-      '<label>理由（任意。会員本人の履歴にも表示されます）</label>' +
-      '<input type="text" class="ptreason" maxlength="200" placeholder="例：HAKU MORNINGの運営お手伝いへの感謝">' +
-      '<div><button type="button" class="ptgo ptgrant">ポイントを付与する</button></div>' +
-      '<div class="ptmsg' + (flash ? ' ok' : '') + '">' + escapeHtml(flash || '') + '</div>' +
-      '<details><summary>調整（誤って付与した場合の訂正など）</summary>' +
-        '<label>調整するポイント数（減らす場合はマイナス。例：-100）</label>' +
-        '<input type="number" class="ptadj" step="1" inputmode="numeric" placeholder="例：-100">' +
-        '<label>理由（必須。会員本人の履歴にも表示されます）</label>' +
-        '<input type="text" class="ptadjreason" maxlength="200" placeholder="例：付与数の入力ミスの訂正">' +
-        '<div><button type="button" class="ptgo ptadjust">調整する</button></div>' +
-        '<div class="ptmsg ptadjmsg"></div>' +
-      '</details>' +
-      '<div class="pthist"><h4>履歴（新しい順）</h4>' +
-        ((d.entries && d.entries.length) ? d.entries.map(function(e){ return pointRowHtml(e, false); }).join('') : '<div class="meta">まだ履歴がありません。</div>') +
+      '<div class="ptmode" role="group" aria-label="操作の種類">' +
+        '<label><input type="radio" name="ptmode-' + escapeHtml(m.email) + '" value="grant" checked> 付与（増やす）</label>' +
+        '<label><input type="radio" name="ptmode-' + escapeHtml(m.email) + '" value="adjust"> 調整（増減・訂正）</label>' +
+      '</div>' +
+      '<label class="ptlbl">付与／調整ポイント <span class="pthint"></span></label>' +
+      '<div class="ptq-row"><button type="button" class="ptq" data-v="100">+100</button><button type="button" class="ptq" data-v="500">+500</button></div>' +
+      '<input type="text" class="ptamt" inputmode="numeric" autocomplete="off" placeholder="例：100"> <span>pt</span>' +
+      '<label class="ptlbl">理由・メモ <span class="ptreasonhint"></span></label>' +
+      '<input type="text" class="ptreason" maxlength="200" autocomplete="off" placeholder="例：HAKU MORNINGの運営お手伝いへの感謝">' +
+      '<div><button type="button" class="ptgo">ポイントを付与</button></div>' +
+      '<div class="ptmsg' + (flash && flash.kind === 'ok' ? ' ok' : '') + '" role="status" aria-live="polite">' + escapeHtml(flash ? flash.text : '') + '</div>' +
+      '<div class="pthist"><h4>履歴（新しい順・削除や書き換えはできません。誤りは「取消」で訂正します）</h4>' +
+        ((d.entries && d.entries.length) ? d.entries.map(pointRowHtml).join('') : '<div class="meta">まだ履歴がありません。</div>') +
       '</div>';
 
+    var amtEl = box.querySelector('.ptamt');
+    var reasonEl = box.querySelector('.ptreason');
+    var goEl = box.querySelector('.ptgo');
     var msgEl = box.querySelector('.ptmsg');
-    var adjMsg = box.querySelector('.ptadjmsg');
-    function fail(el, res2){
-      el.className = el.className.replace(' ok', '');
-      el.textContent = res2 && res2.status === 401
-        ? 'ログインの有効期限が切れました。ページを再読み込みしてログインし直してください。'
-        : ((res2 && res2.data && res2.data.error) || '通信に失敗しました。もう一度お試しください。');
+    function say(text, kind){ msgEl.textContent = text; msgEl.className = 'ptmsg' + (kind === 'ok' ? ' ok' : ''); }
+    function syncMode(){
+      var adjust = state.mode === 'adjust';
+      goEl.textContent = adjust ? 'ポイントを調整' : 'ポイントを付与';
+      box.querySelector('.pthint').textContent = adjust ? '（増減どちらも可。減らす場合はマイナス。例：-20）' : '（1以上の整数）';
+      box.querySelector('.ptreasonhint').textContent = adjust ? '（調整は必須。会員本人の履歴にも表示されます）' : '（任意。会員本人の履歴にも表示されます）';
+      box.querySelector('.ptq-row').style.display = adjust ? 'none' : 'block';
+      amtEl.placeholder = adjust ? '例：-20' : '例：100';
     }
-    function send(action, payload, btnEl, msgTarget, okText){
-      btnEl.disabled = true;
-      msgTarget.textContent = '';
-      api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify(payload) }).then(function(res2){
-        if (res2.status !== 200) { btnEl.disabled = false; fail(msgTarget, res2); return; }
-        renderPointPanel(m, card, box, okText(res2.data));
-      }).catch(function(){ btnEl.disabled = false; fail(msgTarget, null); });
+    syncMode();
+    box.querySelectorAll('input[type=radio]').forEach(function(r){
+      r.addEventListener('change', function(){ if (r.checked) { state.mode = r.value; say('', ''); syncMode(); } });
+    });
+    box.querySelectorAll('.ptq').forEach(function(q){ q.addEventListener('click', function(){ amtEl.value = q.dataset.v; amtEl.focus(); }); });
+
+    // 通信が切れた場合は、同じ操作IDで自動的に再送する（サーバー側で二重付与にならない）。
+    function post(action, payload){
+      var attempt = 0;
+      function once(){
+        attempt++;
+        return api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify(payload) }).then(function(res2){
+          if ((res2.status === 0 || res2.status >= 500) && attempt < 3) return wait(600 * attempt).then(once);
+          return res2;
+        });
+      }
+      return once();
+    }
+    // 結果の後始末：成功→最新の現在ポイント・履歴を取り直して表示。通信失敗→保存されたか分からないので、同じく取り直して実際の状態を見せる。
+    function finish(res2, okText){
+      if (res2.status === 200) {
+        var text = okText(res2.data) + (res2.data.duplicate ? '（この操作はすでに反映済みでした）' : '');
+        return renderPointPanel(m, card, box, { text: text, kind: 'ok' });
+      }
+      if (res2.status === 0 || res2.status >= 500) {
+        return renderPointPanel(m, card, box, { text: '通信に失敗しました。保存されたかどうかを、最新の現在ポイントと履歴で確認してください。', kind: 'warn' });
+      }
+      state.busy = false; goEl.disabled = false;
+      say(res2.status === 401 ? 'ログインの有効期限が切れました。ページを再読み込みしてログインし直してください。' : ((res2.data && res2.data.error) || '処理できませんでした。'), 'warn');
     }
 
-    box.querySelectorAll('.ptq').forEach(function(q){
-      q.addEventListener('click', function(){ box.querySelector('.ptamt').value = q.dataset.v; });
-    });
-    box.querySelector('.ptgrant').addEventListener('click', function(ev){
-      var amt = box.querySelector('.ptamt').value.trim();
-      if (!/^[0-9]+$/.test(amt) || Number(amt) < 1) { fail(msgEl, { data: { error: '付与するポイント数は1以上の整数で入力してください。' } }); return; }
-      if (!confirm(name + ' さんに ' + fmtPt(amt) + ' pt を付与します。よろしいですか？')) return;
-      send('points-grant', { email: m.email, amount: Number(amt), reason: box.querySelector('.ptreason').value.trim(), requestId: ids.grant },
-        ev.currentTarget, msgEl, function(data){ return fmtPt(amt) + ' pt を付与しました（現在 ' + fmtPt(data.balance) + ' pt）。'; });
-    });
-    box.querySelector('.ptadjust').addEventListener('click', function(ev){
-      var amt = box.querySelector('.ptadj').value.trim();
-      var reason = box.querySelector('.ptadjreason').value.trim();
-      if (!/^-?[0-9]+$/.test(amt) || Number(amt) === 0) { fail(adjMsg, { data: { error: '調整するポイント数は0以外の整数で入力してください。' } }); return; }
-      if (!reason) { fail(adjMsg, { data: { error: '調整の理由を入力してください。' } }); return; }
-      if (!confirm(name + ' さんのポイントを ' + (Number(amt) > 0 ? '+' : '') + fmtPt(amt) + ' pt 調整します。よろしいですか？')) return;
-      send('points-adjust', { email: m.email, amount: Number(amt), reason: reason, requestId: ids.adjust },
-        ev.currentTarget, adjMsg, function(data){ return (Number(amt) > 0 ? '+' : '') + fmtPt(amt) + ' pt 調整しました（現在 ' + fmtPt(data.balance) + ' pt）。'; });
-    });
-    box.querySelectorAll('.ptrev').forEach(function(r){
-      r.addEventListener('click', function(){
-        var reason = prompt('この履歴を取り消します。取り消しの理由を入力してください（会員本人の履歴にも表示されます）。');
-        if (reason == null) return;
-        reason = reason.trim();
-        if (!reason) { alert('理由を入力してください。'); return; }
-        r.disabled = true;
-        api('/api/admin?action=points-reverse', { method: 'POST', body: JSON.stringify({ entryId: r.dataset.id, reason: reason, requestId: newRequestId() }) }).then(function(res2){
-          if (res2.status !== 200) { r.disabled = false; alert((res2.data && res2.data.error) || '取消に失敗しました。'); return; }
-          renderPointPanel(m, card, box, '取り消しました（現在 ' + fmtPt(res2.data.balance) + ' pt）。');
-        }).catch(function(){ r.disabled = false; alert('通信に失敗しました。もう一度お試しください。'); });
+    goEl.addEventListener('click', function(){
+      if (state.busy) return;
+      var adjust = state.mode === 'adjust';
+      var raw = amtEl.value.trim();
+      var reason = reasonEl.value.trim();
+      var pattern = adjust ? /^-?[0-9]+$/ : /^[0-9]+$/;
+      if (!raw) { say('ポイント数を入力してください。', 'warn'); return; }
+      if (!pattern.test(raw)) { say(adjust ? '調整するポイント数は整数で入力してください（例：-20）。' : '付与するポイント数は1以上の整数で入力してください。', 'warn'); return; }
+      var amount = Number(raw);
+      if (amount === 0) { say('0ポイントは操作できません。', 'warn'); return; }
+      if (Math.abs(amount) > PT_MAX) { say('1回の操作は ' + fmtPt(PT_MAX) + ' pt までです。', 'warn'); return; }
+      if (adjust && !reason) { say('調整の理由を入力してください。', 'warn'); return; }
+      var ask = adjust ? (name + ' さんのポイントを ' + signed(amount) + ' 調整します。よろしいですか？') : (name + ' さんに ' + signed(amount) + ' を付与します。よろしいですか？');
+      if (!confirm(ask)) return;
+      state.busy = true; goEl.disabled = true; say('保存しています…', '');
+      var action = adjust ? 'points-adjust' : 'points-grant';
+      post(action, { email: m.email, amount: amount, reason: reason, requestId: state.ids[state.mode] }).then(function(res2){
+        finish(res2, function(){ return adjust ? (name + ' さんのポイントを ' + signed(amount) + ' 調整しました（現在 ' + fmtPt((res2.data || {}).balance) + ' pt）。') : (name + ' さんに ' + signed(amount) + ' を付与しました（現在 ' + fmtPt((res2.data || {}).balance) + ' pt）。'); });
       });
     });
-  }).catch(function(){ box.innerHTML = '<div class="ptmsg">通信に失敗しました。もう一度お試しください。</div>'; });
+
+    // 取消：その行の下に理由の入力欄を開く。元の履歴は消さず、逆の増減の履歴が1行追加される。
+    box.querySelectorAll('.ptrev').forEach(function(rb){
+      rb.addEventListener('click', function(){
+        var row = rb.closest('.ptrow');
+        var rbox = row.querySelector('.ptrevbox');
+        if (!rbox.hidden) { rbox.hidden = true; return; }
+        var revId = newRequestId();
+        rbox.hidden = false;
+        rbox.innerHTML = '<label class="ptlbl">取消の理由（必須。会員本人の履歴にも表示されます）</label>' +
+          '<input type="text" class="ptrevreason" maxlength="200" autocomplete="off" placeholder="例：付与数の入力ミス">' +
+          '<div><button type="button" class="ptgo ptrevgo">この履歴を取り消す</button> <button type="button" class="ptq ptrevcancel">やめる</button></div>' +
+          '<div class="ptmsg ptrevmsg" role="status" aria-live="polite"></div>';
+        var rgo = rbox.querySelector('.ptrevgo'), rmsg = rbox.querySelector('.ptrevmsg'), rin = rbox.querySelector('.ptrevreason');
+        rin.focus();
+        rbox.querySelector('.ptrevcancel').addEventListener('click', function(){ rbox.hidden = true; });
+        rgo.addEventListener('click', function(){
+          if (state.busy) return;
+          var reason = rin.value.trim();
+          if (!reason) { rmsg.textContent = '取消の理由を入力してください。'; return; }
+          state.busy = true; rgo.disabled = true; rmsg.textContent = '保存しています…';
+          post('points-reverse', { entryId: rb.dataset.id, reason: reason, requestId: revId }).then(function(res2){
+            if (res2.status === 200) {
+              return renderPointPanel(m, card, box, { text: name + ' さんの履歴を取り消しました（現在 ' + fmtPt(res2.data.balance) + ' pt）。', kind: 'ok' });
+            }
+            if (res2.status === 0 || res2.status >= 500) {
+              return renderPointPanel(m, card, box, { text: '通信に失敗しました。取消が保存されたかどうかを、最新の現在ポイントと履歴で確認してください。', kind: 'warn' });
+            }
+            state.busy = false; rgo.disabled = false;
+            rmsg.textContent = (res2.data && res2.data.error) || '取り消せませんでした。';
+          });
+        });
+      });
+    });
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 「HAKUポイント」タブ：全会員のポイント操作履歴（確認専用。操作は「会員一覧」から行う）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+var pointsRecent = [];
+var pointsQuery = '';
+
+function pointRecentRowHtml(e){
+  var dim = (e.kind === 'admin_reversal' || e.reversed) ? ' dim' : '';
+  var who = (e.fullName || e.displayName || e.email);
+  return '<div class="ptrow' + dim + '">' +
+    '<span class="ptdate">' + escapeHtml(new Date(e.createdAt).toLocaleString('ja-JP')) + '</span>' +
+    '<b style="display:inline">' + signed(e.delta) + '</b> ' +
+    '<span class="ptkind">' + escapeHtml(ptKindText(e)) + '</span>' +
+    ' ・ <span>' + escapeHtml(who) + '</span>' +
+    (e.reason ? ' ・ ' + escapeHtml(e.reason) : '') +
+    '<div class="pmeta">' + escapeHtml(e.email) + ' ・ 操作: ' + escapeHtml(e.actorId) +
+      (e.reversalOf ? ' ・ 取消対象ID: ' + escapeHtml(e.reversalOf) : '') + ' ・ ID: ' + escapeHtml(e.id) + '</div>' +
+    '</div>';
+}
+
+function renderPointsRecent(){
+  var list = document.getElementById('pointsRecentList');
+  var q = pointsQuery.trim();
+  var rows = pointsRecent.filter(function(e){ return memberMatches(e, q); });
+  var count = document.getElementById('pointsCount');
+  if (!pointsRecent.length) { list.innerHTML = '<div class="empty">まだポイントの操作履歴がありません。</div>'; count.textContent = ''; return; }
+  count.textContent = q ? (rows.length ? rows.length + '件の履歴が見つかりました。' : '該当する履歴が見つかりません。') : '直近' + pointsRecent.length + '件';
+  list.innerHTML = rows.length ? rows.map(pointRecentRowHtml).join('') : '<div class="empty">該当する履歴が見つかりません。</div>';
 }
 
 function loadPointsRecent(){
   var list = document.getElementById('pointsRecentList');
   list.innerHTML = '<div class="empty">読み込み中…</div>';
-  api('/api/admin?action=points-recent', { method: 'GET' }).then(function(res){
-    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
-    var entries = res.data.entries || [];
-    list.innerHTML = entries.length ? entries.map(function(e){ return pointRowHtml(e, true); }).join('') : '<div class="empty">まだポイントの履歴がありません。</div>';
-  }).catch(function(){ list.innerHTML = '<div class="empty">通信に失敗しました。</div>'; });
+  return api('/api/admin?action=points-recent', { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { list.innerHTML = '<div class="empty">読み込めませんでした。通信を確認して、もう一度お試しください。</div>'; return; }
+    pointsRecent = res.data.entries || [];
+    renderPointsRecent();
+  });
 }
+
+(function(){
+  var input = document.getElementById('pointsSearch');
+  var timer = null;
+  input.addEventListener('input', function(){ pointsQuery = input.value; clearTimeout(timer); timer = setTimeout(renderPointsRecent, 120); });
+  document.getElementById('pointsReload').addEventListener('click', loadPointsRecent);
+})();
 
 function toggleMemberDetail(email, el){
   var box = el.querySelector('.detailBox');
@@ -1392,6 +1624,15 @@ function deleteNote(id){
     loadNotes();
   });
 }
+
+// ページを開き直したとき、有効な管理者ログイン（Cookie）が残っていれば、ログイン画面を飛ばして管理画面を復元する。
+api('/api/admin?action=whoami', { method: 'GET' }).then(function(res){
+  if (res.status !== 200) return;
+  currentAdminRole = res.data.role || null;
+  document.getElementById('loginbox').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  loadList();
+});
 </script>
 </body>
 </html>
