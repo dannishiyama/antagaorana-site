@@ -140,7 +140,7 @@ h1{font-size:18px;margin-bottom:4px}
       <button data-mode="notes">HAKU NOTE / 今週の問い</button>
       <button data-mode="posts">みんなのことば</button>
       <button data-mode="sessions">セッション（Preview fixture）</button>
-      <button data-mode="tane">HAKU POINT</button>
+      <button data-mode="tane">HAKUポイント</button>
       <button data-mode="audit">操作履歴</button>
     </div>
 
@@ -392,7 +392,7 @@ h1{font-size:18px;margin-bottom:4px}
     </div>
 
     <div id="tanePanel" style="display:none">
-      <p class="note" style="margin-bottom:16px">運営が会員へ手動で付与・調整・取消したポイントの記録です（新しい順・直近100件）。付与・調整・取消は「会員一覧」→ HAKU Community → 各会員の「HAKU POINT」から行います。履歴は削除・書き換えできず、間違いは取消の履歴を追加して直します。</p>
+      <p class="note" style="margin-bottom:16px">運営が会員へ手動で付与・調整・取消したポイントの記録です（新しい順・直近100件）。付与・調整・取消は「会員一覧」→ HAKU Community → 各会員の「HAKUポイント」から行います。履歴は削除・書き換えできず、間違いは取消の履歴を追加して直します。</p>
       <div id="pointsRecentList"><div class="empty">読み込み中…</div></div>
     </div>
 
@@ -573,7 +573,7 @@ function loadMembers(){
           (m.reviewedAt ? ' ・ 審査日時: ' + new Date(m.reviewedAt).toLocaleString('ja-JP') : '') +
           ' ・ 最終ログイン: ' + (m.lastLoginAt ? new Date(m.lastLoginAt).toLocaleString('ja-JP') : '記録なし') + '</div>' +
         '<div class="row"><button class="detail">詳細を見る</button>' +
-          (m.points != null ? '<button class="ptbtn">HAKU POINT ・ ' + fmtPt(m.points) + ' pt</button>' : '') + '</div>' +
+          (m.points != null ? '<button class="ptbtn">HAKUポイント ・ ' + fmtPt(m.points) + ' pt</button>' : '') + '</div>' +
         '<div class="detailBox" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid #eee;font-size:12px;color:#4a473f;white-space:pre-wrap"></div>' +
         (m.points != null ? '<div class="ptBox" style="display:none"></div>' : '');
       el.querySelector('.detail').addEventListener('click', function(){ toggleMemberDetail(m.email, el); });
@@ -625,7 +625,7 @@ function renderPointPanel(m, card, box, flash){
     var d = res.data;
     m.points = d.balance;
     var btn = card.querySelector('.ptbtn');
-    if (btn) btn.textContent = 'HAKU POINT ・ ' + fmtPt(d.balance) + ' pt';
+    if (btn) btn.textContent = 'HAKUポイント ・ ' + fmtPt(d.balance) + ' pt';
     var name = m.fullName || m.email;
     var ids = { grant: newRequestId(), adjust: newRequestId() };
 

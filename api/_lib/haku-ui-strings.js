@@ -23,6 +23,7 @@ export const UI = {
     line1: '教育支援団体',
     line2: 'あんたがおらな',
     memberLabel: 'HAKU Community 会員',
+    service: 'HAKU Community', // PCのサイドバー上部に出すサービス名（運営団体の表示より大きく出す）
   },
 
   // 下部メニュー（PCでは上部）。表示順はこの並びで固定。

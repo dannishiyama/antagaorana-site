@@ -45,24 +45,30 @@ button{font-family:inherit}
 .skip{position:absolute;left:12px;top:-60px;z-index:300;background:var(--paper);color:var(--green-deep);padding:10px 14px;border-radius:8px;font-weight:700}
 .skip:focus{top:10px}
 
-#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#app{position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh}
+/* .side は、スマホでは「ヘッダー・下部メニュー・会員名」をそのまま並べるための入れ物（display:contents）。
+   PCでは左のサイドバーになる（下の @media を参照）。 */
+.side{display:contents}
 
-/* ───── ヘッダー ───── */
+/* ───── ヘッダー（スマホ）／サイドバー上部（PC） ───── */
 .topbar{order:0;background:var(--green-deep);flex-shrink:0;position:relative;z-index:50;padding-top:env(safe-area-inset-top)}
-.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 18px;max-width:1040px;margin:0 auto}
+.topbar-in{display:flex;align-items:center;gap:10px;padding:5px 18px;min-height:54px;padding-right:150px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
-/* 正式ロゴ（総合トップと同じ lp-assets/logo-hero.png）を、総合トップと同じ生成りの台座に載せる。
-   画像の色は一切変えない。透明な余白を台座の中で切り取って、マークだけを大きめに見せている。 */
-.brand-mark{position:relative;flex:none;width:52px;height:41px;border-radius:9px;background:var(--brand-cream);overflow:hidden}
-.brand-mark img{position:absolute;display:block;max-width:none;width:58.14px;height:58.14px;left:-4.8px;top:-7.13px}
+/* 運営団体のロゴは、総合トップと同じ既存アセット（lp-assets/logo-hero.png）をそのまま使い、
+   画像は切り抜かず、マーク全体が丸いバッジの中に収まるように置く（総合トップと同じ約36px幅）。
+   バッジの色は総合トップのヘッダー背景と同じ生成り。ロゴ自体の色は一切変えていない。 */
+.brand-mark{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:var(--brand-cream);overflow:hidden}
+.brand-mark img{position:absolute;display:block;max-width:none;width:47.64px;height:47.64px;left:-3.2px;top:-0.24px}
 .brand-sep{flex:none;width:1px;height:28px;background:rgba(245,239,230,.4)}
 .brand-text{font-family:var(--serif);font-size:12px;font-weight:700;color:rgba(247,240,230,.92);line-height:1.4;white-space:nowrap}
 .brand-text b{display:block;font-size:14px;font-weight:900;color:var(--gold-lt);letter-spacing:.04em}
-.topbar-right{display:flex;align-items:center;gap:10px;min-width:0}
+.side-title{display:none}
+/* 会員名とアバター（スマホではヘッダー右上に重ねる。PCではサイドバー下部） */
+.side-member{position:absolute;top:env(safe-area-inset-top);right:18px;z-index:60;height:54px;display:flex;align-items:center;gap:10px;min-width:0}
 .topbar-name{font-size:13px;color:rgba(247,240,230,.88);max-width:8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar-av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--paper);border:1.5px solid rgba(247,240,230,.45);font-family:var(--serif);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-/* ───── メニュー（スマホは下、PCは上） ───── */
+/* ───── メニュー（スマホは下部、PCは左サイドバー） ───── */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:100;display:flex;background:var(--paper);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 .tab{flex:1 1 0;min-width:0;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:8px 2px;border:0;background:none;color:var(--ink3);cursor:pointer;position:relative}
 .tab svg{width:22px;height:22px;flex:none}
@@ -72,7 +78,7 @@ button{font-family:inherit}
 .tab[aria-current="page"] .tab-lbl{font-weight:700}
 .tab[aria-current="page"]::before{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;background:var(--gold)}
 
-.content{order:2;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;outline:none}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;outline:none}
 .page{display:none;max-width:680px;margin:0 auto;padding:30px 20px 112px}
 .page.active{display:block;animation:fadeIn .25s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -224,13 +230,30 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .toast{position:fixed;left:50%;bottom:88px;z-index:500;max-width:min(92vw,440px);transform:translateX(-50%);padding:12px 18px;border-radius:10px;background:var(--ink);color:var(--paper);font-size:14px;line-height:1.7;text-align:center}
 
 /* ───── PC：細いスマホ幅の列にせず、ヘッダー・メニュー・本文を読みやすい幅でゆったり配置 ───── */
+/* ───── PC：左サイドバー。細いスマホ幅の列＋下部メニューにはしない。
+   深緑の静かな縦のメニュー（文字中心・アイコンなし・件数バッジなし）にして、業務ツールのサイドバーに見せない。
+   スマホ・タブレット縦（900px未満）は、下部メニューのまま。 ───── */
 @media (min-width:900px){
-  .tabbar{position:static;order:1;justify-content:flex-start;gap:4px;padding:0 max(18px,calc((100% - 1040px)/2));background:var(--bg);border-top:0;border-bottom:1px solid var(--line)}
-  .tab{flex:0 0 auto;flex-direction:row;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 18px}
-  .tab-lbl{font-size:15px}
+  #app{flex-direction:row}
+  .side{display:flex;flex-direction:column;flex:none;width:272px;height:100%;overflow-y:auto;background:var(--green-deep);padding:30px 0 24px}
+  .topbar{background:none;position:static;padding:0}
+  .topbar-in{display:block;padding:0 28px;min-height:0}
+  .side-title{display:block;margin-top:26px;font-family:var(--serif);font-size:22px;line-height:1.5;font-weight:700;letter-spacing:.03em;color:var(--paper)}
+  .side-title::after{content:'';display:block;width:28px;height:2px;margin-top:12px;background:var(--gold)}
+  .tabbar{position:static;display:flex;flex-direction:column;gap:2px;margin-top:30px;padding:0 14px;background:none;border:0;overflow:visible}
+  .tab{flex:none;flex-direction:row;align-items:center;justify-content:flex-start;gap:0;min-height:50px;padding:0 16px 0 18px;border-radius:10px;color:rgba(247,240,230,.82)}
+  .tab svg{display:none}
+  .tab:hover{background:rgba(247,240,230,.07);color:var(--paper)}
+  .tab-lbl{font-family:var(--serif);font-size:16px;font-weight:500;letter-spacing:.08em;text-align:left}
   .tab-lbl span{display:inline}
-  .tab[aria-current="page"]::before{top:auto;bottom:-1px;left:12px;right:12px;height:3px}
-  .page{max-width:720px;padding:48px 24px 72px}
+  .tab[aria-current="page"]{background:rgba(247,240,230,.1);color:var(--paper)}
+  .tab[aria-current="page"] .tab-lbl{font-weight:700}
+  .tab[aria-current="page"]::before{top:13px;bottom:13px;left:0;right:auto;width:3px;height:auto;border-radius:2px}
+  .side-member{position:static;height:auto;margin-top:auto;padding:18px 28px 0;border-top:1px solid rgba(247,240,230,.16);margin-left:14px;margin-right:14px;padding-left:14px;padding-right:14px}
+  .topbar-name{max-width:none;flex:1;font-size:14px;color:rgba(247,240,230,.9)}
+  .side-member .topbar-av{order:-1}
+  .content{flex:1;min-width:0}
+  .page{max-width:760px;padding:60px 48px 80px}
   .page-title{font-size:28px}
   .toast{bottom:32px}
   .overlay{align-items:center}
@@ -243,28 +266,32 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 <a class="skip" href="#main">{{t.a11y.skip}}</a>
 
 <div id="app">
-  <header class="topbar">
-    <div class="topbar-in">
-      <div class="brand">
-        <span class="brand-mark"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="" width="58" height="58" decoding="async"></span>
-        <span class="brand-sep" aria-hidden="true"></span>
-        <span class="brand-text">{{t.brand.line1}}<b>{{t.brand.line2}}</b></span>
+  <div class="side">
+    <header class="topbar">
+      <div class="topbar-in">
+        <div class="brand">
+          <span class="brand-mark"><img src="./lp-assets/logo-hero.png?v=20260501a" alt="" width="48" height="48" decoding="async"></span>
+          <span class="brand-sep" aria-hidden="true"></span>
+          <span class="brand-text">{{t.brand.line1}}<b>{{t.brand.line2}}</b></span>
+        </div>
+        <p class="side-title">{{t.brand.service}}</p>
       </div>
-      <div class="topbar-right">
-        <span class="topbar-name">{{DISPLAY_NAME}}</span>
-        <button class="topbar-av" id="avatarBtn" type="button" data-go="profile" aria-label="{{t.nav.meAria}}"></button>
-      </div>
-    </div>
-  </header>
+    </header>
 
-  <nav class="tabbar" aria-label="{{t.nav.aria}}">
-    <button class="tab" type="button" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12L12 4l9 8"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg><span class="tab-lbl">{{t.nav.home}}</span></button>
-    <button class="tab" type="button" data-tab="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c2-1 5-1 7 0v14c-2-1-5-1-7 0z"/><path d="M20 5c-2-1-5-1-7 0v14c2-1 5-1 7 0z"/></svg><span class="tab-lbl">{{t.nav.learn}}</span></button>
-    <button class="tab" type="button" data-tab="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span class="tab-lbl">{{t.nav.words}}</span></button>
-    <button class="tab" type="button" data-tab="gather"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg><span class="tab-lbl">{{t.nav.gather}}</span></button>
-    <button class="tab" type="button" data-tab="point" aria-label="{{t.nav.pointFull}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 6 7 10a7 7 0 0 1-14 0c0-4 3-8 7-10z"/><path d="M12 21V9"/></svg><span class="tab-lbl" aria-hidden="true"><span>{{t.nav.point1}}</span><span>{{t.nav.point2}}</span></span></button>
-    <button class="tab" type="button" data-tab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tab-lbl">{{t.nav.me}}</span></button>
-  </nav>
+    <nav class="tabbar" aria-label="{{t.nav.aria}}">
+      <button class="tab" type="button" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12L12 4l9 8"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg><span class="tab-lbl">{{t.nav.home}}</span></button>
+      <button class="tab" type="button" data-tab="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c2-1 5-1 7 0v14c-2-1-5-1-7 0z"/><path d="M20 5c-2-1-5-1-7 0v14c2-1 5-1 7 0z"/></svg><span class="tab-lbl">{{t.nav.learn}}</span></button>
+      <button class="tab" type="button" data-tab="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span class="tab-lbl">{{t.nav.words}}</span></button>
+      <button class="tab" type="button" data-tab="gather"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg><span class="tab-lbl">{{t.nav.gather}}</span></button>
+      <button class="tab" type="button" data-tab="point" aria-label="{{t.nav.pointFull}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 6 7 10a7 7 0 0 1-14 0c0-4 3-8 7-10z"/><path d="M12 21V9"/></svg><span class="tab-lbl" aria-hidden="true"><span>{{t.nav.point1}}</span><span>{{t.nav.point2}}</span></span></button>
+      <button class="tab" type="button" data-tab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tab-lbl">{{t.nav.me}}</span></button>
+    </nav>
+
+    <div class="side-member">
+      <span class="topbar-name">{{DISPLAY_NAME}}</span>
+      <button class="topbar-av" id="avatarBtn" type="button" data-go="profile" aria-label="{{t.nav.meAria}}"></button>
+    </div>
+  </div>
 
   <main class="content" id="main" tabindex="-1">
 

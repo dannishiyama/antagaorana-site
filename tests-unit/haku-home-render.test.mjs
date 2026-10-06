@@ -146,3 +146,72 @@ test('joinBlockReason / isEventPast', () => {
   assert.equal(joinBlockReason({ startsAt: past }, NOW), 'ended');
   assert.equal(isEventPast({ startsAt: 'not-a-date' }, NOW), false);
 });
+
+/* ─── 追加改修：サイドバー／丸いロゴ／運営元の表記／旧名称「種・TANE」 ─── */
+test('PCは左サイドバー、スマホは下部メニュー：ヘッダー・メニュー・会員名が1つの入れ物にあり、本文より前にある（Tab順＝見た目の順）', () => {
+  const html = render();
+  const body = html.split('<script>')[0];
+  const side = body.indexOf('<div class="side">');
+  const header = body.indexOf('<header class="topbar">');
+  const nav = body.indexOf('<nav class="tabbar"');
+  const member = body.indexOf('<div class="side-member">');
+  const main = body.indexOf('<main class="content"');
+  assert.ok(side > 0 && side < header && header < nav && nav < member && member < main);
+  // 900px以上でサイドバー（縦並び）、それ未満は下部固定のメニューのまま
+  assert.match(html, /@media \(min-width:900px\)\{[\s\S]*\.tabbar\{position:static;display:flex;flex-direction:column/);
+  assert.match(html, /\.tabbar\{position:fixed;left:0;right:0;bottom:0/);
+  // 6項目の順序
+  assert.deepEqual([...body.matchAll(/data-tab="(\w+)"/g)].map((m) => m[1]), ['home', 'learn', 'words', 'gather', 'point', 'profile']);
+});
+
+test('ロゴ：四角い台座は廃止し、丸いバッジに既存アセットをそのまま（切り抜かず）置く', () => {
+  const html = render();
+  assert.match(html, /\.brand-mark\{[^}]*border-radius:50%/);
+  assert.ok(!/\.brand-mark\{[^}]*border-radius:9px/.test(html), '旧・角丸四角の台座が残っている');
+  assert.ok(html.includes('src="./lp-assets/logo-hero.png?v=20260501a"'));
+  // 画像は加工せず（filter・clip-path・object-fit での切り抜きなし）
+  const css = html.match(/\.brand-mark img\{[^}]*\}/)[0];
+  assert.ok(!/filter|clip-path|object-fit|mask/.test(css), css);
+});
+
+test('会員ホームの表示に「株式会社」「種」「TANE」「HAKU POINT」が出ない', () => {
+  const html = render();
+  assert.ok(!html.includes('株式会社'));
+  assert.ok(!/TANE|HAKU POINT/.test(html));
+  // 画面に出る部分（スクリプトのコード・コメントを除く本文）と、全文言データに「種」がない
+  const visible = html.split('<script>')[0];
+  assert.ok(!visible.includes('種'), '旧名称「種」が残っている');
+  assert.ok(!JSON.stringify(UI).includes('種'), '文言データに旧名称「種」が残っている');
+  assert.ok(html.includes(UI.nav.pointFull) && html.includes(UI.point.title));
+  // 未確定の仕様（換算率・有効期限・交換先・付与条件）を会員向け文言に出さない
+  const all = JSON.stringify(UI.point); // HAKUポイント画面の文言（ログイン切れ等の別機能の文言は対象外）
+  for (const w of ['換算', '有効期限', '交換', '還元', '1pt', '付与される']) assert.ok(!all.includes(w), `未確定の仕様を示す語: ${w}`);
+});
+
+test('運営元の表記：HAKU Communityの通常ページは「教育支援団体」。正式法人名が必要なページは維持', () => {
+  const read = (f) => readFileSync(new URL('../' + f, import.meta.url), 'utf8');
+  for (const f of ['haku-community-login.html', 'haku-community-register.html', 'haku-community.html']) {
+    assert.ok(!read(f).includes('株式会社あんたがおらな'), `${f} に運営元の肩書きとして残っている`);
+    assert.ok(read(f).includes('教育支援団体 あんたがおらな'), f);
+  }
+  // 法的に正式法人名が必要なページは変更しない
+  assert.ok(read('commercial-transactions.html').includes('株式会社あんたがおらな'));
+  assert.ok(read('benkyokai-terms.html').includes('株式会社あんたがおらな'));
+  assert.ok(read('index.html').includes('株式会社あんたがおらな'));
+});
+
+test('旧コミュニティ（community.html）のHAKUタブ：会員に見える名称は「HAKUポイント」。未確定ルールの文は出さない', () => {
+  const html = readFileSync(new URL('../community.html', import.meta.url), 'utf8');
+  assert.ok(!html.includes('<span class="tab-lbl">種</span>'));
+  assert.ok(html.includes('<span class="tab-lbl">HAKUポイント</span>'));
+  const fn = html.slice(html.indexOf('function hakuRenderTane()'), html.indexOf('// ── マイページ拡張'));
+  assert.ok(!/TANE|換算率|有効期限/.test(fn), '会員向け描画に旧名称・未確定ルールが残っている');
+  assert.ok(fn.includes('受け取ったものを、次の誰かへ。') && fn.includes('ただいま準備中です'));
+  assert.ok(!html.includes('累計TANE'));
+});
+
+test('管理画面の表示名は「HAKUポイント」に統一（内部名 tane は維持）', () => {
+  const html = readFileSync(new URL('../admin-community.html', import.meta.url), 'utf8');
+  assert.ok(html.includes('<button data-mode="tane">HAKUポイント</button>'));
+  assert.ok(!/<button[^>]*>[^<]*HAKU POINT/.test(html));
+});

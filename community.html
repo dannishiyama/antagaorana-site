@@ -980,7 +980,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
     </button>
     <button class="tab" onclick="goTab('tane',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 2 7 6 7 10a7 7 0 0 1-14 0c0-4 3-8 7-10z"/><path d="M12 21V9"/></svg>
-      <span class="tab-lbl">種</span>
+      <span class="tab-lbl">HAKUポイント</span>
     </button>
     <button class="tab" onclick="goTab('profile',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -2632,12 +2632,13 @@ function hakuRenderTane() {
   const el = document.getElementById('hakuTaneSection');
   if (!el) return;
   if (!hakuIsActive()) { el.innerHTML = hakuLoginCardHtml('tane'); return; }
+  // 会員に見える名称は「HAKUポイント」。未確定の仕様は画面に出さない（内部名 tane は維持）。
   el.innerHTML = `
     <div class="haku-tane-hero">
-      <div class="lbl">あなたのTANE</div>
-      <div class="memo">TANEの残高・育てる・使う・履歴・つながりの機能は、換算率や有効期限など元設計で未確定の事項が解消され次第、実装予定です。</div>
+      <div class="lbl">HAKUポイント</div>
+      <div class="memo" style="font-size:15px;line-height:2;color:rgba(247,240,230,.92)">受け取ったものを、次の誰かへ。<br>HAKUポイントは、学びや行動を誰かへの価値に変えていく、その積み重ねです。</div>
     </div>
-    <div class="haku-stub">種（TANE）は現在準備中です。<br>「貢献」「紹介」「学び」などの行動が、将来ここに記録・還元される予定です。</div>`;
+    <div class="haku-stub">ただいま準備中です</div>`;
 }
 
 // ── マイページ拡張（HAKU歴・参加履歴・過去のことば） ──
@@ -2662,7 +2663,7 @@ async function hakuRenderProfile() {
     </div>
     <div class="haku-stat-grid">
       <div class="haku-stat"><b>―</b><span class="soon" style="display:block">近日公開</span><span>つないだ仲間</span></div>
-      <div class="haku-stat"><b>―</b><span class="soon" style="display:block">近日公開</span><span>累計TANE</span></div>
+      <div class="haku-stat"><b>―</b><span class="soon" style="display:block">近日公開</span><span>HAKUポイント</span></div>
       <div class="haku-stat"><b>${hakuEsc(since)}</b><span>HAKU歴</span></div>
     </div>
     <div class="sec-hd"><h2>過去に書いたことば</h2></div>
