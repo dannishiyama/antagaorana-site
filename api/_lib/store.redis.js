@@ -741,7 +741,7 @@ export async function deletePost(id) {
 // users/{uid}/sessions）で実装されており、Claude からは本番Firebaseの
 // Authユーザー作成・Firestore権限を一切操作できない（意図的な制約）。
 //
-// このセクションは「/haku-community-home に統合後の /community 完成形を
+// このセクションは「/haku-community/home/ に統合後の /community 完成形を
 // Preview限定で再現する」ためだけの、Firestoreとは無関係な独立フィクスチャ。
 // - キーは ht:fixture: 名前空間で明示的に分離する。
 // - blockProduction() により本番環境では常に403（このモジュールを呼ぶ

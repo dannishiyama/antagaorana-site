@@ -23,22 +23,197 @@
     }
   },
   "rewrites": [
-    { "source": "/haku-community-home.html", "destination": "/api/haku-home" },
-    { "source": "/haku-community-home", "destination": "/api/haku-home" },
-    { "source": "/tomoshibi-post.html", "destination": "/api/tomoshibi-post-page" },
-    { "source": "/tomoshibi-post", "destination": "/api/tomoshibi-post-page" }
+    {
+      "source": "/haku-community/home/",
+      "destination": "/api/haku-home"
+    },
+    {
+      "source": "/haku-community/set-password/",
+      "destination": "/community-set-password.html"
+    },
+    {
+      "source": "/haku-community/forgot-password/",
+      "destination": "/forgot-password.html"
+    },
+    {
+      "source": "/tomoshibi-post.html",
+      "destination": "/api/tomoshibi-post-page"
+    },
+    {
+      "source": "/tomoshibi-post",
+      "destination": "/api/tomoshibi-post-page"
+    }
   ],
-  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
+    },
+    {
+      "source": "/haku-community/admin/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/haku-community/admin/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/haku-community-home",
+      "destination": "/haku-community/home/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-home.html",
+      "destination": "/haku-community/home/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-login",
+      "destination": "/haku-community/login/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-login.html",
+      "destination": "/haku-community/login/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-register",
+      "destination": "/haku-community/register/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-register.html",
+      "destination": "/haku-community/register/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-thanks",
+      "destination": "/haku-community/thanks/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-thanks.html",
+      "destination": "/haku-community/thanks/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-cancel",
+      "destination": "/haku-community/cancel/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community-cancel.html",
+      "destination": "/haku-community/cancel/",
+      "permanent": true
+    },
+    {
+      "source": "/admin-community",
+      "destination": "/haku-community/admin/",
+      "permanent": true
+    },
+    {
+      "source": "/admin-community.html",
+      "destination": "/haku-community/admin/",
+      "permanent": true
+    },
+    {
+      "source": "/admin-set-password",
+      "destination": "/haku-community/admin/set-password/",
+      "permanent": true
+    },
+    {
+      "source": "/admin-set-password.html",
+      "destination": "/haku-community/admin/set-password/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community.html",
+      "destination": "/haku-community/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community",
+      "destination": "/haku-community/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/home",
+      "destination": "/haku-community/home/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/login",
+      "destination": "/haku-community/login/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/register",
+      "destination": "/haku-community/register/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/thanks",
+      "destination": "/haku-community/thanks/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/cancel",
+      "destination": "/haku-community/cancel/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/admin",
+      "destination": "/haku-community/admin/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/set-password",
+      "destination": "/haku-community/set-password/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/forgot-password",
+      "destination": "/haku-community/forgot-password/",
+      "permanent": true
+    },
+    {
+      "source": "/haku-community/admin/set-password",
+      "destination": "/haku-community/admin/set-password/",
+      "permanent": true
     }
   ]
 }

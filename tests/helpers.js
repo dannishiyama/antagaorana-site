@@ -17,7 +17,7 @@ export async function apiGet(request, path) {
 }
 
 // 個別管理者アカウントでログインし、admin_session Cookieを持つ新しいAPIRequestContextを返す。
-// E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD は事前に admin-community.html の「初回管理者アカウント
+// E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD は事前に /haku-community/admin/ の「初回管理者アカウント
 // 作成」から作っておいた、テスト専用の管理者アカウントを想定する（本番の管理者アカウントを
 // テストに使い回さないこと）。
 export async function loginAsAdmin(playwright, baseURL) {

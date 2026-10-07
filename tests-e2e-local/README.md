@@ -1,6 +1,6 @@
 # ローカルE2E（本物の画面 × 本物のAPI × メモリ上のRedis）
 
-管理画面（`admin-community.html`）と会員ホームを、本物のAPI（`api/admin.js` `api/community-auth.js` `api/haku-home.js`）につないで、
+管理画面（`/haku-community/admin/`）と会員ホームを、本物のAPI（`api/admin.js` `api/community-auth.js` `api/haku-home.js`）につないで、
 ブラウザ（Chromium）で実際に操作して確認します。保存先はメモリ上のRedis（ioredis-mock）で、
 **本物のRedis（Preview / Production）には一切接続しません**。管理者・会員のIDとパスワードは、このテスト内で作る使い捨ての値です。
 

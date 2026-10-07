@@ -5,13 +5,14 @@
 import { test, expect } from '@playwright/test';
 
 const PAGES = [
-  '/haku-community-login.html',
+  '/haku-community/',
+  '/haku-community/login/',
   '/tomoshibi-login.html',
-  '/haku-community-register.html',
+  '/haku-community/register/',
   '/tomoshibi-register.html',
   '/forgot-password.html',
   '/community-set-password.html?token=dummy&community=haku',
-  '/admin-community.html',
+  '/haku-community/admin/',
   '/account-settings.html', // 未ログイン時のゲート表示のみ確認
 ];
 

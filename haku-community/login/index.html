@@ -6,10 +6,10 @@
 <meta name="robots" content="noindex,nofollow">
 <title>ログイン｜HAKU Community</title>
 <meta name="description" content="HAKU Community 会員の方のログインページです。">
-<link rel="canonical" href="https://antagaorana.com/haku-community-login.html">
-<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<link rel="canonical" href="https://antagaorana.com/haku-community/login/">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="/lp-assets/community-tokens.css">
 <style>
 :root{color-scheme:light;box-sizing:border-box}
 body{margin:0;padding:0}
@@ -103,13 +103,13 @@ footer a:hover{color:rgba(247,240,230,.8)}
 <body>
 
 <div class="top">
-  <a href="./haku-community.html">← HAKU Community 紹介ページへ</a>
+  <a href="/haku-community/">← HAKU Community 紹介ページへ</a>
 </div>
 
 <div class="login">
   <div class="loginbox" id="box">
     <div class="login-calli">
-      <img src="./lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="180" height="115" alt="あんたがおらな" decoding="async">
+      <img src="/lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="/lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, /lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="180" height="115" alt="あんたがおらな" decoding="async">
       <div class="calli-divider"></div>
       <span class="calli-sub">HAKU COMMUNITY</span>
     </div>
@@ -132,18 +132,18 @@ footer a:hover{color:rgba(247,240,230,.8)}
       <div class="err" id="err" role="alert" aria-live="polite"></div>
     </form>
     <div class="links">
-      <a href="./forgot-password.html">パスワードをお忘れの方</a>
+      <a href="/haku-community/forgot-password/">パスワードをお忘れの方</a>
     </div>
 
     <div class="new-here">
       はじめての方はこちら<br>
-      <a href="./haku-community-register.html">新規登録に進む →</a>
+      <a href="/haku-community/register/">新規登録に進む →</a>
     </div>
   </div>
 </div>
 
 <footer>
-  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  <a href="/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="/commercial-transactions" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
   © 教育支援団体 あんたがおらな
 </footer>
 
@@ -187,14 +187,14 @@ footer a:hover{color:rgba(247,240,230,.8)}
       .then(function(res){
         if(res.status !== 200){
           if(res.data && res.data.canResumeCheckout){
-            err.innerHTML = (res.data.error || 'お支払いが完了していません。') + '<br><a href="./haku-community-register.html" style="color:#fff;text-decoration:underline">お支払いへ進む →</a>';
+            err.innerHTML = (res.data.error || 'お支払いが完了していません。') + '<br><a href="/haku-community/register/" style="color:#fff;text-decoration:underline">お支払いへ進む →</a>';
             err.classList.add('show');
           } else {
             showError(res.data.error || 'ログインに失敗しました。');
           }
           reset(); return;
         }
-        location.href = './haku-community-home.html';
+        location.href = '/haku-community/home/';
       })
       .catch(function(){ showError('通信に失敗しました。時間をおいて再度お試しください。'); reset(); });
   });
@@ -205,7 +205,7 @@ footer a:hover{color:rgba(247,240,230,.8)}
 (async () => {
   try {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const { animate } = await import('./lp-assets/vendor/motion.js');
+    const { animate } = await import('/lp-assets/vendor/motion.js');
     document.getElementById('box').classList.add('is-ready');
     const err = document.getElementById('err');
     new MutationObserver(() => {

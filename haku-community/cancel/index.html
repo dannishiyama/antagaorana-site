@@ -38,8 +38,8 @@ p{color:var(--mid);max-width:34em}
     <h1>お申し込みは、<br>まだ完了していません。</h1>
     <p>決済の手続きが途中で中断されました。料金は発生していません。急ぐ必要はありません。あらためて考えたうえで、いつでもお申し込みいただけます。</p>
     <div class="ctas">
-      <a href="./haku-community.html#h-apply" class="btn btn-solid" id="back-apply">申し込み画面に戻る</a>
-      <a href="./haku-community.html" class="btn">HAKU Communityを見る</a>
+      <a href="/haku-community/#h-apply" class="btn btn-solid" id="back-apply">申し込み画面に戻る</a>
+      <a href="/haku-community/" class="btn">HAKU Communityを見る</a>
     </div>
   </div>
 </main>
@@ -49,7 +49,7 @@ p{color:var(--mid);max-width:34em}
   try {
     var seg = new URLSearchParams(location.search).get('for');
     if(seg === 'teacher' || seg === 'professional'){
-      document.getElementById('back-apply').href = './haku-community.html?for=' + seg + '#h-apply';
+      document.getElementById('back-apply').href = '/haku-community/?for=' + seg + '#h-apply';
     }
   } catch(e) {}
 })();

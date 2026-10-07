@@ -152,10 +152,10 @@ h1{font-size:18px;margin-bottom:4px}
 
   <div id="adminPanel">
     <h1>管理画面</h1>
-    <p class="note">Preview環境専用。承認するとRedisにmembershipを作成し、パスワード設定メールを送信します。</p>
+    <p class="note">承認するとmembershipを作成し、パスワード設定メールを送信します。<span id="uiVersion" style="margin-left:8px;opacity:.8"></span></p>
     <div class="modetabs">
       <button class="on" data-mode="applications">会員申請</button>
-      <button data-mode="members">会員一覧</button>
+      <button data-mode="members">会員一覧・検索</button>
       <button data-mode="firebase">拓（既存Community）管理</button>
       <button data-mode="events">HAKUイベント管理</button>
       <button data-mode="words">HAKUからのことば</button>
@@ -167,6 +167,7 @@ h1{font-size:18px;margin-bottom:4px}
     </div>
 
     <div id="applicationsPanel">
+      <p class="note" style="margin-bottom:14px">会員の検索や、HAKUポイントの付与・調整・取消は、<a href="#" id="gotoMembers" style="color:#33472f;font-weight:700">「会員一覧・検索」タブ</a>から行います。</p>
       <div class="tabs">
         <button class="on" data-c="tomoshibi">教育者のサロン 灯</button>
         <button data-c="haku">HAKU Community</button>
@@ -337,7 +338,7 @@ h1{font-size:18px;margin-bottom:4px}
     </div>
 
     <div id="sessionsPanel" style="display:none">
-      <p class="note">/haku-community-home（統合完成形プレビュー）専用のセッション音声フィクスチャです。本番Firebase/Firestoreのセッションデータとは無関係です。</p>
+      <p class="note">会員ホーム（/haku-community/home/）の「わたし」に表示される、セッション音声のデータです。Firebase/Firestoreのセッションデータとは無関係です。</p>
       <div class="evform">
         <label for="sessTargetEmail">対象メンバーのメールアドレス</label>
         <input type="email" id="sessTargetEmail" placeholder="member@example.com">
@@ -1349,7 +1350,7 @@ function deletePostAdmin(id, el) {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// セッション音声（Preview fixture）— /haku-community-home の統合完成形プレビュー専用
+// セッション音声（会員ホーム /haku-community/home/ の「わたし」に表示）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 document.getElementById('sessSubmitBtn').addEventListener('click', function(){
   var errEl = document.getElementById('sessErr');
@@ -1624,6 +1625,11 @@ function deleteNote(id){
     loadNotes();
   });
 }
+
+// 画面バージョン（ブラウザが古い画面を表示していないかを、目で確認できるようにする）
+var ADMIN_UI_VERSION = '2026.10.07-c（会員検索・HAKUポイント操作）';
+document.getElementById('uiVersion').textContent = '画面バージョン: ' + ADMIN_UI_VERSION;
+document.getElementById('gotoMembers').addEventListener('click', function(ev){ ev.preventDefault(); document.querySelector('.modetabs [data-mode="members"]').click(); });
 
 // ページを開き直したとき、有効な管理者ログイン（Cookie）が残っていれば、ログイン画面を飛ばして管理画面を復元する。
 api('/api/admin?action=whoami', { method: 'GET' }).then(function(res){

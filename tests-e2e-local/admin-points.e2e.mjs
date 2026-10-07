@@ -35,7 +35,7 @@ const waitList = () => page.waitForFunction(() => document.querySelectorAll('#me
 const card = (name) => page.locator('#membersList .app', { hasText: name }).first();
 
 console.log('■ A. 管理者ログイン〜会員一覧');
-await page.goto(base + '/admin-community');
+await page.goto(base + '/haku-community/admin/');
 await page.fill('#adminemail', ADMIN.email); await page.fill('#adminpw', ADMIN.password);
 await page.click('#loginbtn'); await page.waitForSelector('#adminPanel', { state: 'visible' });
 await page.click('[data-mode="members"]'); await waitList();
@@ -244,7 +244,7 @@ const mp = await mctx.newPage();
 await mp.goto(base + '/lp-assets/logo-hero.png'); // 同一オリジンでCookieを持たせるための足場
 const loginRes = await mp.evaluate(async (pw) => (await fetch('/api/community-auth?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ community: 'haku', email: 'nishiyama.taro@example.com', password: pw }) })).status, MEMBER_PASSWORD);
 eq('会員ログイン', loginRes, 200);
-await mp.goto(base + '/haku-community-home#point');
+await mp.goto(base + '/haku-community/home/#point');
 await mp.waitForSelector('#pointBody .pt-row');
 const memberText = await mp.locator('#pointBody').innerText();
 check('会員の#pointに「130 pt」が出る', /現在のポイント\s*130 pt/.test(memberText.replace(/\n+/g, ' ')), memberText);

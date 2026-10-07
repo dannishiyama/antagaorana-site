@@ -1,6 +1,6 @@
 /**
  * api/admin.js
- * 管理画面（admin-community.html）向けAPIをまとめた単一エンドポイント。
+ * 管理画面（/haku-community/admin/）向けAPIをまとめた単一エンドポイント。
  * Vercel Hobbyプランのサーバーレス関数数上限（12個）に収めるため、
  * login / logout / bootstrap-admin / applications / approve / reject を1ファイルに集約している。
  *
@@ -614,7 +614,7 @@ async function handleApprove(req, res, session) {
       const membership = await getMembership(community, email);
       if (membership?.status === 'active') {
         // 通常はここに来ない（決済前に承認するため）。手動でMembershipを与えたケース等の保険。
-        ctaUrl = `${baseUrl}/haku-community-login.html`;
+        ctaUrl = `${baseUrl}/haku-community/login/`;
         ctaLabel = 'ログインする';
       } else {
         // 承認済みApplicationに対して、その場でStripe Checkout Sessionを安全に生成し、
@@ -627,7 +627,7 @@ async function handleApprove(req, res, session) {
           ctaLabel = 'お支払いへ進む';
         } catch (err) {
           console.error('[admin:approve] Stripe checkout session creation failed, falling back:', err.message);
-          ctaUrl = `${baseUrl}/haku-community-register.html`;
+          ctaUrl = `${baseUrl}/haku-community/register/`;
           ctaLabel = 'お支払いへ進む';
         }
       }

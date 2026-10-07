@@ -55,10 +55,10 @@ test('safeJson は < > & と行区切り文字を無効化し、読み戻すと�
 
 test('運営の管理画面へのリンク・URLは、運営権限がない会員のHTMLには一切含まれない', () => {
   const member = render({ isAdmin: false });
-  assert.ok(!member.includes('admin-community'));
+  assert.ok(!member.includes('/haku-community/admin'));
   assert.ok(!member.includes(UI.me.admin));
   const admin = render({ isAdmin: true });
-  assert.ok(admin.includes('admin-community.html'));
+  assert.ok(admin.includes('/haku-community/admin/'));
   assert.ok(admin.includes(UI.me.admin));
 });
 
@@ -93,7 +93,7 @@ test('文言ファイルのすべての文言は文字列で、空でなく、�
 
 test('ロゴは総合トップと同じ既存アセット（lp-assets/logo-hero.png）を使い、右側の団体名はそのまま残る', () => {
   const html = render();
-  assert.ok(html.includes('./lp-assets/logo-hero.png?v=20260501a'));
+  assert.ok(html.includes('/lp-assets/logo-hero.png?v=20260501a'));
   assert.ok(html.includes('教育支援団体') && html.includes('あんたがおらな'));
   assert.ok(!html.includes('hero-logo-antagaorana'), '旧・文字ロゴを参照している');
 });
@@ -168,7 +168,7 @@ test('ロゴ：四角い台座は廃止し、丸いバッジに既存アセッ�
   const html = render();
   assert.match(html, /\.brand-mark\{[^}]*border-radius:50%/);
   assert.ok(!/\.brand-mark\{[^}]*border-radius:9px/.test(html), '旧・角丸四角の台座が残っている');
-  assert.ok(html.includes('src="./lp-assets/logo-hero.png?v=20260501a"'));
+  assert.ok(html.includes('src="/lp-assets/logo-hero.png?v=20260501a"'));
   // 画像は加工せず（filter・clip-path・object-fit での切り抜きなし）
   const css = html.match(/\.brand-mark img\{[^}]*\}/)[0];
   assert.ok(!/filter|clip-path|object-fit|mask/.test(css), css);
@@ -190,7 +190,7 @@ test('会員ホームの表示に「株式会社」「種」「TANE」「HAKU PO
 
 test('運営元の表記：HAKU Communityの通常ページは「教育支援団体」。正式法人名が必要なページは維持', () => {
   const read = (f) => readFileSync(new URL('../' + f, import.meta.url), 'utf8');
-  for (const f of ['haku-community-login.html', 'haku-community-register.html', 'haku-community.html']) {
+  for (const f of ['haku-community/login/index.html', 'haku-community/register/index.html', 'haku-community/index.html']) {
     assert.ok(!read(f).includes('株式会社あんたがおらな'), `${f} に運営元の肩書きとして残っている`);
     assert.ok(read(f).includes('教育支援団体 あんたがおらな'), f);
   }
@@ -211,7 +211,7 @@ test('旧コミュニティ（community.html）のHAKUタブ：会員に見え�
 });
 
 test('管理画面の表示名は「HAKUポイント」に統一（内部名 tane は維持）', () => {
-  const html = readFileSync(new URL('../admin-community.html', import.meta.url), 'utf8');
+  const html = readFileSync(new URL('../haku-community/admin/index.html', import.meta.url), 'utf8');
   assert.ok(html.includes('<button data-mode="tane">HAKUポイント</button>'));
   assert.ok(!/<button[^>]*>[^<]*HAKU POINT/.test(html));
 });

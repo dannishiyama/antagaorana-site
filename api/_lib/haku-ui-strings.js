@@ -276,8 +276,8 @@ export const UI = {
   // 外部リンク（変更時はここだけ）。555チャレンジのMeetのURL。
   links: {
     challengeMeet: 'https://meet.google.com/cvr-kkda-mcg',
-    adminPanel: './admin-community.html',
-    login: './haku-community-login.html',
+    adminPanel: '/haku-community/admin/',
+    login: '/haku-community/login/',
   },
 };
 

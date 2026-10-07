@@ -6,10 +6,10 @@
 <meta name="robots" content="noindex,nofollow">
 <title>新規登録｜HAKU Community</title>
 <meta name="description" content="HAKU Community の新規登録ページです。">
-<link rel="canonical" href="https://antagaorana.com/haku-community-register.html">
-<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<link rel="canonical" href="https://antagaorana.com/haku-community/register/">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="/lp-assets/community-tokens.css">
 <style>
 :root{color-scheme:light;box-sizing:border-box}
 body{margin:0;padding:0}
@@ -70,7 +70,6 @@ input,textarea{font-family:inherit;font-size:14px}
 .already{margin-top:40px;padding-top:24px;border-top:1px solid rgba(255,255,255,.2);font-size:12.5px;color:#b9c7b2;line-height:1.9}
 .already a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px}
 
-.mock-note{margin-top:36px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.9;text-align:left}
 
 footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4);line-height:2.2}
 footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
@@ -87,7 +86,7 @@ footer a:hover{color:rgba(255,255,255,.8)}
 <body>
 
 <div class="top">
-  <a href="./haku-community.html">← HAKU Community 紹介ページへ</a>
+  <a href="/haku-community/">← HAKU Community 紹介ページへ</a>
 </div>
 
 <div class="stage">
@@ -148,7 +147,7 @@ footer a:hover{color:rgba(255,255,255,.8)}
       </div>
       <label class="agree">
         <input type="checkbox" id="terms">
-        <span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、内容に同意します。</span>
+        <span><a href="/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="/commercial-transactions" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、内容に同意します。</span>
       </label>
       <button class="go" type="submit" id="go">申し込む</button>
       <p class="err" id="err" role="alert" aria-live="polite"></p>
@@ -156,22 +155,14 @@ footer a:hover{color:rgba(255,255,255,.8)}
 
     <div class="already">
       すでにアカウントをお持ちの方は<br>
-      <a href="./haku-community-login.html">こちらからログイン →</a>
+      <a href="/haku-community/login/">こちらからログイン →</a>
     </div>
 
-    <p class="mock-note" id="test-env-notice" style="display:none">※ これはPreview確認用のテスト環境です。ご入力いただいたパスワードはサーバー側でハッシュ化して保存され、平文では保存されません。決済はStripeのテストモードで行われ、実際の請求は発生しません。</p>
-    <script>
-      (function () {
-        var PRODUCTION_HOSTS = ['www.antagaorana.com', 'antagaorana.com'];
-        var el = document.getElementById('test-env-notice');
-        if (el && PRODUCTION_HOSTS.indexOf(location.hostname) === -1) el.style.display = '';
-      })();
-    </script>
   </div>
 </div>
 
 <footer>
-  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  <a href="/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="/commercial-transactions" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
   © 教育支援団体 あんたがおらな
 </footer>
 
@@ -274,7 +265,7 @@ footer a:hover{color:rgba(255,255,255,.8)}
 (async () => {
   try {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const { animate } = await import('./lp-assets/vendor/motion.js');
+    const { animate } = await import('/lp-assets/vendor/motion.js');
     document.getElementById('card').classList.add('is-ready');
     const err = document.getElementById('err');
     new MutationObserver(() => {

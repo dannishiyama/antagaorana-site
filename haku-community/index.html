@@ -6,10 +6,10 @@
 <meta name="robots" content="noindex,nofollow">
 <title>HAKU Community｜あんたがおらな</title>
 <meta name="description" content="拓（HAKU）コーチングとは別に、日々の実践とつながりを積み重ねる社会人向けの小さなコミュニティ「HAKU Community」。月額2,980円。">
-<link rel="canonical" href="https://antagaorana.com/haku-community.html">
-<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<link rel="canonical" href="https://antagaorana.com/haku-community/">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="stylesheet" href="/lp-assets/community-tokens.css">
 <style>
 :root{color-scheme:light;box-sizing:border-box}
 body{margin:0;padding:0}
@@ -185,9 +185,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 /* ---- APPLY：申込みフォーム ---- */
 .apply{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.test-note{font-size:12.5px;color:var(--mid);border:1px dashed var(--line);background:var(--cream);padding:14px 18px;margin:8px 0 40px;line-height:1.9}
-.test-note b{display:inline-block;font-weight:500;font-size:11px;letter-spacing:.16em;color:#fff;background:var(--accent-ink);padding:1px 8px;margin-right:10px}
-.test-note code{font-family:inherit;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
 .ap-step{border:0;border-top:1px solid var(--line);padding:28px 0 32px;min-width:0}
 .ap-step legend{float:left;width:100%;font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:18px;padding:0}
 .ap-step legend + *{clear:both}
@@ -234,7 +231,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   .for-card h3{font-size:19px}
   .choice{grid-template-columns:1fr}
   .confirm div{grid-template-columns:80px 1fr;gap:12px}
-  .test-note{margin-bottom:28px}
 }
 
 /* ---- micro interactions (CSS-only; safe even if the Motion script below fails to load) ---- */
@@ -259,7 +255,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 <body>
 
 <div class="top">
-  <a class="logo" href="./haku-community.html">HAKU COMMUNITY</a>
+  <a class="logo" href="/haku-community/">HAKU COMMUNITY</a>
   <nav class="primary-nav" aria-label="サイト内ナビゲーション">
     <a href="#h-pillars">サービスについて</a>
     <a href="#h-people">特徴</a>
@@ -267,7 +263,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     <a href="#faq">FAQ</a>
   </nav>
   <div class="top-ctas">
-    <a class="top-login" href="./haku-community-login.html">ログイン</a>
+    <a class="top-login" href="/haku-community/login/">ログイン</a>
     <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
   </div>
 </div>
@@ -281,7 +277,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     <p>「こんなものだ」と諦めていた枠を外し、自分の未来を自分の手で拓いていく——そのための日常の環境です。個別に深く伴走する「拓（HAKU）コーチング」とは別に、日々の実践とつながりを積み重ねる小さな共同体を、月額2,980円でご用意しました。</p>
     <div class="ctas">
       <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
-      <a href="./haku-community-login.html" class="btn btn-ghost">ログイン</a>
+      <a href="/haku-community/login/" class="btn btn-ghost">ログイン</a>
     </div>
     <div class="hero-meta">
       <div><b>週1回</b><span>HAKU NOTE・今週の問い</span></div>
@@ -450,7 +446,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
           <li>価値観分析・人生軸分析</li>
           <li>本人固有の悩みに深く伴走</li>
         </ul>
-        <a href="./haku.html" class="btn" style="margin-top:22px;width:100%;text-align:center">拓（HAKU）コーチングを見る</a>
+        <a href="/haku" class="btn" style="margin-top:22px;width:100%;text-align:center">拓（HAKU）コーチングを見る</a>
       </div>
       <div class="plan pick">
         <div class="tag">HAKU COMMUNITY</div>
@@ -471,7 +467,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 </section>
 
 <!--
-  APPLY：プラン選択 → haku-community-register.html（新規登録：氏名・パスワード等の入力）
+  APPLY：プラン選択 → /haku-community/register/（新規登録：氏名・パスワード等の入力）
   → Application作成（status:'pending'）→ 管理者承認（完全紹介制のため必須）
   → 承認メール内のCTAから /api/haku-checkout が生成したStripe Checkout（テストモードのみ）
   → Webhook確認 → Membership active。
@@ -483,16 +479,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   <div class="narrow">
     <div class="sec-label">APPLY</div>
     <h2 class="lead">お申し込み</h2>
-    <p class="test-note" id="test-env-notice" style="display:none"><b>テスト環境</b>実際の請求は発生しません。参加申請は運営の承認後にお支払いへ進みます。決済画面に進んだ際は、テストカード <code>4242 4242 4242 4242</code>（有効期限は未来の日付・セキュリティコードは任意の3桁）をご利用ください。</p>
-    <script>
-      // 本番ドメイン（www.antagaorana.com / antagaorana.com）では絶対に表示しない。
-      // Preview（*.vercel.app）やlocalhostなど、それ以外のホストでのみテスト環境案内を表示する。
-      (function () {
-        var PRODUCTION_HOSTS = ['www.antagaorana.com', 'antagaorana.com'];
-        var el = document.getElementById('test-env-notice');
-        if (el && PRODUCTION_HOSTS.indexOf(location.hostname) === -1) el.style.display = '';
-      })();
-    </script>
+    <p class="note" style="margin:8px 0 40px">参加申請は、運営の承認後にお支払いへ進みます。</p>
 
     <form id="apply-form" novalidate>
       <input type="hidden" name="segment" value="professional">
@@ -502,7 +489,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
         <div class="choice one">
           <label><input type="radio" name="plan" value="monthly" checked><span><b>HAKU Community 月額プラン</b><small>HAKU NOTE・HAKU MORNING・HAKU MEET</small><em>2,980<i>円／月（税込）</i></em></span></label>
         </div>
-        <p class="note">個別に深く伴走する拓（HAKU）コーチングは、<a href="./haku.html">こちら</a>から別途ご相談ください。</p>
+        <p class="note">個別に深く伴走する拓（HAKU）コーチングは、<a href="/haku">こちら</a>から別途ご相談ください。</p>
       </fieldset>
 
       <fieldset class="ap-step">
@@ -513,7 +500,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
           <div><dt>お支払い</dt><dd>クレジットカード。運営の承認後にお支払いのご案内をお送りします。初回のお支払い完了後、以降は毎月自動で更新されます。</dd></div>
           <div><dt>解約</dt><dd>いつでも解約できます。<span class="is-ph">（解約の手続き方法・返金の扱いは確認中）</span></dd></div>
         </dl>
-        <label class="agree"><input type="checkbox" name="agree"><span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、上記の内容に同意します。<small class="is-ph">HAKU Community 利用規約は準備中です。</small></span></label>
+        <label class="agree"><input type="checkbox" name="agree"><span><a href="/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="/commercial-transactions" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、上記の内容に同意します。<small class="is-ph">HAKU Community 利用規約は準備中です。</small></span></label>
       </fieldset>
 
       <p class="ap-err" id="ap-err" role="alert" aria-live="polite"></p>
@@ -541,12 +528,12 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     <p>大きな決意はいりません。今週の問いを、ひとつ持ち帰るところから。</p>
     <div class="ctas">
       <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
-      <a href="./haku-community-login.html" class="btn btn-ghost">ログイン</a>
+      <a href="/haku-community/login/" class="btn btn-ghost">ログイン</a>
     </div>
   </div>
 </div>
 <div class="site-footer">
-  <a class="teacher-link" href="./tomoshibi.html">教育者の方へ — 教育者のサロン 灯</a>
+  <a class="teacher-link" href="/tomoshibi">教育者の方へ — 教育者のサロン 灯</a>
   <p class="copy">© 教育支援団体 あんたがおらな</p>
 </div>
 
@@ -583,14 +570,14 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     if(!form.agree.checked){ err.textContent = '内容をご確認のうえ、同意にチェックしてください。'; return; }
     err.textContent = '';
     go.disabled = true; go.textContent = '登録フォームへ進んでいます…';
-    location.href = './haku-community-register.html?segment=' + encodeURIComponent(seg.value) + '&plan=' + encodeURIComponent(plan.value);
+    location.href = '/haku-community/register/?segment=' + encodeURIComponent(seg.value) + '&plan=' + encodeURIComponent(plan.value);
   });
 })();
 </script>
 
 <!--
   Motion animations — purely additive progressive enhancement.
-  - Self-hosted at ./lp-assets/vendor/motion.js (Motion v11.15.0, single self-contained ES module,
+  - Self-hosted at /lp-assets/vendor/motion.js (Motion v11.15.0, single self-contained ES module,
     no external network calls at runtime).
   - Loaded via dynamic import() inside try/catch: if the file is missing or fails to evaluate,
     the catch block runs and the page is left exactly as it was before this block existed.
@@ -601,7 +588,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   try {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const { animate, inView, stagger } = await import('./lp-assets/vendor/motion.js');
+    const { animate, inView, stagger } = await import('/lp-assets/vendor/motion.js');
 
     // 1) Hero — quiet staggered entrance (eyebrow → h1 → en → lead → the 4 stat blocks)
     animate(

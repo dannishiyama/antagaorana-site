@@ -384,7 +384,7 @@ export default async function handler(req, res) {
       // 登録を経由しない旧フロー・不整合ケースのみ。
       const token = randomToken(32);
       await createPasswordSetupToken(token, { email: customerEmail, community: 'haku', displayName: customerName });
-      if (baseUrlForEmail) setupUrl = `${baseUrlForEmail}/community-set-password.html?token=${token}&community=haku`;
+      if (baseUrlForEmail) setupUrl = `${baseUrlForEmail}/haku-community/set-password/?token=${token}&community=haku`;
     }
     await logAudit({ actorId: 'stripe-webhook', action: 'membership_activated', targetId: customerEmail, metadata: { community: 'haku', event: event.id } });
   } catch (err) {

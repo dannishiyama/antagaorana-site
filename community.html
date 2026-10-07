@@ -17,8 +17,8 @@
 <meta name="twitter:title" content="コミュニティ「拓」｜ログイン｜あんたがおらな">
 <meta name="twitter:description" content="あんたがおらなコミュニティ「拓」のログインページです。日々の行動を積み上げ、習慣化や目標の見える化を通じて、安心して前に進むための場としてご利用いただけます。">
 <meta name="twitter:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
-<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -634,7 +634,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 <div id="loginScreen" class="screen active">
   <div class="login-wrap">
     <div class="login-calli">
-      <img src="./lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="200" height="127" alt="あんたがおらな" decoding="async">
+      <img src="/lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="/lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, /lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="200" height="127" alt="あんたがおらな" decoding="async">
       <div class="calli-divider"></div>
       <span class="calli-sub">COMMUNITY</span>
     </div>
@@ -653,7 +653,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 <div id="applyScreen" class="screen">
   <div class="apply-wrap">
     <div class="login-calli">
-      <img src="./lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="200" height="127" alt="あんたがおらな" decoding="async">
+      <img src="/lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="/lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, /lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" width="200" height="127" alt="あんたがおらな" decoding="async">
       <div class="calli-divider"></div>
       <span class="calli-sub">COMMUNITY</span>
     </div>
@@ -700,7 +700,7 @@ html,body{height:100%;font-family:'Noto Sans JP',sans-serif;background:var(--ivo
 <div id="appScreen" class="screen">
   <div class="topbar">
     <div class="topbar-logo">
-      <img class="topbar-logo-img" src="./lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="./lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, ./lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" alt="あんたがおらな" style="filter:drop-shadow(0 1px 4px rgba(0,0,0,.25))">
+      <img class="topbar-logo-img" src="/lp-assets/hero-logo-antagaorana.png?v=20260916b" srcset="/lp-assets/hero-logo-antagaorana.png?v=20260916b 1x, /lp-assets/hero-logo-antagaorana@2x.png?v=20260916b 2x" alt="あんたがおらな" style="filter:drop-shadow(0 1px 4px rgba(0,0,0,.25))">
       <div class="topbar-logo-text">教育支援団体<span>あんたがおらな</span></div>
     </div>
     <div class="topbar-right">
@@ -2410,7 +2410,7 @@ function hakuLoginCardHtml(suffix, message) {
         <div class="haku-login-err" id="hakuLoginErr_${suffix}"></div>
         <button type="button" class="btn-haku-login" style="width:100%;margin-bottom:8px" onclick="hakuDoLogin('${suffix}')">HAKU Communityにログイン</button>
       </div>
-      <a href="./haku-community.html" target="_blank" style="font-size:12px;color:var(--green);text-decoration:underline">HAKU Communityについて詳しく見る・申し込む →</a>
+      <a href="/haku-community/" target="_blank" style="font-size:12px;color:var(--green);text-decoration:underline">HAKU Communityについて詳しく見る・申し込む →</a>
     </div>`;
 }
 
@@ -2648,7 +2648,7 @@ async function hakuRenderProfile() {
   if (!hakuIsActive()) {
     el.innerHTML = `<div class="haku-locked" style="margin-top:14px">
       <p>HAKU Community（月額2,980円・完全紹介制）にもご参加いただくと、朝会・イベント・ことば等の活動履歴がここに表示されます。</p>
-      <a href="./haku-community.html" target="_blank" class="btn-haku-login">HAKU Communityについて見る</a>
+      <a href="/haku-community/" target="_blank" class="btn-haku-login">HAKU Communityについて見る</a>
     </div>`;
     return;
   }

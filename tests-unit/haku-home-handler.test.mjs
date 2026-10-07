@@ -40,7 +40,7 @@ async function member(status = 'active', displayName = '山田太郎') {
 test('未ログインはログインページへ（本文は返さない）', async () => {
   const r = await get('');
   assert.equal(r.statusCode, 302);
-  assert.equal(r.location, '/haku-community-login.html');
+  assert.equal(r.location, '/haku-community/login/');
   assert.equal(r.body, null);
 });
 
@@ -54,7 +54,7 @@ test('会員（有効）には新しい画面が返り、未置換のプレー�
   assert.ok(html.includes('<div class="side">') && html.includes('class="side-member"'));
   assert.ok(html.includes('HAKU Community') && html.includes('教育支援団体'));
   assert.ok(!/\{\{[^}]*\}\}/.test(html));
-  assert.ok(!html.includes('admin-community'));
+  assert.ok(!html.includes('/haku-community/admin'));
   assert.ok(!html.includes('株式会社'));
 });
 
@@ -62,11 +62,11 @@ test('有効な運営ログイン（ht_admin_session）がある場合だけ、�
   const m = await member();
   const adminSid = await store.createAdminSession({ actorId: 'admin@example.com', role: 'super_admin' });
   const withAdmin = await get(`ht_session=${m.sid}; ht_admin_session=${adminSid}`);
-  assert.ok(withAdmin.body.includes('admin-community.html'));
+  assert.ok(withAdmin.body.includes('/haku-community/admin/'));
   const fakeAdmin = await get(`ht_session=${m.sid}; ht_admin_session=forged-session-id`);
-  assert.ok(!fakeAdmin.body.includes('admin-community'), '偽の運営セッションでは出ない');
+  assert.ok(!fakeAdmin.body.includes('/haku-community/admin'), '偽の運営セッションでは出ない');
   const none = await get(`ht_session=${m.sid}`);
-  assert.ok(!none.body.includes('admin-community'));
+  assert.ok(!none.body.includes('/haku-community/admin'));
 });
 
 test('表示名はHTMLとスクリプトの両方で安全に埋め込まれる', async () => {

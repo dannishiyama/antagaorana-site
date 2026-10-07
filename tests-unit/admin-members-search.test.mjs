@@ -1,12 +1,12 @@
 /**
- * 管理画面「会員一覧」の検索（admin-community.html 内の normSearch / memberMatches）のテスト。
+ * 管理画面「会員一覧」の検索（haku-community/admin/index.html 内の normSearch / memberMatches）のテスト。
  * 画面のHTMLから該当の関数をそのまま取り出して実行するので、画面と同じ判定を検査できる。
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../admin-community.html', import.meta.url), 'utf8');
+const html = readFileSync(new URL('../haku-community/admin/index.html', import.meta.url), 'utf8');
 const a = html.indexOf('function normSearch(s){');
 const b = html.indexOf('function memberCardHtml(m){');
 assert.ok(a > 0 && b > a, '検索関数が見つからない');

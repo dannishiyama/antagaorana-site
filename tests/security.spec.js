@@ -22,8 +22,11 @@ test.describe('共通セキュリティ', () => {
   });
 
   test('未ログインでの会員ページ直接アクセスはログインページへリダイレクトされる（会員HTMLは返らない）', async ({ page }) => {
+    await page.goto('/haku-community/home/');
+    await expect(page).toHaveURL(/\/haku-community\/login\//);
+    // 旧URLからも同様（ログインページへ。リダイレクトのループにならない）
     await page.goto('/haku-community-home.html');
-    await expect(page).toHaveURL(/haku-community-login/);
+    await expect(page).toHaveURL(/\/haku-community\/login\//);
     await page.goto('/tomoshibi-post.html');
     await expect(page).toHaveURL(/tomoshibi-login/);
   });

@@ -15,7 +15,7 @@
  * 前提: 完全紹介制のため、このAPIを呼べるのは
  * Application(community:'haku', status:'approved'（管理者承認済み）) の場合のみ。
  * 新規登録直後（status:'pending'）はまだ呼べない。管理者が承認すると、承認メールの
- * CTAから haku-community-register.html に戻り、再度Application状態を確認したうえで
+ * CTAから /haku-community/register/ に戻り、再度Application状態を確認したうえで
  * このAPIを呼ぶ（api/community-auth.js の handleRegister が resumed:true を返す）。
  * ここではemailを信用せず、実際に承認済みのApplicationが存在するかを毎回検証する。
  *
@@ -132,8 +132,8 @@ export default async function handler(req, res) {
         type: 'text',
         optional: true,
       }],
-      success_url: `${baseUrl}/haku-community-thanks?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/haku-community-cancel?for=${segment}`,
+      success_url: `${baseUrl}/haku-community/thanks/?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/haku-community/cancel/?for=${segment}`,
     });
 
     return res.status(200).json({ url: session.url });

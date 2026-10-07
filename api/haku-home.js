@@ -1,6 +1,6 @@
 /**
  * api/haku-home.js
- * HAKU Community 会員ホームの実体。vercel.json のrewriteにより /haku-community-home.html は
+ * HAKU Community 会員ホームの実体。vercel.json のrewriteにより /haku-community/home/ は
  * このAPIに転送される。実HTMLは api/_templates/haku-community-home.html にあり、
  * 静的ファイルとしては一切公開されていない（このファイル経由でしか読めない）。
  *
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   const cookies = parseCookies(req);
   try {
     const session = await getSession(cookies.ht_session);
-    if (!session) return res.redirect(302, '/haku-community-login.html');
+    if (!session) return res.redirect(302, '/haku-community/login/');
 
     // 完全紹介制：認証成功 AND Application承認済み AND Membership active の3条件が揃わない限り、
     // HTML本文を絶対に返さない。community-auth.js のログイン時にも同じ判定があるが、
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     // 上位互換として扱ってよい（'pending'/'rejected'はここで弾かれる）。
     const application = await getApplication('haku', session.email);
     if (!application || (application.status !== 'approved' && application.status !== 'paid')) {
-      return res.redirect(302, '/haku-community-login.html');
+      return res.redirect(302, '/haku-community/login/');
     }
 
     // 'canceling'（解約予約済みだが現在の請求期間はまだ終了していない）は'active'と同じく
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     // 'canceled'にしてから発生する（Stripeのcustomer.subscription.deletedが唯一の起点）。
     const membership = await getMembership('haku', session.email);
     if (!membership || (membership.status !== 'active' && membership.status !== 'canceling')) {
-      return res.redirect(302, '/haku-community-login.html');
+      return res.redirect(302, '/haku-community/login/');
     }
 
     const user = await getUser(session.email);

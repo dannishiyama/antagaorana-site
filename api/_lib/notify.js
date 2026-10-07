@@ -39,7 +39,9 @@ export async function sendPasswordSetupEmail({ community, email, displayName, to
   const resend = new Resend(process.env.RESEND_API_KEY);
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
-  const setupUrl = `${baseUrl}/community-set-password.html?token=${encodeURIComponent(token)}&community=${encodeURIComponent(community)}`;
+  // HAKU Communityの案内メールは /haku-community/ 配下のURLを使う（灯は従来のURL）。
+  const setupPath = community === 'haku' ? '/haku-community/set-password/' : '/community-set-password.html';
+  const setupUrl = `${baseUrl}${setupPath}?token=${encodeURIComponent(token)}&community=${encodeURIComponent(community)}`;
   const name = displayName || 'ご参加者';
   const isReset = purpose === 'reset';
   const heading = isReset ? 'パスワード再設定のご案内' : 'パスワード設定のご案内';
@@ -144,7 +146,7 @@ export async function sendApprovalEmail({ community, email, displayName, baseUrl
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
   const name = displayName || 'ご参加者';
-  const finalCtaUrl = ctaUrl || `${baseUrl}/${community === 'haku' ? 'haku-community-login' : 'tomoshibi-login'}.html`;
+  const finalCtaUrl = ctaUrl || `${baseUrl}${community === 'haku' ? '/haku-community/login/' : '/tomoshibi-login.html'}`;
   const finalCtaLabel = ctaLabel || 'ログインする';
   const isPaymentCta = finalCtaLabel !== 'ログインする';
   const lead = isPaymentCta
@@ -193,7 +195,7 @@ ${finalCtaUrl}
 export async function sendAdminSetupEmail({ email, token, baseUrl }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
-  const setupUrl = `${baseUrl}/admin-set-password.html?token=${encodeURIComponent(token)}`;
+  const setupUrl = `${baseUrl}/haku-community/admin/set-password/?token=${encodeURIComponent(token)}`;
 
   const html = `<!DOCTYPE html>
 <html lang="ja"><head><meta charset="UTF-8"></head>
@@ -237,7 +239,7 @@ export async function notifyAdminOfApplication({ community, fullName, displayNam
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
   const submittedLabel = submittedAt ? new Date(submittedAt).toLocaleString('ja-JP') : new Date().toLocaleString('ja-JP');
-  const adminUrl = baseUrl ? `${baseUrl}/admin-community.html` : null;
+  const adminUrl = baseUrl ? `${baseUrl}/haku-community/admin/` : null;
   const recipients = adminEmails(fromEmail);
 
   return sendAndLog({
@@ -321,7 +323,7 @@ export async function sendPaymentCompletedEmail({ community = 'haku', email, cus
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
   const name = customerName || 'ご参加者';
-  const loginUrl = `${baseUrl}/haku-community-login.html`;
+  const loginUrl = `${baseUrl}/haku-community/login/`;
   const ctaUrl = setupUrl || loginUrl;
   const ctaLabel = setupUrl ? 'パスワードを設定する' : `${label}にログインする`;
   const finalAmountLabel = amountLabel || '2,980円';
@@ -378,7 +380,7 @@ export async function sendPaymentFailedEmail({ community = 'haku', email, displa
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
   const name = displayName || 'ご参加者';
-  const ctaUrl = portalUrl || `${baseUrl}/haku-community-login.html`;
+  const ctaUrl = portalUrl || `${baseUrl}/haku-community/login/`;
   const ctaLabel = 'お支払い方法を確認する';
 
   const html = `<!DOCTYPE html>

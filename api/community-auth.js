@@ -878,7 +878,7 @@ async function handleWithdraw(req, res, body, session) {
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 行動目標／セッション：Preview fixture（本番Firebase/Firestoreの操作は一切行わない。
-// /haku-community-home に「統合後の/community完成形」を再現するための独立フィクスチャ）
+// /haku-community/home/ に「統合後の/community完成形」を再現するための独立フィクスチャ）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 function currentYYYYMM() {

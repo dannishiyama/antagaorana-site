@@ -54,8 +54,8 @@ export async function createHakuCheckoutSession({ email, baseUrl, segment = 'pro
         type: 'text',
         optional: true,
       }],
-      success_url: `${baseUrl}/haku-community-thanks?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/haku-community-cancel?for=${segment}`,
+      success_url: `${baseUrl}/haku-community/thanks/?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/haku-community/cancel/?for=${segment}`,
     });
     return session;
   } catch (err) {

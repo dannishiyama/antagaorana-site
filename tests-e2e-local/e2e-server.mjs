@@ -56,12 +56,12 @@ const adapt = (handler) => async (nreq, nres) => {
 };
 
 export function start() {
-  const routes = { '/api/admin': adapt(adminHandler), '/api/community-auth': adapt(authHandler), '/haku-community-home': adapt(homeHandler) };
+  const routes = { '/api/admin': adapt(adminHandler), '/api/community-auth': adapt(authHandler), '/haku-community/home/': adapt(homeHandler) };
   const server = http.createServer((req, res) => {
     const u = new URL(req.url, 'http://localhost');
     if (routes[u.pathname]) return routes[u.pathname](req, res);
     let f = null;
-    if (u.pathname === '/admin-community' || u.pathname === '/admin-community.html') f = path.join(REPO, 'admin-community.html');
+    if (u.pathname === '/haku-community/admin/') f = path.join(REPO, 'haku-community/admin/index.html');
     else if (u.pathname.startsWith('/lp-assets/')) f = path.join(REPO, u.pathname);
     if (f && fs.existsSync(f)) {
       res.writeHead(200, { 'Content-Type': f.endsWith('.png') ? 'image/png' : f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream' });
