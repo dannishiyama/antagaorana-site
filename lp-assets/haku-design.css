@@ -1,0 +1,128 @@
+/*
+ * HAKU Community Design System v1
+ * 紹介ページ・登録／ログイン・会員画面（ホーム〜わたし）が共有する、小さなデザインの約束。
+ * ページごとに装飾を足さず、ここで決めた値だけを使う。
+ *
+ * 考え方
+ *  - 情報の構造は、余白・文字・細い線・わずかな背景差で表す。カードで囲わない。
+ *  - 色は意味のある場所だけ。緑＝ブランドと主操作、金＝「いまここ」（選択中・フォーカス）、
+ *    赤茶＝エラー・取り消し。装飾のための色は使わない。
+ *  - 角丸は操作部品（ボタン・入力欄）だけ、2px。影は使わない（重なる入力シートだけ例外）。
+ *  - 動きは短いフェードと色の変化だけ。
+ */
+
+:root{
+  /* ── Color ───────────────────────────── */
+  --h-bg:#f7f3ec;            /* 地（生成り） */
+  --h-surface:#fffdf8;       /* 入力欄・読み物の面 */
+  --h-ink:#2a2d24;           /* 本文（Primary） */
+  --h-ink-2:#4d5245;         /* 補足（Secondary）  地との比 7.4:1 */
+  --h-ink-3:#63675a;         /* 注記（Tertiary）   地との比 5.2:1 */
+  --h-line:rgba(70,98,70,.22);       /* 区切り線 */
+  --h-line-soft:rgba(70,98,70,.12);  /* 弱い区切り線 */
+  --h-green:#466246;         /* ブランドの深緑（暗い面・主ボタン） */
+  --h-green-ink:#34492f;     /* 緑の文字・ホバー（地との比 8.9:1） */
+  --h-on-green:#f7f3ec;      /* 緑の面の上の文字 */
+  --h-on-green-2:rgba(247,243,236,.88);  /* 緑の面の上の補足 */
+  --h-gold:#d8b15a;          /* 「いまここ」：選択中の印・フォーカス（暗い面では文字にも使える） */
+  --h-gold-ink:#7a5a14;      /* 地の上で金を文字に使うときだけ */
+  --h-success:#3f6b46;
+  --h-warning:#8a5a1f;
+  --h-error:#9a3b1f;
+
+  /* ── Typography ──────────────────────── */
+  --h-serif:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho','游明朝',serif;
+  --h-sans:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','游ゴシック',sans-serif;
+  /* 見出し・本文・補足の段階（サイズ / 行間は --h-lh-*） */
+  --h-fs-display:clamp(30px,4.4vw,46px);
+  --h-fs-h1:clamp(24px,2.6vw,30px);
+  --h-fs-h2:20px;
+  --h-fs-h3:17px;
+  --h-fs-body:16px;
+  --h-fs-small:14px;
+  --h-fs-caption:13px;      /* これより小さい文字は使わない */
+  --h-lh-heading:1.6;
+  --h-lh-body:1.95;
+  --h-lh-small:1.8;
+  --h-ls-heading:.05em;
+  --h-ls-body:.02em;
+  --h-ls-label:.08em;
+  --h-measure:36em;         /* 本文の最大行長（約36字） */
+
+  /* ── Spacing（この8段階だけを使う） ───── */
+  --h-s1:4px; --h-s2:8px; --h-s3:12px; --h-s4:16px; --h-s5:24px; --h-s6:32px; --h-s7:48px; --h-s8:64px; --h-s9:96px;
+
+  /* ── Shape / Motion ──────────────────── */
+  --h-radius:2px;
+  --h-ease:.16s ease;
+  --h-tap:44px;             /* タップ領域の最小 */
+}
+
+/* ── Base ─────────────────────────────── */
+.h-base{font-family:var(--h-sans);font-size:var(--h-fs-body);line-height:var(--h-lh-body);letter-spacing:var(--h-ls-body);color:var(--h-ink);background:var(--h-bg);-webkit-font-smoothing:antialiased;text-size-adjust:100%}
+.h-base :focus-visible{outline:2px solid var(--h-green-ink);outline-offset:2px}
+.h-dark :focus-visible{outline-color:var(--h-gold)}  /* 暗い面では金 */
+
+/* ── Typography ───────────────────────── */
+.h-display,.h-h1,.h-h2,.h-h3{font-family:var(--h-serif);font-weight:500;letter-spacing:var(--h-ls-heading);line-height:var(--h-lh-heading);color:var(--h-green-ink)}
+.h-display{font-size:var(--h-fs-display);line-height:1.5}
+.h-h1{font-size:var(--h-fs-h1)}
+.h-h2{font-size:var(--h-fs-h2)}
+.h-h3{font-size:var(--h-fs-h3);color:var(--h-ink)}
+.h-body{max-width:var(--h-measure)}
+.h-small{font-size:var(--h-fs-small);line-height:var(--h-lh-small);color:var(--h-ink-2)}
+.h-caption{font-size:var(--h-fs-caption);line-height:1.7;color:var(--h-ink-3)}
+.h-label{font-size:var(--h-fs-caption);font-weight:500;letter-spacing:var(--h-ls-label);color:var(--h-ink-3)}
+
+/* ── Button（主操作は1画面に1つ） ──────── */
+.h-btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--h-tap);padding:0 var(--h-s5);border:1px solid var(--h-green);border-radius:var(--h-radius);background:transparent;color:var(--h-green-ink);font:500 15px/1.4 var(--h-sans);letter-spacing:.08em;text-decoration:none;cursor:pointer;transition:background var(--h-ease),color var(--h-ease),border-color var(--h-ease)}
+.h-btn:hover{background:rgba(70,98,70,.08)}
+.h-btn--primary{background:var(--h-green);color:var(--h-on-green)}
+.h-btn--primary:hover{background:var(--h-green-ink);border-color:var(--h-green-ink)}
+.h-dark .h-btn{border-color:rgba(247,243,236,.55);color:var(--h-on-green)}
+.h-dark .h-btn:hover{background:rgba(247,243,236,.1)}
+.h-dark .h-btn--primary{background:var(--h-gold);border-color:var(--h-gold);color:#2b2a1f}   /* 暗い面の主ボタンだけ金（1画面に1つ） */
+.h-dark .h-btn--primary:hover{background:#e3c06f;border-color:#e3c06f}
+.h-btn[disabled],.h-btn[aria-disabled="true"]{opacity:.5;cursor:default;pointer-events:none}
+.h-btn[aria-busy="true"]{cursor:progress}
+
+/* ── Text link ────────────────────────── */
+.h-link{color:var(--h-green-ink);text-decoration:underline;text-decoration-color:rgba(70,98,70,.4);text-underline-offset:.28em;transition:text-decoration-color var(--h-ease)}
+.h-link:hover{text-decoration-color:currentColor}
+.h-dark .h-link{color:var(--h-on-green);text-decoration-color:rgba(247,243,236,.45)}
+button.h-link{background:none;border:0;padding:0;font:inherit;cursor:pointer;min-height:var(--h-tap)}
+
+/* ── Form ─────────────────────────────── */
+.h-field{margin-bottom:var(--h-s5)}
+.h-field label{display:block;margin-bottom:var(--h-s2);font-size:var(--h-fs-small);font-weight:500;color:var(--h-ink-2);letter-spacing:.04em}
+.h-field .h-hint{margin-top:var(--h-s2);font-size:var(--h-fs-caption);color:var(--h-ink-3);line-height:1.7}
+.h-input{width:100%;min-height:var(--h-tap);padding:var(--h-s3) var(--h-s3);border:1px solid rgba(70,98,70,.38);border-radius:var(--h-radius);background:var(--h-surface);color:var(--h-ink);font:400 16px/1.6 var(--h-sans);transition:border-color var(--h-ease)}
+.h-input:hover{border-color:var(--h-green)}
+.h-input:focus-visible{border-color:var(--h-green-ink);outline:2px solid var(--h-green-ink);outline-offset:1px}
+.h-input::placeholder{color:#8b8f80}
+textarea.h-input{min-height:9em;resize:vertical}
+.h-dark .h-input{background:rgba(247,243,236,.08);border-color:rgba(247,243,236,.4);color:var(--h-on-green)}
+.h-dark .h-input::placeholder{color:rgba(247,243,236,.5)}
+.h-dark .h-input:hover{border-color:rgba(247,243,236,.7)}
+.h-dark .h-input:focus-visible{border-color:var(--h-gold);outline-color:var(--h-gold)}
+.h-dark .h-field label{color:var(--h-on-green-2)}
+.h-dark .h-field .h-hint{color:var(--h-on-green-2)}
+
+/* ── Status（バッジにしない。文字だけで状態を示す） ── */
+.h-status{font-size:var(--h-fs-caption);font-weight:500;letter-spacing:.06em;color:var(--h-ink-3)}
+.h-status--on{color:var(--h-success);font-weight:700}      /* 参加予定・完了 */
+.h-status--warn{color:var(--h-warning)}
+.h-status--error{color:var(--h-error)}
+
+/* ── State（読み込み・空・エラー） ──────── */
+.h-state{padding:var(--h-s5) 0;font-size:var(--h-fs-small);line-height:1.9;color:var(--h-ink-2)}
+.h-state--empty{color:var(--h-ink-3)}
+.h-state--error{color:var(--h-error)}
+.h-msg{min-height:1.7em;font-size:var(--h-fs-small);color:var(--h-error)}
+.h-msg--ok{color:var(--h-success)}
+
+/* ── Rule（区切り線） ─────────────────── */
+.h-rule{border:0;border-top:1px solid var(--h-line);margin:0}
+.h-rule--soft{border-top-color:var(--h-line-soft)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

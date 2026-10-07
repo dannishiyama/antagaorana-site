@@ -4,265 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#2F4D2E">
+<meta name="theme-color" content="#466246">
 <title>{{t.meta.title}}</title>
 <link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
 <link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-/*
- * 会員ホーム。深い緑・生成り・金の方向性は従来どおり。
- * 変えたこと：白い角丸カードの多用をやめ、細い罫線で区切る読み物のつくりに。小さく薄い文字をなくし、
- * 補足の文字色も十分なコントラスト（本文色より薄くても4.5:1以上）にしている。
- * 文言はすべて api/_lib/haku-ui-strings.js にあり、ここには書かない。
- */
-:root{
-  --bg:#F6F1E8;
-  --paper:#FBF8F2;
-  --line:rgba(47,77,46,.16);
-  --ink:#1F2A20;
-  --ink2:#444D42;
-  --ink3:#5B6358;
-  --green:#3B5A3A;
-  --green-deep:#2F4D2E;
-  --green-pale:#E9EFE4;
-  --gold:#D4A843;
-  --gold-lt:#E8C060;
-  --gold-ink:#7A5410;
-  --terra-ink:#9A4A30;
-  --brand-cream:#F4F1EA; /* 総合トップのヘッダー背景（rgba(244,241,234)）と同じ色 */
-  --serif:'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif;
-  --sans:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.85;overflow:hidden;-webkit-text-size-adjust:100%}
-[hidden]{display:none!important}
-a{color:inherit}
-button{font-family:inherit}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.topbar :focus-visible{outline-color:var(--gold-lt)}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.skip{position:absolute;left:12px;top:-60px;z-index:300;background:var(--paper);color:var(--green-deep);padding:10px 14px;border-radius:8px;font-weight:700}
-.skip:focus{top:10px}
-
-#app{position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh}
-/* .side は、スマホでは「ヘッダー・下部メニュー・会員名」をそのまま並べるための入れ物（display:contents）。
-   PCでは左のサイドバーになる（下の @media を参照）。 */
-.side{display:contents}
-
-/* ───── ヘッダー（スマホ）／サイドバー上部（PC） ───── */
-.topbar{order:0;background:var(--green-deep);flex-shrink:0;position:relative;z-index:50;padding-top:env(safe-area-inset-top)}
-.topbar-in{display:flex;align-items:center;gap:10px;padding:5px 18px;min-height:54px;padding-right:150px}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-/* 運営団体のロゴは、総合トップと同じ既存アセット（lp-assets/logo-hero.png）をそのまま使い、
-   画像は切り抜かず、マーク全体が丸いバッジの中に収まるように置く（総合トップと同じ約36px幅）。
-   バッジの色は総合トップのヘッダー背景と同じ生成り。ロゴ自体の色は一切変えていない。 */
-.brand-mark{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:var(--brand-cream);overflow:hidden}
-.brand-mark img{position:absolute;display:block;max-width:none;width:47.64px;height:47.64px;left:-3.2px;top:-0.24px}
-.brand-sep{flex:none;width:1px;height:28px;background:rgba(245,239,230,.4)}
-.brand-text{font-family:var(--serif);font-size:12px;font-weight:700;color:rgba(247,240,230,.92);line-height:1.4;white-space:nowrap}
-.brand-text b{display:block;font-size:14px;font-weight:900;color:var(--gold-lt);letter-spacing:.04em}
-.side-title{display:none}
-/* 会員名とアバター（スマホではヘッダー右上に重ねる。PCではサイドバー下部） */
-.side-member{position:absolute;top:env(safe-area-inset-top);right:18px;z-index:60;height:54px;display:flex;align-items:center;gap:10px;min-width:0}
-.topbar-name{font-size:13px;color:rgba(247,240,230,.88);max-width:8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.topbar-av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--paper);border:1.5px solid rgba(247,240,230,.45);font-family:var(--serif);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
-/* ───── メニュー（スマホは下部、PCは左サイドバー） ───── */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:100;display:flex;background:var(--paper);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.tab{flex:1 1 0;min-width:0;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:8px 2px;border:0;background:none;color:var(--ink3);cursor:pointer;position:relative}
-.tab svg{width:22px;height:22px;flex:none}
-.tab-lbl{font-size:11px;line-height:1.25;font-weight:500;text-align:center}
-.tab-lbl span{display:block}
-.tab[aria-current="page"]{color:var(--green-deep)}
-.tab[aria-current="page"] .tab-lbl{font-weight:700}
-.tab[aria-current="page"]::before{content:'';position:absolute;top:0;left:22%;right:22%;height:2px;background:var(--gold)}
-
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;outline:none}
-.page{display:none;max-width:680px;margin:0 auto;padding:30px 20px 112px}
-.page.active{display:block;animation:fadeIn .25s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
-/* ───── 見出し・区切り ───── */
-.page-head{margin-bottom:28px}
-.page-title{font-family:var(--serif);font-size:24px;line-height:1.55;font-weight:700;color:var(--green-deep);letter-spacing:.02em;outline:none}
-.page-lead{margin-top:6px;font-size:14px;color:var(--ink2)}
-.block{margin-top:42px}
-.block-title{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:17px;line-height:1.6;font-weight:700;color:var(--green-deep);letter-spacing:.03em}
-.block-title::before{content:'';flex:none;width:18px;height:2px;background:var(--gold)}
-.block-supp{margin-top:2px;font-size:13px;color:var(--ink3)}
-.block-body{margin-top:12px}
-.sub-title{margin:20px 0 4px;font-size:13px;font-weight:700;color:var(--gold-ink);letter-spacing:.04em}
-.list{list-style:none}
-.item{padding:16px 0;border-top:1px solid var(--line)}
-.item:last-child{border-bottom:1px solid var(--line)}
-
-/* ───── 状態（読み込み・空・エラー） ───── */
-.state{padding:20px 2px;font-size:14px;line-height:1.9;color:var(--ink2)}
-.state.empty{color:var(--ink3)}
-.state.error{color:var(--terra-ink)}
-.state .sub{display:block;margin-top:2px;font-size:13px;color:var(--ink3)}
-.state .btn,.state .btn-text{margin-top:10px}
-.pulse{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
-
-/* ───── ボタン ───── */
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border-radius:10px;border:1.5px solid transparent;font-size:15px;font-weight:700;line-height:1.3;cursor:pointer;text-decoration:none}
-.btn-primary{background:var(--green);border-color:var(--green);color:var(--paper)}
-.btn-primary:hover{background:var(--green-deep)}
-.btn-quiet{background:transparent;border-color:rgba(59,90,58,.55);color:var(--green-deep)}
-.btn-quiet:hover{background:var(--green-pale)}
-.btn-text{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;border:0;background:none;color:var(--green-deep);font-size:14px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.btn-text.danger{color:var(--terra-ink)}
-.btn[disabled],.btn-text[disabled]{opacity:.55;cursor:default}
-.actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:12px}
-.chip{display:inline-block;padding:3px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink2);background:transparent}
-.chip.joined{background:var(--green-pale);border-color:rgba(59,90,58,.4);color:var(--green-deep);font-weight:700}
-
-/* ───── ホーム：今日の一歩 ───── */
-.step{padding:22px 20px;background:var(--green-pale);border-left:4px solid var(--gold);border-radius:4px 14px 14px 4px}
-.step-kicker{font-size:13px;font-weight:700;color:var(--gold-ink);letter-spacing:.08em}
-.step-lead{margin:6px 0 4px;font-family:var(--serif);font-size:18px;line-height:1.75;color:var(--ink)}
-.step-detail{margin-bottom:16px;font-size:14px;color:var(--ink2)}
-.step .btn{margin-top:14px}
-
-/* ───── 集まり ───── */
-.ev-kicker{font-size:12.5px;font-weight:700;color:var(--gold-ink);letter-spacing:.03em}
-.ev-title{margin:2px 0;font-family:var(--serif);font-size:16.5px;line-height:1.65;font-weight:700;color:var(--ink)}
-.ev-meta{font-size:13.5px;color:var(--ink2)}
-.ev-note{margin-top:6px;font-size:14px;color:var(--ink2);white-space:pre-wrap;overflow-wrap:anywhere}
-
-/* ───── 問い（HAKU NOTE） ───── */
-.q-text{margin:6px 0;font-family:var(--serif);font-size:19px;line-height:1.9;color:var(--ink);overflow-wrap:anywhere}
-.q-meta{font-size:13px;color:var(--ink3)}
-.q-supp{margin-top:8px;font-size:14px;color:var(--ink2);white-space:pre-wrap;overflow-wrap:anywhere}
-details.arc{border-top:1px solid var(--line)}
-details.arc:last-of-type{border-bottom:1px solid var(--line)}
-details.arc summary{display:block;list-style:none;padding:14px 22px 14px 0;cursor:pointer;position:relative}
-details.arc summary::-webkit-details-marker{display:none}
-details.arc summary::after{content:'＋';position:absolute;right:2px;top:14px;color:var(--ink3)}
-details.arc[open] summary::after{content:'－'}
-.arc-title{display:block;font-family:var(--serif);font-size:15px;line-height:1.7;color:var(--ink)}
-.arc-meta{display:block;font-size:13px;color:var(--ink3)}
-.arc-body{padding:0 0 16px}
-
-/* ───── ことば ───── */
-.word{padding:6px 0 6px 16px;border-left:3px solid var(--gold);margin-bottom:22px}
-.word-head{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink3)}
-.word-title{margin-top:4px;font-family:var(--serif);font-size:16px;line-height:1.7}
-.word-body{margin-top:4px;color:var(--ink2);white-space:pre-wrap;overflow-wrap:anywhere}
-.word.compact .word-body{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.post-meta{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:13px;color:var(--ink3)}
-.post-meta .who{font-weight:700;color:var(--green-deep)}
-.post-cat{color:var(--gold-ink)}
-.post-title{margin-top:3px;font-family:var(--serif);font-size:15.5px;line-height:1.7}
-.post-body{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
-.hidden-badge{color:var(--terra-ink);font-size:13px}
-
-/* ───── 音声プレーヤー ───── */
-.player{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px 12px;background:var(--green-pale);border-radius:10px}
-.player-btn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--green);color:var(--paper);font-size:14px;cursor:pointer}
-.player-track{flex:1;min-width:0}
-.player input[type=range]{width:100%;min-height:32px;padding:0;border:0;background:none;accent-color:var(--green)}
-.player-time{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2)}
-.player-ctl{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.player-ctl button{min-height:40px;padding:0 12px;border:1px solid rgba(59,90,58,.45);border-radius:8px;background:none;color:var(--green-deep);font-size:13px;cursor:pointer}
-.chapters{margin-top:8px;display:flex;flex-direction:column;gap:2px}
-.chapter{display:flex;justify-content:space-between;gap:10px;min-height:40px;padding:6px 8px;border:0;border-radius:6px;background:none;color:var(--ink);font-size:13.5px;text-align:left;cursor:pointer}
-.chapter:hover{background:var(--green-pale)}
-.chapter span:last-child{color:var(--ink3);font-variant-numeric:tabular-nums}
-
-/* ───── HAKUポイント ───── */
-.philo{margin-top:34px;font-family:var(--serif);font-size:21px;line-height:1.95;color:var(--green-deep)}
-.philo-sub{margin-top:12px;font-size:14.5px;line-height:2.05;color:var(--ink2)}
-.prep{display:inline-block;margin-top:28px;padding:6px 16px;border:1px solid var(--line);border-radius:999px;font-size:13.5px;color:var(--ink2)}
-.pt-now{margin-top:30px;color:var(--ink2);font-size:14px}
-.pt-now b{display:block;margin-top:2px;font-family:var(--serif);font-size:30px;line-height:1.4;color:var(--green-deep);font-weight:700}
-.pt-row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:14px}
-.pt-row:last-child{border-bottom:1px solid var(--line)}
-.pt-row .d{display:block;font-size:13px;color:var(--ink3)}
-.pt-row .n{flex:none;font-family:var(--serif);color:var(--ink);white-space:nowrap}
-
-/* ───── わたし ───── */
-.me-name{font-family:var(--serif);font-size:19px;color:var(--ink)}
-.me-sub{font-size:13.5px;color:var(--ink2)}
-.promise{padding:16px 0;border-top:1px solid var(--line)}
-.promise:last-of-type{border-bottom:1px solid var(--line)}
-.promise-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.promise-text{font-family:var(--serif);font-size:16px;line-height:1.75;overflow-wrap:anywhere}
-.promise-count{font-size:13px;color:var(--ink3)}
-.today-btn{flex:none;min-height:44px;padding:0 14px;border:1.5px solid rgba(59,90,58,.55);border-radius:10px;background:none;color:var(--green-deep);font-size:14px;font-weight:700;cursor:pointer}
-.today-btn[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--paper)}
-.promise details{margin-top:6px}
-.promise summary{min-height:40px;display:flex;align-items:center;font-size:13.5px;color:var(--green-deep);cursor:pointer}
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:8px 0}
-.day{min-height:42px;border:1px solid var(--line);border-radius:8px;background:transparent;font-size:13.5px;color:var(--ink2);cursor:pointer}
-.day[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--paper)}
-.day.today{box-shadow:inset 0 0 0 2px var(--gold)}
-.day[disabled]{opacity:.35;cursor:default}
-.inline-form{display:flex;gap:10px;margin-top:14px}
-.inline-form input{flex:1;min-width:0}
-.menu{list-style:none;margin-top:6px}
-.row-link{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:54px;padding:0 4px;border:0;border-top:1px solid var(--line);background:none;color:var(--ink);font-size:15px;text-align:left;text-decoration:none;cursor:pointer}
-.menu li:last-child .row-link{border-bottom:1px solid var(--line)}
-.row-link.danger{color:var(--terra-ink)}
-.row-arrow{color:var(--ink3)}
-.cancel-note{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px;color:var(--ink2)}
-
-/* ───── フォーム ───── */
-.form{max-width:440px}
-.field{margin-bottom:18px}
-label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;color:var(--ink2)}
-input,select,textarea{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid rgba(47,77,46,.35);border-radius:8px;background:#fff;color:var(--ink);font-family:inherit;font-size:16px;line-height:1.6}
-textarea{min-height:140px;resize:vertical}
-input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2px solid rgba(212,168,67,.6);outline-offset:0}
-.hint{margin-top:4px;font-size:13px;color:var(--ink3)}
-.err{min-height:1.6em;margin-bottom:8px;font-size:14px;color:var(--terra-ink)}
-
-/* ───── 入力ダイアログ・通知 ───── */
-.overlay{position:fixed;inset:0;z-index:400;display:flex;align-items:flex-end;justify-content:center;background:rgba(25,35,25,.5)}
-.sheet{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:24px 22px calc(26px + env(safe-area-inset-bottom));border-radius:18px 18px 0 0;background:var(--bg)}
-.sheet h2{margin-bottom:14px;font-family:var(--serif);font-size:19px;color:var(--green-deep)}
-.sheet .count{margin-top:4px;text-align:right;font-size:13px;color:var(--ink3)}
-.sheet-actions{display:flex;gap:10px;margin-top:8px}
-.sheet-actions .btn{flex:1}
-.toast{position:fixed;left:50%;bottom:88px;z-index:500;max-width:min(92vw,440px);transform:translateX(-50%);padding:12px 18px;border-radius:10px;background:var(--ink);color:var(--paper);font-size:14px;line-height:1.7;text-align:center}
-
-/* ───── PC：細いスマホ幅の列にせず、ヘッダー・メニュー・本文を読みやすい幅でゆったり配置 ───── */
-/* ───── PC：左サイドバー。細いスマホ幅の列＋下部メニューにはしない。
-   深緑の静かな縦のメニュー（文字中心・アイコンなし・件数バッジなし）にして、業務ツールのサイドバーに見せない。
-   スマホ・タブレット縦（900px未満）は、下部メニューのまま。 ───── */
-@media (min-width:900px){
-  #app{flex-direction:row}
-  .side{display:flex;flex-direction:column;flex:none;width:272px;height:100%;overflow-y:auto;background:var(--green-deep);padding:30px 0 24px}
-  .topbar{background:none;position:static;padding:0}
-  .topbar-in{display:block;padding:0 28px;min-height:0}
-  .side-title{display:block;margin-top:26px;font-family:var(--serif);font-size:22px;line-height:1.5;font-weight:700;letter-spacing:.03em;color:var(--paper)}
-  .side-title::after{content:'';display:block;width:28px;height:2px;margin-top:12px;background:var(--gold)}
-  .tabbar{position:static;display:flex;flex-direction:column;gap:2px;margin-top:30px;padding:0 14px;background:none;border:0;overflow:visible}
-  .tab{flex:none;flex-direction:row;align-items:center;justify-content:flex-start;gap:0;min-height:50px;padding:0 16px 0 18px;border-radius:10px;color:rgba(247,240,230,.82)}
-  .tab svg{display:none}
-  .tab:hover{background:rgba(247,240,230,.07);color:var(--paper)}
-  .tab-lbl{font-family:var(--serif);font-size:16px;font-weight:500;letter-spacing:.08em;text-align:left}
-  .tab-lbl span{display:inline}
-  .tab[aria-current="page"]{background:rgba(247,240,230,.1);color:var(--paper)}
-  .tab[aria-current="page"] .tab-lbl{font-weight:700}
-  .tab[aria-current="page"]::before{top:13px;bottom:13px;left:0;right:auto;width:3px;height:auto;border-radius:2px}
-  .side-member{position:static;height:auto;margin-top:auto;padding:18px 28px 0;border-top:1px solid rgba(247,240,230,.16);margin-left:14px;margin-right:14px;padding-left:14px;padding-right:14px}
-  .topbar-name{max-width:none;flex:1;font-size:14px;color:rgba(247,240,230,.9)}
-  .side-member .topbar-av{order:-1}
-  .content{flex:1;min-width:0}
-  .page{max-width:760px;padding:60px 48px 80px}
-  .page-title{font-size:28px}
-  .toast{bottom:32px}
-  .overlay{align-items:center}
-  .sheet{border-radius:18px;max-height:86vh}
-}
-@media (max-width:360px){.topbar-name{display:none}}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/lp-assets/haku-design.css?v=20261008a">
+<link rel="stylesheet" href="/lp-assets/haku-app.css?v=20261008a">
 </head>
-<body>
+<body class="h-base">
 <a class="skip" href="#main">{{t.a11y.skip}}</a>
 
 <div id="app">
@@ -279,157 +29,141 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
     </header>
 
     <nav class="tabbar" aria-label="{{t.nav.aria}}">
-      <button class="tab" type="button" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12L12 4l9 8"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg><span class="tab-lbl">{{t.nav.home}}</span></button>
-      <button class="tab" type="button" data-tab="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c2-1 5-1 7 0v14c-2-1-5-1-7 0z"/><path d="M20 5c-2-1-5-1-7 0v14c2-1 5-1 7 0z"/></svg><span class="tab-lbl">{{t.nav.learn}}</span></button>
-      <button class="tab" type="button" data-tab="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span class="tab-lbl">{{t.nav.words}}</span></button>
-      <button class="tab" type="button" data-tab="gather"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg><span class="tab-lbl">{{t.nav.gather}}</span></button>
-      <button class="tab" type="button" data-tab="point" aria-label="{{t.nav.pointFull}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 6 7 10a7 7 0 0 1-14 0c0-4 3-8 7-10z"/><path d="M12 21V9"/></svg><span class="tab-lbl" aria-hidden="true"><span>{{t.nav.point1}}</span><span>{{t.nav.point2}}</span></span></button>
-      <button class="tab" type="button" data-tab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tab-lbl">{{t.nav.me}}</span></button>
+      <button class="tab" type="button" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12L12 4l9 8"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg><span class="tab-lbl">{{t.nav.home}}</span></button>
+      <button class="tab" type="button" data-tab="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c2-1 5-1 7 0v14c-2-1-5-1-7 0z"/><path d="M20 5c-2-1-5-1-7 0v14c2-1 5-1 7 0z"/></svg><span class="tab-lbl">{{t.nav.learn}}</span></button>
+      <button class="tab" type="button" data-tab="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span class="tab-lbl">{{t.nav.words}}</span></button>
+      <button class="tab" type="button" data-tab="gather"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 20c0-3 2.5-5 5-5s5 2 5 5"/><path d="M11 20c0-3 2.5-5 5-5s5 2 5 5"/></svg><span class="tab-lbl">{{t.nav.gather}}</span></button>
+      <button class="tab" type="button" data-tab="point" aria-label="{{t.nav.pointFull}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c4 2 7 6 7 10a7 7 0 0 1-14 0c0-4 3-8 7-10z"/><path d="M12 21V9"/></svg><span class="tab-lbl" aria-hidden="true"><span>{{t.nav.point1}}</span><span>{{t.nav.point2}}</span></span></button>
+      <button class="tab" type="button" data-tab="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tab-lbl">{{t.nav.me}}</span></button>
     </nav>
 
     <div class="side-member">
-      <span class="topbar-name">{{DISPLAY_NAME}}</span>
-      <button class="topbar-av" id="avatarBtn" type="button" data-go="profile" aria-label="{{t.nav.meAria}}"></button>
+      <span class="member-name">{{DISPLAY_NAME}}</span>
+      <button class="member-av" id="avatarBtn" type="button" data-go="profile" aria-label="{{t.nav.meAria}}"></button>
     </div>
   </div>
 
   <main class="content" id="main" tabindex="-1">
 
-    <!-- ホーム -->
+    <!-- ホーム：今日の一歩（主）→ 直近の予定 → 今週の問い → ことば -->
     <section class="page active" id="p-home" aria-labelledby="h-home">
-      <div class="page-head">
-        <h1 class="page-title" id="h-home" tabindex="-1"><span id="greetTxt"></span></h1>
-        <p class="page-lead">{{t.greet.lead}}</p>
+      <h1 class="page-title" id="h-home" tabindex="-1"><span id="greetTxt"></span></h1>
+      <div class="cols">
+        <div class="col-main">
+          <section class="step" id="homeStep" aria-live="polite"></section>
+          <section class="sec" aria-labelledby="h-next">
+            <h2 class="sec-title" id="h-next">{{t.home.nextTitle}}</h2>
+            <div id="homeNext"></div>
+          </section>
+        </div>
+        <div class="col-side">
+          <section class="sec" aria-labelledby="h-question">
+            <h2 class="sec-title" id="h-question">{{t.home.noteTitle}}</h2>
+            <p class="sec-note">{{t.home.noteSupp}}</p>
+            <div id="homeNote"></div>
+          </section>
+          <section class="sec" aria-labelledby="h-words">
+            <h2 class="sec-title" id="h-words">{{t.home.wordLatest}}</h2>
+            <div id="homeWord"></div>
+          </section>
+          <section class="sec" aria-labelledby="h-challenge">
+            <h2 class="sec-title" id="h-challenge">{{t.home.challengeTitle}}</h2>
+            <p class="entry-meta" style="margin-top:var(--h-s3)">{{t.home.challengeBody}}</p>
+            <div class="more"><a class="h-link" href="{{t.links.challengeMeet}}" target="_blank" rel="noopener">{{t.home.challengeLink}}</a></div>
+          </section>
+        </div>
       </div>
-      <div class="step" id="homeStep" aria-live="polite"></div>
-
-      <section class="block" aria-labelledby="h-next">
-        <h2 class="block-title" id="h-next">{{t.home.nextTitle}}</h2>
-        <div class="block-body">
-          <div class="sub-title">{{t.home.nextMorning}}</div>
-          <div id="homeNextMorning"></div>
-          <div class="sub-title">{{t.home.nextMeet}}</div>
-          <div id="homeNextMeet"></div>
-        </div>
-      </section>
-
-      <section class="block" aria-labelledby="h-question">
-        <h2 class="block-title" id="h-question">{{t.home.noteTitle}}</h2>
-        <p class="block-supp">{{t.home.noteSupp}}</p>
-        <div class="block-body" id="homeNote"></div>
-      </section>
-
-      <section class="block" aria-labelledby="h-words">
-        <h2 class="block-title" id="h-words">{{t.home.wordsTitle}}</h2>
-        <div class="block-body">
-          <div class="sub-title">{{t.home.wordLatest}}</div>
-          <div id="homeWord"></div>
-          <div class="sub-title">{{t.home.membersWords}}</div>
-          <div id="homePosts"></div>
-          <div class="actions"><button class="btn-text" type="button" data-go="words">{{t.home.wordsMore}}</button></div>
-        </div>
-      </section>
-
-      <section class="block" aria-labelledby="h-challenge">
-        <h2 class="block-title" id="h-challenge">{{t.home.challengeTitle}}</h2>
-        <div class="block-body">
-          <p class="block-supp" style="margin:0 0 4px">{{t.home.challengeBody}}</p>
-          <div class="actions"><a class="btn-text" href="{{t.links.challengeMeet}}" target="_blank" rel="noopener">{{t.home.challengeLink}}</a></div>
-        </div>
-      </section>
     </section>
 
     <!-- 学ぶ -->
     <section class="page" id="p-learn" aria-labelledby="h-learn">
-      <div class="page-head">
-        <h1 class="page-title" id="h-learn" tabindex="-1">{{t.learn.title}}</h1>
-        <p class="page-lead">{{t.learn.lead}}</p>
-      </div>
-      <section class="block" style="margin-top:0" aria-labelledby="h-learn-cur">
-        <h2 class="block-title" id="h-learn-cur">{{t.learn.current}}</h2>
-        <div class="block-body" id="learnCurrent"></div>
-      </section>
-      <section class="block" aria-labelledby="h-learn-arc">
-        <h2 class="block-title" id="h-learn-arc">{{t.learn.archive}}</h2>
-        <p class="block-supp">{{t.learn.archiveSupp}}</p>
-        <div class="block-body"><div id="learnArchive"></div>
-          <div class="actions" id="learnMoreWrap" hidden><button class="btn btn-quiet" type="button" data-act="learn-more">{{t.learn.more}}</button></div>
+      <h1 class="page-title" id="h-learn" tabindex="-1">{{t.learn.title}}</h1>
+      <div class="cols">
+        <div class="col-main">
+          <section class="sec" aria-labelledby="h-learn-cur">
+            <h2 class="sec-title" id="h-learn-cur">{{t.learn.current}}</h2>
+            <p class="sec-note">{{t.home.noteSupp}}</p>
+            <div id="learnCurrent" style="margin-top:var(--h-s5)"></div>
+          </section>
         </div>
-      </section>
+        <div class="col-side">
+          <section class="sec" aria-labelledby="h-learn-arc">
+            <h2 class="sec-title" id="h-learn-arc">{{t.learn.archive}}</h2>
+            <div id="learnArchive"></div>
+            <div class="more" id="learnMoreWrap" hidden><button class="h-link" type="button" data-act="learn-more">{{t.learn.more}}</button></div>
+          </section>
+        </div>
+      </div>
     </section>
 
     <!-- ことば -->
     <section class="page" id="p-words" aria-labelledby="h-wordspage">
-      <div class="page-head">
+      <div class="page-head page-head--row">
         <h1 class="page-title" id="h-wordspage" tabindex="-1">{{t.words.title}}</h1>
-        <p class="page-lead">{{t.words.lead}}</p>
+        <button class="h-btn h-btn--primary" type="button" data-act="compose">{{t.words.write}}</button>
       </div>
-      <section class="block" style="margin-top:0" aria-labelledby="h-official">
-        <h2 class="block-title" id="h-official">{{t.words.official}}</h2>
-        <div class="block-body">
-          <div id="officialLatest"></div>
-          <div id="officialPast"></div>
-          <div class="actions" id="officialMoreWrap" hidden><button class="btn btn-quiet" type="button" data-act="official-more">{{t.words.officialMore}}</button></div>
+      <div class="cols">
+        <div class="col-main">
+          <section class="sec" aria-labelledby="h-official">
+            <h2 class="sec-title" id="h-official">{{t.words.official}}</h2>
+            <div id="officialLatest"></div>
+            <div id="officialPast"></div>
+            <div class="more" id="officialMoreWrap" hidden><button class="h-link" type="button" data-act="official-more">{{t.words.officialMore}}</button></div>
+          </section>
         </div>
-      </section>
-      <section class="block" aria-labelledby="h-members">
-        <h2 class="block-title" id="h-members">{{t.words.members}}</h2>
-        <div class="block-body">
-          <button class="btn btn-primary" type="button" data-act="compose">{{t.words.write}}</button>
-          <div id="membersList" style="margin-top:14px"></div>
+        <div class="col-side">
+          <section class="sec" aria-labelledby="h-members">
+            <h2 class="sec-title" id="h-members">{{t.words.members}}</h2>
+            <div id="membersList"></div>
+          </section>
         </div>
-      </section>
+      </div>
     </section>
 
     <!-- 集う -->
     <section class="page" id="p-gather" aria-labelledby="h-gather">
-      <div class="page-head">
-        <h1 class="page-title" id="h-gather" tabindex="-1">{{t.gather.title}}</h1>
-        <p class="page-lead">{{t.gather.lead}}</p>
-      </div>
+      <h1 class="page-title" id="h-gather" tabindex="-1">{{t.gather.title}}</h1>
       <div id="gatherBody"></div>
     </section>
 
     <!-- HAKUポイント -->
     <section class="page" id="p-point" aria-labelledby="h-point">
-      <div class="page-head">
-        <h1 class="page-title" id="h-point" tabindex="-1">{{t.point.title}}</h1>
-      </div>
+      <h1 class="page-title" id="h-point" tabindex="-1">{{t.point.title}}</h1>
       <div id="pointBody"></div>
     </section>
 
-    <!-- わたし -->
+    <!-- わたし：自分の変化を振り返る場所 -->
     <section class="page" id="p-profile" aria-labelledby="h-me">
       <div class="page-head">
         <h1 class="page-title" id="h-me" tabindex="-1">{{t.me.title}}</h1>
-        <p class="me-name" style="margin-top:8px">{{DISPLAY_NAME}}</p>
-        <p class="me-sub" id="meSince">{{t.brand.memberLabel}}</p>
+        <p class="me-sub"><span>{{DISPLAY_NAME}}</span>　<span id="meSince"></span></p>
       </div>
-
-      <section class="block" style="margin-top:0" aria-labelledby="h-goals">
-        <h2 class="block-title" id="h-goals">{{t.me.goalsTitle}}</h2>
-        <p class="block-supp" id="goalsLead"></p>
-        <div class="block-body"><div id="goalsBody"></div></div>
-      </section>
-
-      <section class="block" aria-labelledby="h-recent">
-        <h2 class="block-title" id="h-recent">{{t.me.recentTitle}}</h2>
-        <div class="block-body"><div id="recentBody"></div></div>
-      </section>
-
-      <section class="block" aria-labelledby="h-gathered">
-        <h2 class="block-title" id="h-gathered">{{t.me.gatheredTitle}}</h2>
-        <div class="block-body"><div id="gatheredBody"></div></div>
-      </section>
-
-      <section class="block" aria-labelledby="h-sessions">
-        <h2 class="block-title" id="h-sessions">{{t.me.sessionsTitle}}</h2>
-        <p class="block-supp">{{t.me.sessionsLead}}</p>
-        <div class="block-body"><div id="sessionsBody"></div></div>
-      </section>
-
-      <section class="block" aria-labelledby="h-settings">
-        <h2 class="block-title" id="h-settings">{{t.me.settingsTitle}}</h2>
+      <div class="cols">
+        <div class="col-main">
+          <section class="sec" aria-labelledby="h-goals">
+            <h2 class="sec-title" id="h-goals">{{t.me.goalsTitle}}</h2>
+            <p class="sec-note" id="goalsLead"></p>
+            <div id="goalsBody"></div>
+          </section>
+          <section class="sec" aria-labelledby="h-recent">
+            <h2 class="sec-title" id="h-recent">{{t.me.recentTitle}}</h2>
+            <div id="recentBody"></div>
+          </section>
+        </div>
+        <div class="col-side">
+          <section class="sec" aria-labelledby="h-gathered">
+            <h2 class="sec-title" id="h-gathered">{{t.me.gatheredTitle}}</h2>
+            <div id="gatheredBody"></div>
+          </section>
+          <section class="sec" aria-labelledby="h-sessions">
+            <h2 class="sec-title" id="h-sessions">{{t.me.sessionsTitle}}</h2>
+            <p class="sec-note">{{t.me.sessionsLead}}</p>
+            <div id="sessionsBody"></div>
+          </section>
+        </div>
+      </div>
+      <section class="sec" aria-labelledby="h-settings" style="max-width:var(--h-measure)">
+        <h2 class="sec-title" id="h-settings" style="margin-bottom:0">{{t.me.settingsTitle}}</h2>
         <ul class="menu">
           <li><button class="row-link" type="button" data-go="email"><span>{{t.me.email}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
           <li><button class="row-link" type="button" data-go="password"><span>{{t.me.password}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
@@ -443,27 +177,27 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 
     <!-- メールアドレス変更 -->
     <section class="page" id="p-email" aria-labelledby="h-email">
-      <div class="page-head"><h1 class="page-title" id="h-email" tabindex="-1">{{t.account.emailTitle}}</h1></div>
+      <h1 class="page-title" id="h-email" tabindex="-1">{{t.account.emailTitle}}</h1>
       <form class="form" id="emailForm" novalidate>
-        <div class="field"><label for="newEmailInput">{{t.account.emailNew}}</label><input id="newEmailInput" type="email" autocomplete="email" inputmode="email"></div>
-        <div class="field"><label for="emailChangePwd">{{t.account.emailPassword}}</label><input id="emailChangePwd" type="password" autocomplete="current-password"></div>
-        <div class="err" id="emailErr" role="alert"></div>
-        <button class="btn btn-primary" type="submit" id="emailSaveBtn">{{t.account.emailSave}}</button>
+        <div class="h-field"><label for="newEmailInput">{{t.account.emailNew}}</label><input class="h-input" id="newEmailInput" type="email" autocomplete="email" inputmode="email"></div>
+        <div class="h-field"><label for="emailChangePwd">{{t.account.emailPassword}}</label><input class="h-input" id="emailChangePwd" type="password" autocomplete="current-password"></div>
+        <div class="h-msg" id="emailErr" role="alert"></div>
+        <button class="h-btn h-btn--primary" type="submit" id="emailSaveBtn">{{t.account.emailSave}}</button>
       </form>
-      <div class="actions"><button class="btn-text" type="button" data-go="profile">{{t.account.back}}</button></div>
+      <div class="more"><button class="h-link" type="button" data-go="profile">{{t.account.back}}</button></div>
     </section>
 
     <!-- パスワード変更 -->
     <section class="page" id="p-password" aria-labelledby="h-password">
-      <div class="page-head"><h1 class="page-title" id="h-password" tabindex="-1">{{t.account.passwordTitle}}</h1></div>
+      <h1 class="page-title" id="h-password" tabindex="-1">{{t.account.passwordTitle}}</h1>
       <form class="form" id="passwordForm" novalidate>
-        <div class="field"><label for="currentPwdInput">{{t.account.passwordCurrent}}</label><input id="currentPwdInput" type="password" autocomplete="current-password"></div>
-        <div class="field"><label for="newPwdInput">{{t.account.passwordNew}}</label><input id="newPwdInput" type="password" autocomplete="new-password" aria-describedby="pwdHint"><p class="hint" id="pwdHint">{{t.account.passwordHint}}</p></div>
-        <div class="field"><label for="newPwdConfirm">{{t.account.passwordConfirm}}</label><input id="newPwdConfirm" type="password" autocomplete="new-password"></div>
-        <div class="err" id="pwdErr" role="alert"></div>
-        <button class="btn btn-primary" type="submit" id="pwdSaveBtn">{{t.account.passwordSave}}</button>
+        <div class="h-field"><label for="currentPwdInput">{{t.account.passwordCurrent}}</label><input class="h-input" id="currentPwdInput" type="password" autocomplete="current-password"></div>
+        <div class="h-field"><label for="newPwdInput">{{t.account.passwordNew}}</label><input class="h-input" id="newPwdInput" type="password" autocomplete="new-password" aria-describedby="pwdHint"><p class="h-hint" id="pwdHint">{{t.account.passwordHint}}</p></div>
+        <div class="h-field"><label for="newPwdConfirm">{{t.account.passwordConfirm}}</label><input class="h-input" id="newPwdConfirm" type="password" autocomplete="new-password"></div>
+        <div class="h-msg" id="pwdErr" role="alert"></div>
+        <button class="h-btn h-btn--primary" type="submit" id="pwdSaveBtn">{{t.account.passwordSave}}</button>
       </form>
-      <div class="actions"><button class="btn-text" type="button" data-go="profile">{{t.account.back}}</button></div>
+      <div class="more"><button class="h-link" type="button" data-go="profile">{{t.account.back}}</button></div>
     </section>
 
   </main>
@@ -473,14 +207,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 <div class="overlay" id="composerOverlay" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="composerHeading">
     <h2 id="composerHeading"></h2>
-    <div class="field"><label for="composerCategory">{{t.composer.category}}</label><select id="composerCategory"></select></div>
-    <div class="field"><label for="composerTitle">{{t.composer.title}}</label><input type="text" id="composerTitle" maxlength="60" placeholder="{{t.composer.titlePlaceholder}}" autocomplete="off"></div>
-    <div class="field"><label for="composerBody">{{t.composer.body}}</label><textarea id="composerBody" maxlength="1000" placeholder="{{t.composer.bodyPlaceholder}}"></textarea>
+    <div class="h-field"><label for="composerBody">{{t.composer.body}}</label><textarea class="h-input" id="composerBody" maxlength="1000" placeholder="{{t.composer.bodyPlaceholder}}"></textarea>
       <div class="count" aria-label="{{t.composer.countAria}}"><span id="composerCount">0</span> / 1000</div></div>
-    <div class="err" id="composerErr" role="alert"></div>
+    <div class="h-field"><label for="composerTitle">{{t.composer.title}}</label><input class="h-input" type="text" id="composerTitle" maxlength="60" placeholder="{{t.composer.titlePlaceholder}}" autocomplete="off"></div>
+    <div class="h-field"><label for="composerCategory">{{t.composer.category}}</label><select class="h-input" id="composerCategory"></select></div>
+    <div class="h-msg" id="composerErr" role="alert"></div>
     <div class="sheet-actions">
-      <button class="btn btn-quiet" type="button" data-act="composer-cancel">{{t.composer.cancel}}</button>
-      <button class="btn btn-primary" type="button" id="composerSubmitBtn" data-act="composer-submit"></button>
+      <button class="h-btn" type="button" data-act="composer-cancel">{{t.composer.cancel}}</button>
+      <button class="h-btn h-btn--primary" type="button" id="composerSubmitBtn" data-act="composer-submit"></button>
     </div>
   </div>
 </div>
@@ -572,11 +306,11 @@ const data = {
 
 /* ═════════ 状態表示（読み込み中・空・エラー）の共通部品 ═════════ */
 const retries = {};
-function stateLoading(label){ return '<div class="state" role="status"><span class="pulse" aria-hidden="true"></span><span data-loading-msg>' + esc(label || UI.state.loading) + '</span></div>'; }
-function stateEmpty(msg, sub, actionHtml){ return '<div class="state empty">' + esc(msg) + (sub ? '<span class="sub">' + esc(sub) + '</span>' : '') + (actionHtml || '') + '</div>'; }
+function stateLoading(label){ return '<div class="h-state" role="status"><span class="dot" aria-hidden="true"></span><span data-loading-msg>' + esc(label || UI.state.loading) + '</span></div>'; }
+function stateEmpty(msg, sub, actionHtml){ return '<div class="h-state h-state--empty">' + esc(msg) + (sub ? '<br><span class="h-caption">' + esc(sub) + '</span>' : '') + (actionHtml || '') + '</div>'; }
 function stateError(kind, key){
   const msg = kind === 'network' ? UI.state.errNetwork : kind === 'timeout' ? UI.state.errTimeout : UI.state.errServer;
-  return '<div class="state error" role="alert">' + esc(msg) + '<span class="sub">' + esc(UI.state.errHint) + '</span><button class="btn btn-quiet" type="button" data-retry="' + esc(key) + '">' + esc(UI.state.retry) + '</button></div>';
+  return '<div class="h-state h-state--error" role="alert">' + esc(msg) + '<br><span class="h-caption">' + esc(UI.state.errHint) + '</span><br><button class="h-link" type="button" data-retry="' + esc(key) + '">' + esc(UI.state.retry) + '</button></div>';
 }
 /* producer は HTML文字列、または { html, after } を返す。失敗しても、必ず「エラー＋もう一度」に変わる（永遠に読み込み中にならない）。 */
 async function loadInto(key, el, producer, loadingLabel){
@@ -639,67 +373,64 @@ function greeting(){
   return fmt(UI.greet[key], { name: MEMBER.name });
 }
 function evTypeLabel(t){ return t === 'morning' ? UI.gather.typeMorning : t === 'meet' ? UI.gather.typeMeet : t === 'volunteer' ? UI.gather.typeVolunteer : UI.gather.typeOther; }
-function stateChip(e){
-  if (e.state === 'joined') return '<span class="chip joined">' + esc(UI.gather.chipJoined) + '</span>';
-  if (e.state === 'cancelled') return '<span class="chip">' + esc(UI.gather.chipCancelled) + '</span>';
-  if (e.state === 'ended') return '<span class="chip">' + esc(UI.gather.chipEnded) + '</span>';
-  if (e.state === 'full') return '<span class="chip">' + esc(UI.gather.btnFull) + '</span>';
-  if (e.state === 'closed') return '<span class="chip">' + esc(UI.gather.btnClosed) + '</span>';
-  return '';
+/* 状態は、バッジにせず文字で示す（参加予定＝緑の太字、それ以外は落ち着いた灰色、中止は注意色） */
+function statusText(e){
+  const map = { joined: ['on', UI.gather.chipJoined], cancelled: ['warn', UI.gather.chipCancelled], ended: ['', UI.gather.chipEnded], full: ['', UI.gather.btnFull], closed: ['', UI.gather.btnClosed] };
+  const m = map[e.state];
+  if (!m) return '';
+  return '<span class="h-status' + (m[0] ? ' h-status--' + m[0] : '') + '">' + esc(m[1]) + '</span>';
 }
 function evMeta(e){
-  const bits = [fmtEventDate(e.startsAt)];
+  const bits = [];
   if (e.location) bits.push(e.location);
   if (e.capacity != null) bits.push(fmt(UI.gather.capacity, { cap: e.capacity, rest: Math.max(0, e.capacity - e.participantCount) }));
   if (e.fee) bits.push(e.fee);
   return bits.join('・');
 }
-function renderEventCompact(e, withLink){
-  return '<article class="item"><div class="ev-kicker">' + esc(evTypeLabel(e.type)) + '</div>' +
-    '<h3 class="ev-title">' + esc(e.title) + '</h3><p class="ev-meta">' + esc(evMeta(e)) + '</p>' +
-    '<div class="actions">' + stateChip(e) + (withLink ? '<button class="btn-text" type="button" data-go="gather">' + esc(UI.home.seeGather) + '</button>' : '') + '</div></article>';
-}
 function nextEvent(events, pred){ return events.find((e) => !e.isPast && e.state !== 'cancelled' && pred(e)); }
 
+/* ホームの「直近の予定」：日時・内容・状態だけ。予約の操作は「集う」で行う */
+function homeEventHtml(e, kicker, emptyText){
+  if (!e) return '<article class="entry"><div class="kicker">' + esc(kicker) + '</div><p class="entry-meta">' + esc(emptyText) + '</p></article>';
+  return '<article class="entry"><div class="kicker">' + esc(kicker) + '</div><div class="ev-date">' + esc(fmtEventDate(e.startsAt)) + '</div>' +
+    '<h3 class="entry-title">' + esc(e.title) + '</h3>' + (evMeta(e) ? '<p class="entry-meta">' + esc(evMeta(e)) + '</p>' : '') +
+    (statusText(e) ? '<div class="entry-actions">' + statusText(e) + '</div>' : '') + '</article>';
+}
 function renderHomeEvents(){
-  const promise = data.events();
-  loadInto('home-morning', $('homeNextMorning'), async () => {
-    const e = nextEvent(await promise, (x) => x.type === 'morning');
-    return e ? '<div class="list">' + renderEventCompact(e, true) + '</div>' : stateEmpty(UI.home.nextMorningEmpty, UI.home.nextEmptyNote);
-  });
-  loadInto('home-meet', $('homeNextMeet'), async () => {
-    const e = nextEvent(await promise, (x) => x.type !== 'morning');
-    return e ? '<div class="list">' + renderEventCompact(e, true) + '</div>' : stateEmpty(UI.home.nextMeetEmpty, UI.home.nextEmptyNote);
+  loadInto('home-next', $('homeNext'), async () => {
+    const events = await data.events();
+    const morning = nextEvent(events, (x) => x.type === 'morning');
+    const other = nextEvent(events, (x) => x.type !== 'morning');
+    return homeEventHtml(morning, UI.home.nextMorning, UI.home.nextMorningEmpty) + homeEventHtml(other, UI.home.nextMeet, UI.home.nextMeetEmpty) +
+      '<div class="more"><button class="h-link" type="button" data-go="gather">' + esc(UI.home.seeGather) + '</button></div>';
   });
 }
 function renderHomeNote(){
   loadInto('home-note', $('homeNote'), async () => {
     const n = await data.note();
     if (!n) return stateEmpty(UI.home.noteEmpty);
-    return '<p class="q-text">' + esc(n.body) + '</p>' + (n.title ? '<p class="q-meta">' + esc(n.title) + '</p>' : '') +
-      '<div class="actions"><button class="btn-text" type="button" data-go="learn">' + esc(UI.home.noteMore) + '</button></div>';
+    return '<p class="q">' + esc(n.body) + '</p>' + (n.title ? '<p class="q-meta">' + esc(n.title) + '</p>' : '') +
+      '<div class="more"><button class="h-link" type="button" data-go="learn">' + esc(UI.home.noteMore) + '</button></div>';
   });
 }
+/* 運営からのことば（ホームでは文章だけ。音声はことばの画面で） */
 function wordCard(w, compact){
-  return '<article class="word' + (compact ? ' compact' : '') + '"><div class="word-head"><span>' + esc(w.authorName) + '</span><span>' + esc(fmtDate(w.publishedAt)) + '</span></div>' +
-    (w.title ? '<h3 class="word-title">' + esc(w.title) + '</h3>' : '') + (w.body ? '<p class="word-body">' + esc(w.body) + '</p>' : '') +
-    (w.audioUrl ? playerHtml('ow-' + w.id, true) : '') + '</article>';
+  return '<article class="entry' + (compact ? ' entry--compact' : '') + '">' +
+    (w.title ? '<h3 class="entry-title">' + esc(w.title) + '</h3>' : '') + (w.body ? '<p class="word-body">' + esc(w.body) + '</p>' : '') +
+    '<p class="word-by">' + esc(w.authorName) + '　' + esc(fmtDate(w.publishedAt)) + '</p>' +
+    (!compact && w.audioUrl ? playerHtml('ow-' + w.id, true) : '') + '</article>';
 }
 function renderHomeWords(){
   loadInto('home-word', $('homeWord'), async () => {
     const d = await data.words(1, 0);
     const w = (d.words || [])[0];
-    return w ? wordCard(w, true) : stateEmpty(UI.home.wordEmpty);
-  });
-  loadInto('home-posts', $('homePosts'), async () => {
-    const posts = await data.posts(3);
-    if (!posts.length) return stateEmpty(UI.home.membersEmpty);
-    return '<div class="list">' + posts.slice(0, 2).map((p) => postCard(p, false)).join('') + '</div>';
+    if (!w) return stateEmpty(UI.home.wordEmpty);
+    return wordCard(w, true) + '<div class="more"><button class="h-link" type="button" data-go="words">' + esc(UI.home.wordsMore) + '</button></div>';
   });
 }
 async function renderHomeStep(){
   const el = $('homeStep');
-  el.innerHTML = '<div class="step-kicker">' + esc(UI.step.kicker) + '</div>' + stateLoading(UI.step.loading);
+  el.innerHTML = '<div class="kicker">' + esc(UI.step.kicker) + '</div>' + stateLoading(UI.step.loading);
   const settled = await Promise.allSettled([data.events(), data.note(), data.words(1, 0)]);
   const events = settled[0].status === 'fulfilled' ? settled[0].value : [];
   const note = settled[1].status === 'fulfilled' ? settled[1].value : null;
@@ -709,15 +440,15 @@ async function renderHomeStep(){
   const morning = nextEvent(events, (e) => e.type === 'morning' && e.state === 'open');
   const joinedLater = events.find((e) => e.state === 'joined' && !e.isPast);
   let lead, detail = '', btn, go = null, act = null;
-  if (soon) { lead = UI.step.joinedSoon.lead; detail = soon.title + '（' + fmtEventDate(soon.startsAt) + '）'; btn = UI.step.joinedSoon.btn; go = 'gather'; }
-  else if (morning) { lead = UI.step.nextMorning.lead; detail = morning.title + '（' + fmtEventDate(morning.startsAt) + '）'; btn = UI.step.nextMorning.btn; go = 'gather'; }
-  else if (joinedLater) { lead = UI.step.joinedLater.lead; detail = joinedLater.title + '（' + fmtEventDate(joinedLater.startsAt) + '）'; btn = UI.step.joinedLater.btn; go = 'gather'; }
+  if (soon) { lead = UI.step.joinedSoon.lead; detail = soon.title + '　' + fmtEventDate(soon.startsAt); btn = UI.step.joinedSoon.btn; go = 'gather'; }
+  else if (morning) { lead = UI.step.nextMorning.lead; detail = morning.title + '　' + fmtEventDate(morning.startsAt); btn = UI.step.nextMorning.btn; go = 'gather'; }
+  else if (joinedLater) { lead = UI.step.joinedLater.lead; detail = joinedLater.title + '　' + fmtEventDate(joinedLater.startsAt); btn = UI.step.joinedLater.btn; go = 'gather'; }
   else if (note) { lead = UI.step.note.lead; detail = note.title || ''; btn = UI.step.note.btn; go = 'learn'; }
   else if (word) { lead = UI.step.word.lead; detail = word.title || ''; btn = UI.step.word.btn; go = 'words'; }
   else { lead = UI.step.write.lead; btn = UI.step.write.btn; act = 'compose'; }
-  el.innerHTML = '<div class="step-kicker">' + esc(UI.step.kicker) + '</div><p class="step-lead">' + esc(lead) + '</p>' +
+  el.innerHTML = '<div class="kicker">' + esc(UI.step.kicker) + '</div><p class="step-lead">' + esc(lead) + '</p>' +
     (detail ? '<p class="step-detail">' + esc(detail) + '</p>' : '') +
-    '<button class="btn btn-primary" type="button" ' + (go ? 'data-go="' + go + '"' : 'data-act="' + act + '"') + '>' + esc(btn) + '</button>';
+    '<button class="h-btn h-btn--primary" type="button" ' + (go ? 'data-go="' + go + '"' : 'data-act="' + act + '"') + '>' + esc(btn) + '</button>';
 }
 function loadHome(){
   $('greetTxt').textContent = greeting();
@@ -733,9 +464,9 @@ async function loadLearn(){
   loadInto('learn-current', $('learnCurrent'), async () => {
     const n = await data.note();
     if (!n) return stateEmpty(UI.learn.emptyCurrent);
-    return '<p class="q-text">' + esc(n.body) + '</p>' +
-      '<p class="q-meta">' + esc([n.category, n.title].filter(Boolean).join('・')) + '</p>' +
-      (n.supplement ? '<p class="q-supp">' + esc(n.supplement) + '</p>' : '');
+    return '<p class="q">' + esc(n.body) + '</p>' +
+      ([n.category, n.title].filter(Boolean).length ? '<p class="q-meta">' + esc([n.category, n.title].filter(Boolean).join('・')) + '</p>' : '') +
+      (n.supplement ? '<p class="prose" style="margin-top:var(--h-s5);color:var(--h-ink-2)">' + esc(n.supplement) + '</p>' : '');
   });
   learnOffset = 0;
   loadLearnArchive(true);
@@ -743,7 +474,7 @@ async function loadLearn(){
 function archiveItem(n){
   const title = n.title || String(n.body || '').slice(0, 40);
   return '<details class="arc"><summary><span class="arc-title">' + esc(title) + '</span><span class="arc-meta">' + esc([n.category, fmtDate(n.publishFrom)].filter(Boolean).join('・')) + '</span></summary>' +
-    '<div class="arc-body"><p class="q-supp" style="margin-top:0">' + esc(n.body) + '</p>' + (n.supplement ? '<p class="q-supp">' + esc(n.supplement) + '</p>' : '') + '</div></details>';
+    '<div class="arc-body"><p class="prose">' + esc(n.body) + '</p>' + (n.supplement ? '<p class="prose" style="margin-top:var(--h-s3);color:var(--h-ink-2)">' + esc(n.supplement) + '</p>' : '') + '</div></details>';
 }
 async function loadLearnArchive(reset){
   const box = $('learnArchive');
@@ -812,13 +543,15 @@ document.addEventListener('input', (ev) => {
 
 /* ═════════ ことば ═════════ */
 let officialOffset = 0;
+/* みんなのことば：一つひとつの言葉として静かに読める行。いいね・数・順位は持たない */
 function postCard(p, withActions){
   postsById[p.id] = p;
   const mine = withActions && p.isMine;
-  return '<article class="item"><div class="post-meta"><span class="who">' + esc(p.displayName) + '</span><span>' + esc(fmtDate(p.createdAt)) + '</span><span class="post-cat">' + esc(p.categoryLabel) + '</span>' +
-    (p.status === 'hidden' ? '<span class="hidden-badge">' + esc(UI.words.hiddenBadge) + '</span>' : '') + '</div>' +
-    (p.title ? '<h3 class="post-title">' + esc(p.title) + '</h3>' : '') + '<p class="post-body">' + esc(p.body) + '</p>' +
-    (mine ? '<div class="actions" style="margin-top:4px"><button class="btn-text" type="button" data-act="post-edit" data-id="' + esc(p.id) + '">' + esc(UI.words.edit) + '</button><button class="btn-text danger" type="button" data-act="post-delete" data-id="' + esc(p.id) + '">' + esc(UI.words.delete) + '</button></div>' : '') + '</article>';
+  return '<article class="entry">' +
+    (p.title ? '<h3 class="entry-title">' + esc(p.title) + '</h3>' : '') + '<p class="word-body">' + esc(p.body) + '</p>' +
+    '<p class="word-by"><span class="who">' + esc(p.displayName) + '</span>　' + esc(fmtDate(p.createdAt)) + (p.categoryLabel ? '　' + esc(p.categoryLabel) : '') +
+    (p.status === 'hidden' ? '　<span class="hidden-note">' + esc(UI.words.hiddenBadge) + '</span>' : '') + '</p>' +
+    (mine ? '<div class="entry-actions" style="margin-top:0"><button class="h-link" type="button" data-act="post-edit" data-id="' + esc(p.id) + '">' + esc(UI.words.edit) + '</button><button class="h-link" type="button" data-act="post-delete" data-id="' + esc(p.id) + '">' + esc(UI.words.delete) + '</button></div>' : '') + '</article>';
 }
 const postsById = {};
 function loadWords(){
@@ -828,8 +561,9 @@ function loadWords(){
     officialOffset = words.length;
     $('officialMoreWrap').hidden = !d.hasMore;
     if (!words.length) { $('officialPast').innerHTML = ''; return stateEmpty(UI.words.officialEmpty); }
-    $('officialPast').innerHTML = words.length > 1 ? '<div class="sub-title">' + esc(UI.words.officialPast) + '</div>' + words.slice(1).map((w) => wordCard(w, true)).join('') : '';
-    return { html: wordCard(words[0], false), after: () => { words.forEach((w) => { if (w.audioUrl) bindAudio('ow-' + w.id, w.audioUrl); }); } };
+    $('officialPast').innerHTML = words.length > 1 ? '<div class="kicker" style="margin-top:var(--h-s7)">' + esc(UI.words.officialPast) + '</div>' + words.slice(1).map((w) => wordCard(w, false)).join('') : '';
+    words.forEach((w) => { if (w.audioUrl) setTimeout(() => bindAudio('ow-' + w.id, w.audioUrl), 0); });
+    return wordCard(words[0], false);
   });
   loadMembers();
 }
@@ -839,7 +573,7 @@ actions['official-more'] = async (btn) => {
   btn.disabled = false;
   if (!r.ok) { toast(errMessage(r)); return; }
   const words = r.data.words || [];
-  $('officialPast').insertAdjacentHTML('beforeend', words.map((w) => wordCard(w, true)).join(''));
+  $('officialPast').insertAdjacentHTML('beforeend', words.map((w) => wordCard(w, false)).join(''));
   words.forEach((w) => { if (w.audioUrl) bindAudio('ow-' + w.id, w.audioUrl); });
   officialOffset += words.length;
   $('officialMoreWrap').hidden = !r.data.hasMore;
@@ -847,14 +581,13 @@ actions['official-more'] = async (btn) => {
 function loadMembers(){
   loadInto('members', $('membersList'), async () => {
     const posts = await data.posts(30);
-    return posts.length ? '<div class="list">' + posts.map((p) => postCard(p, true)).join('') + '</div>' : stateEmpty(UI.words.membersEmpty);
+    return posts.length ? posts.map((p) => postCard(p, true)).join('') : stateEmpty(UI.words.membersEmpty);
   });
 }
 function refreshWordViews(){
   invalidate('posts:3', 'posts:30', 'mine');
   const active = document.querySelector('.page.active');
   const id = active ? active.id : '';
-  if (id === 'p-home') renderHomeWords();
   if (id === 'p-words') loadMembers();
   if (id === 'p-profile') renderRecent();
 }
@@ -937,30 +670,41 @@ document.addEventListener('keydown', (ev) => {
 });
 
 /* ═════════ 集う（予約） ═════════ */
+/* 集う：日時・内容・参加状態・残席・参加の操作を、一目で。色分けや飾りはしない */
 function renderEvent(e){
-  let controls = '';
-  if (e.state === 'open') controls = '<button class="btn btn-quiet" type="button" data-act="join" data-id="' + esc(e.id) + '">' + esc(UI.gather.btnJoin) + '</button>';
-  else if (e.state === 'joined') controls = '<span class="chip joined">' + esc(UI.gather.chipJoined) + '</span><button class="btn-text danger" type="button" data-act="leave" data-id="' + esc(e.id) + '">' + esc(UI.gather.btnLeave) + '</button>';
-  else if (e.state === 'full') controls = '<button class="btn btn-quiet" type="button" disabled>' + esc(UI.gather.btnFull) + '</button>';
-  else if (e.state === 'closed') controls = '<button class="btn btn-quiet" type="button" disabled>' + esc(UI.gather.btnClosed) + '</button>';
-  else controls = stateChip(e);
-  return '<article class="item"><div class="ev-kicker">' + esc(evTypeLabel(e.type)) + '</div><h3 class="ev-title">' + esc(e.title) + '</h3><p class="ev-meta">' + esc(evMeta(e)) + '</p>' +
-    (e.description ? '<p class="ev-note">' + esc(e.description) + '</p>' : '') +
-    (e.itemsToBring ? '<p class="ev-note">' + esc(fmt(UI.gather.bring, { v: e.itemsToBring })) + '</p>' : '') +
-    '<div class="actions">' + controls + '</div></article>';
+  let act;
+  if (e.state === 'open') act = '<button class="h-btn" type="button" data-act="join" data-id="' + esc(e.id) + '">' + esc(UI.gather.btnJoin) + '</button>';
+  else if (e.state === 'joined') act = statusText(e) + '<button class="h-link" type="button" data-act="leave" data-id="' + esc(e.id) + '">' + esc(UI.gather.btnLeave) + '</button>';
+  else if (e.state === 'full') act = '<button class="h-btn" type="button" disabled>' + esc(UI.gather.btnFull) + '</button>';
+  else if (e.state === 'closed') act = '<button class="h-btn" type="button" disabled>' + esc(UI.gather.btnClosed) + '</button>';
+  else act = statusText(e);
+  return '<article class="entry"><div class="kicker">' + esc(evTypeLabel(e.type)) + '</div><div class="ev-date">' + esc(fmtEventDate(e.startsAt)) + '</div>' +
+    '<h3 class="entry-title">' + esc(e.title) + '</h3>' + (evMeta(e) ? '<p class="entry-meta">' + esc(evMeta(e)) + '</p>' : '') +
+    (e.description ? '<p class="entry-note">' + esc(e.description) + '</p>' : '') +
+    (e.itemsToBring ? '<p class="entry-note">' + esc(fmt(UI.gather.bring, { v: e.itemsToBring })) + '</p>' : '') +
+    '<div class="entry-actions">' + act + '</div></article>';
 }
-function section(title, id, inner){ return '<section class="block" style="margin-top:0;margin-bottom:38px" aria-labelledby="' + id + '"><h2 class="block-title" id="' + id + '">' + esc(title) + '</h2><div class="block-body">' + inner + '</div></section>'; }
+/* 過ぎた集まり：日付とタイトルだけの静かな索引 */
+function pastEventHtml(e){
+  return '<article class="entry"><div class="entry-meta">' + esc(fmtEventDate(e.startsAt)) + '</div><h3 class="entry-title">' + esc(e.title) + '</h3>' +
+    (statusText(e) ? '<div class="entry-actions" style="margin-top:var(--h-s1)">' + statusText(e) + '</div>' : '') + '</article>';
+}
+function section(title, id, inner){ return '<section class="sec" aria-labelledby="' + id + '"><h2 class="sec-title" id="' + id + '">' + esc(title) + '</h2>' + inner + '</section>'; }
 function loadGather(){
   loadInto('gather', $('gatherBody'), async () => {
     const events = await data.events();
     const mine = events.filter((e) => e.state === 'joined');
     const open = events.filter((e) => e.state === 'open' || e.state === 'full' || e.state === 'closed');
     const past = events.filter((e) => e.state === 'ended' || e.state === 'cancelled').reverse();
-    return section(UI.gather.joined, 'g-joined', mine.length ? '<div class="list">' + mine.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyJoined)) +
-      section(UI.gather.open, 'g-open', open.length ? '<div class="list">' + open.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyOpen)) +
-      section(UI.gather.past, 'g-past', past.length ? '<div class="list">' + past.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyPast));
+    return '<div class="cols"><div class="col-main">' +
+      section(UI.gather.joined, 'g-joined', mine.length ? mine.map(renderEvent).join('') : stateEmpty(UI.gather.emptyJoined)) +
+      section(UI.gather.open, 'g-open', open.length ? open.map(renderEvent).join('') : stateEmpty(UI.gather.emptyOpen)) +
+      '</div><div class="col-side">' +
+      section(UI.gather.past, 'g-past', past.length ? past.map(pastEventHtml).join('') : stateEmpty(UI.gather.emptyPast)) +
+      '</div></div>';
   });
 }
+
 const eventBusy = new Set();
 async function changeEvent(btn, kind){
   const id = btn.dataset.id;
@@ -986,19 +730,20 @@ function refreshEventViews(){
 }
 
 /* ═════════ HAKUポイント ═════════ */
+/* HAKUポイント：ゲームにしない。記録がなければ静かな準備中の表示だけ。換算・期限・交換先・付与条件は一切書かない */
 function loadPoint(){
   invalidate('points');
   loadInto('point', $('pointBody'), async () => {
     const d = await data.points();
     const entries = d.entries || [];
     const philosophy = '<p class="philo">' + esc(UI.point.philosophy1) + '</p><p class="philo-sub">' + esc(UI.point.philosophy2) + '</p>';
-    if (!entries.length) return philosophy + '<span class="prep">' + esc(UI.point.preparing) + '</span>';
+    if (!entries.length) return philosophy + '<p class="prep">' + esc(UI.point.preparing) + '</p>';
     const rows = entries.map((e) =>
-      '<div class="pt-row"><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '<span class="d">' + esc(fmtDate(e.createdAt)) + '</span></div>' +
+      '<div class="ledger-row"><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '<span class="d">' + esc(fmtDate(e.createdAt)) + '</span></div>' +
       '<div class="n">' + (e.delta > 0 ? '+' : '') + Number(e.delta).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</div></div>').join('');
     return philosophy + '<p class="pt-now">' + esc(UI.point.now) + '<b>' + Number(d.balance || 0).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</b></p>' +
-      '<section class="block" style="margin-top:28px"><h2 class="block-title">' + esc(UI.point.history) + '</h2><div class="block-body">' + rows +
-      (d.hasMore ? '<p class="state empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</div></section>';
+      '<section class="sec" style="max-width:var(--h-measure)"><h2 class="sec-title">' + esc(UI.point.history) + '</h2>' + rows +
+      (d.hasMore ? '<p class="h-state h-state--empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</section>';
   });
 }
 
@@ -1036,27 +781,28 @@ const openGoals = new Set();
 let goalForm = { requestId: newRequestId(), busy: false };
 function goalHtml(g){
   const days = daysInMonth(), today = new Date().getDate();
-  const done = g.stamps.length;
   const cells = Array.from({ length: days }, (_, i) => {
     const d = i + 1, on = g.stamps.indexOf(d) >= 0, future = d > today;
     return '<button class="day' + (d === today ? ' today' : '') + '" type="button" data-act="stamp" data-goal="' + esc(g.id) + '" data-day="' + d + '" aria-pressed="' + on + '" ' + (future ? 'disabled' : '') +
       ' aria-label="' + esc(fmt(UI.me.dayAria, { m: new Date().getMonth() + 1, d: d }) + ' ' + (on ? UI.me.dayDone : UI.me.dayNotYet)) + '">' + d + '</button>';
   }).join('');
   const todayOn = g.stamps.indexOf(today) >= 0;
-  return '<div class="promise"><div class="promise-top"><div><div class="promise-text">' + esc(g.text) + '</div><div class="promise-count">' + esc(fmt(UI.me.goalCount, { n: done })) + '</div></div>' +
-    '<button class="today-btn" type="button" data-act="stamp" data-goal="' + esc(g.id) + '" data-day="' + today + '" aria-pressed="' + todayOn + '">' + esc(UI.me.goalDoneToday) + (todayOn ? ' ✓' : '') + '</button></div>' +
+  // 日数や達成率は前面に出さない（進捗ゲームにしない）。振り返りたい人だけが「記録」を開く。
+  return '<div class="promise"><div class="promise-top"><div class="promise-text">' + esc(g.text) + '</div>' +
+    '<button class="today-btn" type="button" data-act="stamp" data-goal="' + esc(g.id) + '" data-day="' + today + '" aria-pressed="' + todayOn + '">' + esc(UI.me.goalDoneToday) + '</button></div>' +
     '<details data-goal="' + esc(g.id) + '"' + (openGoals.has(g.id) ? ' open' : '') + '><summary>' + esc(UI.me.goalMonth) + '</summary><div class="days">' + cells + '</div>' +
-    '<button class="btn-text danger" type="button" data-act="goal-delete" data-goal="' + esc(g.id) + '">' + esc(UI.me.goalDelete) + '</button></details></div>';
+    '<button class="h-link" type="button" data-act="goal-delete" data-goal="' + esc(g.id) + '">' + esc(UI.me.goalDelete) + '</button></details></div>';
 }
 function goalFormHtml(){
-  if (goalsState.length >= 3) return '<p class="state empty" style="padding-bottom:0">' + esc(UI.me.goalLimit) + '</p>';
+  if (goalsState.length >= 3) return '<p class="h-state h-state--empty" style="padding-bottom:0">' + esc(UI.me.goalLimit) + '</p>';
   return '<form class="inline-form" id="goalForm" novalidate><label class="sr-only" for="newGoalInput">' + esc(UI.me.goalLabel) + '</label>' +
-    '<input id="newGoalInput" type="text" maxlength="100" placeholder="' + esc(UI.me.goalPlaceholder) + '" autocomplete="off"><button class="btn btn-quiet" type="submit" id="goalAddBtn">' + esc(UI.me.goalAdd) + '</button></form><div class="err" id="goalErr" role="alert"></div>';
+    '<input class="h-input" id="newGoalInput" type="text" maxlength="100" placeholder="' + esc(UI.me.goalPlaceholder) + '" autocomplete="off"><button class="h-btn" type="submit" id="goalAddBtn">' + esc(UI.me.goalAdd) + '</button></form><div class="h-msg" id="goalErr" role="alert"></div>';
 }
 function drawGoals(){
   $('goalsBody').innerHTML = (goalsState.length ? goalsState.map(goalHtml).join('') : stateEmpty(UI.me.goalEmpty)) + goalFormHtml();
   document.querySelectorAll('#goalsBody details[data-goal]').forEach((d) => d.addEventListener('toggle', () => { if (d.open) openGoals.add(d.dataset.goal); else openGoals.delete(d.dataset.goal); }));
 }
+
 function renderGoals(){
   invalidate('goals');
   loadInto('goals', $('goalsBody'), async () => { goalsState = await data.goals(); return { html: '', after: drawGoals }; });
@@ -1106,33 +852,35 @@ function renderRecent(){
   invalidate('mine');
   loadInto('recent', $('recentBody'), async () => {
     const posts = (await data.mine()).slice(0, 3);
-    if (!posts.length) return stateEmpty(UI.me.recentEmpty, '', '<div><button class="btn btn-quiet" type="button" data-act="compose">' + esc(UI.me.recentWrite) + '</button></div>');
-    return '<div class="list">' + posts.map((p) => postCard(p, true)).join('') + '</div><div class="actions"><button class="btn-text" type="button" data-go="words">' + esc(UI.me.recentAll) + '</button></div>';
+    if (!posts.length) return stateEmpty(UI.me.recentEmpty, '', '<div class="more"><button class="h-link" type="button" data-act="compose">' + esc(UI.me.recentWrite) + '</button></div>');
+    return posts.map((p) => postCard(p, true)).join('') + '<div class="more"><button class="h-link" type="button" data-go="words">' + esc(UI.me.recentAll) + '</button></div>';
   });
 }
 function renderGathered(){
   loadInto('gathered', $('gatheredBody'), async () => {
     const events = (await data.events()).filter((e) => e.joined && e.isPast && e.state !== 'cancelled').reverse().slice(0, 5);
-    return events.length ? '<div class="list">' + events.map((e) => renderEventCompact(e, false)).join('') + '</div>' : stateEmpty(UI.me.gatheredEmpty);
+    return events.length ? events.map(pastEventHtml).join('') : stateEmpty(UI.me.gatheredEmpty);
   });
 }
+
 const SPEEDS = [1, 1.25, 1.5, 2, 0.75];
 function sessionHtml(s){
   const chapters = Array.isArray(s.chapters) && s.chapters.length
     ? '<div class="chapters" aria-label="' + esc(UI.me.chapters) + '">' + s.chapters.map((c, i) => '<button class="chapter" type="button" data-act="chapter" data-id="' + esc(s.id) + '" data-t="' + (Number(c.time) || 0) + '"><span>' + (i + 1) + '. ' + esc(c.title || '') + '</span><span>' + mmss(Number(c.time) || 0) + '</span></button>').join('') + '</div>' : '';
   const player = s.url
     ? playerHtml('ss-' + s.id, false) + '<div class="player-ctl"><button type="button" data-act="skip" data-id="' + esc(s.id) + '" data-d="-15">' + esc(UI.me.sessionBack15) + '</button><button type="button" data-act="skip" data-id="' + esc(s.id) + '" data-d="15">' + esc(UI.me.sessionFwd15) + '</button><button type="button" data-act="speed" data-id="' + esc(s.id) + '" aria-label="' + esc(UI.me.sessionSpeed) + '">1x</button></div>'
-    : '<p class="state empty" style="padding:8px 0">' + esc(UI.me.sessionsNoAudio) + '</p>';
-  return '<article class="item"><h3 class="ev-title">' + esc(s.title) + '</h3><p class="ev-meta">' + esc([s.date, s.dur, s.tag].filter(Boolean).join('・')) + '</p>' +
-    (s.desc ? '<p class="ev-note">' + esc(s.desc) + '</p>' : '') + chapters + player + '</article>';
+    : '<p class="entry-meta" style="margin-top:var(--h-s2)">' + esc(UI.me.sessionsNoAudio) + '</p>';
+  return '<article class="entry"><h3 class="entry-title">' + esc(s.title) + '</h3><p class="entry-meta">' + esc([s.date, s.dur, s.tag].filter(Boolean).join('・')) + '</p>' +
+    (s.desc ? '<p class="entry-note">' + esc(s.desc) + '</p>' : '') + chapters + player + '</article>';
 }
 function renderSessions(){
   loadInto('sessions', $('sessionsBody'), async () => {
     const sessions = await data.sessions();
     if (!sessions.length) return stateEmpty(UI.me.sessionsEmpty);
-    return { html: '<div class="list">' + sessions.map(sessionHtml).join('') + '</div>', after: () => sessions.forEach((s) => { if (s.url) bindAudio('ss-' + s.id, s.url); }) };
+    return { html: sessions.map(sessionHtml).join(''), after: () => sessions.forEach((s) => { if (s.url) bindAudio('ss-' + s.id, s.url); }) };
   });
 }
+
 actions.chapter = (btn) => { const a = audios['ss-' + btn.dataset.id]; if (!a) return; a.currentTime = Number(btn.dataset.t) || 0; if (a.paused) actions.play({ dataset: { id: 'ss-' + btn.dataset.id } }); };
 actions.skip = (btn) => { const a = audios['ss-' + btn.dataset.id]; if (!a) return; a.currentTime = Math.max(0, Math.min(a.duration || 1e9, a.currentTime + Number(btn.dataset.d))); };
 actions.speed = (btn) => { const a = audios['ss-' + btn.dataset.id]; if (!a) return; const i = SPEEDS.findIndex((x) => Math.abs(x - (a.playbackRate || 1)) < .01); const next = SPEEDS[(i + 1) % SPEEDS.length]; a.playbackRate = next; btn.textContent = next + 'x'; };

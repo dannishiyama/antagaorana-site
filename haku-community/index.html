@@ -9,7 +9,9 @@
 <link rel="canonical" href="https://antagaorana.com/haku-community/">
 <link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
 <link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/lp-assets/community-tokens.css">
+<link rel="stylesheet" href="/lp-assets/haku-design.css?v=20261008a">
 <style>
 :root{color-scheme:light;box-sizing:border-box}
 body{margin:0;padding:0}
@@ -250,9 +252,65 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     scroll-behavior:auto!important;
   }
 }
+
+/* ──────── HAKU Design System への統一（haku-design.css の値を参照） ──────── */
+:root{
+  --green:var(--h-green); --green-dk:var(--h-green); --green-lt:var(--h-green);
+  --cream:var(--h-bg); --paper:var(--h-surface);
+  --ink:var(--h-ink); --mid:var(--h-ink-2); --faint:var(--h-ink-3);
+  --terra:var(--h-green); --accent-ink:var(--h-green-ink);
+  --gold:var(--h-gold); --line:var(--h-line); --line-soft:var(--h-line-soft);
+  --serif:var(--h-serif); --sans:var(--h-sans);
+}
+body{font-size:var(--h-fs-body);line-height:var(--h-lh-body);letter-spacing:var(--h-ls-body)}
+h1,h2,h3,h4{font-weight:500;letter-spacing:var(--h-ls-heading)}
+:focus-visible{outline-color:var(--h-green-ink)}
+.top :focus-visible,.hero :focus-visible,.closing :focus-visible,.site-footer :focus-visible{outline-color:var(--h-gold)}
+
+/* 文字の大きさ：最小13px、本文16px。補足は濃く */
+.top .logo{font-size:15px}
+.top .primary-nav a,.top .top-login{font-size:14px}
+.hero .eyebrow,.invite-line{font-size:var(--h-fs-caption);color:var(--h-on-green-2);letter-spacing:.14em}
+.invite-line{letter-spacing:.04em;margin-bottom:var(--h-s5)}
+.hero h1{margin-bottom:var(--h-s5);letter-spacing:.06em}
+.hero p{font-size:var(--h-fs-body);color:var(--h-on-green);max-width:32em;line-height:2}
+.hero-meta b{font-size:19px}
+.hero-meta span{font-size:var(--h-fs-caption);color:var(--h-on-green-2)}
+.note,.plan .for,.plan .tag,.people-list .role,.voice-by,.confirm dt{font-size:var(--h-fs-caption)}
+.chain p,.can p,.flowline p,.plan ul,.for-card p,.for-card ul,.people-list .value,.confirm{font-size:var(--h-fs-small)}
+.faq p{font-size:var(--h-fs-body)}
+.lede,.can p,.flowline p,.plan ul li{color:var(--h-ink-2)}
+.chain .n,.flowline b,.ap-step legend .n{color:var(--h-ink-3)}
+.verdict{color:var(--h-green-ink)}
+
+/* 暗い面（緑）の上：ヘッダー・ヒーロー・最後の呼びかけ・フッター */
+.top,.hero,.closing,.site-footer{background:var(--h-green)}
+.site-footer .teacher-link,.site-footer .copy{color:var(--h-on-green-2)}
+.top .primary-nav a,.top .top-login{color:var(--h-on-green-2)}
+.top .primary-nav a:hover,.top .top-login:hover{color:var(--h-on-green)}
+.closing p{color:var(--h-on-green)}
+
+/* ボタン：角丸は2px、浮き上がり・影なし。明るい面の主ボタンは緑、暗い面では金 */
+.btn{border-radius:var(--h-radius);font-weight:500;transition:background var(--h-ease),color var(--h-ease),border-color var(--h-ease)}
+.btn:hover,.btn:active{transform:none}
+.btn-solid{background:var(--h-green);border-color:var(--h-green);color:var(--h-on-green)}
+.btn-solid:hover{background:var(--h-green-ink);border-color:var(--h-green-ink)}
+.top .btn-solid,.hero .btn-solid,.closing .btn-solid{background:var(--h-gold);border-color:var(--h-gold);color:#2b2a1f}
+.top .btn-solid:hover,.hero .btn-solid:hover,.closing .btn-solid:hover{background:#e3c06f;border-color:#e3c06f}
+.btn-ghost{border-color:rgba(247,243,236,.6);color:var(--h-on-green)}
+.btn-ghost:hover{background:rgba(247,243,236,.1)}
+.plan,.plan:hover{transition:none;transform:none;box-shadow:none}
+.plan.pick::before{display:none}
+.plan.pick{border:1px solid var(--h-green)}
+.plan.pick .tag{color:var(--h-green-ink)}
+
+/* 入力欄 */
+.choice label,.confirm,.ap-step{border-radius:var(--h-radius)}
+input[type=text],input[type=email],input[type=password],textarea{border-radius:var(--h-radius)}
+.ap-err{color:var(--h-error)}
 </style>
 </head>
-<body>
+<body class="h-base">
 
 <div class="top">
   <a class="logo" href="/haku-community/">HAKU COMMUNITY</a>
@@ -273,7 +331,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     <div class="eyebrow">教育支援団体 あんたがおらな ｜ HAKU COMMUNITY</div>
     <p class="invite-line">文化やつながりを大切にするため、現在は完全紹介制で運営しています。</p>
     <h1>人は、人の中で、磨かれる。</h1>
-    <div class="en">HAKU COMMUNITY</div>
     <p>「こんなものだ」と諦めていた枠を外し、自分の未来を自分の手で拓いていく——そのための日常の環境です。個別に深く伴走する「拓（HAKU）コーチング」とは別に、日々の実践とつながりを積み重ねる小さな共同体を、月額2,980円でご用意しました。</p>
     <div class="ctas">
       <a href="#h-apply" class="btn btn-solid">HAKUに参加する</a>
@@ -290,7 +347,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section>
   <div class="narrow">
-    <div class="sec-label">WHY HAKU</div>
     <h2 class="lead">枝葉のノウハウより先に、<br>根っこを育てます。</h2>
     <p class="lede">「営業ではこう話す」「こう行動する」——そうした技術も必要です。ただし本人の中の「人をどう見るか」「何を大切にするか」が変わらなければ、特定の場面でしか使えません。HAKUが育てたいのは、次の循環そのものです。</p>
     <div class="chain">
@@ -306,7 +362,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section style="border-top:1px solid var(--line)" id="h-pillars">
   <div class="wrap">
-    <div class="sec-label">4 PILLARS</div>
     <h2 class="lead">4つの柱</h2>
     <p class="lede">大量のコンテンツを消費させることが目的ではありません。ひとつの問いを持ち帰り、日常の中で考え、動かしてみること。</p>
     <div class="can">
@@ -320,7 +375,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="sec-label">TANE</div>
     <h2 class="lead">TANEは、ポイントではありません。</h2>
     <p class="lede" style="margin-bottom:30px">貯めることより、何から生まれ、何に使ったかという物語を大事にしています。「稼げるコミュニティ」を目指しているわけではないので、増やすこと自体を競う設計にはしていません。</p>
     <div class="can">
@@ -333,7 +387,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section>
   <div class="wrap">
-    <div class="sec-label">A WEEK HERE</div>
     <h2 class="lead">一週間の流れ</h2>
     <p class="lede">特別な日ではなく、いつもの一週間の中に、こんなリズムが流れています。</p>
     <div class="flowline">
@@ -354,7 +407,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 -->
 <section class="people" id="h-people">
   <div class="wrap">
-    <div class="sec-label">PEOPLE</div>
     <h2 class="lead">同じ問いを、違う場所から<br>持ち寄る人たち。</h2>
     <p class="lede">年齢も仕事もばらばらです。共通しているのは、ノウハウより先に、自分の根っこに向き合おうとしていること。当面は直接紹介で、50人ほどの小さな輪から始めます。</p>
 
@@ -377,7 +429,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     </ul>
 
     <div class="meet">
-      <div class="sec-label">HAKU MEET — RECORD</div>
       <h3>画面の外で、会う。</h3>
       <p class="lede">開催のたびに、その日の記録をここに残していきます。まずは、はじめての回から。</p>
     </div>
@@ -386,7 +437,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section class="voices" id="h-voices">
   <div class="narrow">
-    <div class="sec-label">VOICES</div>
     <h2 class="lead">ここで過ごした人の言葉</h2>
     <p class="lede">掲載するのは、ご本人の許可をいただいた言葉だけです。成果や数字ではなく、日々の中での気づきを残していきます。</p>
 
@@ -413,11 +463,9 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 <!-- FOR：社会人の方への訴求。HAKU Communityは社会人向けコミュニティとして統一（教師向けは別ブランド「灯」に分離） -->
 <section class="for" id="h-for">
   <div class="wrap">
-    <div class="sec-label">FOR YOU</div>
     <h2 class="lead">こんな日常を送っている方へ。</h2>
     <p class="lede">業種も役職も、ばらばらでかまいません。共通しているのは、日々の判断の軸を、自分の中に育てたいという思いです。</p>
     <article class="for-card">
-      <div class="tag">FOR PROFESSIONALS</div>
       <h3>仕事の技術より先に、<br>根っこを育てる。</h3>
       <p>役割や責任が増えるほど、「自分は何を大切にしているか」を考える時間は減っていきます。業種も立場も違う人と同じ問いを持ち寄ることで、日々の判断の軸を、自分の中に育てていきます。</p>
       <ul>
@@ -432,7 +480,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section id="h-price">
   <div class="wrap">
-    <div class="sec-label">PRICE</div>
     <h2 class="lead">個別の伴走と、日常の環境は、<br>別々にご用意しています。</h2>
     <p class="lede" style="margin-bottom:40px">深く自分と向き合いたいときは拓（HAKU）コーチングへ。日常の中で磨かれ続けたいときはHAKU Communityへ。両方でも、どちらか一方でも。</p>
     <div class="plans" style="grid-template-columns:repeat(2,1fr)">
@@ -477,7 +524,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 -->
 <section class="apply" id="h-apply">
   <div class="narrow">
-    <div class="sec-label">APPLY</div>
     <h2 class="lead">お申し込み</h2>
     <p class="note" style="margin:8px 0 40px">参加申請は、運営の承認後にお支払いへ進みます。</p>
 
@@ -512,7 +558,6 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 
 <section class="faq" id="faq">
   <div class="narrow">
-    <div class="sec-label">FAQ</div>
     <h2 class="lead" style="margin-bottom:30px">よくあるご質問</h2>
     <details open><summary>拓（HAKU）コーチングとの違いは何ですか。</summary><p>コーチングは個人に深く入る個別サービスです。HAKU Communityは個別コンサルではなく、学び・振り返り・実践・つながりを日常の中で繰り返すための環境です。Community側で個別の診断や分析を提供することはありません。</p></details>
     <details><summary>既存の「拓」コミュニティアプリ（555チャレンジなど）とは違うのですか。</summary><p>別のものです。思想の根っこは近いですが、機能は独立しており、現時点では統合の予定はありません。</p></details>
