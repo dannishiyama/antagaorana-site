@@ -62,8 +62,9 @@ test('新URLの実体がある（ディレクトリの index.html、または書
   const rewrites = new Map(cfg.rewrites.map((r) => [r.source, r.destination]));
   assert.equal(rewrites.get(NEW_URLS.home), '/api/haku-home');
   assert.ok(existsSync(path.join(ROOT, 'api/haku-home.js')));
-  assert.equal(rewrites.get(NEW_URLS.setPassword), '/community-set-password.html');
-  assert.equal(rewrites.get(NEW_URLS.forgotPassword), '/forgot-password.html');
+  // cleanUrls（.html を隠す設定）のもとでは、書き換え先も拡張子なしにする（.html付きだと404になる）
+  assert.equal(rewrites.get(NEW_URLS.setPassword), '/community-set-password');
+  assert.equal(rewrites.get(NEW_URLS.forgotPassword), '/forgot-password');
   assert.ok(existsSync(path.join(ROOT, 'community-set-password.html')) && existsSync(path.join(ROOT, 'forgot-password.html')));
   // 旧ファイルが残っていない（古いURLが二重に配信されない）
   for (const f of ['haku-community.html', 'haku-community-login.html', 'haku-community-register.html', 'haku-community-thanks.html', 'haku-community-cancel.html', 'admin-community.html', 'admin-set-password.html']) {

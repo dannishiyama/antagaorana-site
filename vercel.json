@@ -29,11 +29,11 @@
     },
     {
       "source": "/haku-community/set-password/",
-      "destination": "/community-set-password.html"
+      "destination": "/community-set-password"
     },
     {
       "source": "/haku-community/forgot-password/",
-      "destination": "/forgot-password.html"
+      "destination": "/forgot-password"
     },
     {
       "source": "/tomoshibi-post.html",
