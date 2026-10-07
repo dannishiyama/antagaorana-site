@@ -23,6 +23,8 @@ body{margin:0;padding:0}
   --serif:'Noto Serif JP',serif; --sans:'Noto Sans JP',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+/* 背景の装飾の円が画面の外へはみ出して、横スクロール幅が広がらないように（bodyだけでなくhtmlでも切る） */
+html{overflow-x:hidden}
 body{
   background:linear-gradient(170deg,#3A5A38 0%,#2A4A28 55%,#1A3018 100%);
   color:var(--ivory);font-family:var(--sans);font-size:15px;line-height:1.9;

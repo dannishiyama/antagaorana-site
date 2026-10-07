@@ -55,19 +55,31 @@ const adapt = (handler) => async (nreq, nres) => {
   try { await handler(nreq, nres); } catch (e) { console.error('handler error', e); nres.statusCode = 500; nres.end('err'); }
 };
 
+// vercel.json の cleanUrls / redirects / rewrites と、ディレクトリの index.html を再現して配信する（本物のVercelの挙動は Preview で別途確認）。
 export function start() {
-  const routes = { '/api/admin': adapt(adminHandler), '/api/community-auth': adapt(authHandler), '/haku-community/home/': adapt(homeHandler) };
+  const cfg = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'));
+  const handlers = { '/api/admin': adapt(adminHandler), '/api/community-auth': adapt(authHandler), '/api/haku-home': adapt(homeHandler) };
+  const exists = (f) => fs.existsSync(f) && fs.statSync(f).isFile();
   const server = http.createServer((req, res) => {
     const u = new URL(req.url, 'http://localhost');
-    if (routes[u.pathname]) return routes[u.pathname](req, res);
-    let f = null;
-    if (u.pathname === '/haku-community/admin/') f = path.join(REPO, 'haku-community/admin/index.html');
-    else if (u.pathname.startsWith('/lp-assets/')) f = path.join(REPO, u.pathname);
-    if (f && fs.existsSync(f)) {
-      res.writeHead(200, { 'Content-Type': f.endsWith('.png') ? 'image/png' : f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream' });
-      return fs.createReadStream(f).pipe(res);
+    let p = u.pathname;
+    if (handlers[p]) return handlers[p](req, res);
+    const redirect = (loc, status = 308) => { res.writeHead(status, { Location: loc + u.search }); res.end(); };
+    if (p.endsWith('.html') && exists(path.join(REPO, p.slice(1)))) return redirect(p.slice(0, -5)); // cleanUrls
+    const red = cfg.redirects.find((r) => r.source === p);
+    if (red) return redirect(red.destination);
+    const rw = cfg.rewrites.find((r) => r.source === p);
+    if (rw) {
+      if (handlers[rw.destination]) return handlers[rw.destination](req, res);
+      p = rw.destination;
     }
-    res.writeHead(404); res.end('nf');
+    const candidates = [p, p + '.html', p.endsWith('/') ? p + 'index.html' : null].filter(Boolean);
+    const rel = candidates.find((c) => !c.includes('..') && !c.startsWith('/api/') && !c.startsWith('/node_modules') && exists(path.join(REPO, c.slice(1))));
+    if (!rel) { res.writeHead(404); return res.end('not found'); }
+    const f = path.join(REPO, rel.slice(1));
+    const type = f.endsWith('.png') ? 'image/png' : f.endsWith('.css') ? 'text/css' : f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream';
+    res.writeHead(200, { 'Content-Type': type });
+    fs.createReadStream(f).pipe(res);
   });
   return new Promise((resolve) => server.listen(0, () => resolve({ server, base: 'http://localhost:' + server.address().port })));
 }

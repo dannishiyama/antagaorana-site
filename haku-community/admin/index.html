@@ -1633,7 +1633,7 @@ document.getElementById('gotoMembers').addEventListener('click', function(ev){ e
 
 // ページを開き直したとき、有効な管理者ログイン（Cookie）が残っていれば、ログイン画面を飛ばして管理画面を復元する。
 api('/api/admin?action=whoami', { method: 'GET' }).then(function(res){
-  if (res.status !== 200) return;
+  if (res.status !== 200 || !res.data || !res.data.ok) return;
   currentAdminRole = res.data.role || null;
   document.getElementById('loginbox').style.display = 'none';
   document.getElementById('adminPanel').style.display = 'block';

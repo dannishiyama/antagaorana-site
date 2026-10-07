@@ -50,12 +50,12 @@ async function adminCookie(role = 'super_admin', actorId = 'admin@example.com') 
 const rid = () => `req-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 
 test('whoami：管理者ログインがあれば200、なければ401（ページを開き直したときの復元用）', async () => {
-  assert.equal((await admin('', 'whoami')).status, 401);
+  assert.deepEqual((await admin('', 'whoami')).body, { ok: false }, '未ログインは401にせず ok:false');
   const c = await adminCookie('staff', 'staff@example.com');
   const r = await admin(c, 'whoami');
   assert.equal(r.status, 200); assert.equal(r.body.actorId, 'staff@example.com'); assert.equal(r.body.role, 'staff');
   const m = await member();
-  assert.equal((await admin(m.cookie, 'whoami')).status, 401, '一般会員のCookieは管理者として扱われない');
+  assert.deepEqual((await admin(m.cookie, 'whoami')).body, { ok: false }, '一般会員のCookieは管理者として扱われない');
 });
 
 test('会員一覧：ポイントを持つのは会員資格（Membership）がある人だけ。操作可否が明示される', async () => {

@@ -31,7 +31,7 @@
  * POST /api/admin?action=points-grant   { email, amount, reason?, requestId }   （手動付与。管理者）
  * POST /api/admin?action=points-adjust  { email, amount(±), reason, requestId } （調整。管理者）
  * POST /api/admin?action=points-reverse { entryId, reason, requestId }           （取消。管理者）
- * GET  /api/admin?action=whoami                                                  （管理者ログインの確認）
+ * GET  /api/admin?action=whoami                                                  （管理者ログインの確認。未ログインは ok:false）
  * GET  /api/admin?action=audit-log
  * GET  /api/admin?action=events-list
  * POST /api/admin?action=events-create          { title, type, startsAt, location, capacity, fee, itemsToBring, description, registration? }
@@ -127,7 +127,9 @@ export default async function handler(req, res) {
     // 管理画面を開き直したときに、有効な管理者ログイン（Cookie）が残っていれば画面を復元するための確認。
     if (action === 'whoami') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-      const session = await requireAdminHere(req, res); if (!session) return;
+      // 未ログインでもエラー（401）にはせず ok:false を返す（画面を開くたびに、ブラウザのコンソールに赤いエラーが出ないように）。
+      const session = await getAdminSession(parseCookies(req).ht_admin_session);
+      if (!session) return res.status(200).json({ ok: false });
       return res.status(200).json({ ok: true, actorId: session.actorId, role: session.role || null });
     }
     if (action === 'applications') {
