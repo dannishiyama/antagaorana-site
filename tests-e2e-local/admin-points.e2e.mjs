@@ -245,10 +245,10 @@ await mp.goto(base + '/lp-assets/logo-hero.png'); // 同一オリジンでCookie
 const loginRes = await mp.evaluate(async (pw) => (await fetch('/api/community-auth?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ community: 'haku', email: 'nishiyama.taro@example.com', password: pw }) })).status, MEMBER_PASSWORD);
 eq('会員ログイン', loginRes, 200);
 await mp.goto(base + '/haku-community/home/#point');
-await mp.waitForSelector('#pointBody .ledger-row');
+await mp.waitForSelector('#pointBody .pt-row');
 const memberText = await mp.locator('#pointBody').innerText();
 check('会員の#pointに「130 pt」が出る', /現在のポイント\s*130 pt/.test(memberText.replace(/\n+/g, ' ')), memberText);
-const mrows = await mp.locator('#pointBody .ledger-row').evaluateAll((els) => els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
+const mrows = await mp.locator('#pointBody .pt-row').evaluateAll((els) => els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
 eq('会員側の履歴も +100 / +50 / -20', mrows.map((r) => (r.match(/([+-][0-9]+) pt/) || [])[1]), ['-20', '+50', '+100']);
 check('会員側に、運営の個人名・メールは出ない', !/admin@example\.test/.test(memberText), memberText);
 await mp.screenshot({ path: path.join(OUT, 'member_point_130.png') });

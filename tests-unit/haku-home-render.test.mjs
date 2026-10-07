@@ -10,7 +10,6 @@ import { UI } from '../api/_lib/haku-ui-strings.js';
 import { cleanUserText, hasInvalidChars, isDisplayablePost, normalizeRequestId } from '../api/_lib/text-safety.js';
 import { computeEventState, joinBlockReason, isEventPast } from '../api/_lib/event-state.js';
 
-const APP_CSS = readFileSync(new URL('../lp-assets/haku-app.css', import.meta.url), 'utf8');
 const TEMPLATE = readFileSync(new URL('../api/_templates/haku-community-home.html', import.meta.url), 'utf8');
 const render = (opts = {}) => renderHakuHome(TEMPLATE, { displayName: '山田太郎', isAdmin: false, ...opts });
 
@@ -159,19 +158,19 @@ test('PCは左サイドバー、スマホは下部メニュー：ヘッダー・
   const main = body.indexOf('<main class="content"');
   assert.ok(side > 0 && side < header && header < nav && nav < member && member < main);
   // 900px以上でサイドバー（縦並び）、それ未満は下部固定のメニューのまま
-  assert.match(APP_CSS, /@media \(min-width:900px\)\{[\s\S]*\.tabbar\{position:static;display:flex;flex-direction:column/);
-  assert.match(APP_CSS, /\.tabbar\{position:fixed;left:0;right:0;bottom:0/);
+  assert.match(html, /@media \(min-width:900px\)\{[\s\S]*\.tabbar\{position:static;display:flex;flex-direction:column/);
+  assert.match(html, /\.tabbar\{position:fixed;left:0;right:0;bottom:0/);
   // 6項目の順序
   assert.deepEqual([...body.matchAll(/data-tab="(\w+)"/g)].map((m) => m[1]), ['home', 'learn', 'words', 'gather', 'point', 'profile']);
 });
 
 test('ロゴ：四角い台座は廃止し、丸いバッジに既存アセットをそのまま（切り抜かず）置く', () => {
   const html = render();
-  assert.match(APP_CSS, /\.brand-mark\{[^}]*border-radius:50%/);
-  assert.ok(!/\.brand-mark\{[^}]*border-radius:9px/.test(APP_CSS), '旧・角丸四角の台座が残っている');
+  assert.match(html, /\.brand-mark\{[^}]*border-radius:50%/);
+  assert.ok(!/\.brand-mark\{[^}]*border-radius:9px/.test(html), '旧・角丸四角の台座が残っている');
   assert.ok(html.includes('src="/lp-assets/logo-hero.png?v=20260501a"'));
   // 画像は加工せず（filter・clip-path・object-fit での切り抜きなし）
-  const css = APP_CSS.match(/\.brand-mark img\{[^}]*\}/)[0];
+  const css = html.match(/\.brand-mark img\{[^}]*\}/)[0];
   assert.ok(!/filter|clip-path|object-fit|mask/.test(css), css);
 });
 

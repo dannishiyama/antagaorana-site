@@ -9,11 +9,81 @@
 <link rel="canonical" href="https://antagaorana.com/haku-community/register/">
 <link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
 <link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/lp-assets/haku-design.css?v=20261008a">
-<link rel="stylesheet" href="/lp-assets/haku-entry.css?v=20261008a">
+<link rel="stylesheet" href="/lp-assets/community-tokens.css">
+<style>
+:root{color-scheme:light;box-sizing:border-box}
+body{margin:0;padding:0}
+[hidden]{display:none!important}
+
+:root{
+  --green:var(--color-green);
+  --green-dk:var(--color-green-dark);
+  --cream:var(--color-bg);
+  --paper:var(--color-surface);
+  --ink:var(--color-text);
+  --mid:var(--color-text-muted);
+  --terra:#8c692c;
+  --gold:var(--color-gold);
+  --line:var(--color-border);
+  --serif:var(--font-serif);
+  --sans:var(--font-sans);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--green-dk);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit}
+input,textarea{font-family:inherit;font-size:14px}
+
+.top{padding:20px 8%}
+.top a{color:rgba(255,255,255,.7);font-size:12.5px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3)}
+.top a:hover{color:#fff}
+.top a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 24px 60px;color:#fff}
+.card{width:100%;max-width:420px;text-align:center;opacity:0;transform:translateY(12px)}
+.card.is-ready{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.mark{font-family:var(--serif);font-size:22px;letter-spacing:.14em;margin-bottom:10px}
+.sub{font-size:12px;letter-spacing:.05em;color:#b9c7b2;margin-bottom:36px;line-height:1.9}
+
+.field{text-align:left;margin-bottom:20px}
+.field-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.field label{display:block;font-size:12px;letter-spacing:.1em;color:#b9c7b2}
+.field-head label{margin-bottom:0}
+.field input,.field textarea{width:100%;min-height:44px;padding:12px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.35);color:#fff;outline:none;transition:border-color .15s ease,background-color .15s ease;resize:vertical}
+.field input:hover,.field textarea:hover{border-color:rgba(255,255,255,.5)}
+.field input:focus-visible,.field textarea:focus-visible{border-color:var(--gold);outline:2px solid var(--gold);outline-offset:1px}
+.hint{font-size:11.5px;color:rgba(255,255,255,.5);margin-top:6px;text-align:left}
+.toggle-pw{background:none;border:0;color:#b9c7b2;font-size:11.5px;letter-spacing:.04em;cursor:pointer;text-decoration:underline;padding:0;min-height:24px;font-family:var(--sans)}
+.toggle-pw:hover{color:#fff}
+.toggle-pw:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.agree{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:12.5px;color:#dfe8da;line-height:1.8;margin-bottom:24px;cursor:pointer}
+.agree input{width:16px;height:16px;margin-top:3px;accent-color:var(--gold);flex:none}
+.agree a{color:#fff;text-decoration:underline}
+
+.go{width:100%;min-height:48px;margin-top:4px;padding:14px;background:var(--terra);border:1px solid var(--terra);color:#fff;font-size:14px;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);transition:transform .18s ease}
+.go:hover{transform:translateY(-1px)}
+.go:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.go[disabled]{opacity:.65;cursor:progress}
+.err{font-size:12px;color:#f0c2a8;margin-top:12px;min-height:18px;opacity:0}
+.err.show{opacity:1}
+
+.already{margin-top:40px;padding-top:24px;border-top:1px solid rgba(255,255,255,.2);font-size:12.5px;color:#b9c7b2;line-height:1.9}
+.already a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px}
+
+
+footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4);line-height:2.2}
+footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
+footer a:hover{color:rgba(255,255,255,.8)}
+
+@media(max-width:600px){ .stage{padding:10px 22px 40px} }
+
+@media(prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .card{opacity:1!important;transform:none!important}
+}
+</style>
 </head>
-<body class="h-base dark h-dark">
+<body>
 
 <div class="top">
   <a href="/haku-community/">← HAKU Community 紹介ページへ</a>
@@ -23,9 +93,9 @@
   <div class="card" id="card">
     <div class="mark">HAKU COMMUNITY</div>
     <p class="sub">新規登録<br>ご登録後、管理者の確認・承認を経てお支払いへ進みます。</p>
-    <p class="lead-note">HAKU Communityは完全紹介制のコミュニティです。ご紹介者のお名前をご入力のうえ、お申し込みください。内容を運営が確認したうえで、承認された方にお支払いのご案内をお送りします。</p>
+    <p style="font-size:12.5px;color:#dfe8da;line-height:1.9;text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);padding:12px 14px;margin-bottom:28px">HAKU Communityは完全紹介制のコミュニティです。ご紹介者のお名前をご入力のうえ、お申し込みください。内容を運営が確認したうえで、承認された方にお支払いのご案内をお送りします。</p>
 
-    <div id="pendingNotice" class="pending" hidden>
+    <div id="pendingNotice" hidden>
       <p style="font-size:15px;color:#fff;line-height:2;margin-bottom:20px">お申し込みを受け付けました。<br>運営が内容を確認し、承認され次第、<br>ご登録のメールアドレスへご案内をお送りします。</p>
       <p style="font-size:12.5px;color:#b9c7b2;line-height:1.9">今しばらくお待ちください。</p>
     </div>
