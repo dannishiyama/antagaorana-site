@@ -62,7 +62,7 @@ import {
   resetTestMember,
   listEmailLogForRecipient,
 } from './_lib/store.js';
-import { randomToken, hashPassword, verifyPassword } from './_lib/security.js';
+import { randomToken, hashPassword, verifyPassword, stripSecrets } from './_lib/security.js';
 import { createHakuCheckoutSession } from './_lib/stripe-checkout.js';
 import { grantPoints, adjustPoints, reversePoints, getBalance, getAdminMemberView, listRecent, PointError } from './_lib/points.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
@@ -519,14 +519,15 @@ async function handleMemberDetail(req, res) {
     getMembership('tomoshibi', email),
     listEmailLogForRecipient(email, 30),
   ]);
-  return res.status(200).json({
+  // パスワードのハッシュ等はブラウザへ返さない（保存データは変更しない）。
+  return res.status(200).json(stripSecrets({
     ok: true,
     email,
     user,
     haku: { application: hakuApplication, membership: hakuMembership },
     tomoshibi: { application: tomoshibiApplication, membership: tomoshibiMembership },
     emailLog,
-  });
+  }));
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━

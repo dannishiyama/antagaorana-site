@@ -36,3 +36,19 @@ export function escapeHtml(s) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
+
+// ブラウザへ返してはいけないパスワード関連の項目（ハッシュ・ダイジェスト等）を、再帰的に取り除いた「コピー」を返す。
+// 保存されているデータ自体は変更しない（認証処理は保存済みの値をそのまま使う）。
+const SECRET_KEY_RE = /^(password|passwd|pwd)$|password[_-]?hash|hashed[_-]?password|password[_-]?digest|pass[_-]?hash/i;
+export function stripSecrets(value) {
+  if (Array.isArray(value)) return value.map(stripSecrets);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) {
+      if (SECRET_KEY_RE.test(k)) continue;
+      out[k] = stripSecrets(v);
+    }
+    return out;
+  }
+  return value;
+}
