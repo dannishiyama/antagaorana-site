@@ -11,6 +11,7 @@ const require = createRequire(REPO + 'package.json');
 const { chromium } = require('playwright-core');
 const { start, seed, store, MEMBER_PASSWORD } = await import('./e2e-server.mjs');
 const { __setFetchForTests } = await import(new URL('api/_lib/google-meet.js', REPO_URL).href);
+const { legacyMeetUrl } = await import(new URL('api/_lib/morning-meet.js', REPO_URL).href);
 await seed();
 const { server, base } = await start();
 const OUT = process.env.OUT_DIR || os.tmpdir();
@@ -35,6 +36,8 @@ __setFetchForTests(async (url) => {
 });
 function googleOn(on) { for (const k of ['GOOGLE_MEET_CLIENT_ID', 'GOOGLE_MEET_CLIENT_SECRET', 'GOOGLE_MEET_REFRESH_TOKEN']) { if (on) process.env[k] = 'x'; else delete process.env[k]; } }
 
+// 画像の保存だけが目的の処理。PCのメモリが足りないときに撮影に失敗しても、検証そのものは止めない。
+async function shot(page, opts) { try { await page.screenshot(opts); } catch (e) { /* 撮影の失敗は無視 */ } }
 const errors = [];
 async function login(email, { width = 1280, height = 900, name } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height }, locale: 'ja-JP' });
@@ -46,7 +49,7 @@ async function login(email, { width = 1280, height = 900, name } = {}) {
   await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
   await page.goto(base + '/haku-community/login/');
   await page.fill('input[type=email]', email); await page.fill('input[type=password]', MEMBER_PASSWORD);
-  await page.click('#go'); await page.waitForURL('**/haku-community/home/**', { timeout: 8000 });
+  await page.click('#go', { force: true }); await page.waitForURL('**/haku-community/home/**', { timeout: 8000 });
   await page.waitForSelector('.page.active h1');
   return { ctx, page };
 }
@@ -74,6 +77,7 @@ async function clickPopup(page, sel) { // クリックの前から「新しい�
   await popup.waitForURL(/meet\.google\.com/, { timeout: 8000 }).catch(() => {}); // APIの返事のあとにMeetへ移動する
   return popup;
 }
+const q_get = (page, d) => page.evaluate(async (date) => { const r = await fetch('/api/community-auth?action=morning-meet&date=' + date, { credentials: 'same-origin' }); return { status: r.status, body: await r.json() }; }, d);
 const box = (page, sel) => page.locator(sel).first().boundingBox();
 
 console.log('■ A. HOME：冒頭 → ことば → 予定（朝の集まり・直近の予定）。PC');
@@ -91,7 +95,7 @@ const a = await login(A, { name: 'タロウ' });
   check('2つのグループは背景・枠のあるカード（淡白にしていない）', await p.evaluate(() => ['#homeWordsGroup', '#homePlanGroup'].every((s) => { const st = getComputedStyle(document.querySelector(s)); return st.borderTopWidth === '1px' && st.backgroundColor !== 'rgba(0, 0, 0, 0)' && parseFloat(st.borderTopLeftRadius) >= 10; })), null);
   const w = await box(p, '#homeWordsGroup'), pl = await box(p, '#homePlanGroup');
   check('ことばのグループが、予定のグループより上（PC）', w.y + w.height <= pl.y + 1, { w, pl });
-  await p.screenshot({ path: path.join(OUT, 'r3-01-home-pc.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-01-home-pc.png'), fullPage: true });
 }
 
 console.log('■ B. カレンダー：人数テキストなし・参加者アイコンが日付枠内に増える・多いときは「＋n」');
@@ -124,7 +128,7 @@ const b = await login(B, { name: 'ハナ' });
   await pick(b.page, D1);
   const dt = await detail(b.page);
   check('日付を選ぶと、参加者の一覧（表示名とアイコン）と「参加予定 7人」が出る', /参加予定 7人/.test(dt) && /ハナ/.test(dt) && /タロウ/.test(dt) && /ジロー/.test(dt) && /Miku/.test(dt) && (await b.page.locator('#moDetail .mo-person .av').count()) === 7, dt);
-  await b.page.screenshot({ path: path.join(OUT, 'r3-02-calendar-pc.png') });
+  await shot(b.page, { path: path.join(OUT, 'r3-02-calendar-pc.png') });
   // 取消でアイコンが減る
   await b.page.click('#moDetail [data-act="mo-leave"]'); await b.page.waitForSelector('#moDetail [data-act="mo-join"]');
   eq('Bが取消 → アイコン6個→「3個＋＋3」に更新', [await cell(b.page, D1).locator('.mo-avs .av').count(), await cell(b.page, D1).locator('.mo-more').allInnerTexts()], [3, ['＋3']]);
@@ -135,7 +139,7 @@ const b = await login(B, { name: 'ハナ' });
 
 console.log('■ C. Google Meet：未設定のとき（準備中・再試行。架空のURLは出さない）');
 {
-  googleOn(false);
+  googleOn(false); process.env.HAKU_LEGACY_MEET_URL = ''; // 暫定の共通Meetも無効にして「準備中」表示を確認する
   const p = a.page;
   await openMorning(p); await pick(p, D1);
   await p.click('#moDetail [data-act="mo-meet"]');
@@ -145,6 +149,13 @@ console.log('■ C. Google Meet：未設定のとき（準備中・再試行。�
   eq('Googleへ作成要求をしていない', google.spaces, 0);
   eq('URLは保存されていない', await store.getMorningMeet(D1), null);
   check('ボタンは押せる状態に戻っている', await p.locator('#moDetail [data-act="mo-meet"]').first().isEnabled(), null);
+  // 暫定：Google未設定のまま共通Meetを有効にすると、参加済みの会員は従来の共通Meetへ移動できる（別のURLは作らない）
+  delete process.env.HAKU_LEGACY_MEET_URL;
+  const legacyPopup = await clickPopup(p, '#moDetail [data-act="mo-meet"]');
+  check('暫定：Google未設定の間は、共通Meetへ移動できる（Googleへは通信せず、新しい会議も作らない）', legacyPopup.url() === legacyMeetUrl() && google.spaces === 0, { spaces: google.spaces });
+  await legacyPopup.close();
+  const nbLegacy = await q_get(b.page, D2); // BはD2に参加していない
+  check('暫定：参加していないBには共通Meetも返らない（403）', nbLegacy.status === 403 && !JSON.stringify(nbLegacy.body).includes('meet.google.com'), { status: nbLegacy.status });
 }
 
 console.log('■ D. Google Meet：設定済み（偽のGoogle）。開催日ごとに別URL・同日は同じURL・参加者だけ');
@@ -181,7 +192,7 @@ console.log('■ D. Google Meet：設定済み（偽のGoogle）。開催日ご�
   await openMorning(q); await pick(q, D1); await q.click('#moDetail [data-act="mo-leave"]'); await q.waitForSelector('#moDetail [data-act="mo-join"]');
   const afterLeave = await get(q, D1);
   eq('参加を取り消したら、その日のURLは取得できない', afterLeave.status, 403);
-  await p.screenshot({ path: path.join(OUT, 'r3-03-meet-detail.png') });
+  await shot(p, { path: path.join(OUT, 'r3-03-meet-detail.png') });
 }
 
 console.log('■ E. Google Meet：Google側の一時的な失敗（エラー表示と再試行）／過去・中止');
@@ -226,7 +237,7 @@ console.log('■ F. マイページ：活動の記録（最近書いたことば
   eq('今月の約束・設定とサポートはそのまま', [await p.locator('#h-goals').innerText(), await p.locator('#h-settings').innerText()], ['今月の約束', '設定とサポート']);
   const order = await p.evaluate(() => ['#h-goals', '.rec-group', '#h-settings'].map((s) => document.querySelector(s).getBoundingClientRect().top));
   check('並び：今月の約束 → 記録のまとまり → 設定とサポート', order[0] < order[1] && order[1] < order[2], order);
-  await p.screenshot({ path: path.join(OUT, 'r3-04-mypage-pc.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-04-mypage-pc.png'), fullPage: true });
 }
 
 console.log('■ G. HAKUポイント：活用イメージ（構想の紹介だけ）');
@@ -239,7 +250,7 @@ console.log('■ G. HAKUポイント：活用イメージ（構想の紹介だ�
   check('未確定の換算率・ルールを断定していない（1pt＝1円・円・有効期限・上限などの語がない）', !/1\s*pt|1ポイント|＝|=|円|有効期限|上限|換算|交換できます|寄付できます/.test(await p.locator('section.block[aria-labelledby="h-usage"]').innerText()), null);
   eq('交換・寄付・申請のボタンやリンクを追加していない', await p.locator('section.block[aria-labelledby="h-usage"]').locator('button, a, input').count(), 0);
   check('既存のポイント表示（理念・準備中／残高・履歴）が維持', /受け取ったものを、次の誰かへ/.test(t), null);
-  await p.screenshot({ path: path.join(OUT, 'r3-05-point.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-05-point.png'), fullPage: true });
 }
 
 console.log('■ H. スマホ幅（390px）：HOME／カレンダー（アイコン）／マイページ／ポイント');
@@ -251,20 +262,20 @@ console.log('■ H. スマホ幅（390px）：HOME／カレンダー（アイコ
   const w = await box(p, '#homeWordsGroup'), pl = await box(p, '#homePlanGroup');
   check('スマホでも、ことばが予定より上（縦に ことば → 予定）', w.y + w.height <= pl.y + 1, { w, pl });
   eq('HOME：横スクロールなし', await overflow(), false);
-  await p.screenshot({ path: path.join(OUT, 'r3-06-home-m.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-06-home-m.png'), fullPage: true });
   await store.ensureMorningEvent(D1, 'x');
   for (const e of ['nishiyama.taro@example.com', 'hanako.nishiyama@example.com', 'jiro.yamada@example.com', 'extra1@example.com', 'extra2@example.com', 'extra3@example.com']) await store.joinEventAtomic(`morning-${D1}`, e, null);
   await openMorning(p); await pick(p, D1);
   const geo = await p.evaluate((d) => { const c = document.querySelector(`.mo-cell[data-date="${d}"]`).getBoundingClientRect(); const items = [...document.querySelectorAll(`.mo-cell[data-date="${d}"] .mo-avs > *`)].map((e) => e.getBoundingClientRect()); const next = document.querySelector(`.mo-cell[data-date="${d}"]`).nextElementSibling; return { n: items.length, inside: items.every((r) => r.left >= c.left - 0.5 && r.right <= c.right + 0.5), h: Math.round(c.height), w: Math.round(c.width) }; }, D1);
   check(`6人参加でも日付枠に収まる（スマホ：アイコン${geo.n}個・枠 ${geo.w}×${geo.h}px）`, geo.inside && geo.n === 4, geo);
   eq('カレンダー：横スクロールなし', await overflow(), false);
-  await p.screenshot({ path: path.join(OUT, 'r3-07-calendar-m.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-07-calendar-m.png'), fullPage: true });
   await p.goto(base + '/haku-community/home/#profile'); await p.reload(); await p.waitForSelector('#p-profile.active .rec-group');
   eq('マイページ：横スクロールなし', await overflow(), false);
-  await p.screenshot({ path: path.join(OUT, 'r3-08-mypage-m.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-08-mypage-m.png'), fullPage: true });
   await p.goto(base + '/haku-community/home/#point'); await p.reload(); await p.waitForSelector('#h-usage');
   eq('ポイント：横スクロールなし', await overflow(), false);
-  await p.screenshot({ path: path.join(OUT, 'r3-09-point-m.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'r3-09-point-m.png'), fullPage: true });
   await m.ctx.close();
 }
 
@@ -299,11 +310,11 @@ console.log('■ I. 参加申請の締切（開催日の前々日23:59まで）�
   const d2 = await detail(q);
   check('締切後に取り消すと開催予定なしに。再び参加はできない（受付終了の表示）', /開催予定なし/.test(d2) && /参加受付は終了しました/.test(d2) && (await q.locator('#moDetail [data-act="mo-join"]').count()) === 0, d2);
   check('ホームの「今日の一歩」は、締切後の日へ「参加してみませんか」と誘わない', !/朝の集まりが開催予定です。参加してみませんか/.test(await (async () => { await p.goto(base + '/haku-community/home/#home'); await p.reload(); await p.waitForFunction(() => !document.querySelector('#homeStep .pulse')); return p.locator('#homeStep').innerText(); })()), null);
-  await p.screenshot({ path: path.join(OUT, 'r4-01-home.png') });
+  await shot(p, { path: path.join(OUT, 'r4-01-home.png') });
   await openMorning(q, closedDay); await pick(q, closedDay);
-  await q.screenshot({ path: path.join(OUT, 'r4-02-closed-day.png'), fullPage: false });
+  await shot(q, { path: path.join(OUT, 'r4-02-closed-day.png'), fullPage: false });
   await openMorning(p, openDay); await pick(p, openDay);
-  await p.screenshot({ path: path.join(OUT, 'r4-03-calendar-note.png'), fullPage: false });
+  await shot(p, { path: path.join(OUT, 'r4-03-calendar-note.png'), fullPage: false });
   await store.leaveEvent(`morning-${closedDay}`, B.toLowerCase());
 }
 

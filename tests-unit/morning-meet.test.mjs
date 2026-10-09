@@ -13,6 +13,7 @@ process.env.VERCEL_ENV = 'preview';
 const { default: authHandler } = await import('../api/community-auth.js');
 const { __setFetchForTests, createMeetSpace, meetConfig, MeetError } = await import('../api/_lib/google-meet.js');
 const { jstToday, addDays } = await import('../api/_lib/morning.js');
+const { legacyMeetUrl } = await import('../api/_lib/morning-meet.js');
 
 function fakeRes() {
   const res = { statusCode: 200, body: null, headers: {} };
@@ -72,8 +73,8 @@ function configure(on) {
   if (on) { process.env.GOOGLE_MEET_CLIENT_ID = 'id'; process.env.GOOGLE_MEET_CLIENT_SECRET = 'secret'; process.env.GOOGLE_MEET_REFRESH_TOKEN = 'refresh'; }
 }
 
-test('Google側が未設定のときは、URLを作らず「準備中」状態を返す（架空のURLは出さない）', async () => {
-  configure(false); installFakeGoogle();
+test('Google側が未設定で、暫定の共通Meetも無効なときは、URLを作らず「準備中」状態を返す（架空のURLは出さない）', async () => {
+  configure(false); installFakeGoogle(); process.env.HAKU_LEGACY_MEET_URL = '';
   assert.equal(meetConfig().configured, false);
   await assert.rejects(createMeetSpace(), (e) => e instanceof MeetError && e.code === 'unconfigured');
   const date = day(11);
@@ -83,6 +84,48 @@ test('Google側が未設定のときは、URLを作らず「準備中」状態�
   assert.equal(r.status, 200); assert.equal(r.body.ok, false); assert.equal(r.body.status, 'unavailable'); assert.equal(r.body.url, undefined);
   assert.equal(google.tokenCalls + google.spaceCalls, 0, 'Googleへは一切通信しない');
   assert.equal(await store.getMorningMeet(date), null, 'URLは保存されない');
+});
+
+test('暫定：Google未設定の間は、従来の共通Meetを参加表明済みの有効会員にだけ返す。未参加・取消後・中止・過去日・解約済みには返さず、他のAPIにも出さない。別のURLは作らない', async () => {
+  delete process.env.HAKU_LEGACY_MEET_URL; configure(false); installFakeGoogle();
+  const legacy = legacyMeetUrl();
+  assert.ok(legacy && /^https:\/\/meet\.google\.com\//.test(legacy));
+  const date = day(30), other = day(31);
+  const a = await member('あや'); const b = await member('ぼん'); const c = await member('かい', { status: null });
+  const join = await post(a.cookie, 'morning-join', { date });
+  assert.equal(join.status, 200);
+  const ok = await get(a.cookie, 'morning-meet', { date });
+  assert.equal(ok.status, 200); assert.equal(ok.body.status, 'ready'); assert.equal(ok.body.url, legacy, '共通Meetだけを返す（別のURLを作らない）');
+  assert.equal(google.tokenCalls + google.spaceCalls, 0, 'Googleへは通信しない・新しい会議は作らない');
+  assert.equal(await store.getMorningMeet(date), null, '日付別の保存もしない');
+  assert.equal((await get('', 'morning-meet', { date })).status, 401);
+  assert.equal((await get(c.cookie, 'morning-meet', { date })).status, 403, '会員資格がない');
+  const nb = await get(b.cookie, 'morning-meet', { date });
+  assert.equal(nb.status, 403); assert.equal(nb.body.url, undefined, '未参加者には返さない');
+  await post(b.cookie, 'morning-join', { date: other });
+  assert.equal((await get(b.cookie, 'morning-meet', { date })).status, 403, '別の日の参加者にも返さない');
+  const outputs = [join, await get(b.cookie, 'morning-month', { month: date.slice(0, 7) }), await get(a.cookie, 'morning-month', { month: date.slice(0, 7) }), await get(a.cookie, 'morning-next'), await get(a.cookie, 'events-list'), await get(a.cookie, 'me'), nb];
+  for (const r of outputs) assert.ok(!JSON.stringify(r.body).includes('meet.google.com'), 'Meet URLがMeet取得API以外に出ている');
+  const html = (await import('node:fs')).readFileSync(new URL('../api/_templates/haku-community-home.html', import.meta.url), 'utf8');
+  assert.ok(!html.includes('meet.google.com/' + legacy.split('/').pop()), 'テンプレート（HTML）にURLが埋め込まれていない');
+  await post(a.cookie, 'morning-leave', { date });
+  assert.equal((await get(a.cookie, 'morning-meet', { date })).status, 403, '参加を取り消したら返さない');
+  await post(a.cookie, 'morning-join', { date });
+  const ev = await store.getEvent(`morning-${date}`); await store.updateEvent(ev.id, { registration: 'cancelled' });
+  assert.equal((await get(a.cookie, 'morning-meet', { date })).status, 409, '中止の日は返さない');
+  assert.equal((await get(a.cookie, 'morning-meet', { date: addDays(jstToday(), -1) })).status, 409, '過去日は返さない');
+});
+
+test('Google設定を入れると、自動で日付別Meetに切り替わり、共通Meetは使われなくなる（切替機構）', async () => {
+  delete process.env.HAKU_LEGACY_MEET_URL; configure(true); installFakeGoogle();
+  const legacy = legacyMeetUrl();
+  const d1 = day(32), d2 = day(33);
+  const a = await member('あや');
+  await post(a.cookie, 'morning-join', { date: d1 }); await post(a.cookie, 'morning-join', { date: d2 });
+  const r1 = await get(a.cookie, 'morning-meet', { date: d1 }); const r2 = await get(a.cookie, 'morning-meet', { date: d2 });
+  assert.ok(r1.body.url !== legacy && r2.body.url !== legacy && r1.body.url !== r2.body.url, '日付別の別々のURL');
+  assert.equal(google.spaceCalls, 2);
+  configure(false);
 });
 
 test('設定済み：その日専用のMeetを作る（Googleの正式API・同日は同じURL・別の日は別のURL）', async () => {

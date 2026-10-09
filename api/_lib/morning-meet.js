@@ -14,11 +14,27 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export function meetIsConfigured() { return meetConfig().configured; }
 
+/**
+ * 暫定：Googleの連携（日付別Meet）が未設定の間だけ、従来の共通Meetを使う。URLはこのサーバーの中だけにあり、
+ * 参加表明済みの有効会員にだけ morning-meet API が返す（画面のHTML・他のAPIには含めない）。
+ * Googleの連携（GOOGLE_MEET_*）を設定すると、自動で日付別Meetに切り替わり、この共通URLは使われなくなる。
+ * 環境変数 HAKU_LEGACY_MEET_URL で上書き（空文字なら無効）できる。
+ */
+const LEGACY_SHARED_MEET_URL = 'https://meet.google.com/cvr-kkda-mcg';
+export function legacyMeetUrl() {
+  const env = process.env.HAKU_LEGACY_MEET_URL;
+  const v = env !== undefined ? env : LEGACY_SHARED_MEET_URL;
+  return /^https:\/\/meet\.google\.com\/[a-z0-9-]+$/i.test(v) ? v : null;
+}
+
 /** 戻り値: { status: 'ready', url } | { status: 'unavailable' } | { status: 'pending' } | { status: 'error', code } */
 export async function ensureMorningMeet(date) {
   const existing = await getMorningMeet(date);
   if (existing?.url) return { status: 'ready', url: existing.url };
-  if (!meetConfig().configured) return { status: 'unavailable' };
+  if (!meetConfig().configured) {
+    const legacy = legacyMeetUrl(); // 暫定：日付別Meetが使えない間は、従来の共通Meet
+    return legacy ? { status: 'ready', url: legacy } : { status: 'unavailable' };
+  }
 
   if (!(await claimMorningMeetLock(date))) {
     // 別の人の参加表明が、いまこの日の会議を作っている。少し待って、できていればそれを使う。

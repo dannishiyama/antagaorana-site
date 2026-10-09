@@ -34,6 +34,8 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'haku-av-'));
 const FILES = { wide: path.join(tmp, 'wide.png'), fake: path.join(tmp, 'fake.png'), txt: path.join(tmp, 'note.txt'), logo: path.join(REPO, 'lp-assets/haku-community-logo.png') };
 fs.writeFileSync(FILES.wide, widePng(600, 200)); fs.writeFileSync(FILES.fake, '<script>alert(1)</script>'); fs.writeFileSync(FILES.txt, 'hello');
 
+// 画像の保存だけが目的の処理。PCのメモリが足りないときに撮影に失敗しても、検証そのものは止めない。
+async function shot(page, opts) { try { await page.screenshot(opts); } catch (e) { /* 撮影の失敗は無視 */ } }
 const errors = [];
 async function login(email, { width = 1280, height = 900, name } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height }, locale: 'ja-JP' });
@@ -44,7 +46,7 @@ async function login(email, { width = 1280, height = 900, name } = {}) {
   await page.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
   await page.goto(base + '/haku-community/login/');
   await page.fill('input[type=email]', email); await page.fill('input[type=password]', MEMBER_PASSWORD);
-  await page.click('#go'); await page.waitForURL('**/haku-community/home/**', { timeout: 8000 });
+  await page.click('#go', { force: true }); await page.waitForURL('**/haku-community/home/**', { timeout: 8000 });
   await page.waitForSelector('.page.active h1');
   return { ctx, page };
 }
@@ -82,7 +84,7 @@ const a = await login(A, { name: 'タロウ' });
   const body = await p.innerText('body');
   check('HOMEに「555チャレンジ」「HAKU MORNING」が出ない', !/555|チャレンジ|HAKU MORNING|Google Meet/.test(body), null);
   eq('ホームにカレンダーを置かない', await p.locator('#p-home .mo-grid').count(), 0);
-  await p.screenshot({ path: path.join(OUT, 'morning-01-home-empty.png') });
+  await shot(p, { path: path.join(OUT, 'morning-01-home-empty.png') });
   await p.click('#homeNextMorning [data-go="morning"]'); await p.waitForSelector('.mo-grid');
   eq('「朝の集まりを見る」で専用ページへ（hash）', new URL(p.url()).hash, '#morning');
   eq('専用ページの見出し', await p.locator('#p-morning h1').innerText(), '朝の集まり');
@@ -106,7 +108,7 @@ console.log('■ B. カレンダー：参加表明（Aが明日に参加）');
   check('参加済みは「朝の集まりに参加する」（Meet）と取消の2つ。参加表明ボタンは消える', (await p.locator('#moDetail [data-act="mo-meet"]').count()) === 1 && (await p.locator('#moDetail [data-act="mo-leave"]').count()) === 1 && (await p.locator('#moDetail [data-act="mo-join"]').count()) === 0, null);
   const c = cell(p, tomorrow);
   check('セル：「○人」の文字はなく、参加者アイコンが1つ・自分が参加予定（mine）', !/人/.test(await c.innerText()) && (await c.locator('.mo-avs .av').count()) === 1 && (await c.getAttribute('class')).includes('mine') && /あなたは参加予定/.test(await c.getAttribute('aria-label')), await c.innerText());
-  await p.screenshot({ path: path.join(OUT, 'morning-02-calendar-A.png'), fullPage: false });
+  await shot(p, { path: path.join(OUT, 'morning-02-calendar-A.png'), fullPage: false });
 }
 
 console.log('■ C. Bから見える（共有）／Bも参加／取消の反映');
@@ -116,7 +118,7 @@ const b = await login(B, { name: 'ハナ' });
   await p.waitForFunction(() => document.querySelector('#homeNextMorning') && !document.querySelector('#homeNextMorning .pulse'));
   const home = await p.locator('#homeNextMorning').innerText();
   check('Bのホーム：「○月○日（曜）の朝の集まり」参加予定1人・タロウさん', new RegExp(dayLabel(tomorrow) + 'の朝の集まり').test(home) && /参加予定 1人/.test(home) && /タロウさん/.test(home), home);
-  await p.screenshot({ path: path.join(OUT, 'morning-03-home-B.png') });
+  await shot(p, { path: path.join(OUT, 'morning-03-home-B.png') });
   await p.click('#homeNextMorning [data-go="morning"]'); await p.waitForSelector('.mo-grid');
   await pick(p, tomorrow);
   const d = await detail(p);
@@ -137,7 +139,7 @@ const b = await login(B, { name: 'ハナ' });
   await openMorning(p); await pick(p, tomorrow);
   const db = await detail(p);
   check('Aの取消がB側にも反映（1人・ハナのみ）', /参加予定 1人/.test(db) && /ハナ/.test(db) && !/タロウ/.test(db), db);
-  await p.screenshot({ path: path.join(OUT, 'morning-04-calendar-B.png') });
+  await shot(p, { path: path.join(OUT, 'morning-04-calendar-B.png') });
   // Bも取消 → 開催予定なしに戻る
   await p.click('#moDetail [data-act="mo-leave"]');
   await p.waitForFunction(() => /開催予定なし/.test(document.querySelector('#moDetail').innerText));
@@ -183,7 +185,7 @@ console.log('■ E. マイページ → 設定とサポート → プロフィ�
   eq('設定とサポートのグループ', groups, ['プロフィール', 'アカウント', 'サポート']);
   const rows = await p.locator('#p-profile #h-settings ~ ul .row-link span:first-child, #p-profile #cancelArea .row-link span:first-child').allInnerTexts();
   check('既存の項目が残っている（メール・パスワード・ログアウト・解約・お問い合わせ）', ['メールアドレスを変更', 'パスワードを変更', 'ログアウト', 'HAKU Communityを解約する', '運営へのお問い合わせ'].every((t) => rows.includes(t)), rows);
-  await p.screenshot({ path: path.join(OUT, 'profile-01-mypage.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'profile-01-mypage.png'), fullPage: true });
   await p.click('[data-go="profile-settings"]'); await p.waitForSelector('#p-profile-settings.active');
   eq('プロフィール設定の見出し', await p.locator('#p-profile-settings h1').innerText(), 'プロフィール設定');
   eq('表示名の現在値', await p.inputValue('#pfNameInput'), 'タロウ');
@@ -206,7 +208,7 @@ console.log('■ F. 画像アップロード（検証）');
   await p.waitForSelector('[data-act="avatar-save"]');
   const prev = await p.evaluate(() => { const i = document.querySelector('#pfImage img'); return i && { w: i.naturalWidth, h: i.naturalHeight, src: i.src.slice(0, 22) }; });
   eq('プレビューは正方形に整えられている（256×256 JPEG）', prev, { w: 256, h: 256, src: 'data:image/jpeg;base64' });
-  await p.screenshot({ path: path.join(OUT, 'profile-02-preview.png') });
+  await shot(p, { path: path.join(OUT, 'profile-02-preview.png') });
   await p.click('[data-act="avatar-cancel"]');
   check('「やめる」で保存せず戻る', (await p.locator('[data-act="avatar-save"]').count()) === 0 && (await store.getUser(A)).avatarId == null, null);
 }
@@ -225,7 +227,7 @@ console.log('■ G. 画像の保存・各所への反映・再読み込み');
   check('PC左下のアイコン（サイドナビ周辺）に画像', await imgOk('#avatarBtn img'), null);
   await p.click('[data-go="profile"]'); await p.waitForSelector('#p-profile.active');
   check('マイページのアイコンに画像', await imgOk('#meAv img'), null);
-  await p.screenshot({ path: path.join(OUT, 'profile-03-mypage-with-image.png') });
+  await shot(p, { path: path.join(OUT, 'profile-03-mypage-with-image.png') });
   // 再読み込み後も維持
   await p.reload(); await p.waitForSelector('.page.active h1');
   check('再読み込み後も、PC左下のアイコンに画像が出る', await imgOk('#avatarBtn img'), null);
@@ -241,10 +243,10 @@ console.log('■ G. 画像の保存・各所への反映・再読み込み');
   await b.page.waitForSelector('#moDetail .mo-person img');
   check('Bから見たAの参加者アイコンも画像', await imgOk0(b.page, '#moDetail .mo-person img'), null);
   eq('同じ会員は、どの場所でも同じ画像（avatarIdが同一）', await b.page.evaluate(() => document.querySelector('#moDetail .mo-person img').getAttribute('src').split('id=')[1]), id);
-  await b.page.screenshot({ path: path.join(OUT, 'morning-05-participants-with-image-B.png') });
+  await shot(b.page, { path: path.join(OUT, 'morning-05-participants-with-image-B.png') });
   await b.page.goto(base + '/haku-community/home/#home'); await b.page.waitForSelector('#homeNextMorning .mo-stack');
   check('ホームの朝の集まりカードにもアイコン画像', await imgOk0(b.page, '#homeNextMorning .mo-stack img'), null);
-  await b.page.screenshot({ path: path.join(OUT, 'morning-06-home-B-with-avatar.png') });
+  await shot(b.page, { path: path.join(OUT, 'morning-06-home-B-with-avatar.png') });
   await p.click('#moDetail [data-act="mo-leave"]'); await p.waitForFunction(() => /開催予定なし/.test(document.querySelector('#moDetail').innerText));
 }
 async function imgOk0(page, sel) { // 画像の読み込みが終わるのを少し待ってから判定する
@@ -289,20 +291,20 @@ console.log('■ I. スマホ幅（390px）：ホーム／朝の集まり／プ�
   await p.waitForFunction(() => !document.querySelector('#homeNextMorning .pulse'));
   eq('ホーム：横スクロールなし', await overflow(), false);
   check('ホーム：下部メニュー6項目・最後は「マイページ」', (await p.locator('.tabbar .tab').count()) === 6 && /マイページ/.test(await p.locator('.tabbar .tab').last().innerText()), null);
-  await p.screenshot({ path: path.join(OUT, 'm-01-home.png') });
+  await shot(p, { path: path.join(OUT, 'm-01-home.png') });
   await openMorning(p); await pick(p, tomorrow);
   await p.click('#moDetail [data-act="mo-join"]'); await p.waitForFunction(() => /参加予定 1人/.test(document.querySelector('#moDetail').innerText));
   eq('朝の集まり：横スクロールなし', await overflow(), false);
   const cw = await p.evaluate(() => Math.round(document.querySelector('.mo-cell:not(.blank)').getBoundingClientRect().width));
   check(`セルの幅が十分（${cw}px）・押しやすい高さ`, cw >= 40 && (await p.evaluate(() => document.querySelector('.mo-cell:not(.blank)').getBoundingClientRect().height)) >= 56, cw);
-  await p.screenshot({ path: path.join(OUT, 'm-02-morning.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'm-02-morning.png'), fullPage: true });
   await p.click('#moDetail [data-act="mo-leave"]'); await p.waitForFunction(() => /開催予定なし/.test(document.querySelector('#moDetail').innerText));
   await p.goto(base + '/haku-community/home/#profile-settings'); await p.waitForSelector('#p-profile-settings.active');
   eq('プロフィール設定：横スクロールなし', await overflow(), false);
-  await p.screenshot({ path: path.join(OUT, 'm-03-profile-settings.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'm-03-profile-settings.png'), fullPage: true });
   await p.goto(base + '/haku-community/home/#profile'); await p.waitForSelector('#p-profile.active');
   eq('マイページ：横スクロールなし', await overflow(), false);
-  await p.screenshot({ path: path.join(OUT, 'm-04-mypage.png'), fullPage: true });
+  await shot(p, { path: path.join(OUT, 'm-04-mypage.png'), fullPage: true });
   await m.ctx.close();
 }
 
