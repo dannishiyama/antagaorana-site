@@ -686,7 +686,8 @@ async function handleEventsListAdmin(req, res) {
     ...e,
     participantCount: await countEventParticipants(e.id),
   })));
-  return res.status(200).json({ ok: true, events: enriched });
+  // 日ごとの朝の集まり（会員の参加表明で成立）は、参加者がいる日だけ出す（誰もいない日は「開催予定なし」）
+  return res.status(200).json({ ok: true, events: enriched.filter((e) => e.kind !== 'morning-day' || e.participantCount > 0) });
 }
 
 async function handleEventsCreate(req, res, session) {

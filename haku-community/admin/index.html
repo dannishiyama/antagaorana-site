@@ -1241,7 +1241,7 @@ document.getElementById('evSubmitBtn').addEventListener('click', function(){
   });
 });
 
-var EVENT_TYPE_LABEL = { morning: 'HAKU MORNING', meet: 'HAKU MEET', volunteer: 'ボランティア', other: 'その他' };
+var EVENT_TYPE_LABEL = { morning: '朝の集まり', meet: 'HAKU MEET', volunteer: 'ボランティア', other: 'その他' };
 
 function loadEvents() {
   var list = document.getElementById('eventsList');
@@ -1255,7 +1255,7 @@ function loadEvents() {
     events.forEach(function(e){
       var el = document.createElement('div');
       el.className = 'ev';
-      var dateStr = e.startsAt ? new Date(e.startsAt).toLocaleString('ja-JP') : '日程調整中';
+      var dateStr = e.startsAt ? (e.allDay ? new Date(e.startsAt).toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' }) + '（会員の参加表明で成立）' : new Date(e.startsAt).toLocaleString('ja-JP')) : '日程調整中';
       el.innerHTML = '<b>' + escapeHtml(e.title) + '</b>' +
         '<div class="meta">' + (EVENT_TYPE_LABEL[e.type] || e.type) + ' ・ ' + dateStr +
         (e.location ? ' ・ ' + escapeHtml(e.location) : '') +

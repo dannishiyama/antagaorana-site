@@ -96,6 +96,12 @@ export const {
   isEventParticipant,
   listMemberEventIds,
   renameEventParticipantEmail,
+  morningEventId,
+  ensureMorningEvent,
+  listMorningParticipants,
+  saveAvatarImage,
+  getAvatarImage,
+  deleteAvatarImage,
 } = redisImpl;
 
 // ── 管理者アカウントの初回パスワード設定トークン ──

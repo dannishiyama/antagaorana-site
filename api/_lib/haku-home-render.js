@@ -23,7 +23,7 @@ export function safeJson(value) {
   return out;
 }
 
-export function renderHakuHome(template, { displayName, isAdmin = false }) {
+export function renderHakuHome(template, { displayName, isAdmin = false, avatarId = null }) {
   const name = String(displayName || '').trim() || 'メンバー';
   const adminLink = isAdmin
     ? `<li><a class="row-link" href="${escapeHtml(UI.links.adminPanel)}" target="_blank" rel="noopener"><span>${escapeHtml(UI.me.admin)}</span><span class="row-arrow" aria-hidden="true">›</span></a></li>`
@@ -35,7 +35,7 @@ export function renderHakuHome(template, { displayName, isAdmin = false }) {
 
   let html = template
     .replaceAll('{{UI_JSON}}', () => safeJson(clientUi))
-    .replaceAll('{{MEMBER_JSON}}', () => safeJson({ name, isAdmin: Boolean(isAdmin) }))
+    .replaceAll('{{MEMBER_JSON}}', () => safeJson({ name, isAdmin: Boolean(isAdmin), avatarId: /^[a-f0-9]{16}$/.test(String(avatarId || '')) ? String(avatarId) : null }))
     .replaceAll('{{DISPLAY_NAME}}', () => escapeHtml(name))
     .replaceAll('{{ADMIN_LINK}}', () => adminLink)
     .replace(/\{\{t\.([A-Za-z0-9_.]+)\}\}/g, (_, path) => escapeHtml(lookup(path)));

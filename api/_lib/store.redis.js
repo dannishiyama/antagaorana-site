@@ -464,6 +464,47 @@ export async function getEvent(id) {
   return readJSON(`${PREFIX}event:${id}`);
 }
 
+// ── 朝の集まり（日ごと）──────────────────────────────────────────────
+// 「毎日の開催予定」を先に作っておくのではなく、メンバーの誰かがその日の朝に参加表明したとき、
+// はじめて開催予定（イベント）が作られる。既存のイベント/参加者の仕組みをそのまま使い、
+// IDを日付から決める（morning-YYYY-MM-DD）ので、同時に最初の2人が参加表明しても1件しか作られない。
+export function morningEventId(date) { return `morning-${date}`; }
+
+export async function ensureMorningEvent(date, createdBy) {
+  const id = morningEventId(date);
+  const startsAt = `${date}T00:00:00+09:00`; // 日付の始まり（日本時間）。時刻は未決定のため表示には使わない
+  const record = {
+    id, community: 'haku', type: 'morning', kind: 'morning-day', auto: true, allDay: true,
+    title: '朝の集まり', startsAt, location: '', description: '', capacity: null, fee: '', itemsToBring: '',
+    registration: 'open', createdAt: Date.now(), createdBy: createdBy || null,
+  };
+  const created = await getRedis().set(`${PREFIX}event:${id}`, JSON.stringify(record), 'NX');
+  if (created) await getRedis().zadd(`${PREFIX}events:haku`, new Date(startsAt).getTime(), id);
+  return getEvent(id);
+}
+
+// 指定した日付ごとの参加者（メールアドレス）を、まとめて1回の通信で取る。
+export async function listMorningParticipants(dates) {
+  if (!dates.length) return [];
+  const pipeline = getRedis().pipeline();
+  dates.forEach((d) => pipeline.smembers(`${PREFIX}event_participants:${morningEventId(d)}`));
+  const results = await pipeline.exec();
+  return results.map(([err, members]) => (err ? [] : members || []));
+}
+
+// ── プロフィール画像 ─────────────────────────────────────────────────
+// 画像本体は別キー（ht:avatar:<avatarId>）に保存し、Userには avatarId だけを持たせる（正は User.avatarId 1か所）。
+// avatarId は保存のたびに新しくなるので、画像を変えると表示側のキャッシュも自然に切り替わる。
+export async function saveAvatarImage(avatarId, { mime, b64 }) {
+  await writeJSON(`${PREFIX}avatar:${avatarId}`, { mime, b64, savedAt: Date.now() });
+}
+export async function getAvatarImage(avatarId) {
+  return readJSON(`${PREFIX}avatar:${avatarId}`);
+}
+export async function deleteAvatarImage(avatarId) {
+  if (avatarId) await getRedis().del(`${PREFIX}avatar:${avatarId}`);
+}
+
 // 開催日時の昇順（近い予定が先）で返す。
 export async function listEvents(community, limit = 100) {
   const ids = await getRedis().zrange(`${PREFIX}events:${community}`, 0, limit - 1);

@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     let isAdmin = false;
     try { isAdmin = Boolean(await getAdminSession(cookies.ht_admin_session)); } catch { isAdmin = false; }
 
-    const html = renderHakuHome(readFileSync(TEMPLATE_PATH, 'utf8'), { displayName, isAdmin });
+    const html = renderHakuHome(readFileSync(TEMPLATE_PATH, 'utf8'), { displayName, isAdmin, avatarId: user?.avatarId || null });
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.status(200).send(html);
   } catch (err) {

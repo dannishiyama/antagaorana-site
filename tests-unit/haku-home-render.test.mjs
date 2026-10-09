@@ -69,14 +69,14 @@ test('会員の画面に、Preview表記・テスト用の言葉・旧名称・�
   // ナビは6項目・指定の順序・日本語ラベル
   const nav = [...html.matchAll(/data-tab="(\w+)"/g)].map((m) => m[1]);
   assert.deepEqual(nav, ['home', 'learn', 'words', 'gather', 'point', 'profile']);
-  assert.deepEqual([UI.nav.home, UI.nav.learn, UI.nav.words, UI.nav.gather, UI.nav.pointFull, UI.nav.me], ['ホーム', '学ぶ', 'ことば', '集う', 'HAKUポイント', 'わたし']);
+  assert.deepEqual([UI.nav.home, UI.nav.learn, UI.nav.words, UI.nav.gather, UI.nav.pointFull, UI.nav.me], ['ホーム', '学ぶ', 'ことば', '集う', 'HAKUポイント', 'マイページ']);
 });
 
 test('操作はすべてdata属性で受け、HTMLにonclick等のインライン操作がない／見出しは各画面に1つ', () => {
   const html = render();
   assert.ok(!/\sonclick=/i.test(html));
   const body = html.split('<script>')[0];
-  assert.equal((body.match(/<h1\b/g) || []).length, 8, '各画面（8つ）にh1が1つずつ');
+  assert.equal((body.match(/<h1\b/g) || []).length, 10, '各画面（10）にh1が1つずつ');
   // 入力欄にはラベルが結び付いている
   const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
   for (const m of body.matchAll(/<label[^>]*\sfor="([^"]+)"/g)) assert.ok(ids.has(m[1]), `ラベルの対象がない: ${m[1]}`);
@@ -217,4 +217,53 @@ test('管理画面の表示名は「HAKUポイント」に統一（内部名 tan
   const html = readFileSync(new URL('../haku-community/admin/index.html', import.meta.url), 'utf8');
   assert.ok(html.includes('<button data-mode="tane">HAKUポイント</button>'));
   assert.ok(!/<button[^>]*>[^<]*HAKU POINT/.test(html));
+});
+
+test('名称の統一：会員の画面は「朝の集まり」。HAKU MORNING／555チャレンジは出ない（説明文での補足のみ）', () => {
+  const html = render();
+  assert.ok(!/555|チャレンジ|5時55分|meet\.google\.com/.test(html), '555チャレンジ関連が残っている');
+  const withBrand = Object.entries(Object.fromEntries([...walk(UI)].map((p) => [p, get(p)]))).filter(([, v]) => /HAKU MORNING/.test(v)).map(([k]) => k);
+  assert.deepEqual(withBrand, ['morning.lead'], '「HAKU MORNING」は、朝の集まりの説明文だけ');
+  assert.equal(UI.gather.typeMorning, '朝の集まり');
+  assert.ok(UI.morning.lead.startsWith('朝の集まり（HAKU MORNING）'));
+});
+
+test('「わたし」→「マイページ」：ナビ（PC・スマホ共通）とaria-label。画面内の見出し「わたしの記録」は残す', () => {
+  const html = render();
+  const nav = html.match(/<nav class="tabbar"[\s\S]*?<\/nav>/)[0];
+  assert.ok(nav.includes('マイページ') && !nav.includes('わたし'), 'ナビにマイページ以外の名称が残っている');
+  assert.ok(html.includes('aria-label="マイページを開く"'));
+  assert.equal(UI.me.title, 'わたしの記録');
+});
+
+test('設定とサポート：プロフィール設定／アカウント／サポートに整理され、既存の機能は残っている', () => {
+  const html = render({ isAdmin: true });
+  const block = html.match(/<section class="block" aria-labelledby="h-settings">[\s\S]*?<\/section>/)[0];
+  const order = [UI.me.groupProfile, UI.me.groupAccount, UI.me.groupSupport].map((t) => block.indexOf('class="sub-title">' + t));
+  assert.ok(order.every((n) => n > 0) && order[0] < order[1] && order[1] < order[2], 'グループの順序');
+  assert.ok(block.includes('data-go="profile-settings"') && block.includes(UI.me.profileSettings));
+  for (const keep of ['data-go="email"', 'data-go="password"', 'data-act="logout"', 'id="cancelArea"', UI.contact.mailto.replace(/&/g, '&amp;')]) assert.ok(block.includes(keep), `既存機能が消えている: ${keep}`);
+  assert.ok(block.includes('/haku-community/admin/'), '運営の方のリンクは維持');
+});
+
+test('プロフィール設定：画像（選ぶ・プレビュー・保存・戻す）と表示名がマイページから開ける', () => {
+  const html = render();
+  assert.ok(html.includes('id="p-profile-settings"') && html.includes('id="avatarFile"') && html.includes('accept="image/jpeg,image/png,image/webp"'));
+  assert.ok(html.includes('id="nameForm"'));
+  for (const act of ['avatar-pick', 'avatar-save', 'avatar-cancel', 'avatar-remove']) assert.ok(html.includes(`actions['${act}']`), act);
+  assert.ok(html.includes('id="p-morning"') && html.includes('data-act') && html.includes("actions['mo-join']") && html.includes("actions['mo-leave']"));
+  // アイコンを出す3か所（サイド/ヘッダー・マイページ・朝の集まりの参加者）は、同じ関数（avatarInner / avatarHtml）で描く
+  assert.ok(html.includes('function paintAvatars()') && html.includes("$('avatarBtn').innerHTML = avatarInner(me)") && html.includes("$('meAv').innerHTML = avatarHtml(me, 64)"));
+  assert.ok((html.match(/avatarHtml\(p(?:, \d+)?\)|avatarHtml\(q, \d+\)|avatarHtml\(p, \d+\)/g) || []).length >= 3, '参加者アイコンも同じ関数');
+});
+
+test('ホーム：朝の集まりは月間カレンダーではなく、直近1件のカード＋「朝の集まりを見る」。情報の順番は変えない', () => {
+  const html = render();
+  const body = html.split('<script>')[0];
+  const order = ['id="homeStep"', 'id="h-next"', 'id="h-question"', 'id="h-words"'].map((k) => body.indexOf(k));
+  assert.ok(order.every((n) => n > 0) && order.every((n, i) => i === 0 || n > order[i - 1]), '今日の一歩→直近の予定→今週の問い→ことば の順');
+  const homeSection = body.match(/<section class="page active" id="p-home"[\s\S]*?<!-- 学ぶ -->/)[0];
+  assert.ok(!homeSection.includes('mo-grid') && !homeSection.includes('morningBody'), 'ホームにカレンダーを置かない');
+  assert.ok(html.includes('data-go="morning"'));
+  assert.ok(html.includes('function renderMorningHome()'));
 });

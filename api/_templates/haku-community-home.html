@@ -229,6 +229,54 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .sheet-actions .btn{flex:1}
 .toast{position:fixed;left:50%;bottom:88px;z-index:500;max-width:min(92vw,440px);transform:translateX(-50%);padding:12px 18px;border-radius:10px;background:var(--ink);color:var(--paper);font-size:14px;line-height:1.7;text-align:center}
 
+/* ───── アバター（プロフィール画像。未設定のときは表示名の頭文字） ───── */
+.av{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--av,32px);height:var(--av,32px);border-radius:50%;overflow:hidden;background:var(--green);color:var(--paper);font-family:var(--serif);font-weight:700;line-height:1;font-size:calc(var(--av,32px)*.44)}
+.av img{display:block;width:100%;height:100%;object-fit:cover}
+.topbar-av{overflow:hidden;padding:0}
+.topbar-av img{display:block;width:100%;height:100%;object-fit:cover}
+.me-id{display:flex;align-items:center;gap:16px;margin-top:12px}
+
+/* ───── 朝の集まり（カレンダー・ホームのカード） ───── */
+.mo-stack{display:flex;align-items:center;margin:8px 0 4px}
+.mo-stack .av{margin-left:-8px;box-shadow:0 0 0 2px var(--bg)}
+.mo-stack .av:first-child{margin-left:0}
+.mo-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 8px}
+.mo-month{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--green-deep);letter-spacing:.04em}
+.mo-nav{flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:none;color:var(--green-deep);font-size:20px;line-height:1;cursor:pointer}
+.mo-nav:hover{background:var(--green-pale)}
+.mo-nav[disabled]{opacity:.3;cursor:default}
+.mo-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.mo-wd{padding:4px 0;text-align:center;font-size:12.5px;color:var(--ink3)}
+.mo-cell{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:64px;padding:5px 1px 4px;border:1.5px solid transparent;border-radius:10px;background:none;color:var(--ink);font-size:14px;cursor:pointer}
+.mo-cell:hover{background:var(--green-pale)}
+.mo-cell.blank{visibility:hidden;pointer-events:none}
+.mo-cell.past{color:var(--ink3)}
+.mo-cell.live{background:var(--green-pale)}
+.mo-cell.mine{background:var(--green);color:var(--paper)}
+.mo-cell.cancelled{text-decoration:line-through;color:var(--ink3)}
+.mo-cell[aria-pressed="true"]{border-color:var(--green-deep);box-shadow:inset 0 0 0 1px var(--green-deep)}
+.mo-d{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-variant-numeric:tabular-nums;line-height:1}
+.mo-cell.today .mo-d{box-shadow:inset 0 0 0 2px var(--gold)}
+.mo-n{font-size:12px;line-height:1.2;font-weight:700;color:var(--green-deep)}
+.mo-cell.mine .mo-n{color:var(--paper)}
+.mo-avs{display:flex;justify-content:center;align-items:center;min-height:14px}
+.mo-avs .av{margin-left:-3px;box-shadow:0 0 0 1.5px var(--paper)}
+.mo-avs .av:first-child{margin-left:0}
+.mo-cell.live .mo-avs .av{box-shadow:0 0 0 1.5px var(--green-pale)}
+.mo-cell.mine .mo-avs .av{box-shadow:0 0 0 1.5px var(--green)}
+.mo-day{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.mo-day-title{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-family:var(--serif);font-size:19px;line-height:1.6;font-weight:700;color:var(--ink)}
+.mo-people{list-style:none;margin-top:6px}
+.mo-person{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.mo-person:last-child{border-bottom:1px solid var(--line)}
+.mo-person .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.mo-person .me-tag{font-size:12.5px;color:var(--green-deep);font-weight:700}
+
+/* ───── プロフィール設定 ───── */
+.pf-now{display:flex;align-items:center;gap:18px;margin:8px 0 6px}
+.pf-hint{margin-top:6px;font-size:13px;color:var(--ink3)}
+.pf-pending{font-size:13.5px;color:var(--ink2)}
+
 /* ───── PC：細いスマホ幅の列にせず、ヘッダー・メニュー・本文を読みやすい幅でゆったり配置 ───── */
 /* ───── PC：左サイドバー。細いスマホ幅の列＋下部メニューにはしない。
    深緑の静かな縦のメニュー（文字中心・アイコンなし・件数バッジなし）にして、業務ツールのサイドバーに見せない。
@@ -329,14 +377,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
           <div class="actions"><button class="btn-text" type="button" data-go="words">{{t.home.wordsMore}}</button></div>
         </div>
       </section>
-
-      <section class="block" aria-labelledby="h-challenge">
-        <h2 class="block-title" id="h-challenge">{{t.home.challengeTitle}}</h2>
-        <div class="block-body">
-          <p class="block-supp" style="margin:0 0 4px">{{t.home.challengeBody}}</p>
-          <div class="actions"><a class="btn-text" href="{{t.links.challengeMeet}}" target="_blank" rel="noopener">{{t.home.challengeLink}}</a></div>
-        </div>
-      </section>
     </section>
 
     <!-- 学ぶ -->
@@ -402,8 +442,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
     <section class="page" id="p-profile" aria-labelledby="h-me">
       <div class="page-head">
         <h1 class="page-title" id="h-me" tabindex="-1">{{t.me.title}}</h1>
-        <p class="me-name" style="margin-top:8px">{{DISPLAY_NAME}}</p>
-        <p class="me-sub" id="meSince">{{t.brand.memberLabel}}</p>
+        <div class="me-id">
+          <span id="meAv"></span>
+          <div><p class="me-name" id="meName">{{DISPLAY_NAME}}</p>
+          <p class="me-sub" id="meSince">{{t.brand.memberLabel}}</p></div>
+        </div>
       </div>
 
       <section class="block" style="margin-top:0" aria-labelledby="h-goals">
@@ -430,15 +473,59 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 
       <section class="block" aria-labelledby="h-settings">
         <h2 class="block-title" id="h-settings">{{t.me.settingsTitle}}</h2>
-        <ul class="menu">
+        <div class="sub-title">{{t.me.groupProfile}}</div>
+        <ul class="menu" style="margin-top:0">
+          <li><button class="row-link" type="button" data-go="profile-settings"><span>{{t.me.profileSettings}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
+        </ul>
+        <div class="sub-title">{{t.me.groupAccount}}</div>
+        <ul class="menu" style="margin-top:0">
           <li><button class="row-link" type="button" data-go="email"><span>{{t.me.email}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
           <li><button class="row-link" type="button" data-go="password"><span>{{t.me.password}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
-          <li><a class="row-link" href="{{t.contact.mailto}}"><span>{{t.me.contact}}</span><span class="row-arrow" aria-hidden="true">›</span></a></li>
-          {{ADMIN_LINK}}
           <li><button class="row-link" type="button" data-act="logout"><span>{{t.me.logout}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
         </ul>
         <div id="cancelArea"></div>
+        <div class="sub-title">{{t.me.groupSupport}}</div>
+        <ul class="menu" style="margin-top:0">
+          <li><a class="row-link" href="{{t.contact.mailto}}"><span>{{t.me.contact}}</span><span class="row-arrow" aria-hidden="true">›</span></a></li>
+          {{ADMIN_LINK}}
+        </ul>
       </section>
+    </section>
+
+    <!-- 朝の集まり（カレンダー） -->
+    <section class="page" id="p-morning" aria-labelledby="h-morning">
+      <div class="page-head">
+        <h1 class="page-title" id="h-morning" tabindex="-1">{{t.morning.title}}</h1>
+        <p class="page-lead">{{t.morning.lead}}</p>
+      </div>
+      <div id="morningBody"></div>
+      <div class="actions"><button class="btn-text" type="button" data-go="gather">{{t.morning.back}}</button></div>
+    </section>
+
+    <!-- プロフィール設定 -->
+    <section class="page" id="p-profile-settings" aria-labelledby="h-pfset">
+      <div class="page-head"><h1 class="page-title" id="h-pfset" tabindex="-1">{{t.profile.title}}</h1></div>
+      <section class="block" style="margin-top:0" aria-labelledby="h-pfimg">
+        <h2 class="block-title" id="h-pfimg">{{t.profile.imageTitle}}</h2>
+        <p class="block-supp">{{t.profile.imageLead}}</p>
+        <div class="block-body">
+          <div id="pfImage"></div>
+          <input type="file" id="avatarFile" accept="image/jpeg,image/png,image/webp" hidden>
+          <div class="err" id="pfImgErr" role="alert"></div>
+        </div>
+      </section>
+      <section class="block" aria-labelledby="h-pfname">
+        <h2 class="block-title" id="h-pfname">{{t.profile.nameTitle}}</h2>
+        <p class="block-supp">{{t.profile.nameLead}}</p>
+        <div class="block-body">
+          <form class="form" id="nameForm" novalidate>
+            <div class="field"><label for="pfNameInput">{{t.profile.nameLabel}}</label><input id="pfNameInput" type="text" maxlength="30" autocomplete="nickname"></div>
+            <div class="err" id="pfNameErr" role="alert"></div>
+            <button class="btn btn-quiet" type="submit" id="pfNameBtn">{{t.profile.nameSave}}</button>
+          </form>
+        </div>
+      </section>
+      <div class="actions"><button class="btn-text" type="button" data-go="profile">{{t.profile.back}}</button></div>
     </section>
 
     <!-- メールアドレス変更 -->
@@ -568,6 +655,7 @@ const data = {
   sessions: () => getJson('sessions', '/api/community-auth?action=sessions-list').then((d) => d.sessions || []),
   points: () => getJson('points', '/api/community-auth?action=points-me', 5000),
   me: () => getJson('me', '/api/community-auth?action=me'),
+  morningNext: () => getJson('morning-next', '/api/community-auth?action=morning-next', 8000).then((d) => { if (d.today) MO.today = d.today; return d.next || null; }),
 };
 
 /* ═════════ 状態表示（読み込み中・空・エラー）の共通部品 ═════════ */
@@ -595,7 +683,7 @@ async function loadInto(key, el, producer, loadingLabel){
 }
 
 /* ═════════ 画面の切り替え ═════════ */
-const PAGES = ['home','learn','words','gather','point','profile','email','password'];
+const PAGES = ['home','learn','words','gather','point','profile','email','password','morning','profile-settings'];
 const TABS = ['home','learn','words','gather','point','profile'];
 const loaders = {
   home: () => loadHome(),
@@ -604,12 +692,14 @@ const loaders = {
   gather: () => loadGather(),
   point: () => loadPoint(),
   profile: () => loadProfile(),
+  morning: () => loadMorning(),
+  'profile-settings': () => loadProfileSettings(),
 };
 function showPage(name, opts){
   if (PAGES.indexOf(name) < 0) name = 'home';
   document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
   $('p-' + name).classList.add('active');
-  const tabName = TABS.indexOf(name) >= 0 ? name : 'profile';
+  const tabName = TABS.indexOf(name) >= 0 ? name : (name === 'morning' ? 'gather' : 'profile');
   document.querySelectorAll('.tab').forEach((b) => {
     if (b.dataset.tab === tabName) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
@@ -661,14 +751,59 @@ function renderEventCompact(e, withLink){
 }
 function nextEvent(events, pred){ return events.find((e) => !e.isPast && e.state !== 'cancelled' && pred(e)); }
 
+/* ═════════ アバター・日付の共通部品 ═════════ */
+function initialOf(name){ return String(name || '').trim().charAt(0) || 'メ'; }
+function avatarUrl(id){ return '/api/community-auth?action=avatar&id=' + encodeURIComponent(id); }
+/* プロフィール画像があれば画像、なければ表示名の頭文字。画像が読めなかったときも頭文字に戻る。 */
+function avatarInner(p){
+  const init = initialOf(p.name);
+  return p.avatarId ? '<img src="' + esc(avatarUrl(p.avatarId)) + '" alt="" decoding="async" data-init="' + esc(init) + '">' : esc(init);
+}
+function avatarHtml(p, size){ return '<span class="av" style="--av:' + size + 'px" aria-hidden="true">' + avatarInner(p) + '</span>'; }
+document.addEventListener('error', (ev) => {
+  const t = ev.target;
+  if (t && t.tagName === 'IMG' && t.dataset && t.dataset.init !== undefined && t.parentNode) t.parentNode.textContent = t.dataset.init;
+}, true);
+function paintAvatars(){
+  const me = { name: MEMBER.name, avatarId: MEMBER.avatarId };
+  $('avatarBtn').innerHTML = avatarInner(me);
+  $('meAv').innerHTML = avatarHtml(me, 64);
+  const pf = $('pfNow'); if (pf) pf.innerHTML = avatarHtml(me, 96);
+}
+function setMemberName(name){
+  MEMBER.name = name;
+  document.querySelectorAll('.topbar-name,#meName').forEach((el) => { el.textContent = name; });
+  $('greetTxt').textContent = greeting();
+  paintAvatars();
+}
+const MO = { today: null, month: null, selected: null, data: null, busy: false };
+function dateAdd(str, n){ const d = new Date(str + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+function dateParts(str){ const d = new Date(str + 'T00:00:00Z'); return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(), w: String(UI.morning.weekdays).split(',')[d.getUTCDay()] }; }
+function dayTitle(str){ const p = dateParts(str); return fmt(UI.morning.dayTitle, { m: p.m, d: p.d, w: p.w }); }
+function morningWhen(day){
+  if (MO.today && day.date === MO.today) return UI.home.morning.today;
+  if (MO.today && day.date === dateAdd(MO.today, 1)) return UI.home.morning.tomorrow;
+  const p = dateParts(day.date); return fmt(UI.morning.dayTitle, { m: p.m, d: p.d, w: p.w });
+}
+
+/* ホーム：次に開催されそうな朝の集まり（自分が参加予定のものがあれば、それを優先）。月間カレンダーは置かない。 */
+function renderMorningHome(){
+  loadInto('home-morning', $('homeNextMorning'), async () => {
+    const day = await data.morningNext();
+    const goBtn = '<button class="btn btn-quiet" type="button" data-go="morning">' + esc(UI.home.morning.btn) + '</button>';
+    if (!day) return stateEmpty(UI.home.nextMorningEmpty, UI.home.morning.emptyNote, '<div class="actions">' + goBtn + '</div>');
+    const names = day.participants.slice(0, 3).map((p) => p.name + 'さん').join('　') + (day.count > 3 ? fmt(UI.home.morning.more, { n: day.count - 3 }) : '');
+    return '<div class="list"><article class="item"><h3 class="ev-title">' + esc(fmt(UI.home.morning.title, { when: morningWhen(day) })) + '</h3>' +
+      '<div class="mo-stack">' + day.participants.slice(0, 5).map((p) => avatarHtml(p, 30)).join('') + '</div>' +
+      '<p class="ev-meta">' + esc(fmt(UI.morning.people, { n: day.count })) + '</p><p class="ev-meta">' + esc(names) + '</p>' +
+      '<div class="actions">' + (day.joined ? '<span class="chip joined">' + esc(UI.home.morning.joined) + '</span>' : '') + goBtn + '</div></article></div>';
+  });
+}
 function renderHomeEvents(){
   const promise = data.events();
-  loadInto('home-morning', $('homeNextMorning'), async () => {
-    const e = nextEvent(await promise, (x) => x.type === 'morning');
-    return e ? '<div class="list">' + renderEventCompact(e, true) + '</div>' : stateEmpty(UI.home.nextMorningEmpty, UI.home.nextEmptyNote);
-  });
+  renderMorningHome();
   loadInto('home-meet', $('homeNextMeet'), async () => {
-    const e = nextEvent(await promise, (x) => x.type !== 'morning');
+    const e = nextEvent(await promise, () => true);
     return e ? '<div class="list">' + renderEventCompact(e, true) + '</div>' : stateEmpty(UI.home.nextMeetEmpty, UI.home.nextEmptyNote);
   });
 }
@@ -700,17 +835,19 @@ function renderHomeWords(){
 async function renderHomeStep(){
   const el = $('homeStep');
   el.innerHTML = '<div class="step-kicker">' + esc(UI.step.kicker) + '</div>' + stateLoading(UI.step.loading);
-  const settled = await Promise.allSettled([data.events(), data.note(), data.words(1, 0)]);
+  const settled = await Promise.allSettled([data.events(), data.note(), data.words(1, 0), data.morningNext()]);
   const events = settled[0].status === 'fulfilled' ? settled[0].value : [];
   const note = settled[1].status === 'fulfilled' ? settled[1].value : null;
   const word = settled[2].status === 'fulfilled' ? ((settled[2].value.words || [])[0] || null) : null;
+  const morningDay = settled[3].status === 'fulfilled' ? settled[3].value : null;
   const now = Date.now();
   const soon = events.find((e) => e.state === 'joined' && !e.isPast && e.startsAt && (new Date(e.startsAt).getTime() - now) <= 24 * 3600 * 1000);
-  const morning = nextEvent(events, (e) => e.type === 'morning' && e.state === 'open');
   const joinedLater = events.find((e) => e.state === 'joined' && !e.isPast);
   let lead, detail = '', btn, go = null, act = null;
   if (soon) { lead = UI.step.joinedSoon.lead; detail = soon.title + '（' + fmtEventDate(soon.startsAt) + '）'; btn = UI.step.joinedSoon.btn; go = 'gather'; }
-  else if (morning) { lead = UI.step.nextMorning.lead; detail = morning.title + '（' + fmtEventDate(morning.startsAt) + '）'; btn = UI.step.nextMorning.btn; go = 'gather'; }
+  else if (morningDay && morningDay.joined && MO.today && morningDay.date <= dateAdd(MO.today, 1)) { lead = UI.step.morningSoon.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }); btn = UI.step.morningSoon.btn; go = 'morning'; }
+  else if (morningDay && !morningDay.joined) { lead = UI.step.nextMorning.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }) + '・' + fmt(UI.morning.people, { n: morningDay.count }); btn = UI.step.nextMorning.btn; go = 'morning'; }
+  else if (morningDay && morningDay.joined) { lead = UI.step.joinedLater.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }); btn = UI.step.joinedLater.btn; go = 'morning'; }
   else if (joinedLater) { lead = UI.step.joinedLater.lead; detail = joinedLater.title + '（' + fmtEventDate(joinedLater.startsAt) + '）'; btn = UI.step.joinedLater.btn; go = 'gather'; }
   else if (note) { lead = UI.step.note.lead; detail = note.title || ''; btn = UI.step.note.btn; go = 'learn'; }
   else if (word) { lead = UI.step.word.lead; detail = word.title || ''; btn = UI.step.word.btn; go = 'words'; }
@@ -956,7 +1093,8 @@ function loadGather(){
     const mine = events.filter((e) => e.state === 'joined');
     const open = events.filter((e) => e.state === 'open' || e.state === 'full' || e.state === 'closed');
     const past = events.filter((e) => e.state === 'ended' || e.state === 'cancelled').reverse();
-    return section(UI.gather.joined, 'g-joined', mine.length ? '<div class="list">' + mine.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyJoined)) +
+    const morningEntry = section(UI.gather.morningTitle, 'g-morning', '<p class="ev-note" style="margin-top:0">' + esc(UI.gather.morningLead) + '</p><div class="actions"><button class="btn btn-quiet" type="button" data-go="morning">' + esc(UI.gather.morningBtn) + '</button></div>');
+    return morningEntry + section(UI.gather.joined, 'g-joined', mine.length ? '<div class="list">' + mine.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyJoined)) +
       section(UI.gather.open, 'g-open', open.length ? '<div class="list">' + open.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyOpen)) +
       section(UI.gather.past, 'g-past', past.length ? '<div class="list">' + past.map(renderEvent).join('') + '</div>' : stateEmpty(UI.gather.emptyPast));
   });
@@ -1076,7 +1214,8 @@ document.addEventListener('submit', async (ev) => {
     if (!r.ok) { err.textContent = errMessage(r); btn.disabled = false; btn.textContent = UI.me.goalAdd; return; }
     goalForm.requestId = newRequestId();
     renderGoals();
-  } else if (f.id === 'emailForm') { ev.preventDefault(); saveEmail(); }
+  } else if (f.id === 'nameForm') { ev.preventDefault(); saveName(); }
+  else if (f.id === 'emailForm') { ev.preventDefault(); saveEmail(); }
   else if (f.id === 'passwordForm') { ev.preventDefault(); savePassword(); }
 });
 const stampBusy = new Set();
@@ -1197,8 +1336,171 @@ async function savePassword(){
   showPage('profile');
 }
 
+
+/* ═════════ 朝の集まり（専用ページ：月間カレンダー） ═════════ */
+function monthParts(month){ const a = month.split('-'); return { y: parseInt(a[0], 10), m: parseInt(a[1], 10) }; }
+function shiftMonth(month, n){ const p = monthParts(month); const d = new Date(Date.UTC(p.y, p.m - 1 + n, 1)); return d.toISOString().slice(0, 7); }
+async function fetchMorningMonth(month){
+  const r = await api('/api/community-auth?action=morning-month&month=' + encodeURIComponent(month), { method: 'GET' });
+  if (!r.ok) throw failure(r);
+  MO.today = r.data.today;
+  const map = {};
+  (r.data.days || []).forEach((d) => { map[d.date] = d; });
+  MO.data = { month: r.data.month, days: map, min: r.data.minMonth, max: r.data.maxMonth };
+}
+function moDay(date){ return (MO.data && MO.data.days[date]) || { date, count: 0, status: 'none', joined: false, participants: [] }; }
+function moCellHtml(date){
+  const day = moDay(date), p = dateParts(date);
+  const past = MO.today && date < MO.today;
+  const state = day.status === 'cancelled' ? UI.morning.cancelled : day.status === 'scheduled' ? UI.morning.scheduled : UI.morning.none;
+  const aria = fmt(UI.morning.cellAria, { m: p.m, d: p.d, state: state, people: fmt(UI.morning.people, { n: day.count }) }) + (day.joined ? UI.morning.cellAriaMine : '');
+  const cls = 'mo-cell' + (past ? ' past' : '') + (date === MO.today ? ' today' : '') + (day.status === 'scheduled' ? ' live' : '') + (day.status === 'cancelled' ? ' cancelled' : '') + (day.joined ? ' mine' : '');
+  return '<button class="' + cls + '" type="button" data-act="mo-select" data-date="' + date + '" aria-pressed="' + (MO.selected === date) + '" aria-label="' + esc(aria) + '">' +
+    '<span class="mo-d">' + p.d + '</span>' +
+    (day.count > 0 ? '<span class="mo-n">' + day.count + '人</span><span class="mo-avs">' + day.participants.slice(0, 3).map((q) => avatarHtml(q, 14)).join('') + '</span>' : '') + '</button>';
+}
+function moDetailHtml(date){
+  const day = moDay(date);
+  const past = MO.today && date < MO.today;
+  const chipText = day.status === 'cancelled' ? UI.morning.cancelled : day.status === 'scheduled' ? UI.morning.scheduled : UI.morning.none;
+  let body = '';
+  if (day.status === 'cancelled') body = '<p class="ev-note">' + esc(UI.morning.cancelledNote) + '</p>';
+  else if (day.count === 0) body = '<p class="ev-note">' + esc(past ? UI.morning.pastDay : UI.morning.emptyDay) + '</p>';
+  else body = '<p class="ev-meta">' + esc(fmt(UI.morning.people, { n: day.count })) + '</p><ul class="mo-people" aria-label="' + esc(UI.morning.peopleHead) + '">' +
+    day.participants.map((q) => '<li class="mo-person">' + avatarHtml(q, 36) + '<span class="nm">' + esc(q.name) + '</span>' + (q.me ? '<span class="me-tag">' + esc(UI.morning.me) + '</span>' : '') + '</li>').join('') + '</ul>';
+  let action = '';
+  if (!past && day.status !== 'cancelled') {
+    action = day.joined
+      ? '<button class="btn-text danger" type="button" data-act="mo-leave" data-date="' + date + '">' + esc(UI.morning.leave) + '</button>'
+      : '<button class="btn btn-primary" type="button" data-act="mo-join" data-date="' + date + '">' + esc(UI.morning.join) + '</button>';
+  }
+  return '<div class="mo-day"><h2 class="mo-day-title" tabindex="-1">' + esc(dayTitle(date)) + '<span class="chip' + (day.status === 'scheduled' ? ' joined' : '') + '">' + esc(chipText) + '</span></h2>' + body + (action ? '<div class="actions">' + action + '</div>' : '') + '</div>';
+}
+function drawMorning(){
+  const box = $('morningBody');
+  const month = MO.data.month, mp = monthParts(month);
+  const first = new Date(Date.UTC(mp.y, mp.m - 1, 1)).getUTCDay();
+  const days = new Date(Date.UTC(mp.y, mp.m, 0)).getUTCDate();
+  if (!MO.selected || MO.selected.slice(0, 7) !== month) {
+    MO.selected = (MO.today && MO.today.slice(0, 7) === month) ? MO.today : month + '-01';
+  }
+  let cells = '';
+  for (let i = 0; i < first; i++) cells += '<span class="mo-cell blank" aria-hidden="true"></span>';
+  for (let d = 1; d <= days; d++) cells += moCellHtml(month + '-' + String(d).padStart(2, '0'));
+  box.innerHTML = '<div class="mo-head"><button class="mo-nav" type="button" data-act="mo-prev" aria-label="' + esc(UI.morning.prev) + '"' + (month <= MO.data.min ? ' disabled' : '') + '>‹</button>' +
+    '<div class="mo-month" aria-live="polite">' + esc(fmt(UI.morning.month, { y: mp.y, m: mp.m })) + '</div>' +
+    '<button class="mo-nav" type="button" data-act="mo-next" aria-label="' + esc(UI.morning.next) + '"' + (month >= MO.data.max ? ' disabled' : '') + '>›</button></div>' +
+    '<div class="mo-grid" role="group" aria-label="' + esc(UI.morning.gridAria) + '">' + String(UI.morning.weekdays).split(',').map((w) => '<span class="mo-wd" aria-hidden="true">' + esc(w) + '</span>').join('') + cells + '</div>' +
+    '<div id="moDetail" aria-live="polite">' + moDetailHtml(MO.selected) + '</div>';
+}
+function loadMorning(){
+  if (!MO.month) MO.month = null;
+  const month = MO.month || (MO.today ? MO.today.slice(0, 7) : '');
+  invalidate('morning-next');
+  loadInto('morning', $('morningBody'), async () => {
+    await fetchMorningMonth(month);
+    MO.month = MO.data.month;
+    return { html: '', after: drawMorning };
+  });
+}
+async function refreshMorningSilently(){
+  try { await fetchMorningMonth(MO.month); drawMorning(); } catch (e) { /* 失敗しても、いまの表示は残す */ }
+  invalidate('morning-next');
+}
+actions['mo-select'] = (btn) => { MO.selected = btn.dataset.date; drawMorning(); };
+actions['mo-prev'] = () => { MO.month = shiftMonth(MO.month, -1); MO.selected = null; loadMorning(); };
+actions['mo-next'] = () => { MO.month = shiftMonth(MO.month, 1); MO.selected = null; loadMorning(); };
+async function changeMorning(btn, kind){
+  if (MO.busy) return;
+  MO.busy = true;
+  const date = btn.dataset.date;
+  btn.disabled = true; btn.textContent = kind === 'join' ? UI.morning.joining : UI.morning.leaving;
+  const r = await api('/api/community-auth?action=morning-' + kind, { method: 'POST', body: JSON.stringify({ date }) });
+  MO.busy = false;
+  if (r.ok) toast(kind === 'join' ? UI.morning.toastJoined : UI.morning.toastLeft); else toast(errMessage(r));
+  await refreshMorningSilently(); // 成功でも失敗でも、いまの本当の状態を取り直して表示する
+}
+actions['mo-join'] = (btn) => changeMorning(btn, 'join');
+actions['mo-leave'] = (btn) => { if (confirm(UI.morning.leaveConfirm)) changeMorning(btn, 'leave'); };
+
+/* ═════════ プロフィール設定（プロフィール画像・表示名） ═════════ */
+const AV = { maxBytes: 8 * 1024 * 1024, mb: 8, side: 256, pending: null, busy: false };
+function drawProfileImage(){
+  const el = $('pfImage');
+  const hint = '<p class="pf-hint">' + esc(fmt(UI.profile.hint, { mb: AV.mb })) + '</p>';
+  if (AV.pending) {
+    el.innerHTML = '<p class="pf-pending">' + esc(UI.profile.pendingLabel) + '</p><div class="pf-now"><span class="av" style="--av:96px"><img src="' + AV.pending + '" alt="' + esc(UI.profile.imageAlt) + '"></span></div>' +
+      '<div class="actions"><button class="btn btn-primary" type="button" data-act="avatar-save" id="avatarSaveBtn">' + esc(UI.profile.save) + '</button>' +
+      '<button class="btn-text" type="button" data-act="avatar-cancel">' + esc(UI.profile.cancel) + '</button></div>' + hint;
+    return;
+  }
+  el.innerHTML = '<div class="pf-now" id="pfNow"></div>' + (MEMBER.avatarId ? '' : '<p class="pf-hint" style="margin-top:0">' + esc(UI.profile.imageNone) + '</p>') +
+    '<div class="actions"><button class="btn btn-quiet" type="button" data-act="avatar-pick">' + esc(MEMBER.avatarId ? UI.profile.change : UI.profile.pick) + '</button>' +
+    (MEMBER.avatarId ? '<button class="btn-text danger" type="button" data-act="avatar-remove">' + esc(UI.profile.remove) + '</button>' : '') + '</div>' + hint;
+  paintAvatars();
+}
+function loadProfileSettings(){
+  AV.pending = null;
+  $('pfImgErr').textContent = ''; $('pfNameErr').textContent = '';
+  $('pfNameInput').value = MEMBER.name;
+  drawProfileImage();
+}
+actions['avatar-pick'] = () => { $('pfImgErr').textContent = ''; $('avatarFile').click(); };
+actions['avatar-cancel'] = () => { AV.pending = null; $('pfImgErr').textContent = ''; drawProfileImage(); };
+$('avatarFile').addEventListener('change', async (ev) => {
+  const file = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if (!file) return;
+  const err = $('pfImgErr');
+  err.textContent = '';
+  if (['image/jpeg', 'image/png', 'image/webp'].indexOf(file.type) < 0) { err.textContent = UI.profile.errType; return; }
+  if (file.size > AV.maxBytes) { err.textContent = fmt(UI.profile.errSize, { mb: AV.mb }); return; }
+  try {
+    let bmp;
+    try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch (e) { bmp = await createImageBitmap(file); }
+    const side = Math.min(bmp.width, bmp.height); // 中央を正方形に切り取る
+    const c = document.createElement('canvas'); c.width = AV.side; c.height = AV.side;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, AV.side, AV.side);
+    ctx.drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, AV.side, AV.side);
+    AV.pending = c.toDataURL('image/jpeg', 0.86);
+    drawProfileImage();
+  } catch (e) { err.textContent = UI.profile.errRead; }
+});
+actions['avatar-save'] = async (btn) => {
+  if (AV.busy || !AV.pending) return;
+  AV.busy = true; btn.disabled = true; btn.textContent = UI.profile.saving;
+  const r = await api('/api/community-auth?action=avatar-set', { method: 'POST', body: JSON.stringify({ image: AV.pending }), timeout: 25000 });
+  AV.busy = false;
+  if (!r.ok) { btn.disabled = false; btn.textContent = UI.profile.save; $('pfImgErr').textContent = (r.data && r.data.error) || UI.profile.errSave; return; }
+  MEMBER.avatarId = r.data.avatarId; AV.pending = null; invalidate('me');
+  drawProfileImage(); toast(UI.profile.saved);
+};
+actions['avatar-remove'] = async (btn) => {
+  if (AV.busy || !confirm(UI.profile.removeConfirm)) return;
+  AV.busy = true; btn.disabled = true; btn.textContent = UI.profile.removing;
+  const r = await api('/api/community-auth?action=avatar-delete', { method: 'POST' });
+  AV.busy = false;
+  if (!r.ok) { btn.disabled = false; btn.textContent = UI.profile.remove; $('pfImgErr').textContent = (r.data && r.data.error) || UI.profile.errSave; return; }
+  MEMBER.avatarId = null; invalidate('me');
+  drawProfileImage(); toast(UI.profile.removed);
+};
+let nameBusy = false;
+async function saveName(){
+  if (nameBusy) return;
+  const v = $('pfNameInput').value.trim(), err = $('pfNameErr');
+  err.textContent = '';
+  if (!v) { err.textContent = UI.profile.nameErrEmpty; return; }
+  nameBusy = true; $('pfNameBtn').disabled = true; $('pfNameBtn').textContent = UI.profile.nameSaving;
+  const r = await api('/api/community-auth?action=update-profile', { method: 'POST', body: JSON.stringify({ displayName: v }) });
+  nameBusy = false; $('pfNameBtn').disabled = false; $('pfNameBtn').textContent = UI.profile.nameSave;
+  if (!r.ok) { err.textContent = (r.data && r.data.error) || UI.profile.errSave; return; }
+  setMemberName(r.data.displayName || v);
+  toast(UI.profile.nameSaved);
+}
+
 /* ═════════ 起動 ═════════ */
-$('avatarBtn').textContent = (MEMBER.name || '').trim().charAt(0) || 'メ';
+paintAvatars();
 const startPage = (location.hash || '#home').slice(1);
 try { history.replaceState({ page: PAGES.indexOf(startPage) >= 0 ? startPage : 'home' }, '', location.hash || '#home'); } catch (e) {}
 showPage(PAGES.indexOf(startPage) >= 0 ? startPage : 'home', { push: false, focus: false });

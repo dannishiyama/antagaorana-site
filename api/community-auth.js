@@ -41,6 +41,7 @@ import {
   setStripeCustomerEmail,
   listEvents, joinEventAtomic, leaveEvent, countEventParticipants, isEventParticipant, listMemberEventIds, getEvent,
   renameEventParticipantEmail,
+  ensureMorningEvent, morningEventId, saveAvatarImage, getAvatarImage, deleteAvatarImage,
   POST_CATEGORIES, POST_CATEGORY_LABELS, isValidPostCategory,
   createPost, getPost, listPublishedPosts, listPostsByAuthor, updatePost, deletePost, renamePostAuthorEmail,
   createGoalFixture, listGoalFixtures, toggleGoalStampFixture, deleteGoalFixture, listSessionFixtures,
@@ -53,6 +54,11 @@ import { computeEventState, joinBlockReason, JOIN_BLOCK_MESSAGES, isEventPast } 
 import { cleanUserText, hasInvalidChars, isDisplayablePost, normalizeRequestId } from './_lib/text-safety.js';
 import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
 import { getMemberView } from './_lib/points.js';
+import {
+  MORNING_CONFIG, MORNING_BLOCK_MESSAGES, jstToday, isValidMonth, addDays, monthDates, viewableMonthRange,
+  joinBlock, leaveBlock, buildMorningDays,
+} from './_lib/morning.js';
+import { parseAvatarDataUrl, AvatarError } from './_lib/avatar.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { notifyAdminOfApplication, sendPasswordSetupEmail, sendApplicationReceivedEmail, sendCancellationScheduledEmail, sendEmailChangedEmail } from './_lib/notify.js';
 
@@ -116,6 +122,22 @@ export default async function handler(req, res) {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await requireHakuMembership(req, res); if (!session) return;
       return await handleEventsList(req, res, session);
+    }
+    // 朝の集まり（日ごとの参加表明）。会員の表示名とアイコンだけを他の会員に見せる。
+    if (action === 'morning-month') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleMorningMonth(req, res, session);
+    }
+    if (action === 'morning-next') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleMorningNext(req, res, session);
+    }
+    if (action === 'avatar') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleAvatarGet(req, res);
     }
     if (action === 'posts-list') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -194,6 +216,26 @@ export default async function handler(req, res) {
     if (action === 'events-leave') {
       const session = await requireHakuMembership(req, res); if (!session) return;
       return await handleEventsLeave(req, res, body, session);
+    }
+    if (action === 'morning-join') {
+      if (!(await rateLimitGuard(req, res, { key: 'morning-join', limit: 30, windowSeconds: 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleMorningJoin(req, res, body, session);
+    }
+    if (action === 'morning-leave') {
+      if (!(await rateLimitGuard(req, res, { key: 'morning-leave', limit: 30, windowSeconds: 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleMorningLeave(req, res, body, session);
+    }
+    if (action === 'avatar-set') {
+      if (!(await rateLimitGuard(req, res, { key: 'avatar-set', limit: 10, windowSeconds: 60 * 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleAvatarSet(req, res, body, session);
+    }
+    if (action === 'avatar-delete') {
+      if (!(await rateLimitGuard(req, res, { key: 'avatar-delete', limit: 20, windowSeconds: 60 * 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleAvatarDelete(req, res, session);
     }
     if (action === 'posts-create') {
       if (!(await rateLimitGuard(req, res, { key: 'posts-create', limit: 20, windowSeconds: 60 * 60 }))) return;
@@ -553,6 +595,7 @@ async function handleMe(req, res) {
     fullName: user.fullName,
     fullNameKana: user.fullNameKana,
     displayName: user.displayName,
+    avatarId: user.avatarId || null,
     memberships,
     hakuStats,
   });
@@ -565,7 +608,8 @@ async function handleMe(req, res) {
 // 状態の判定（中止／開催済み／参加予定／受付終了／満席／受付中）は api/_lib/event-state.js に集約。
 // 画面の見た目と、参加・取消APIの実際の挙動を同じ関数で揃えている。
 async function handleEventsList(req, res, session) {
-  const events = await listEvents('haku');
+  // 日ごとの朝の集まり（kind: 'morning-day'）は、専用の画面（morning-*）で扱う。ここには出さない。
+  const events = (await listEvents('haku')).filter((e) => e.kind !== 'morning-day');
   const nowMs = Date.now();
   const enriched = await Promise.all(events.map(async (e) => {
     const [participantCount, joined] = await Promise.all([
@@ -600,6 +644,7 @@ async function handleEventsList(req, res, session) {
 async function handleEventsJoin(req, res, body, session) {
   const eventId = String(body.eventId || '').trim();
   if (!eventId) return res.status(400).json({ error: 'イベントを指定してください。' });
+  if (eventId.startsWith('morning-')) return res.status(400).json({ error: '朝の集まりは、朝の集まりの画面から操作してください。', code: 'use_morning' });
   const event = await getEvent(eventId);
   if (!event || event.community !== 'haku') return res.status(404).json({ error: 'イベントが見つかりません。' });
 
@@ -619,6 +664,7 @@ async function handleEventsJoin(req, res, body, session) {
 async function handleEventsLeave(req, res, body, session) {
   const eventId = String(body.eventId || '').trim();
   if (!eventId) return res.status(400).json({ error: 'イベントを指定してください。' });
+  if (eventId.startsWith('morning-')) return res.status(400).json({ error: '朝の集まりは、朝の集まりの画面から操作してください。', code: 'use_morning' });
   const event = await getEvent(eventId);
   if (!event || event.community !== 'haku') return res.status(404).json({ error: 'イベントが見つかりません。' });
 
@@ -628,6 +674,106 @@ async function handleEventsLeave(req, res, body, session) {
   await leaveEvent(eventId, session.email);
   await logAudit({ actorId: session.email, action: 'event_left', targetId: eventId, metadata: { targetType: 'Event' } });
   return res.status(200).json({ ok: true });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 朝の集まり：誰かが参加表明した日だけ「開催予定」になる。参加・取消は、既存のイベント参加者データ
+// （event_participants）で管理するので、管理画面・会員画面は同じデータを見る。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function handleMorningMonth(req, res, session) {
+  const month = String(req.query?.month || jstToday().slice(0, 7));
+  if (!isValidMonth(month)) return res.status(400).json({ error: '月を正しく指定してください。' });
+  const range = viewableMonthRange();
+  if (month < range.min || month > range.max) return res.status(400).json({ error: 'この月は表示できません。', code: 'out_of_range' });
+  const days = await buildMorningDays(monthDates(month), session.email);
+  return res.status(200).json({
+    ok: true, month, today: jstToday(), minMonth: range.min, maxMonth: range.max,
+    days: days.filter((d) => d.count > 0 || d.status === 'cancelled'),
+  });
+}
+
+// ホーム用：自分が参加予定の直近、なければ開催予定の直近（なければ null）。
+async function handleMorningNext(req, res, session) {
+  const today = jstToday();
+  const dates = Array.from({ length: MORNING_CONFIG.nextScanDays }, (_, i) => addDays(today, i));
+  const days = await buildMorningDays(dates, session.email);
+  const live = days.filter((d) => d.status === 'scheduled');
+  const next = live.find((d) => d.joined) || live[0] || null;
+  return res.status(200).json({ ok: true, today, next });
+}
+
+async function handleMorningJoin(req, res, body, session) {
+  const date = String(body.date || '').trim();
+  const blocked = joinBlock(date);
+  if (blocked) return res.status(blocked === 'invalid' ? 400 : 409).json({ error: MORNING_BLOCK_MESSAGES[blocked], code: blocked });
+  const event = await ensureMorningEvent(date, session.email);
+  if (event.registration === 'cancelled' || event.registration === 'closed') {
+    return res.status(409).json({ error: MORNING_BLOCK_MESSAGES[event.registration], code: event.registration });
+  }
+  const result = await joinEventAtomic(morningEventId(date), session.email, null);
+  if (result === 'joined') await logAudit({ actorId: session.email, action: 'morning_joined', targetId: morningEventId(date), metadata: { targetType: 'Event', date } });
+  const [day] = await buildMorningDays([date], session.email);
+  return res.status(200).json({ ok: true, alreadyJoined: result === 'already', day });
+}
+
+async function handleMorningLeave(req, res, body, session) {
+  const date = String(body.date || '').trim();
+  const blocked = leaveBlock(date);
+  if (blocked) return res.status(blocked === 'invalid' ? 400 : 409).json({ error: MORNING_BLOCK_MESSAGES[blocked], code: blocked });
+  const id = morningEventId(date);
+  const was = await isEventParticipant(id, session.email);
+  if (was) {
+    await leaveEvent(id, session.email);
+    await logAudit({ actorId: session.email, action: 'morning_left', targetId: id, metadata: { targetType: 'Event', date } });
+  }
+  const [day] = await buildMorningDays([date], session.email);
+  return res.status(200).json({ ok: true, alreadyLeft: !was, day });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// プロフィール画像：保存先は ht:avatar:<avatarId>。Userには avatarId だけを持たせ、
+// 画面はどこでもこの1か所（User.avatarId）を正として表示する。
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function handleAvatarGet(req, res) {
+  const id = String(req.query?.id || '');
+  if (!/^[a-f0-9]{16}$/.test(id)) return res.status(404).json({ error: 'Not found' });
+  const img = await getAvatarImage(id);
+  if (!img) return res.status(404).json({ error: 'Not found' });
+  const buffer = Buffer.from(img.b64, 'base64');
+  res.setHeader('Content-Type', img.mime);
+  res.setHeader('Content-Length', String(buffer.length));
+  res.setHeader('Cache-Control', 'private, max-age=604800, immutable'); // 画像を変えるとIDも変わるので、長く覚えさせてよい
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  return res.status(200).send(buffer);
+}
+
+async function handleAvatarSet(req, res, body, session) {
+  const user = await getUser(session.email);
+  if (!user) return res.status(401).json({ error: 'ログインが必要です。' });
+  let parsed;
+  try { parsed = parseAvatarDataUrl(body.image); } catch (e) {
+    if (e instanceof AvatarError) return res.status(400).json({ error: e.message, code: e.code });
+    throw e;
+  }
+  const avatarId = randomToken(8);
+  await saveAvatarImage(avatarId, { mime: parsed.mime, b64: parsed.b64 });
+  await saveUser({ ...user, avatarId });
+  if (user.avatarId) await deleteAvatarImage(user.avatarId);
+  await logAudit({ actorId: session.email, action: 'avatar_updated' });
+  return res.status(200).json({ ok: true, avatarId });
+}
+
+async function handleAvatarDelete(req, res, session) {
+  const user = await getUser(session.email);
+  if (!user) return res.status(401).json({ error: 'ログインが必要です。' });
+  if (user.avatarId) {
+    await deleteAvatarImage(user.avatarId);
+    await saveUser({ ...user, avatarId: null });
+    await logAudit({ actorId: session.email, action: 'avatar_deleted' });
+  }
+  return res.status(200).json({ ok: true, avatarId: null });
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -77,7 +77,7 @@ export function start() {
     const rel = candidates.find((c) => !c.includes('..') && !c.startsWith('/api/') && !c.startsWith('/node_modules') && exists(path.join(REPO, c.slice(1))));
     if (!rel) { res.writeHead(404); return res.end('not found'); }
     const f = path.join(REPO, rel.slice(1));
-    const type = f.endsWith('.png') ? 'image/png' : f.endsWith('.css') ? 'text/css' : f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream';
+    const type = f.endsWith('.png') ? 'image/png' : f.endsWith('.css') ? 'text/css' : f.endsWith('.js') ? 'text/javascript' : f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream';
     res.writeHead(200, { 'Content-Type': type });
     fs.createReadStream(f).pipe(res);
   });
