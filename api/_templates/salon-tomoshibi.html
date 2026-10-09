@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教育者のサロン 灯｜あんたがおらな</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<style>
+:root{
+  --green:#1E3A2F;
+  --green-dk:#132620;
+  --green-lt:#3E5A4C;
+  --cream:#F6F2E9;
+  --paper:#FFFDF8;
+  --ink:#2B2926;
+  --mid:#6E685F;
+  --faint:#9A9388;
+  --terra:#B4552F;
+  --gold:#C0A05C;
+  --line:#DCD5C5;
+  --line-soft:#EAE4D6;
+  --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","HiraMinProN-W3","游明朝",serif;
+  --sans:"Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  --bar:52px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:.04em}
+a{color:inherit}
+button{font-family:var(--sans)}
+textarea,input{font-family:inherit;font-size:14px}
+
+/* ===== top bar ===== */
+.top{position:sticky;top:0;z-index:60;height:var(--bar);background:var(--green);color:#fff;display:flex;align-items:center;gap:18px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.16)}
+.top .logo{font-family:var(--serif);font-size:15px;letter-spacing:.1em;white-space:nowrap;text-decoration:none}
+.top .logo span{font-size:10.5px;letter-spacing:.2em;color:var(--gold);margin-left:8px}
+.top .search{margin-left:auto;display:flex;align-items:center}
+.top .search input{width:210px;padding:7px 12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;outline:none;font-size:12.5px}
+.top .search input::placeholder{color:rgba(255,255,255,.4)}
+.top .me{display:flex;align-items:center;gap:10px;font-size:12.5px;color:rgba(255,255,255,.75)}
+.top .me a{text-decoration:none;color:rgba(255,255,255,.55);font-size:11.5px;border-bottom:1px solid rgba(255,255,255,.3)}
+.top .bell{position:relative;font-size:12.5px;color:rgba(255,255,255,.7)}
+.top .bell i{position:absolute;top:-2px;right:-8px;width:6px;height:6px;border-radius:50%;background:var(--terra)}
+
+/* ===== layout ===== */
+.app{display:grid;grid-template-columns:228px 1fr 268px;align-items:start;min-height:calc(100vh - var(--bar))}
+.side{background:var(--green);color:rgba(255,255,255,.72);font-size:13px;min-height:calc(100vh - var(--bar));position:sticky;top:var(--bar)}
+.side .sname{padding:22px 22px 18px;border-bottom:1px solid rgba(255,255,255,.16)}
+.side .sname b{display:block;font-family:var(--serif);font-size:17px;color:#fff;font-weight:500}
+.side .sname span{font-size:10.5px;letter-spacing:.18em;color:var(--gold)}
+.side .grp{font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.38);padding:20px 22px 8px}
+.side a.ch{display:flex;align-items:center;gap:8px;padding:8px 22px;text-decoration:none;color:inherit;cursor:pointer}
+.side a.ch:hover{color:#fff}
+.side a.ch.on{background:rgba(255,255,255,.1);color:#fff;box-shadow:inset 2px 0 0 var(--terra)}
+.side .dot{width:5px;height:5px;border-radius:50%;background:var(--terra);margin-left:auto}
+.side .foot{margin:24px 22px 26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.16);font-size:11.5px;color:rgba(255,255,255,.45);line-height:2}
+.side .foot a{color:rgba(255,255,255,.55);text-decoration:none}
+
+.feed{border-left:1px solid var(--line);border-right:1px solid var(--line);background:var(--paper);min-height:calc(100vh - var(--bar))}
+.feedhead{padding:18px 30px;border-bottom:1px solid var(--line);position:sticky;top:var(--bar);background:var(--paper);z-index:20}
+.feedhead h2{font-size:19px}
+.feedhead p{font-size:12.5px;color:var(--faint);margin-top:2px}
+
+.composer{padding:18px 30px;border-bottom:1px solid var(--line)}
+.composer .shut{display:flex;gap:12px;align-items:center;color:var(--faint);font-size:13px;cursor:text}
+.composer .shut .fake{flex:1;border:1px solid var(--line);padding:9px 14px;background:var(--cream)}
+.composer .open{display:none}
+.composer.is-open .shut{display:none}
+.composer.is-open .open{display:block}
+.composer textarea{width:100%;min-height:104px;padding:12px 14px;border:1px solid var(--line);background:var(--cream);outline:none;resize:vertical;line-height:1.9}
+.composer textarea:focus{border-color:var(--green-lt)}
+.composer .opts{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-top:12px;font-size:12.5px;color:var(--mid)}
+.composer .opts label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.composer .opts .right{margin-left:auto;display:flex;gap:10px}
+.composer .opts select{font-size:12.5px;padding:6px 8px;border:1px solid var(--line);background:var(--paper);font-family:var(--sans)}
+.btn-s{font-size:12.5px;border:1px solid var(--green);color:var(--green);padding:8px 18px;background:none;cursor:pointer}
+.btn-s.solid{background:var(--terra);border-color:var(--terra);color:#fff}
+.btn-s.ghost{border-color:var(--line);color:var(--mid)}
+
+.post{padding:28px 30px;border-bottom:1px solid var(--line)}
+.post .top-row{display:flex;gap:12px;margin-bottom:14px}
+.av{width:36px;height:36px;border-radius:50%;background:var(--green-lt);color:#fff;font-family:var(--serif);font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.av.t{background:var(--terra)}
+.av.p{background:#7C7360}
+.av.g{background:var(--gold)}
+.who b{font-size:14px;font-weight:600}
+.who .badge{font-size:10.5px;color:var(--terra);border:1px solid var(--terra);padding:1px 6px;margin-left:8px;letter-spacing:.06em;white-space:nowrap}
+.who .badge.g{color:var(--gold);border-color:var(--gold)}
+.who .meta{font-size:12px;color:var(--faint)}
+.post .body{font-size:14.5px;line-height:2.05}
+.post .body p{margin-bottom:14px}
+.post .body p:last-child{margin-bottom:0}
+.post .body .q{border-left:2px solid var(--terra);padding-left:16px;color:var(--green);font-family:var(--serif);font-size:16px;line-height:1.95;margin:18px 0}
+.attach{border:1px solid var(--line);background:var(--cream);padding:18px 20px;margin:16px 0 0;display:flex;gap:16px;align-items:center}
+.attach .ic{width:44px;height:44px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:12px;color:var(--green);flex:0 0 44px;background:var(--paper);line-height:1.3;text-align:center}
+.attach b{display:block;font-size:14px}
+.attach small{color:var(--mid);font-size:12.5px}
+.attach .go{margin-left:auto;font-size:12px;border:1px solid var(--green);color:var(--green);padding:7px 14px;white-space:nowrap;background:none;cursor:pointer}
+
+.acts{display:flex;gap:22px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:12.5px;color:var(--mid)}
+.acts button{background:none;border:0;font:inherit;color:inherit;cursor:pointer;padding:0}
+.acts button:hover{color:var(--terra)}
+.acts button.on{color:var(--terra)}
+.comments{margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:16px}
+.comments[hidden]{display:none}
+.cmt{display:flex;gap:10px}
+.cmt .av{width:28px;height:28px;flex:0 0 28px;font-size:11px}
+.cmt .txt{font-size:13.5px;line-height:1.85}
+.cmt .txt b{font-weight:600;font-size:13px}
+.cmt .txt .meta{font-size:11.5px;color:var(--faint);margin-left:8px}
+.cmt.reply{margin-left:38px}
+.cmtbox{display:flex;gap:10px;margin-top:4px}
+.cmtbox input{flex:1;border:1px solid var(--line);background:var(--cream);padding:9px 12px;font-size:13px;outline:none}
+.cmtbox input:focus{border-color:var(--green-lt)}
+
+.panel{padding:28px 30px}
+.mlist{border-top:1px solid var(--line-soft)}
+.mrow{display:flex;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line-soft)}
+.mrow .info b{font-size:14px}
+.mrow .info small{display:block;font-size:12.5px;color:var(--mid)}
+.mrow .since{margin-left:auto;font-size:11.5px;color:var(--faint);white-space:nowrap}
+
+.rail{padding:26px 22px;font-size:13px;position:sticky;top:var(--bar)}
+.rail h4{font-size:12px;letter-spacing:.16em;color:var(--faint);margin-bottom:14px;font-weight:400}
+.rail .card{border-top:1px solid var(--line);padding:14px 0}
+.rail .card b{display:block;font-size:13.5px;margin-bottom:3px}
+.rail .card small{color:var(--mid);font-size:12px;display:block}
+.rail .blk{margin-bottom:32px}
+.rail .pin{border:1px solid var(--line);padding:16px;background:var(--paper)}
+.rail .members{display:flex}
+.rail .members .av{width:28px;height:28px;flex:0 0 28px;font-size:11px;margin-right:-6px;border:2px solid var(--cream)}
+
+.empty{padding:60px 30px;color:var(--faint);font-size:13.5px;text-align:center}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;min-height:0;display:block}
+  .side .sname{padding:16px 7%}
+  .side .grp,.side .foot{display:none}
+  .side .nav{display:flex;overflow-x:auto}
+  .side a.ch{white-space:nowrap;padding:13px 16px}
+  .side a.ch.on{box-shadow:inset 0 -2px 0 var(--terra)}
+  .feed{border:0}
+  .feedhead{top:var(--bar);padding:16px 7%}
+  .composer,.post,.panel{padding-left:7%;padding-right:7%}
+  .rail{position:static;border-top:1px solid var(--line);padding:26px 7%}
+  .top .search{display:none}
+  .top{gap:12px;padding:0 14px}
+  .top .me{margin-left:auto}
+}
+
+/* ===== 機能のために追加した部分（モックアップのCSSには手を入れていない。色・余白・書体の変更なし） ===== */
+.top .logo,.top .bell,.top .me a,.side a.ch,.btn-s,.acts button,.cmtbox button{cursor:pointer}
+.top .bell{background:none;border:0;font-family:var(--sans);padding:0}
+.top .me button.out{background:none;border:0;border-bottom:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.55);font-size:11.5px;padding:0;font-family:var(--sans);cursor:pointer}
+.top .me button.out:hover{color:#fff}
+.top .search form{display:flex}
+.top .bell i[hidden],.side .dot[hidden]{display:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.composer .opts button[disabled]{opacity:.55;cursor:progress}
+.composer .err,.cmterr,.form-err{font-size:12.5px;color:var(--terra);margin-top:8px;min-height:0}
+.composer .err:empty,.cmterr:empty,.form-err:empty{display:none}
+.post .who .badge.pin{color:var(--mid);border-color:var(--line)}
+.post .body p{overflow-wrap:anywhere}
+.post .editbox textarea{width:100%;min-height:96px;padding:12px 14px;border:1px solid var(--line);background:var(--cream);outline:none;resize:vertical;line-height:1.9}
+.post .editbox .opts{display:flex;gap:10px;margin-top:10px;justify-content:flex-end}
+.attach .go.ghost{border-color:var(--line);color:var(--mid)}
+.attach .acts2{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.attach .acts2 .go{margin-left:0}
+.attach small{display:block}
+.cmt .txt .re{background:none;border:0;color:var(--faint);font-size:11.5px;margin-left:10px;padding:0;cursor:pointer;font-family:var(--sans)}
+.cmt .txt .re:hover{color:var(--terra)}
+.cmt.reply.d3{margin-left:66px}
+.match{margin-top:10px;padding:8px 12px;border-left:2px solid var(--line);font-size:12.5px;color:var(--mid)}
+.more{padding:22px 30px;text-align:center}
+.more .btn-s{min-width:160px}
+
+.panel h3{font-size:15.5px;margin:30px 0 8px;padding-top:22px;border-top:1px solid var(--line)}
+.panel h3:first-of-type{margin-top:6px;padding-top:0;border-top:0}
+.panel p{font-size:13.5px;color:var(--mid)}
+.panel p.lead{color:var(--ink)}
+.panel ul.guide{margin:6px 0 0 1.2em;font-size:13.5px;color:var(--mid)}
+.panel ul.guide li{margin:4px 0}
+.fgrid{display:grid;gap:14px;margin-top:12px;max-width:460px}
+.fgrid label{display:block;font-size:12px;letter-spacing:.06em;color:var(--mid);margin-bottom:4px}
+.fgrid input[type=text],.fgrid input[type=password],.fgrid select{width:100%;padding:9px 12px;border:1px solid var(--line);background:var(--cream);outline:none;font-size:14px;font-family:inherit}
+.fgrid input:focus,.fgrid select:focus{border-color:var(--green-lt)}
+.fgrid .radios{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mid)}
+.fgrid .radios label{display:flex;align-items:center;gap:6px;margin:0;font-size:13px;letter-spacing:0;color:var(--mid)}
+.kv{display:grid;grid-template-columns:9em 1fr;gap:6px 14px;font-size:13.5px;margin-top:10px}
+.kv dt{color:var(--faint)}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);margin:10px 0;cursor:pointer}
+.savedmsg{font-size:12.5px;color:var(--green-lt);margin-left:10px}
+.btn-s.danger{border-color:var(--terra);color:var(--terra)}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;background:var(--green);color:#fff;font-size:13px;padding:10px 20px;border:1px solid rgba(255,255,255,.2);max-width:90vw}
+.toast[hidden]{display:none}
+.overlay{position:fixed;inset:0;z-index:80;background:rgba(19,38,32,.72);display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay[hidden]{display:none}
+.vbox{background:var(--paper);border:1px solid var(--line);width:100%;max-width:880px;padding:18px 20px}
+.vbox .vh{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.vbox .vh b{font-family:var(--serif);font-size:16px;font-weight:500}
+.vbox .vh button{margin-left:auto}
+.vbox .frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.vbox .frame iframe,.vbox .frame video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vbox .vd{font-size:13px;color:var(--mid);margin-top:12px;white-space:pre-wrap}
+.vbox .vlink{font-size:13.5px;margin-top:12px}
+
+/* モックアップの不具合の修正（見た目は変えない）：スマホ幅で、チャンネルの横スクロール行が画面幅に収まらず、
+   ページ全体が横にはみ出していた。チャンネル行の「中だけ」で横スクロールするようにする。 */
+@media(max-width:900px){
+  .app>*{min-width:0}
+  .side .nav{max-width:100%;-webkit-overflow-scrolling:touch}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="logo" href="#home">教育者のサロン 灯<span>TOMOSHIBI</span></a>
+  <div class="search"><form id="searchForm" role="search"><label class="sr-only" for="searchInput">サロン内を検索</label><input id="searchInput" type="search" placeholder="サロン内を検索" autocomplete="off" maxlength="60"></form></div>
+  <button class="bell" type="button" id="bell">お知らせ<i id="bellDot" hidden></i></button>
+  <div class="me">
+    <div class="av" id="meAv" style="width:28px;height:28px;flex:0 0 28px;font-size:11px">　</div>
+    <span id="meName"></span>
+    <button class="out" type="button" id="logoutBtn">ログアウト</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <nav class="side" aria-label="チャンネル">
+    <div class="sname"><b>教育者のサロン</b><span>灯｜TOMOSHIBI</span></div>
+    <div class="nav">
+      <div class="grp">サロン</div>
+      <a class="ch on" data-ch="home" href="#home">ホーム<span class="dot" hidden></span></a>
+      <a class="ch" data-ch="creed" href="#creed">今月の一条<span class="dot" hidden></span></a>
+      <a class="ch" data-ch="case" href="#case">ケース検討<span class="dot" hidden></span></a>
+      <a class="ch" data-ch="mgmt" href="#mgmt">運営の相談<span class="dot" hidden></span></a>
+      <a class="ch" data-ch="archive" href="#archive">実践講義アーカイブ<span class="dot" hidden></span></a>
+      <a class="ch" data-ch="news" href="#news">お知らせ<span class="dot" hidden></span></a>
+      <a class="ch" data-ch="members" href="#members">メンバー一覧</a>
+    </div>
+    <div class="foot">
+      灯 会員<br>
+      <a href="#settings">設定</a>・<a href="#guide">ご利用ガイド</a><br>
+      <a href="#withdraw">退会について</a>
+    </div>
+  </nav>
+
+  <main class="feed">
+    <div class="feedhead">
+      <h2 id="chTitle">ホーム</h2>
+      <p id="chDesc"></p>
+    </div>
+
+    <div class="composer" id="composer" hidden>
+      <div class="shut" id="composerShut">
+        <div class="av" id="composerAv">　</div>
+        <div class="fake">現場で起きたことを書く（教室名は伏せられます）</div>
+      </div>
+      <div class="open">
+        <label class="sr-only" for="ptext">投稿の本文</label>
+        <textarea id="ptext" maxlength="5000" placeholder="いま関わっている子のこと、迷っていること、うまくいったこと。&#10;教室名・学校名・お子さんの名前は書かないでください。"></textarea>
+        <div class="opts">
+          <label><input type="checkbox" id="anon"> 匿名で投稿する</label>
+          <label><input type="checkbox" id="hide" checked> 教室名を伏せる</label>
+          <div class="right">
+            <label class="sr-only" for="pch">投稿するチャンネル</label>
+            <select id="pch"></select>
+            <button class="btn-s ghost" type="button" id="composerCancel">やめる</button>
+            <button class="btn-s solid" type="button" id="composerSubmit">投稿する</button>
+          </div>
+        </div>
+        <div class="err" id="composerErr" role="alert"></div>
+      </div>
+    </div>
+
+    <div id="posts"></div>
+    <div class="more" id="more" hidden><button class="btn-s" type="button" id="moreBtn">さらに読み込む</button></div>
+    <div class="empty" id="empty" hidden></div>
+
+    <div class="panel" id="membersPanel" hidden></div>
+    <div class="panel" id="settingsPanel" hidden></div>
+    <div class="panel" id="guidePanel" hidden></div>
+    <div class="panel" id="withdrawPanel" hidden></div>
+  </main>
+
+  <aside class="rail">
+    <div class="blk">
+      <h4>今月の一条</h4>
+      <div class="pin" id="railCreed"></div>
+    </div>
+    <div class="blk">
+      <h4>今月の予定</h4>
+      <div id="railEvents"></div>
+    </div>
+    <div class="blk">
+      <h4>ピン留め</h4>
+      <div class="pin" id="railPin"></div>
+    </div>
+    <div class="blk">
+      <h4>最近入った仲間</h4>
+      <div class="members" id="railMembers" style="margin-bottom:10px"></div>
+      <small id="railWeek" style="color:var(--mid);font-size:12px"></small>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="overlay" id="overlay" hidden>
+  <div class="vbox" role="dialog" aria-modal="true" aria-labelledby="vTitle">
+    <div class="vh"><b id="vTitle"></b><button class="btn-s ghost" type="button" id="vClose">閉じる</button></div>
+    <div id="vBody"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+'use strict';
+/* サロン画面。表示はモックアップのまま、データはすべてAPI（api/salon.js）から取得する。
+   画面に出す値は必ず esc() でエスケープする（HTMLとして解釈させない）。 */
+var API = '/api/salon';
+var LOGIN = '/salon/tomoshibi/login/';
+var $ = function (id) { return document.getElementById(id); };
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function rid() { try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {} return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12); }
+
+var S = { me: null, boot: null, ch: 'home', loading: false, busy: {}, nextBefore: null, view: 'feed', q: '' };
+
+/* ── 通信（例外を投げない。ログインが切れていたら、元のURLに戻れる形でログインへ） ── */
+function api(action, opts) {
+  opts = opts || {};
+  var qs = opts.query ? '&' + Object.keys(opts.query).map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(opts.query[k]); }).join('&') : '';
+  var init = { method: opts.body ? 'POST' : 'GET', credentials: 'same-origin', headers: {} };
+  if (opts.body) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(opts.body); }
+  var ctrl = new AbortController(); var timer = setTimeout(function () { ctrl.abort(); }, opts.timeout || 15000); init.signal = ctrl.signal;
+  return fetch(API + '?action=' + action + qs, init).then(function (r) {
+    return r.json().catch(function () { return {}; }).then(function (d) {
+      if (r.status === 401 || (r.status === 403 && d && d.code === 'not_member')) { location.href = LOGIN + '?next=' + encodeURIComponent('/salon/tomoshibi/'); }
+      return { ok: r.ok, status: r.status, data: d };
+    });
+  }).catch(function (e) { return { ok: false, status: 0, data: { error: e && e.name === 'AbortError' ? '読み込みに時間がかかっています。' : '通信に失敗しました。' } }; })
+    .then(function (res) { clearTimeout(timer); return res; });
+}
+function ext(path, body, method) { // 既存の認証API（ログアウト・パスワード変更・退会）
+  return fetch(path, { method: method || 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) })
+    .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
+    .catch(function () { return { ok: false, status: 0, data: { error: '通信に失敗しました。' } }; });
+}
+
+var toastTimer = null;
+function toast(msg) { var t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 3600); }
+
+/* ── 表示用の小さな関数 ── */
+function jst(ms) { return new Date(ms + 9 * 3600000); }
+function fmtTime(ms, withTime) { var d = jst(ms); var s = (d.getUTCMonth() + 1) + '月' + d.getUTCDate() + '日'; return withTime ? s + ' ' + d.getUTCHours() + ':' + String(d.getUTCMinutes()).padStart(2, '0') : s; }
+function paras(text) { return String(text).split(/\n+/).filter(function (x) { return x.trim(); }).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join(''); }
+function avHtml(a, style) { return '<div class="av ' + esc(a.av || '') + '"' + (style ? ' style="' + style + '"' : '') + '>' + esc(a.initial) + '</div>'; }
+function hideAll() { ['membersPanel', 'settingsPanel', 'guidePanel', 'withdrawPanel'].forEach(function (id) { $(id).hidden = true; }); }
+
+/* ── 投稿の描画（モックアップのマークアップのまま） ── */
+function attachHtml(a, postId) {
+  if (!a) return '';
+  var btn = '';
+  if (a.type === 'video') btn = '<button class="go" type="button" data-act="play" data-id="' + esc(a.id) + '">' + esc(a.button) + '</button>';
+  else if (a.type === 'file') btn = '<button class="go" type="button" data-act="openfile" data-post="' + esc(postId) + '">' + esc(a.button) + '</button>';
+  else if (a.type === 'event') {
+    if (a.ended) btn = '<span class="go ghost" style="border-color:var(--line);color:var(--faint)">終了しました</span>';
+    else if (a.joined) btn = '<div class="acts2">' + (a.hasUrl ? '<button class="go" type="button" data-act="eventurl" data-id="' + esc(a.id) + '">開催URLを開く</button>' : '<span class="go" style="border-color:var(--line);color:var(--mid)">参加予定</span>') + '<button class="go ghost" type="button" data-act="eventleave" data-id="' + esc(a.id) + '">取り消す</button></div>';
+    else if (a.full) btn = '<span class="go ghost" style="border-color:var(--line);color:var(--faint)">定員に達しました</span>';
+    else btn = '<button class="go" type="button" data-act="eventjoin" data-id="' + esc(a.id) + '">参加する</button>';
+  }
+  return '<div class="attach" data-attach="' + esc(a.type) + '"><div class="ic">' + esc(a.ic) + '</div><div><b>' + esc(a.title) + '</b><small>' + esc(a.sub) + '</small></div>' + btn + '</div>';
+}
+function postHtml(p, extra) {
+  var dateOnly = p.channel === 'archive' || p.channel === 'news';
+  var badges = (p.author.badge ? '<span class="badge">' + esc(p.author.badge) + '</span>' : '') +
+    (p.creedLabel ? '<span class="badge g">' + esc(p.creedLabel) + '</span>' : '') +
+    (!p.author.badge && p.channelLabel && p.channel !== 'home' ? '<span class="badge">' + esc(p.channelLabel) + '</span>' : '') +
+    (p.pinned ? '<span class="badge pin">ピン留め</span>' : '');
+  var acts = '<button type="button" data-act="react" data-id="' + esc(p.id) + '" data-n="' + p.reactions + '" class="' + (p.reacted ? 'on' : '') + '">ありがとう ' + p.reactions + '</button>' +
+    (p.channel !== 'news' ? '<button type="button" data-act="comments" data-id="' + esc(p.id) + '">コメント ' + p.commentCount + '</button>' : '') +
+    '<button type="button" data-act="save" data-id="' + esc(p.id) + '" class="' + (p.bookmarked ? 'on' : '') + '">' + (p.bookmarked ? '保存しました' : 'あとで読む') + '</button>' +
+    (p.canEdit ? '<button type="button" data-act="edit" data-id="' + esc(p.id) + '">編集</button>' : '') +
+    (S.me.isStaff ? '<button type="button" data-act="pin" data-id="' + esc(p.id) + '" data-pinned="' + (p.pinned ? '1' : '0') + '">' + (p.pinned ? 'ピン留めを外す' : 'ピン留め') + '</button>' : '') +
+    (p.canDelete ? '<button type="button" data-act="delete" data-id="' + esc(p.id) + '">削除</button>' : '');
+  return '<article class="post" id="post-' + esc(p.id) + '" data-id="' + esc(p.id) + '" data-ch="' + esc(p.channel) + '">' +
+    '<div class="top-row">' + avHtml(p.author) + '<div class="who"><b>' + esc(p.author.label) + '</b>' + badges +
+    '<div class="meta">' + esc(p.channelLabel) + ' ・ ' + fmtTime(p.createdAt, !dateOnly) + (p.edited ? '（編集済み）' : '') + '</div></div></div>' +
+    '<div class="body">' + paras(p.body) + '</div>' + attachHtml(p.attachment, p.id) +
+    (extra || '') + '<div class="acts">' + acts + '</div>' +
+    (p.channel !== 'news' ? '<div class="comments" hidden></div>' : '') + '</article>';
+}
+
+/* ── チャンネルの切り替え ── */
+var CH_TITLES = {};
+function setHead(title, desc) { $('chTitle').textContent = title; $('chDesc').textContent = desc || ''; }
+function showComposer(ch) {
+  var can = S.boot.canPostIn.indexOf(ch) >= 0;
+  var staffOnly = ch === 'archive' || ch === 'news';
+  $('composer').hidden = !can || (staffOnly && !S.me.isStaff);
+  var sel = $('pch');
+  sel.innerHTML = S.boot.postableChannels.map(function (c) { return '<option value="' + c + '">' + esc(S.boot.channels[c]) + '</option>'; }).join('');
+  if (ch !== 'home' && S.boot.postableChannels.indexOf(ch) >= 0) sel.value = ch; else if (S.boot.postableChannels.indexOf('case') >= 0) sel.value = ch === 'home' ? 'case' : sel.value;
+}
+function setNav(ch) {
+  document.querySelectorAll('.side a.ch').forEach(function (a) { a.classList.toggle('on', a.dataset.ch === ch); });
+}
+function markSeen(ch) {
+  if (['home', 'creed', 'case', 'mgmt', 'archive', 'news'].indexOf(ch) < 0) return;
+  var dot = document.querySelector('.side a.ch[data-ch="' + ch + '"] .dot'); if (dot) dot.hidden = true;
+  if (ch === 'news') $('bellDot').hidden = true;
+  api('seen', { body: { channel: ch } });
+}
+function renderUnread(u) {
+  Object.keys(u || {}).forEach(function (ch) { var dot = document.querySelector('.side a.ch[data-ch="' + ch + '"] .dot'); if (dot) dot.hidden = !u[ch]; });
+  $('bellDot').hidden = !(u && u.news);
+}
+
+function showFeed(ch) {
+  S.ch = ch; S.view = 'feed'; S.nextBefore = null;
+  hideAll(); setNav(ch);
+  setHead(S.boot.channels[ch], S.boot.descs[ch]);
+  showComposer(ch);
+  $('posts').hidden = false; $('posts').innerHTML = ''; $('empty').hidden = true; $('more').hidden = true;
+  loadFeed(false);
+  markSeen(ch);
+  window.scrollTo(0, 0);
+}
+function loadFeed(append) {
+  if (S.loading) return; S.loading = true;
+  if (!append) { $('empty').hidden = false; $('empty').textContent = '読み込んでいます…'; }
+  var q = { ch: S.ch }; if (append && S.nextBefore) q.before = S.nextBefore;
+  api('feed', { query: q }).then(function (r) {
+    S.loading = false;
+    if (S.view !== 'feed' || S.ch !== q.ch) return;
+    if (!r.ok) { $('empty').hidden = false; $('empty').innerHTML = esc(r.data.error || '読み込めませんでした。') + '<br><button class="btn-s" type="button" id="retryBtn" style="margin-top:12px">もう一度読み込む</button>'; return; }
+    var html = r.data.posts.map(function (p) { return postHtml(p); }).join('');
+    if (append) $('posts').insertAdjacentHTML('beforeend', html); else $('posts').innerHTML = html;
+    var any = $('posts').children.length > 0;
+    $('empty').hidden = any; if (!any) $('empty').textContent = 'このチャンネルにはまだ投稿がありません。';
+    S.nextBefore = r.data.nextBefore; $('more').hidden = !r.data.hasMore;
+    focusPostFromHash();
+  });
+}
+
+function showMembers() {
+  S.view = 'members'; hideAll(); setNav('members'); setHead(S.boot.channels.members, '');
+  $('composer').hidden = true; $('posts').hidden = true; $('empty').hidden = true; $('more').hidden = true;
+  var panel = $('membersPanel'); panel.hidden = false; panel.innerHTML = '<div class="empty">読み込んでいます…</div>';
+  api('members').then(function (r) {
+    if (!r.ok) { panel.innerHTML = '<div class="empty">' + esc(r.data.error || '読み込めませんでした。') + '</div>'; return; }
+    panel.innerHTML = '<p style="font-size:13.5px;color:var(--mid);margin-bottom:6px">灯の会員は' + r.data.count + '名です。お住まいの都道府県と、運営されている場の種類のみを公開しています。</p><div class="mlist">' +
+      r.data.members.map(function (m) { return '<div class="mrow">' + avHtml(m) + '<div class="info"><b>' + esc(m.name) + '</b><small>' + esc(m.sub) + '</small></div><div class="since">' + esc(m.since) + '</div></div>'; }).join('') + '</div>';
+  });
+  window.scrollTo(0, 0);
+}
+
+function showSearch(q) {
+  S.view = 'search'; S.q = q; hideAll(); setNav(''); setHead('検索結果', '「' + q + '」');
+  $('composer').hidden = true; $('more').hidden = true; $('posts').hidden = false; $('posts').innerHTML = ''; $('empty').hidden = false; $('empty').textContent = '検索しています…';
+  api('search', { query: { q: q } }).then(function (r) {
+    if (S.view !== 'search' || S.q !== q) return;
+    if (!r.ok) { $('empty').textContent = r.data.error || '検索できませんでした。'; return; }
+    if (!r.data.results.length) { $('empty').textContent = '一致する投稿・コメントは見つかりませんでした。'; return; }
+    $('empty').hidden = true;
+    $('posts').innerHTML = r.data.results.map(function (x) {
+      var extra = x.matches.map(function (m) { return '<div class="match">コメント：' + esc(m.snippet) + '</div>'; }).join('');
+      return postHtml(x.post, extra);
+    }).join('');
+  });
+  window.scrollTo(0, 0);
+}
+
+function showPost(id) {
+  S.view = 'post'; hideAll(); setNav(''); setHead('投稿', '');
+  $('composer').hidden = true; $('more').hidden = true; $('posts').hidden = false; $('posts').innerHTML = ''; $('empty').hidden = false; $('empty').textContent = '読み込んでいます…';
+  api('post', { query: { id: id } }).then(function (r) {
+    if (S.view !== 'post') return;
+    if (!r.ok) { $('empty').textContent = r.data.error || '投稿が見つかりません。'; return; }
+    $('empty').hidden = true; $('posts').innerHTML = postHtml(r.data.post);
+    var c = $('posts').querySelector('[data-act="comments"]'); if (c) c.click();
+  });
+}
+function focusPostFromHash() {
+  var m = /^#post=([a-z0-9]+)$/.exec(location.hash); if (!m) return;
+  var el = $('post-' + m[1]); if (el) el.scrollIntoView();
+}
+
+/* ── 設定・ご利用ガイド・退会 ── */
+var PREFS = [];
+function showSettings() {
+  S.view = 'settings'; hideAll(); setNav(''); setHead('設定', '');
+  $('composer').hidden = true; $('posts').hidden = true; $('empty').hidden = true; $('more').hidden = true;
+  var panel = $('settingsPanel'); panel.hidden = false; panel.innerHTML = '<div class="empty">読み込んでいます…</div>';
+  api('me').then(function (r) {
+    if (!r.ok) { panel.innerHTML = '<div class="empty">' + esc(r.data.error || '読み込めませんでした。') + '</div>'; return; }
+    var p = r.data.profile; PREFS = r.data.prefectures;
+    var since = r.data.membership.since ? fmtTime(r.data.membership.since, false) : '—';
+    panel.innerHTML =
+      '<h3>プロフィール</h3><p>サロンの中で表示される情報です。メンバー一覧には、都道府県と場の種類だけが表示されます。</p>' +
+      '<form class="fgrid" id="profileForm" novalidate>' +
+      '<div><label for="pfName">表示名</label><input id="pfName" type="text" maxlength="30" value="' + esc(p.displayName) + '"></div>' +
+      '<div><label for="pfPref">お住まいの都道府県</label><select id="pfPref"><option value="">表示しない</option>' + PREFS.map(function (x) { return '<option value="' + esc(x) + '"' + (x === p.prefecture ? ' selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select></div>' +
+      '<div><label for="pfFac">運営されている場の種類</label><input id="pfFac" type="text" maxlength="30" value="' + esc(p.facilityLabel) + '" placeholder="例：学習塾・フリースクール併設"></div>' +
+      '<div><label>メンバー一覧での表示</label><div class="radios"><label><input type="radio" name="pfVis" value="public"' + (p.listVisibility !== 'anonymous' ? ' checked' : '') + '> 名前と所属を表示する</label><label><input type="radio" name="pfVis" value="anonymous"' + (p.listVisibility === 'anonymous' ? ' checked' : '') + '> 匿名希望にする</label></div></div>' +
+      '<div><button class="btn-s solid" type="submit">保存する</button><span class="savedmsg" id="pfSaved"></span><div class="form-err" id="pfErr" role="alert"></div></div></form>' +
+      '<h3>通知</h3><p>サロンからのメールをお送りする場合の設定です。</p>' +
+      '<label class="chk"><input type="checkbox" id="ntReply"' + (p.notify.reply ? ' checked' : '') + '> 自分の投稿に運営から返信がついたとき、メールで知らせる</label>' +
+      '<label class="chk"><input type="checkbox" id="ntRemind"' + (p.notify.reminder ? ' checked' : '') + '> 月1回の実践講義の前日に、メールで知らせる</label>' +
+      '<h3>パスワードの変更</h3>' +
+      '<form class="fgrid" id="pwForm" novalidate>' +
+      '<div><label for="pwCur">現在のパスワード</label><input id="pwCur" type="password" autocomplete="current-password"></div>' +
+      '<div><label for="pwNew">新しいパスワード（8文字以上）</label><input id="pwNew" type="password" autocomplete="new-password"></div>' +
+      '<div><label for="pwNew2">新しいパスワード（確認）</label><input id="pwNew2" type="password" autocomplete="new-password"></div>' +
+      '<div><button class="btn-s" type="submit">変更する</button><span class="savedmsg" id="pwSaved"></span><div class="form-err" id="pwErr" role="alert"></div></div></form>' +
+      '<h3>所属・会員の状態</h3><dl class="kv"><dt>所属サロン</dt><dd>教育者のサロン 灯</dd><dt>会員の状態</dt><dd>' + (r.data.membership.status === 'canceling' ? '解約手続き中' : '有効') + '</dd><dt>参加日</dt><dd>' + esc(since) + '</dd>' + (r.data.isStaff ? '<dt>運営ロール</dt><dd>あり</dd>' : '') + '</dl>' +
+      '<h3>あとで読む</h3><div id="bmBox"><button class="btn-s" type="button" data-act="loadbm">あとで読むに入れた投稿を見る</button></div>' +
+      '<h3>退会</h3><p>退会についての案内は、<a href="#withdraw" style="color:var(--terra)">こちら</a>です。</p>';
+  });
+  window.scrollTo(0, 0);
+}
+
+var GUIDE = '<h3>投稿のしかた</h3><p class="lead">「ホーム」「ケース検討」「運営の相談」「今月の一条」の入力欄をクリックすると、書き込めます。投稿するチャンネルは、入力欄の右の選択肢で変えられます。自分の投稿は、あとから編集・削除できます。</p>' +
+  '<h3>匿名で投稿する／教室名を伏せる</h3><ul class="guide"><li>「匿名で投稿する」にチェックすると、他の会員には投稿者の名前が表示されません。</li><li>「教室名を伏せる」（初めからチェックが入っています）にすると、名前の横に表示される所属が非表示になります。</li><li>運営から投稿者がどう見えるか、匿名の範囲については、正式に決まり次第お知らせします。現時点では、匿名であることを保証するものではありません。</li><li>お子さん・保護者の方・教室・学校が特定される情報は、書かないでください。</li></ul>' +
+  '<h3>コメント・ありがとう</h3><p class="lead">投稿の「コメント」から、コメントや返信ができます（返信への返信まで）。「ありがとう」は、読んで助かったときの気持ちを伝えるボタンです。「あとで読む」に入れた投稿は、「設定」から見返せます。</p>' +
+  '<h3>実践講義アーカイブの見方</h3><p class="lead">「実践講義アーカイブ」の投稿の「視聴する」から、過去の講義を見られます。月に1回の実践講義の予定は、「お知らせ」と右側の「今月の予定」に出ます。参加を登録すると、開催のURLをご案内します。</p>' +
+  '<h3>運営への問い合わせ</h3><p class="lead">ご不明な点は、<a href="mailto:info@antagaorana.com" style="color:var(--terra)">info@antagaorana.com</a> までお問い合わせください。</p>' +
+  '<h3>会員として守っていただきたいこと</h3><ul class="guide"><li>他の会員の投稿・コメントの内容を、サロンの外に出さないでください。</li><li>お互いの現場を尊重し、相手を責める言い方は避けてください。</li><li>詳しい決まりは、利用規約・プライバシーポリシーに従います。</li></ul>';
+function showGuide() {
+  S.view = 'guide'; hideAll(); setNav(''); setHead('ご利用ガイド', '');
+  $('composer').hidden = true; $('posts').hidden = true; $('empty').hidden = true; $('more').hidden = true;
+  var panel = $('guidePanel'); panel.hidden = false; panel.innerHTML = GUIDE; window.scrollTo(0, 0);
+}
+function showWithdraw() {
+  S.view = 'withdraw'; hideAll(); setNav(''); setHead('退会について', '');
+  $('composer').hidden = true; $('posts').hidden = true; $('empty').hidden = true; $('more').hidden = true;
+  var panel = $('withdrawPanel'); panel.hidden = false;
+  panel.innerHTML = '<p class="lead" style="color:var(--ink)">退会のお手続きをすると、この会員資格ではサロンに入れなくなります。投稿の取り扱いなど、詳しい決まりは、正式に決まり次第お知らせします。ご不明な点は、<a href="mailto:info@antagaorana.com" style="color:var(--terra)">info@antagaorana.com</a> までお問い合わせください。</p>' +
+    '<div style="margin-top:18px"><button class="btn-s danger" type="button" id="withdrawBtn">退会する</button></div><div class="form-err" id="wdErr" role="alert"></div>';
+  window.scrollTo(0, 0);
+}
+
+/* ── 右カラム ── */
+function renderRail(b) {
+  var c = b.creed;
+  $('railCreed').innerHTML = c ?
+    '<small style="display:block;font-size:11.5px;color:var(--terra);letter-spacing:.1em;margin-bottom:6px">' + esc(c.label) + '</small><b style="display:block;font-family:var(--serif);font-size:15px;line-height:1.7;margin-bottom:8px">' + esc(c.title) + '</b>' + (c.reading ? '<small style="color:var(--mid);font-size:12px">灯での読み方：' + esc(c.reading) + '</small>' : '') :
+    '<small style="color:var(--mid);font-size:12.5px">今月の一条は、まもなくお知らせします。</small>';
+  $('railEvents').innerHTML = b.rail.events.length ? b.rail.events.map(function (e) { return '<div class="card"><b>' + esc(e.title) + '</b><small>' + esc(e.sub) + '</small></div>'; }).join('') : '<div class="card"><small>予定は、決まり次第お知らせします。</small></div>';
+  var pin = b.rail.pinned;
+  $('railPin').innerHTML = pin ? '<b style="display:block;font-size:13.5px;margin-bottom:6px">' + esc(pin.title) + '</b><small style="color:var(--mid);font-size:12.5px">' + esc(pin.excerpt) + '</small>' :
+    '<b style="display:block;font-size:13.5px;margin-bottom:6px">投稿のきまり</b><small style="color:var(--mid);font-size:12.5px">教室名・学校名・お子さんの名前は伏せてください。近隣の同業が気になる場合は事務局までご相談ください。</small>';
+  $('railMembers').innerHTML = b.rail.recent.map(function (m) { return '<div class="av ' + esc(m.av) + '">' + esc(m.initial) + '</div>'; }).join('') + (b.rail.recentMore > 0 ? '<div class="av">＋' + b.rail.recentMore + '</div>' : '');
+  $('railWeek').textContent = b.rail.weekJoined > 0 ? '今週' + b.rail.weekJoined + '名が参加しました' : '';
+}
+
+/* ── コメント ── */
+function commentHtml(c) {
+  return '<div class="cmt' + (c.depth > 1 ? ' reply' : '') + (c.depth > 2 ? ' d3' : '') + '" id="c-' + esc(c.id) + '">' + avHtml(c.author) + '<div class="txt"><b>' + esc(c.author.label) + '</b>' + (c.author.badge ? '<span class="badge" style="font-size:10.5px;color:var(--terra);border:1px solid var(--terra);padding:1px 6px;margin-left:8px">' + esc(c.author.badge) + '</span>' : '') + '<span class="meta">' + fmtTime(c.createdAt, true) + '</span><br>' + esc(c.body).replace(/\n/g, '<br>') +
+    (c.depth < 3 ? '<button class="re" type="button" data-act="reply" data-id="' + esc(c.id) + '" data-name="' + esc(c.author.label) + '">返信</button>' : '') + (c.canDelete ? '<button class="re" type="button" data-act="cdel" data-id="' + esc(c.id) + '">削除</button>' : '') + '</div></div>';
+}
+function commentBox(postId) {
+  return '<form class="cmtbox" data-post="' + esc(postId) + '"><div class="av">' + esc(S.me.initial) + '</div><input type="text" maxlength="2000" placeholder="コメントする" aria-label="コメントする" autocomplete="off"></form><div class="cmterr" role="alert"></div>';
+}
+function loadComments(postEl) {
+  var id = postEl.dataset.id; var box = postEl.querySelector('.comments');
+  box.innerHTML = '<div class="empty" style="padding:12px 0;text-align:left">読み込んでいます…</div>';
+  return api('comments', { query: { postId: id } }).then(function (r) {
+    if (!r.ok) { box.innerHTML = '<div class="empty" style="padding:12px 0;text-align:left">' + esc(r.data.error || '読み込めませんでした。') + '</div>'; return; }
+    box.innerHTML = r.data.comments.map(commentHtml).join('') + commentBox(id);
+    var btn = postEl.querySelector('[data-act="comments"]'); if (btn) btn.textContent = 'コメント ' + r.data.comments.length;
+  });
+}
+
+/* ── クリック操作（HTMLにonclickは書かない） ── */
+var actions = {
+  react: function (b) {
+    var on = !b.classList.contains('on'); var n = parseInt(b.dataset.n, 10) || 0;
+    b.classList.toggle('on', on); b.dataset.n = n + (on ? 1 : -1); b.textContent = 'ありがとう ' + b.dataset.n; // 先に画面を変え、結果で正しい数に直す
+    api('react', { body: { postId: b.dataset.id, on: on } }).then(function (r) {
+      if (!r.ok) { b.classList.toggle('on', !on); b.dataset.n = n; b.textContent = 'ありがとう ' + n; toast(r.data.error || '保存できませんでした。'); return; }
+      b.dataset.n = r.data.count; b.textContent = 'ありがとう ' + r.data.count; b.classList.toggle('on', r.data.on);
+    });
+  },
+  save: function (b) {
+    var on = !b.classList.contains('on'); b.classList.toggle('on', on); b.textContent = on ? '保存しました' : 'あとで読む';
+    api('bookmark', { body: { postId: b.dataset.id, on: on } }).then(function (r) { if (!r.ok) { b.classList.toggle('on', !on); b.textContent = on ? 'あとで読む' : '保存しました'; toast(r.data.error || '保存できませんでした。'); } });
+  },
+  comments: function (b) {
+    var post = b.closest('.post'); var box = post.querySelector('.comments');
+    if (!box.hidden) { box.hidden = true; return; }
+    box.hidden = false; loadComments(post);
+  },
+  reply: function (b) {
+    var post = b.closest('.post'); var form = post.querySelector('.cmtbox'); if (!form) return;
+    form.dataset.parent = b.dataset.id; var input = form.querySelector('input'); input.placeholder = b.dataset.name + ' に返信する'; input.focus();
+  },
+  cdel: function (b) {
+    if (!confirm('このコメントを削除しますか？（返信も一緒に消えます）')) return;
+    var post = b.closest('.post');
+    api('comment-delete', { body: { id: b.dataset.id } }).then(function (r) { if (!r.ok) toast(r.data.error || '削除できませんでした。'); else loadComments(post); });
+  },
+  delete: function (b) {
+    if (!confirm('この投稿を削除しますか？（コメントも一緒に消えます）')) return;
+    api('post-delete', { body: { id: b.dataset.id } }).then(function (r) {
+      if (!r.ok) { toast(r.data.error || '削除できませんでした。'); return; }
+      var el = $('post-' + b.dataset.id); if (el) el.remove(); toast('削除しました。');
+      if (!$('posts').children.length) { $('empty').hidden = false; $('empty').textContent = 'このチャンネルにはまだ投稿がありません。'; }
+    });
+  },
+  pin: function (b) {
+    var to = b.dataset.pinned !== '1';
+    api('post-pin', { body: { id: b.dataset.id, pinned: to } }).then(function (r) { if (!r.ok) toast(r.data.error || '変更できませんでした。'); else { toast(to ? 'ピン留めしました。' : 'ピン留めを外しました。'); refreshRail(); if (S.view === 'feed') showFeed(S.ch); } });
+  },
+  edit: function (b) {
+    var post = b.closest('.post'); var body = post.querySelector('.body'); if (post.querySelector('.editbox')) return;
+    var current = Array.prototype.map.call(body.querySelectorAll('p'), function (p) { return p.textContent; }).join('\n');
+    var box = document.createElement('div'); box.className = 'editbox';
+    box.innerHTML = '<textarea maxlength="5000" aria-label="投稿の本文を編集">' + esc(current) + '</textarea><div class="opts"><button class="btn-s ghost" type="button" data-act="editcancel">やめる</button><button class="btn-s solid" type="button" data-act="editsave" data-id="' + esc(post.dataset.id) + '">保存する</button></div><div class="form-err" role="alert"></div>';
+    body.hidden = true; body.insertAdjacentElement('afterend', box); box.querySelector('textarea').focus();
+  },
+  editcancel: function (b) { var post = b.closest('.post'); post.querySelector('.editbox').remove(); post.querySelector('.body').hidden = false; },
+  editsave: function (b) {
+    var post = b.closest('.post'); var box = post.querySelector('.editbox'); var text = box.querySelector('textarea').value.trim();
+    if (!text) { box.querySelector('.form-err').textContent = '本文を入力してください。'; return; }
+    b.disabled = true;
+    api('post-update', { body: { id: b.dataset.id, body: text } }).then(function (r) {
+      b.disabled = false;
+      if (!r.ok) { box.querySelector('.form-err').textContent = r.data.error || '保存できませんでした。'; return; }
+      var open = !post.querySelector('.comments').hidden;
+      post.outerHTML = postHtml(r.data.post);
+      if (open) { var np = $('post-' + r.data.post.id); np.querySelector('[data-act="comments"]').click(); }
+    });
+  },
+  play: function (b) {
+    var ov = $('overlay'); $('vTitle').textContent = ''; $('vBody').innerHTML = '<div class="empty" style="padding:30px 0">読み込んでいます…</div>'; ov.hidden = false;
+    api('lecture-play', { query: { id: b.dataset.id } }).then(function (r) {
+      if (!r.ok) { $('vBody').innerHTML = '<div class="empty" style="padding:30px 0">' + esc(r.data.error || '動画を読み込めませんでした。') + '<br><button class="btn-s" type="button" style="margin-top:12px" data-act="play" data-id="' + esc(b.dataset.id) + '">もう一度読み込む</button></div>'; return; }
+      var d = r.data; $('vTitle').textContent = d.title;
+      var media = d.kind === 'embed' ? '<div class="frame"><iframe src="' + esc(d.url) + '" title="' + esc(d.title) + '" allow="fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'
+        : d.kind === 'video' ? '<div class="frame"><video controls playsinline preload="metadata" src="' + esc(d.url) + '" id="vVideo"></video></div>'
+        : '<p class="vlink"><a href="' + esc(d.url) + '" target="_blank" rel="noopener noreferrer" style="color:var(--terra)">新しいタブで動画を開く</a></p>';
+      $('vBody').innerHTML = media + (d.description ? '<div class="vd">' + esc(d.description) + '</div>' : '');
+      var v = $('vVideo'); if (v) v.addEventListener('error', function () { $('vBody').innerHTML = '<div class="empty" style="padding:30px 0">動画を再生できませんでした。時間をおいて、もう一度お試しください。</div>'; });
+    });
+  },
+  openfile: function (b) {
+    var w = window.open('', '_blank'); if (w) w.opener = null;
+    api('attach-open', { body: { postId: b.dataset.post } }).then(function (r) { if (r.ok && /^https:/.test(r.data.url)) { if (w) w.location.href = r.data.url; else location.href = r.data.url; } else { if (w) w.close(); toast(r.data.error || '開けませんでした。'); } });
+  },
+  eventjoin: function (b) { eventChange(b, 'event-join'); },
+  eventleave: function (b) { if (confirm('参加を取り消しますか？')) eventChange(b, 'event-leave'); },
+  eventurl: function (b) {
+    var w = window.open('', '_blank'); if (w) w.opener = null;
+    api('event-url', { query: { id: b.dataset.id } }).then(function (r) {
+      if (r.ok && r.data.url && /^https:/.test(r.data.url)) { if (w) w.location.href = r.data.url; else location.href = r.data.url; return; }
+      if (w) w.close(); toast((r.data && (r.data.message || r.data.error)) || '開催URLを取得できませんでした。');
+    });
+  },
+  loadbm: function (b) {
+    var box = $('bmBox'); box.innerHTML = '<div class="empty" style="padding:12px 0;text-align:left">読み込んでいます…</div>';
+    api('bookmarks').then(function (r) {
+      if (!r.ok) { box.innerHTML = esc(r.data.error || '読み込めませんでした。'); return; }
+      box.innerHTML = r.data.posts.length ? r.data.posts.map(function (p) { return '<div class="mrow"><div class="info"><b>' + esc(p.author.label) + '</b><small>' + esc(p.body.slice(0, 80)) + '</small></div><a class="since" href="#post=' + esc(p.id) + '" style="color:var(--terra)">開く</a></div>'; }).join('') : '<p>まだ、あとで読むに入れた投稿はありません。</p>';
+    });
+  },
+};
+function eventChange(b, action) {
+  if (S.busy[b.dataset.id]) return; S.busy[b.dataset.id] = true; b.disabled = true;
+  api(action, { body: { eventId: b.dataset.id } }).then(function (r) {
+    S.busy[b.dataset.id] = false;
+    if (!r.ok) { b.disabled = false; toast(r.data.error || '手続きできませんでした。'); return; }
+    toast(action === 'event-join' ? '参加予定に登録しました。' : '参加を取り消しました。');
+    refreshAttachments(); refreshRail();
+  });
+}
+function refreshAttachments() { if (S.view === 'feed') { var open = {}; document.querySelectorAll('.post').forEach(function (p) { if (!p.querySelector('.comments') || !p.querySelector('.comments').hidden) open[p.dataset.id] = 1; }); S.nextBefore = null; loadFeedKeep(); } else if (S.view === 'post') { var m = /^#post=([a-z0-9]+)$/.exec(location.hash); if (m) showPost(m[1]); } }
+function loadFeedKeep() { var y = window.scrollY; S.loading = false; api('feed', { query: { ch: S.ch } }).then(function (r) { if (!r.ok || S.view !== 'feed') return; $('posts').innerHTML = r.data.posts.map(function (p) { return postHtml(p); }).join(''); S.nextBefore = r.data.nextBefore; $('more').hidden = !r.data.hasMore; window.scrollTo(0, y); }); }
+function refreshRail() { api('bootstrap').then(function (r) { if (r.ok) { S.boot = r.data; renderRail(r.data); } }); }
+
+document.addEventListener('click', function (e) {
+  var t = e.target;
+  if (t.id === 'retryBtn') { loadFeed(false); return; }
+  var a = t.closest && t.closest('[data-act]');
+  if (a && actions[a.dataset.act]) { e.preventDefault(); actions[a.dataset.act](a, e); }
+});
+document.addEventListener('submit', function (e) {
+  var f = e.target;
+  if (f.id === 'searchForm') { e.preventDefault(); var q = $('searchInput').value.trim(); if (q) location.hash = '#search=' + encodeURIComponent(q); return; }
+  if (f.classList.contains('cmtbox')) {
+    e.preventDefault();
+    var input = f.querySelector('input'); var text = input.value.trim(); var err = f.nextElementSibling; if (!text || f.dataset.busy) return;
+    f.dataset.busy = '1'; input.disabled = true; err.textContent = '';
+    var post = f.closest('.post');
+    api('comment-create', { body: { postId: f.dataset.post, parentId: f.dataset.parent || undefined, body: text, requestId: f.dataset.rid || (f.dataset.rid = rid()) } }).then(function (r) {
+      delete f.dataset.busy; input.disabled = false;
+      if (!r.ok) { err.textContent = r.data.error || 'コメントできませんでした。'; return; }
+      delete f.dataset.rid; delete f.dataset.parent; loadComments(post);
+    });
+    return;
+  }
+  if (f.id === 'profileForm') {
+    e.preventDefault(); var err2 = $('pfErr'); err2.textContent = ''; $('pfSaved').textContent = '';
+    api('profile-update', { body: { displayName: $('pfName').value, prefecture: $('pfPref').value, facilityLabel: $('pfFac').value, listVisibility: (document.querySelector('input[name="pfVis"]:checked') || {}).value } }).then(function (r) {
+      if (!r.ok) { err2.textContent = r.data.error || '保存できませんでした。'; return; }
+      $('pfSaved').textContent = '保存しました'; S.me.name = r.data.profile.displayName; S.me.initial = Array.from(S.me.name)[0] || '？'; paintMe();
+    });
+    return;
+  }
+  if (f.id === 'pwForm') {
+    e.preventDefault(); var perr = $('pwErr'); perr.textContent = ''; $('pwSaved').textContent = '';
+    var cur = $('pwCur').value, n1 = $('pwNew').value, n2 = $('pwNew2').value;
+    if (!cur) { perr.textContent = '現在のパスワードを入力してください。'; return; }
+    if (n1.length < 8) { perr.textContent = '新しいパスワードは8文字以上にしてください。'; return; }
+    if (n1 !== n2) { perr.textContent = '確認用のパスワードが一致しません。'; return; }
+    ext('/api/community-auth?action=change-password', { currentPassword: cur, newPassword: n1, newPassword2: n2 }).then(function (r) {
+      if (!r.ok) { perr.textContent = (r.data && r.data.error) || '変更できませんでした。'; return; }
+      $('pwCur').value = ''; $('pwNew').value = ''; $('pwNew2').value = ''; $('pwSaved').textContent = '変更しました';
+    });
+    return;
+  }
+});
+document.addEventListener('change', function (e) {
+  if (e.target.id === 'ntReply' || e.target.id === 'ntRemind') {
+    var body = { reply: $('ntReply').checked, reminder: $('ntRemind').checked };
+    api('notify-update', { body: body }).then(function (r) { toast(r.ok ? '通知の設定を保存しました。' : (r.data.error || '保存できませんでした。')); });
+  }
+});
+
+/* ── 投稿フォーム ── */
+function openComposer() { $('composer').classList.add('is-open'); $('ptext').focus(); }
+function closeComposer() { $('composer').classList.remove('is-open'); $('composerErr').textContent = ''; }
+var composeRid = null;
+$('composerShut').addEventListener('click', openComposer);
+$('composerCancel').addEventListener('click', closeComposer);
+$('composerSubmit').addEventListener('click', function () {
+  var btn = $('composerSubmit'); var text = $('ptext').value.trim(); var err = $('composerErr'); err.textContent = '';
+  if (!text) { $('ptext').focus(); return; }
+  if (btn.disabled) return; btn.disabled = true;
+  composeRid = composeRid || rid(); // 同じ内容の送信は、連打・再送しても1回だけ保存される
+  api('post-create', { body: { channel: $('pch').value, body: text, anonymous: $('anon').checked, hideFacility: $('hide').checked, requestId: composeRid } }).then(function (r) {
+    btn.disabled = false;
+    if (!r.ok) { err.textContent = r.data.error || '投稿できませんでした。'; return; }
+    composeRid = null; $('ptext').value = ''; closeComposer();
+    var ch = r.data.post.channel;
+    if (S.ch === 'home' || S.ch === ch) { $('empty').hidden = true; $('posts').insertAdjacentHTML('afterbegin', postHtml(r.data.post)); }
+    else toast('「' + S.boot.channels[ch] + '」に投稿しました。');
+  });
+});
+$('ptext').addEventListener('input', function () { composeRid = null; });
+$('moreBtn').addEventListener('click', function () { loadFeed(true); });
+
+/* ── 上部バー ── */
+function paintMe() { $('meName').textContent = S.me.name + ' さん'; $('meAv').textContent = S.me.initial; $('composerAv').textContent = S.me.initial; }
+$('bell').addEventListener('click', function () { location.hash = '#news'; });
+$('logoutBtn').addEventListener('click', function () {
+  ext('/api/community-auth?action=logout', {}).then(function () { location.href = LOGIN; });
+});
+$('overlay').addEventListener('click', function (e) { if (e.target === $('overlay') || e.target.id === 'vClose') closeVideo(); });
+function closeVideo() { $('overlay').hidden = true; $('vBody').innerHTML = ''; }
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('overlay').hidden) closeVideo(); });
+
+document.addEventListener('click', function (e) {
+  if (e.target.id === 'withdrawBtn') {
+    if (!confirm('退会しますか？この会員資格では、サロンに入れなくなります。')) return;
+    e.target.disabled = true;
+    ext('/api/community-auth?action=withdraw', { community: 'tomoshibi' }).then(function (r) {
+      if (!r.ok) { e.target.disabled = false; $('wdErr').textContent = (r.data && r.data.error) || '退会の手続きができませんでした。時間をおいて、もう一度お試しください。'; return; }
+      ext('/api/community-auth?action=logout', {}).then(function () { location.href = '/salon/'; });
+    });
+  }
+});
+
+/* ── ルーティング（#home / #case / #members / #settings / #guide / #withdraw / #search=… / #post=…） ── */
+function route() {
+  var h = decodeURIComponent((location.hash || '#home').slice(1));
+  closeComposer();
+  if (h === 'members') return showMembers();
+  if (h === 'settings') return showSettings();
+  if (h === 'guide') return showGuide();
+  if (h === 'withdraw') return showWithdraw();
+  if (h.indexOf('search=') === 0) return showSearch(h.slice(7));
+  if (h.indexOf('post=') === 0) return showPost(h.slice(5));
+  if (['home', 'creed', 'case', 'mgmt', 'archive', 'news'].indexOf(h) >= 0) return showFeed(h);
+  showFeed('home');
+}
+window.addEventListener('hashchange', route);
+
+function start() {
+  api('bootstrap').then(function (r) {
+    if (!r.ok) { $('chDesc').textContent = r.data.error || '読み込めませんでした。'; $('empty').hidden = false; $('empty').innerHTML = esc(r.data.error || '読み込めませんでした。') + '<br><button class="btn-s" type="button" onclick="location.reload()" style="margin-top:12px">もう一度読み込む</button>'; return; }
+    S.boot = r.data; S.me = r.data.me; paintMe(); renderRail(r.data); renderUnread(r.data.unread);
+    route();
+  });
+}
+start();
+})();
+</script>
+</body>
+</html>

@@ -53,6 +53,8 @@ import {
 import { computeEventState, joinBlockReason, JOIN_BLOCK_MESSAGES, isEventPast } from './_lib/event-state.js';
 import { cleanUserText, hasInvalidChars, isDisplayablePost, normalizeRequestId } from './_lib/text-safety.js';
 import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
+import * as Salon from './_lib/salon-store.js';
+import { PREFECTURES } from './_lib/salon-core.js';
 import { getMemberView } from './_lib/points.js';
 import {
   MORNING_CONFIG, MORNING_BLOCK_MESSAGES, jstToday, isValidMonth, addDays, monthDates, viewableMonthRange,
@@ -302,6 +304,13 @@ async function handleRegister(req, res, body) {
   const password2 = body.password2 || '';
   const reason = String(body.reason || '').trim();
   const referrerName = String(body.referrerName || '').trim();
+  // 灯の申請だけが持つ追加項目（任意）：都道府県／場の種類の表示ラベル／どのCTAから来たか。教室名などの固有名は集めない。
+  const isSalon = community === 'tomoshibi';
+  const prefecture = isSalon ? String(body.prefecture || '').trim() : '';
+  const facilityLabel = isSalon ? String(body.facilityLabel || '').trim() : '';
+  const source = isSalon ? String(body.source || '').trim().replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40) : '';
+  if (prefecture && !PREFECTURES.includes(prefecture)) return res.status(400).json({ error: '都道府県の選択をご確認ください。' });
+  if (facilityLabel.length > 30 || /�/.test(facilityLabel)) return res.status(400).json({ error: '場の種類は30文字以内でご入力ください。' });
   const termsAccepted = body.termsAccepted === true;
 
   if (!fullName) return res.status(400).json({ error: '氏名をご入力ください。' });
@@ -368,7 +377,9 @@ async function handleRegister(req, res, body) {
     fullName, fullNameKana, displayName, email, reason, referrerName,
     termsVersion: TERMS_VERSION,
     termsAcceptedAt: submittedAt,
+    prefecture, facilityLabel, source,
   });
+  if (isSalon) await Salon.saveProfile(email, { displayName, prefecture, facilityLabel, listVisibility: 'public' });
   await logAudit({ actorId: email, action: 'registered', metadata: { community } });
 
   // DB保存（Application作成）とメール通知は別処理として扱う。通知が失敗してもApplicationは
@@ -391,10 +402,17 @@ async function handleLogin(req, res, body) {
   if (blockProductionForCommunity(res, community)) return;
   if (!email || !password) return res.status(400).json({ error: GENERIC_ERROR });
 
+  const isSalon = community === 'tomoshibi';
+  // 灯：同じメールアドレスへの連続失敗でロックする（5回／15分）。ロック中はパスワードの照合もしない。
+  if (isSalon && (await Salon.loginFailureCount(email)) >= 5) {
+    return res.status(429).json({ error: 'ログインに連続して失敗したため、しばらく時間をおいてから、もう一度お試しください。', code: 'locked' });
+  }
   const user = await getUser(email);
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
+    if (isSalon) await Salon.loginFailure(email);
     return res.status(401).json({ error: GENERIC_ERROR });
   }
+  if (isSalon) await Salon.clearLoginFailures(email);
 
   // 完全紹介制：認証成功だけでは会員ページに入れない。Application承認 AND Membership active の
   // 両方が揃って初めて利用可能（haku-home.js側にも同じ判定を持つが、ログイン時点でも
@@ -410,6 +428,11 @@ async function handleLogin(req, res, body) {
     }
   }
 
+  if (isSalon) { // 灯：申請の状態に合わせた案内（審査中・見送り）
+    const app = await getApplication('tomoshibi', email);
+    if (app?.status === 'rejected') return res.status(403).json({ error: '大変申し訳ございませんが、このお申し込みは承認されませんでした。', code: 'rejected' });
+    if (app?.status === 'pending') return res.status(403).json({ error: 'お申し込みは現在確認中です。承認され次第、メールでご案内します。', code: 'pending' });
+  }
   const membership = await getMembership(community, email);
   // 'canceling'（解約予約済みだが現在の請求期間はまだ終了していない）は'active'と同様に
   // アクセスを許可する。実際にアクセス不可になるのは、期間終了時にStripeが
@@ -432,17 +455,20 @@ async function handleLogin(req, res, body) {
     const reasonText = membership?.status === 'past_due' ? 'お支払い方法をご確認ください。運営からのメールをご確認いただくか、運営までお問い合わせください。'
       : membership?.status === 'canceled' ? '解約済みです。'
       : `${label}の会員として有効化されていません。`;
-    return res.status(403).json({ error: `このメールアドレスは${reasonText}` });
+    // 灯：未入金・退会済みなどは、再登録のご案内（code）を添える
+    return res.status(403).json({ error: `このメールアドレスは${reasonText}`, ...(isSalon ? { code: 'reregister' } : {}) });
   }
 
-  const sessionId = await createSession(email);
-  setCookie(res, 'ht_session', sessionId, { maxAgeSeconds: SESSION_TTL_SECONDS });
+  // 「ログインしたままにする」（灯の初期値はON）。OFFのときはブラウザを閉じると切れる＋サーバー側も12時間で切れる。
+  const keep = body.keep !== false;
+  const sessionId = keep ? await createSession(email) : await createSession(email, 12 * 60 * 60);
+  setCookie(res, 'ht_session', sessionId, keep ? { maxAgeSeconds: SESSION_TTL_SECONDS } : {});
   // 管理画面の会員一覧に「最終ログイン日時」を表示するための記録。ログイン処理自体の
   // 成否には影響させない（失敗しても握りつぶし、ログインは継続する）が、Vercelの
   // サーバーレス実行はレスポンス送信後に即座に凍結され得るため、必ずawaitしてから返す
   // （awaitしないfire-and-forgetは応答直後に実行が打ち切られ、書き込みが失われる場合がある）。
   await saveUser({ email, lastLoginAt: Date.now() }).catch((e) => console.error('[login] lastLoginAt update failed:', e.message));
-  return res.status(200).json({ ok: true, displayName: user.displayName || email.split('@')[0] });
+  return res.status(200).json({ ok: true, displayName: user.displayName || email.split('@')[0], ...(isSalon ? { redirect: '/salon/tomoshibi/' } : {}) });
 }
 
 // 会員本人による解約。cancel_at_period_end=true をStripe側に設定するだけで、

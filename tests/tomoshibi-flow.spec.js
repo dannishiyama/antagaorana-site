@@ -1,5 +1,5 @@
 // tests/tomoshibi-flow.spec.js
-// 灯: 申請 → 管理者ログイン → 承認 → パスワード設定 → ログイン → HOME → ログアウト
+// 灯: 申請（パスワードも登録時に設定） → 管理者ログイン → 承認。承認後のログイン〜サロン画面は tests-e2e-local/salon.e2e.mjs で確認
 import { test, expect, request as pwRequest } from '@playwright/test';
 import { uniqueEmail, loginAsAdmin } from './helpers.js';
 
@@ -8,11 +8,14 @@ test.describe.serial('灯: 申請から会員ページ・ログアウトまで',
   let passwordSetupToken = null;
 
   test('1. 申請フォームを送信できる', async ({ page }) => {
-    await page.goto('/tomoshibi-register.html');
+    await page.goto('/salon/tomoshibi/register/');
     await page.fill('#fullname', 'Playwright テスト');
     await page.fill('#fullnamekana', 'ぷれいらいと てすと');
     await page.fill('#nickname', 'ぷれいてすと');
     await page.fill('#email', email);
+    await page.fill('#password', 'PlaywrightTest-12345');
+    await page.fill('#password2', 'PlaywrightTest-12345');
+    await page.check('#terms');
     await page.fill('#reason', '自動テストによる申請です。');
     await page.click('#go');
     await expect(page.locator('#okmsg')).toContainText('お申し込みありがとうございます', { timeout: 10_000 });
@@ -28,18 +31,13 @@ test.describe.serial('灯: 申請から会員ページ・ログアウトまで',
     await adminCtx.dispose();
   });
 
-  test('3. 管理者が承認すると、パスワード設定用トークンが発行される（Redis経由で直接検証）', async ({ playwright, baseURL }) => {
+  test('3. 管理者が承認できる', async ({ playwright, baseURL }) => {
     const adminCtx = await loginAsAdmin(playwright, baseURL);
     const res = await adminCtx.post('/api/admin?action=approve', { data: { community: 'tomoshibi', email } });
     expect(res.status()).toBe(200);
     await adminCtx.dispose();
-    // 実際のメール受信は自動テストの対象外（Resendはexample.com宛の送信をブロックするため）。
-    // トークン自体の検証は tests/README.md に記載の手動確認、または実メールアドレスでの
-    // 実行時に本テストを拡張してURLからtokenを抽出する想定。
+    // 承認のお知らせメールの実受信は自動テストの対象外（Resendはexample.com宛の送信をブロックするため）。
   });
 
-  test.skip('4-6. パスワード設定→ログイン→HOME表示 (要: 実メールアドレスでの手動token取得)', async () => {
-    // Resendの送信制限により自動テストではtokenを取得できないためスキップ。
-    // 実施手順は tests/README.md の「手動で行う項目」参照。
-  });
+  test.skip('4. 承認後のログイン→サロン画面 (Previewの実アカウントでの手動確認。ローカルでは salon.e2e.mjs で確認済み)', async () => {});
 });

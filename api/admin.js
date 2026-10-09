@@ -65,6 +65,7 @@ import {
 import { randomToken, hashPassword, verifyPassword, stripSecrets } from './_lib/security.js';
 import { createHakuCheckoutSession } from './_lib/stripe-checkout.js';
 import { grantPoints, adjustPoints, reversePoints, getBalance, getAdminMemberView, listRecent, PointError } from './_lib/points.js';
+import { handleSalonAdmin } from './_lib/salon-admin.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { sendPasswordSetupEmail, sendRejectionEmail, sendApprovalEmail, sendAdminSetupEmail } from './_lib/notify.js';
 
@@ -190,6 +191,11 @@ export default async function handler(req, res) {
       const session = await requireAdminHere(req, res); if (!session) return;
       const entries = await listAuditLog(200);
       return res.status(200).json({ ok: true, entries });
+    }
+    // 灯サロンの運営向け管理（管理者ログイン＋灯の運営ロールの両方をサーバー側で確認する）
+    if (typeof action === 'string' && action.startsWith('salon-')) {
+      const session = await requireAdminHere(req, res); if (!session) return;
+      return await handleSalonAdmin(action, req, res, session);
     }
     if (action === 'events-list') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -603,7 +609,8 @@ async function handleApprove(req, res, session) {
   // HAKU Community は完全紹介制＋決済必須のため、承認だけではMembershipを有効化しない。
   // Membershipが実際にactiveになるのは、承認後にStripe決済が完了しWebhookが確認してから
   // （api/haku-stripe-webhook.js 側で「承認済みApplicationのみ」を条件に有効化する）。
-  if (community === 'tomoshibi') {
+  if (community === 'tomoshibi' && process.env.SALON_REQUIRE_PAYMENT !== '1') {
+    // SALON_REQUIRE_PAYMENT=1 のときは、承認だけでは有効にしない（料金・決済が決まったあと、確認できた会員を運営が有効化する）。
     await setMembership(community, email, { status: 'active', activatedAt: Date.now(), source: 'admin' });
   }
 

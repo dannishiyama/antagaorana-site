@@ -6,25 +6,32 @@
 <meta name="robots" content="noindex,nofollow">
 <title>教育者のサロン 灯｜あんたがおらな</title>
 <meta name="description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝が毎日いる、預かる側のためのコミュニティです。">
-<link rel="canonical" href="https://antagaorana.com/tomoshibi.html">
-<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<link rel="canonical" href="https://antagaorana.com/salon/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="あんたがおらな">
+<meta property="og:title" content="教育者のサロン 灯｜あんたがおらな">
+<meta property="og:description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝が毎日いる、預かる側のためのコミュニティです。">
+<meta property="og:url" content="https://antagaorana.com/salon/">
+<meta property="og:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
 <style>
 :root{
-  --green:var(--color-green);
-  --green-dk:var(--color-green-dark);
-  --cream:var(--color-bg);
-  --paper:var(--color-surface);
-  --ink:var(--color-text);
-  --mid:var(--color-text-muted);
-  --faint:var(--color-text-faint);
+  --green:#1E3A2F;
+  --green-dk:#132620;
+  --green-lt:#3E5A4C;
+  --cream:#F6F2E9;
+  --paper:#FFFDF8;
+  --ink:#2B2926;
+  --mid:#6E685F;
+  --faint:#9A9388;
   --terra:#B4552F;
-  --gold:var(--color-gold);
-  --line:var(--color-border);
-  --line-soft:var(--color-border-soft);
-  --serif:var(--font-serif);
-  --sans:var(--font-sans);
+  --gold:#C0A05C;
+  --line:#DCD5C5;
+  --line-soft:#EAE4D6;
+  --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","HiraMinProN-W3","游明朝",serif;
+  --sans:"Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -188,16 +195,16 @@ footer a:hover{color:#fff}
 <body>
 
 <div class="top">
-  <a class="logo" href="./tomoshibi.html">教育者のサロン 灯<span>TOMOSHIBI</span></a>
+  <a class="logo" href="/salon/">教育者のサロン 灯<span>TOMOSHIBI</span></a>
   <nav class="primary-nav" aria-label="サイト内ナビゲーション">
     <a href="#room">サロンについて</a>
     <a href="#curriculum">十ヶ条</a>
-    <a href="#price">料金</a>
+    <a href="#price" id="nav-price" hidden>料金</a>
     <a href="#faq">FAQ</a>
   </nav>
   <div class="top-ctas">
-    <a class="login-link" href="./tomoshibi-login.html">ログイン</a>
-    <a href="#price" class="btn btn-solid">灯に参加する</a>
+    <a class="login-link" href="/salon/tomoshibi/login/" data-cta="header-login">ログイン</a>
+    <a href="/salon/tomoshibi/register/?cta=header" data-cta="header-join" class="btn btn-solid">灯に参加する</a>
   </div>
 </div>
 
@@ -208,8 +215,8 @@ footer a:hover{color:#fff}
     <div class="en">灯｜TOMOSHIBI</div>
     <p>理念は「子どもの人生に、味方を。」<br>子どもの居場所をつくる教育者のためのサロン「灯」。3万件の教育相談に立ち会ってきた大久保俊輝（教育学者）が毎日います。</p>
     <div class="ctas">
-      <a href="#price" class="btn btn-solid">灯に参加する</a>
-      <a href="./tomoshibi-login.html" class="btn btn-ghost">ログイン</a>
+      <a href="/salon/tomoshibi/register/?cta=hero" data-cta="hero-join" class="btn btn-solid">灯に参加する</a>
+      <a href="/salon/tomoshibi/login/" data-cta="hero-login" class="btn btn-ghost">ログイン</a>
     </div>
     <div class="hero-meta">
       <div><b>週3回</b><span>大久保からの投稿</span></div>
@@ -304,6 +311,18 @@ footer a:hover{color:#fff}
         <li>募集・月謝・続け方など運営の相談</li>
       </ul>
     </div>
+
+    <div class="room" id="en">
+      <div class="name">親のサロン<span class="kana">縁｜EN</span><small>お子さんのことで悩む保護者の方</small></div>
+      <div>
+        <div class="who">保護者のためのサロン</div>
+        <div class="desc">保護者の方のためのサロン「縁」を準備しています。公開の時期が決まりましたら、こちらでお知らせします。</div>
+      </div>
+      <ul>
+        <li>準備中です</li>
+      </ul>
+      <div class="en-cta" style="grid-column:1 / -1;padding-bottom:6px"><span class="btn" style="display:inline-block;opacity:.55;cursor:default" aria-disabled="true">縁は準備中です</span></div>
+    </div>
   </div>
 </section>
 
@@ -366,7 +385,7 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<section id="price">
+<section id="price" hidden>
   <div class="wrap">
     <div class="sec-label">PRICE</div>
     <h2 class="lead">教育者のためのサロンです。</h2>
@@ -382,7 +401,7 @@ footer a:hover{color:#fff}
           <li>十ヶ条のその月の条</li>
           <li>お知らせの受け取り</li>
         </ul>
-        <a href="./tomoshibi-register.html" class="btn" style="margin-top:22px;width:100%;text-align:center">登録する</a>
+        <a href="/salon/tomoshibi/register/?cta=price-free" data-cta="price-free" class="btn" style="margin-top:22px;width:100%;text-align:center">登録する</a>
       </div>
       <div class="plan pick">
         <div class="tag">灯｜TOMOSHIBI</div>
@@ -396,7 +415,7 @@ footer a:hover{color:#fff}
           <li>運営相談（募集・月謝・撤退判断）</li>
           <li>研修・講演の優待価格</li>
         </ul>
-        <a href="./tomoshibi-register.html" class="btn btn-solid" style="margin-top:22px;width:100%;text-align:center">灯に参加する</a>
+        <a href="/salon/tomoshibi/register/?cta=price-plan" data-cta="price-plan" class="btn btn-solid" style="margin-top:22px;width:100%;text-align:center">灯に参加する</a>
       </div>
     </div>
     <p class="note">※ 金額は叩き台です。スタッフを複数名登録できる教室単位プラン（月9,900円／3名まで等）を置くと法人契約として通しやすくなります。十ヶ条が一巡するのは10ヶ月なので、年額プラン（2ヶ月分割引）とも相性がよく、「一巡して戻ってくる」ことを継続の理由として説明できます。</p>
@@ -418,15 +437,15 @@ footer a:hover{color:#fff}
     <h2>自分のままで居ていいんだ、と思えた時、<br>可能性はもう一度動き始める。</h2>
     <p>ダメな子なんて、いない。——そう言い切れる大人を増やすことが、いちばん確実な居場所のつくり方だと考えています。</p>
     <div class="ctas" style="justify-content:center">
-      <a href="#price" class="btn btn-solid">灯に参加する</a>
-      <a href="./tomoshibi-login.html" class="btn btn-ghost">ログイン</a>
+      <a href="/salon/tomoshibi/register/?cta=closing" data-cta="closing-join" class="btn btn-solid">灯に参加する</a>
+      <a href="/salon/tomoshibi/login/" data-cta="closing-login" class="btn btn-ghost">ログイン</a>
     </div>
   </div>
 </div>
 
 <footer>
-  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>
-  <a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>
+  <a href="/privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>
+  <a href="/commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>
   <a href="mailto:info@antagaorana.com">お問い合わせ</a>
   <br>© 株式会社あんたがおらな
 </footer>
@@ -435,7 +454,7 @@ footer a:hover{color:#fff}
 (async () => {
   try {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const { animate, inView, stagger } = await import('./lp-assets/vendor/motion.js');
+    const { animate, inView, stagger } = await import('/lp-assets/vendor/motion.js');
 
     document.getElementById('hero').classList.add('is-ready');
 
@@ -461,5 +480,22 @@ footer a:hover{color:#fff}
 })();
 </script>
 
+<script>
+// CTAのクリックを計測できるようにする（Google Analytics想定。計測IDが設定されるまでは、イベントを dataLayer に積むだけ）。
+document.addEventListener('click', function (e) {
+  var el = e.target.closest && e.target.closest('[data-cta]');
+  if (!el) return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'cta_click', cta: el.getAttribute('data-cta') });
+  if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { cta: el.getAttribute('data-cta') });
+});
+// 料金セクションの表示／非表示は /salon/lp-config.json の showPrice で切り替える（料金が確定するまでは非表示）。
+fetch('/salon/lp-config.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (c) {
+  if (c && c.showPrice === true) {
+    var p = document.getElementById('price'); if (p) p.hidden = false;
+    var n = document.getElementById('nav-price'); if (n) n.hidden = false;
+  }
+}).catch(function () {});
+</script>
 </body>
 </html>

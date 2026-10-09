@@ -163,6 +163,7 @@ h1{font-size:18px;margin-bottom:4px}
       <button data-mode="posts">みんなのことば</button>
       <button data-mode="sessions">セッション（Preview fixture）</button>
       <button data-mode="tane">HAKUポイント</button>
+      <button data-mode="salon">灯 サロン運営</button>
       <button data-mode="audit">操作履歴</button>
     </div>
 
@@ -433,6 +434,21 @@ h1{font-size:18px;margin-bottom:4px}
         <div class="mscount" id="pointsCount" role="status" aria-live="polite"></div>
       </div>
       <div id="pointsRecentList"><div class="empty">読み込み中…</div></div>
+    </div>
+
+    <div id="salonPanel" style="display:none">
+      <p class="note">教育者のサロン「灯」の運営画面です（Preview限定）。HAKU Communityとは別のデータとして管理しています。</p>
+      <div class="statusfilter" id="salonSub">
+        <button class="on" data-sub="roles">運営ロール</button>
+        <button data-sub="creed">今月の一条</button>
+        <button data-sub="posts">投稿・コメント</button>
+        <button data-sub="lectures">講義アーカイブ</button>
+        <button data-sub="events">お知らせ・イベント</button>
+        <button data-sub="members">会員</button>
+        <button data-sub="audit">操作履歴</button>
+      </div>
+      <div class="err" id="salonMsg" role="status" aria-live="polite"></div>
+      <div id="salonBody"></div>
     </div>
 
     <div id="auditPanel" style="display:none">
@@ -1020,7 +1036,7 @@ function escapeHtml(s) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // モード切替（会員申請 / HAKUイベント管理 / みんなのことば）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'audit'];
+var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'salon', 'audit'];
 document.querySelectorAll('.modetabs button').forEach(function(btn){
   btn.addEventListener('click', function(){
     document.querySelectorAll('.modetabs button').forEach(function(b){ b.classList.remove('on'); });
@@ -1034,6 +1050,7 @@ document.querySelectorAll('.modetabs button').forEach(function(btn){
     if (mode === 'notes') loadNotes();
     if (mode === 'posts') loadPosts();
     if (mode === 'audit') loadAuditLog();
+    if (mode === 'salon' && window.SalonAdmin) window.SalonAdmin.open();
     if (mode === 'tane') loadPointsRecent();
     if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
   });
@@ -1640,5 +1657,6 @@ api('/api/admin?action=whoami', { method: 'GET' }).then(function(res){
   loadList();
 });
 </script>
+<script src="/haku-community/admin/salon-admin.js"></script>
 </body>
 </html>

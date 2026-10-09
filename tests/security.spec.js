@@ -27,8 +27,11 @@ test.describe('共通セキュリティ', () => {
     // 旧URLからも同様（ログインページへ。リダイレクトのループにならない）
     await page.goto('/haku-community-home.html');
     await expect(page).toHaveURL(/\/haku-community\/login\//);
+    await page.goto('/salon/tomoshibi/');
+    await expect(page).toHaveURL(/\/salon\/tomoshibi\/login\//);
+    // 旧URL（/tomoshibi*）は新しい /salon/ 配下へ移る
     await page.goto('/tomoshibi-post.html');
-    await expect(page).toHaveURL(/tomoshibi-login/);
+    await expect(page).toHaveURL(/\/salon\/tomoshibi\/login\//);
   });
 
   test('保護ページの実テンプレートは静的ファイルとして直接取得できない', async ({ request }) => {

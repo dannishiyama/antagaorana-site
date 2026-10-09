@@ -40,7 +40,7 @@ export async function sendPasswordSetupEmail({ community, email, displayName, to
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
   // HAKU Communityの案内メールは /haku-community/ 配下のURLを使う（灯は従来のURL）。
-  const setupPath = community === 'haku' ? '/haku-community/set-password/' : '/community-set-password.html';
+  const setupPath = community === 'haku' ? '/haku-community/set-password/' : '/salon/tomoshibi/set-password/';
   const setupUrl = `${baseUrl}${setupPath}?token=${encodeURIComponent(token)}&community=${encodeURIComponent(community)}`;
   const name = displayName || 'ご参加者';
   const isReset = purpose === 'reset';
@@ -146,7 +146,7 @@ export async function sendApprovalEmail({ community, email, displayName, baseUrl
   const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
   const label = COMMUNITY_LABEL[community] || community;
   const name = displayName || 'ご参加者';
-  const finalCtaUrl = ctaUrl || `${baseUrl}${community === 'haku' ? '/haku-community/login/' : '/tomoshibi-login.html'}`;
+  const finalCtaUrl = ctaUrl || `${baseUrl}${community === 'haku' ? '/haku-community/login/' : '/salon/tomoshibi/login/'}`;
   const finalCtaLabel = ctaLabel || 'ログインする';
   const isPaymentCta = finalCtaLabel !== 'ログインする';
   const lead = isPaymentCta
@@ -528,4 +528,29 @@ ${maskedNew} へ変更されました。
       text,
     }),
   });
+}
+
+// ── 灯サロンの通知（メール）。本文には投稿の内容を入れない（リンクだけ）。失敗しても例外を投げない ──
+const SALON_PREVIEW_NOTE = () => (process.env.VERCEL_ENV === 'production' ? '' : '※これはテスト環境（Preview）からの送信です。');
+async function sendSalonMail({ emailType, email, subject, lines, url, urlLabel }) {
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const fromEmail = process.env.FROM_EMAIL || 'info@antagaorana.com';
+    const note = SALON_PREVIEW_NOTE();
+    const text = [...lines, '', `${urlLabel}：${url}`, '', 'このメールの通知は、サロンの「設定」からいつでも止められます。', note].filter((l, i, a) => l !== '' || a[i - 1] !== '').join('\n');
+    const html = `<!DOCTYPE html><html lang="ja"><body style="margin:0;background:#F6F2E9;font-family:'Yu Gothic',sans-serif"><div style="max-width:520px;margin:0 auto;background:#FFFDF8;border:1px solid #DCD5C5"><div style="background:#1E3A2F;color:#fff;padding:18px 24px;font-size:14px;letter-spacing:.1em">教育者のサロン 灯</div><div style="padding:26px 24px;color:#2B2926;font-size:14px;line-height:1.9">${lines.map((l) => `<p style="margin:0 0 12px">${escapeHtml(l)}</p>`).join('')}<p style="margin:22px 0"><a href="${escapeHtml(url)}" style="display:inline-block;background:#B4552F;color:#fff;text-decoration:none;padding:12px 24px;font-size:13px">${escapeHtml(urlLabel)}</a></p><p style="margin:0;color:#9A9388;font-size:12px">このメールの通知は、サロンの「設定」からいつでも止められます。${note ? '<br>' + escapeHtml(note) : ''}</p></div></div></body></html>`;
+    return await sendAndLog({
+      emailType, recipient: email, relatedEntityId: email,
+      send: () => resend.emails.send({ from: `教育者のサロン 灯 <${fromEmail}>`, to: [email], replyTo: fromEmail, subject, html, text }),
+    });
+  } catch (err) {
+    console.error(`[notify] ${emailType} setup failed:`, err.message);
+    return { ok: false, error: err.message };
+  }
+}
+export function sendSalonReplyEmail({ email, url }) {
+  return sendSalonMail({ emailType: 'salon_reply', email, subject: '【灯】あなたの投稿に、運営から返信がつきました', lines: ['あなたの投稿に、運営から返信がつきました。'], url, urlLabel: 'サロンで読む' });
+}
+export function sendSalonReminderEmail({ email, eventTitle, whenLabel, url }) {
+  return sendSalonMail({ emailType: 'salon_reminder', email, subject: `【灯】明日は「${eventTitle}」です`, lines: [`明日、「${eventTitle}」があります。`, whenLabel], url, urlLabel: 'サロンで確認する' });
 }

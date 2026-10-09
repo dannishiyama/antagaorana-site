@@ -100,6 +100,10 @@ export async function createApplication(community, fields) {
     termsVersion: fields.termsVersion || null,
     termsAcceptedAt: fields.termsAcceptedAt || null,
   };
+  // 灯の申請だけが持つ項目（都道府県・場の種類の表示ラベル・どのCTAから来たか）。HAKUの申請には付けない。
+  if (fields.prefecture) record.prefecture = fields.prefecture;
+  if (fields.facilityLabel) record.facilityLabel = fields.facilityLabel;
+  if (fields.source) record.source = fields.source;
   await writeJSON(`${PREFIX}application:${community}:${email}`, record);
   const pipeline = getRedis().pipeline();
   pipeline.sadd(`${PREFIX}applications:${community}:pending`, email);
@@ -306,9 +310,10 @@ export async function consumeAdminSetupToken(token) {
 }
 
 // ── セッション（会員） ───────────────────────────────────────────────
-export async function createSession(email) {
+// ttlSeconds を省略すると従来どおり7日。「ログインしたままにする」をOFFにしたときだけ、短い期間で呼ぶ。
+export async function createSession(email, ttlSeconds = SESSION_TTL_SECONDS) {
   const sessionId = randomToken(32);
-  await writeJSON(`${PREFIX}session:${sessionId}`, { email: normalizeEmail(email) }, SESSION_TTL_SECONDS);
+  await writeJSON(`${PREFIX}session:${sessionId}`, { email: normalizeEmail(email) }, ttlSeconds);
   await getRedis().sadd(`${PREFIX}user_sessions:${normalizeEmail(email)}`, sessionId);
   await getRedis().expire(`${PREFIX}user_sessions:${normalizeEmail(email)}`, SESSION_TTL_SECONDS);
   return sessionId;

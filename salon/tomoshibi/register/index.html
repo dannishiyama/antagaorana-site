@@ -6,25 +6,27 @@
 <meta name="robots" content="noindex,nofollow">
 <title>新規登録｜教育者のサロン 灯｜あんたがおらな</title>
 <meta name="description" content="教育者のサロン「灯（TOMOSHIBI）」への新規登録ページです。">
-<link rel="canonical" href="https://antagaorana.com/tomoshibi-register.html">
-<link rel="icon" type="image/png" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="apple-touch-icon" href="./lp-assets/logo-hero.png?v=20260501a">
-<link rel="stylesheet" href="./lp-assets/community-tokens.css">
+<link rel="canonical" href="https://antagaorana.com/salon/tomoshibi/register/">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
 <style>
 :root{color-scheme:light;box-sizing:border-box}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:var(--color-green);
-  --green-dk:var(--color-green-dark);
-  --cream:var(--color-bg);
-  --paper:var(--color-surface);
-  --ink:var(--color-text);
-  --mid:var(--color-text-muted);
+  --green:#1E3A2F;
+  --green-dk:#132620;
+  --green-lt:#3E5A4C;
+  --cream:#F6F2E9;
+  --paper:#FFFDF8;
+  --ink:#2B2926;
+  --mid:#6E685F;
+  --faint:#9A9388;
   --terra:#B4552F;
-  --gold:var(--color-gold);
-  --line:var(--color-border);
-  --serif:var(--font-serif);
-  --sans:var(--font-sans);
+  --gold:#C0A05C;
+  --line:#DCD5C5;
+  --line-soft:#EAE4D6;
+  --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","HiraMinProN-W3","游明朝",serif;
+  --sans:"Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
 }
 body{min-height:100vh;background:var(--green-dk);color:#fff;font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
 a{color:inherit}
@@ -50,6 +52,9 @@ input{font-family:inherit;font-size:14px}
 .field input::placeholder{color:rgba(255,255,255,.3)}
 .field input:hover{border-color:rgba(255,255,255,.45)}
 .field input:focus-visible{border-color:var(--gold);background:rgba(255,255,255,.1);outline:2px solid var(--gold);outline-offset:1px}
+.field select{width:100%;min-height:44px;padding:12px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);color:#fff;outline:none;font-family:inherit;font-size:14px}
+.field select option{color:#2B2926;background:#FFFDF8}
+.field select:focus-visible{border-color:var(--gold);outline:2px solid var(--gold);outline-offset:1px}
 .hint{font-size:11.5px;color:rgba(255,255,255,.45);margin-top:6px;text-align:left}
 .toggle-pw{background:none;border:0;color:rgba(255,255,255,.55);font-size:11.5px;letter-spacing:.04em;cursor:pointer;text-decoration:underline;padding:0;min-height:24px;font-family:var(--sans)}
 .toggle-pw:hover{color:#fff}
@@ -86,7 +91,7 @@ footer a:hover{color:rgba(255,255,255,.8)}
 <body>
 
 <div class="top">
-  <a href="./tomoshibi.html">← 灯 紹介ページへ</a>
+  <a href="/salon/">← 灯 紹介ページへ</a>
 </div>
 
 <div class="stage">
@@ -110,6 +115,16 @@ footer a:hover{color:rgba(255,255,255,.8)}
         <label for="nickname">表示名</label>
         <input id="nickname" name="nickname" type="text" autocomplete="nickname" placeholder="例：さとう先生" maxlength="30">
         <div class="hint">サイト内で表示される名前です</div>
+      </div>
+      <div class="field">
+        <label for="prefecture">お住まいの都道府県（任意）</label>
+        <select id="prefecture" name="prefecture"><option value="">選択しない</option></select>
+        <div class="hint">メンバー一覧に表示されます。あとから「設定」で変更・非公開にできます</div>
+      </div>
+      <div class="field">
+        <label for="facility">運営されている場の種類（任意）</label>
+        <input id="facility" name="facility" type="text" autocomplete="off" placeholder="例：学習塾・フリースクール併設" maxlength="30">
+        <div class="hint">教室名・学校名ではなく、場の種類だけをご入力ください</div>
       </div>
       <div class="field">
         <label for="email">メールアドレス</label>
@@ -137,7 +152,7 @@ footer a:hover{color:rgba(255,255,255,.8)}
       </div>
       <label class="agree">
         <input type="checkbox" id="terms">
-        <span><a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、内容に同意します。</span>
+        <span><a href="/privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>と<a href="/commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>を確認し、内容に同意します。</span>
       </label>
       <button class="go" type="submit" id="go">申し込む</button>
       <p class="err" id="err" role="alert" aria-live="polite"></p>
@@ -146,28 +161,23 @@ footer a:hover{color:rgba(255,255,255,.8)}
 
     <div class="already">
       すでにアカウントをお持ちの方は<br>
-      <a href="./tomoshibi-login.html">こちらからログイン →</a>
+      <a href="/salon/tomoshibi/login/">こちらからログイン →</a>
     </div>
 
-    <p class="mock-note" id="test-env-notice" style="display:none">※ これはPreview確認用の申し込みフォームです（テスト環境）。ご入力いただいたパスワードはサーバー側でハッシュ化して保存され、平文では保存されません。審査後、承認されるとご登録のメールアドレス・パスワードでログインできるようになります。</p>
-    <script>
-      (function () {
-        var PRODUCTION_HOSTS = ['www.antagaorana.com', 'antagaorana.com'];
-        var el = document.getElementById('test-env-notice');
-        if (el && PRODUCTION_HOSTS.indexOf(location.hostname) === -1) el.style.display = '';
-      })();
-    </script>
+    
   </div>
 </div>
 
 <footer>
-  <a href="./privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="./commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  <a href="/privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>・<a href="/commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
   © 株式会社あんたがおらな
 </footer>
 
 <script>
 // サーバー側API（api/community-auth.js?action=register）に登録する。この時点でパスワードが
 // 実際の認証パスワードとして保存される。承認後はこのメールアドレス・パスワードでログインできる。
+var PREFS = '北海道,青森県,岩手県,宮城県,秋田県,山形県,福島県,茨城県,栃木県,群馬県,埼玉県,千葉県,東京都,神奈川県,新潟県,富山県,石川県,福井県,山梨県,長野県,岐阜県,静岡県,愛知県,三重県,滋賀県,京都府,大阪府,兵庫県,奈良県,和歌山県,鳥取県,島根県,岡山県,広島県,山口県,徳島県,香川県,愛媛県,高知県,福岡県,佐賀県,長崎県,熊本県,大分県,宮崎県,鹿児島県,沖縄県'.split(',');
+(function(){ var sel = document.getElementById('prefecture'); PREFS.forEach(function(p){ var o = document.createElement('option'); o.value = p; o.textContent = p; sel.appendChild(o); }); })();
 var KANA_RE = /^[぀-ゟ゠-ヿー\s　]+$/;
 (function(){
   var form = document.getElementById('f');
@@ -222,6 +232,8 @@ var KANA_RE = /^[぀-ゟ゠-ヿー\s　]+$/;
       body: JSON.stringify({
         community: 'tomoshibi', fullName: fullname, fullNameKana: kana, displayName: nickname,
         email: email, password: pw, password2: pw2, reason: reason, termsAccepted: terms,
+        prefecture: document.getElementById('prefecture').value, facilityLabel: (document.getElementById('facility').value || '').trim(),
+        source: new URLSearchParams(location.search).get('cta') || '',
       }),
     }).then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); })
       .then(function(res){
@@ -239,7 +251,7 @@ var KANA_RE = /^[぀-ゟ゠-ヿー\s　]+$/;
 (async () => {
   try {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const { animate } = await import('./lp-assets/vendor/motion.js');
+    const { animate } = await import('/lp-assets/vendor/motion.js');
     document.getElementById('card').classList.add('is-ready');
     const err = document.getElementById('err');
     new MutationObserver(() => {

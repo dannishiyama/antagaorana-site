@@ -18,8 +18,8 @@
     "api/haku-home.js": {
       "includeFiles": "api/_templates/haku-community-home.html"
     },
-    "api/tomoshibi-post-page.js": {
-      "includeFiles": "api/_templates/tomoshibi-post.html"
+    "api/salon.js": {
+      "includeFiles": "api/_templates/salon-tomoshibi.html"
     }
   },
   "rewrites": [
@@ -36,12 +36,8 @@
       "destination": "/forgot-password"
     },
     {
-      "source": "/tomoshibi-post.html",
-      "destination": "/api/tomoshibi-post-page"
-    },
-    {
-      "source": "/tomoshibi-post",
-      "destination": "/api/tomoshibi-post-page"
+      "source": "/salon/tomoshibi/",
+      "destination": "/api/salon?action=page"
     }
   ],
   "headers": [
@@ -85,6 +81,15 @@
         {
           "key": "Cache-Control",
           "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/salon/tomoshibi/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
         }
       ]
     }
@@ -213,6 +218,76 @@
     {
       "source": "/haku-community/admin/set-password",
       "destination": "/haku-community/admin/set-password/",
+      "permanent": true
+    },
+    {
+      "source": "/salon",
+      "destination": "/salon/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi",
+      "destination": "/salon/tomoshibi/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi/login",
+      "destination": "/salon/tomoshibi/login/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi/register",
+      "destination": "/salon/tomoshibi/register/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi/password-reset",
+      "destination": "/salon/tomoshibi/password-reset/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi/set-password",
+      "destination": "/salon/tomoshibi/set-password/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi",
+      "destination": "/salon/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi.html",
+      "destination": "/salon/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi-login",
+      "destination": "/salon/tomoshibi/login/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi-login.html",
+      "destination": "/salon/tomoshibi/login/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi-register",
+      "destination": "/salon/tomoshibi/register/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi-register.html",
+      "destination": "/salon/tomoshibi/register/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi-post",
+      "destination": "/salon/tomoshibi/",
+      "permanent": true
+    },
+    {
+      "source": "/tomoshibi-post.html",
+      "destination": "/salon/tomoshibi/",
       "permanent": true
     }
   ]

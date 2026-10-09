@@ -7,9 +7,10 @@ import { test, expect } from '@playwright/test';
 const PAGES = [
   '/haku-community/',
   '/haku-community/login/',
-  '/tomoshibi-login.html',
+  '/salon/tomoshibi/login/',
   '/haku-community/register/',
-  '/tomoshibi-register.html',
+  '/salon/tomoshibi/register/',
+  '/salon/',
   '/forgot-password.html',
   '/community-set-password.html?token=dummy&community=haku',
   '/haku-community/admin/',

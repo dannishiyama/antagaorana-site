@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ログイン｜教育者のサロン 灯｜あんたがおらな</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<style>
+:root{
+  --green:#1E3A2F;
+  --green-dk:#132620;
+  --cream:#F6F2E9;
+  --paper:#FFFDF8;
+  --ink:#2B2926;
+  --mid:#6E685F;
+  --faint:#9A9388;
+  --terra:#B4552F;
+  --gold:#C0A05C;
+  --line:#DCD5C5;
+  --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","HiraMinProN-W3","游明朝",serif;
+  --sans:"Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--green);color:#fff;font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit}
+input{font-family:inherit;font-size:14px}
+
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:64px 24px}
+.box{width:100%;max-width:392px}
+.mark{text-align:center;margin-bottom:48px}
+.mark .co{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.5);margin-bottom:14px}
+.mark .name{font-family:var(--serif);font-size:30px;letter-spacing:.14em;line-height:1.5}
+.mark .en{font-family:var(--serif);font-size:11.5px;letter-spacing:.3em;color:var(--gold);margin-top:8px}
+.mark .sub{font-size:12.5px;color:rgba(255,255,255,.55);margin-top:16px}
+
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.62);margin-bottom:8px}
+.field input[type=text],.field input[type=email],.field input[type=password]{width:100%;padding:12px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);color:#fff;outline:none}
+.field input::placeholder{color:rgba(255,255,255,.3)}
+.field input:focus{border-color:var(--gold);background:rgba(255,255,255,.1)}
+.row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:rgba(255,255,255,.6);margin-bottom:22px}
+.row label{display:flex;align-items:center;gap:7px;cursor:pointer}
+.row a{color:rgba(255,255,255,.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);padding-bottom:1px}
+.go{width:100%;padding:14px;background:var(--terra);border:1px solid var(--terra);color:#fff;font-size:14px;letter-spacing:.14em;cursor:pointer;font-family:var(--sans)}
+.go:hover{background:#9E4726;border-color:#9E4726}
+.go[disabled]{opacity:.65;cursor:progress}
+.err{font-size:12.5px;color:#EDB9A6;margin-top:14px;min-height:20px}
+.err a{color:#fff;border-bottom:1px solid rgba(255,255,255,.4);text-decoration:none}
+
+.alt{margin-top:40px;padding-top:26px;border-top:1px solid rgba(255,255,255,.2);font-size:13px;color:rgba(255,255,255,.62);text-align:center;line-height:2}
+.alt a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px}
+.alt .other{margin-top:16px;font-size:12px;color:rgba(255,255,255,.45)}
+
+footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4);line-height:2.2}
+footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
+
+@media(max-width:600px){ .page{padding:40px 22px} .mark{margin-bottom:36px} .mark .name{font-size:25px} }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="box">
+    <div class="mark">
+      <div class="co">株式会社あんたがおらな</div>
+      <div class="name">教育者のサロン 灯</div>
+      <div class="en">TOMOSHIBI</div>
+      <div class="sub">会員の方はログインしてください</div>
+    </div>
+
+    <form id="f" novalidate>
+      <div class="field">
+        <label for="uid">メールアドレス</label>
+        <input id="uid" name="email" type="email" autocomplete="username" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="pw">パスワード</label>
+        <input id="pw" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <div class="row">
+        <label><input type="checkbox" id="keep" checked> ログインしたままにする</label>
+        <a href="/salon/tomoshibi/password-reset/">パスワードをお忘れの方</a>
+      </div>
+      <button class="go" type="submit" id="go">ログイン</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+
+    <div class="alt">
+      はじめての方は <a href="/salon/tomoshibi/register/">新規のご登録</a><br>
+      <a href="/salon/">サロンの紹介ページを見る</a>
+      <div class="other">保護者の方は「親のサロン 縁」へ（準備中）</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/privacy-policy.html">プライバシーポリシー</a>・<a href="/commercial-transactions.html">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  © 株式会社あんたがおらな
+</footer>
+
+<script>
+// 実際の認証APIに送る（入力チェックだけでは通らない）。会員資格・所属サロンはサーバー側で確認される。
+(function(){
+  var form = document.getElementById('f');
+  var err = document.getElementById('err');
+  var go = document.getElementById('go');
+  var LABEL = go.textContent;
+  var params = new URLSearchParams(location.search);
+
+  // 認証後に戻るURL。サロン内（/salon/ で始まる同じサイトの道）だけを許す（外部サイトへ飛ばされないため）
+  function safeNext(v){
+    if (typeof v !== 'string') return null;
+    if (v.indexOf('/salon/') !== 0 || v.indexOf('//') !== -1 || v.indexOf(String.fromCharCode(92)) !== -1) return null;
+    return v;
+  }
+  function show(msg, link){
+    err.textContent = msg;
+    if (link) { err.appendChild(document.createTextNode(' ')); var a = document.createElement('a'); a.href = link.href; a.textContent = link.text; err.appendChild(a); }
+  }
+  function reset(){ go.disabled = false; go.textContent = LABEL; }
+  window.addEventListener('pageshow', reset);
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('uid').value.trim();
+    var pw = document.getElementById('pw').value;
+    if(!id || !pw){ show('メールアドレスとパスワードをご入力ください。'); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id)){ show('メールアドレスの形式をご確認ください。'); return; }
+    err.textContent = '';
+    go.disabled = true; go.textContent = '確認しています…';
+    fetch('/api/community-auth?action=login', {
+      method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ community: 'tomoshibi', email: id, password: pw, keep: document.getElementById('keep').checked })
+    }).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { status: r.status, data: d }; }); })
+      .then(function(res){
+        if (res.status === 200 && res.data.ok) { location.href = safeNext(params.get('next')) || res.data.redirect || '/salon/tomoshibi/'; return; }
+        if (res.data && res.data.code === 'reregister') show(res.data.error, { href: '/salon/tomoshibi/register/', text: '再登録のご案内を見る' });
+        else show((res.data && res.data.error) || 'メールアドレスまたはパスワードが違います。');
+        reset();
+      })
+      .catch(function(){ show('通信に失敗しました。時間をおいて、もう一度お試しください。'); reset(); });
+  });
+})();
+</script>
+</body>
+</html>

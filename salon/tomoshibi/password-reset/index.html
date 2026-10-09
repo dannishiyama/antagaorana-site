@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>パスワードの再設定｜教育者のサロン 灯｜あんたがおらな</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
+<style>
+:root{
+  --green:#1E3A2F;
+  --green-dk:#132620;
+  --cream:#F6F2E9;
+  --paper:#FFFDF8;
+  --ink:#2B2926;
+  --mid:#6E685F;
+  --faint:#9A9388;
+  --terra:#B4552F;
+  --gold:#C0A05C;
+  --line:#DCD5C5;
+  --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","HiraMinProN-W3","游明朝",serif;
+  --sans:"Yu Gothic","YuGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--green);color:#fff;font-family:var(--sans);font-size:15px;line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:inherit}
+input{font-family:inherit;font-size:14px}
+
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:64px 24px}
+.box{width:100%;max-width:392px}
+.mark{text-align:center;margin-bottom:48px}
+.mark .co{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.5);margin-bottom:14px}
+.mark .name{font-family:var(--serif);font-size:30px;letter-spacing:.14em;line-height:1.5}
+.mark .en{font-family:var(--serif);font-size:11.5px;letter-spacing:.3em;color:var(--gold);margin-top:8px}
+.mark .sub{font-size:12.5px;color:rgba(255,255,255,.55);margin-top:16px}
+
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.62);margin-bottom:8px}
+.field input[type=email]{width:100%;padding:12px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.3);color:#fff;outline:none}
+.field input::placeholder{color:rgba(255,255,255,.3)}
+.field input:focus{border-color:var(--gold);background:rgba(255,255,255,.1)}
+.go{width:100%;padding:14px;background:var(--terra);border:1px solid var(--terra);color:#fff;font-size:14px;letter-spacing:.14em;cursor:pointer;font-family:var(--sans)}
+.go:hover{background:#9E4726;border-color:#9E4726}
+.go[disabled]{opacity:.65;cursor:progress}
+.err{font-size:12.5px;color:#EDB9A6;margin-top:14px;min-height:20px}
+.ok{font-size:13px;color:rgba(255,255,255,.8);margin-top:14px;line-height:2}
+
+.alt{margin-top:40px;padding-top:26px;border-top:1px solid rgba(255,255,255,.2);font-size:13px;color:rgba(255,255,255,.62);text-align:center;line-height:2}
+.alt a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px}
+
+footer{padding:26px 24px 34px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4);line-height:2.2}
+footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
+
+@media(max-width:600px){ .page{padding:40px 22px} .mark{margin-bottom:36px} .mark .name{font-size:25px} }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="box">
+    <div class="mark">
+      <div class="co">株式会社あんたがおらな</div>
+      <div class="name">教育者のサロン 灯</div>
+      <div class="en">TOMOSHIBI</div>
+      <div class="sub">パスワードの再設定</div>
+    </div>
+
+    <form id="f" novalidate>
+      <div class="field">
+        <label for="uid">ご登録のメールアドレス</label>
+        <input id="uid" name="email" type="email" autocomplete="username" placeholder="you@example.com">
+      </div>
+      <button class="go" type="submit" id="go">再設定のメールを送る</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+    <p class="ok" id="ok" role="status" hidden></p>
+
+    <div class="alt">
+      <a href="/salon/tomoshibi/login/">ログインへ戻る</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/privacy-policy.html">プライバシーポリシー</a>・<a href="/commercial-transactions.html">特定商取引法に基づく表記</a>・<a href="mailto:info@antagaorana.com">お問い合わせ</a><br>
+  © 株式会社あんたがおらな
+</footer>
+
+<script>
+// メールで再設定用のリンクを送る。登録の有無はお知らせしない（常に同じ文面を返す）。
+(function(){
+  var form = document.getElementById('f'), err = document.getElementById('err'), ok = document.getElementById('ok'), go = document.getElementById('go');
+  var LABEL = go.textContent;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('uid').value.trim();
+    if(!id){ err.textContent = 'メールアドレスをご入力ください。'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id)){ err.textContent = 'メールアドレスの形式をご確認ください。'; return; }
+    err.textContent = '';
+    go.disabled = true; go.textContent = '送信しています…';
+    fetch('/api/community-auth?action=request-password-reset', {
+      method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ community: 'tomoshibi', email: id })
+    }).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { status: r.status, data: d }; }); })
+      .then(function(res){
+        go.disabled = false; go.textContent = LABEL;
+        if (res.status === 429) { err.textContent = 'しばらく時間をおいてから、もう一度お試しください。'; return; }
+        form.hidden = true; ok.hidden = false;
+        ok.textContent = (res.data && res.data.message) || 'ご入力のメールアドレスが登録されている場合、パスワード再設定用のメールをお送りしました。';
+      })
+      .catch(function(){ go.disabled = false; go.textContent = LABEL; err.textContent = '通信に失敗しました。時間をおいて、もう一度お試しください。'; });
+  });
+})();
+</script>
+</body>
+</html>
