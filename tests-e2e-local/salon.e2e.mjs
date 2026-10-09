@@ -79,10 +79,18 @@ console.log('■ 1. 紹介ページ /salon/');
   const html = await page.content();
   check('noindex・OGP・canonical', /name="robots" content="noindex/.test(html) && /property="og:title"/.test(html) && /rel="canonical" href="https:\/\/antagaorana.com\/salon\/"/.test(html), null);
   eq('ヒーローの見出し（Word指定の文言）', (await page.locator('.hero h1').innerText()).replace(/\s+/g, ''), '居場所は、つくれた。そのあとが、わからない。');
-  eq('セクション：ヘッダー・ヒーロー・WHY・CURRICULUM・TOMOSHIBI(TWO SALONS)・FAQ・フッター', await page.evaluate(() => [!!document.querySelector('.top'), !!document.querySelector('#hero'), [...document.querySelectorAll('.sec-label')].map((e) => e.textContent.trim())].flat().join(',')), 'true,true,WHY,CURRICULUM,ATTITUDE,TOMOSHIBI,CONTENTS,POSITION,A MONTH HERE,PRICE,FAQ');
+  eq('セクション：ヘッダー・ヒーロー・WHY・CURRICULUM・TOMOSHIBI(TWO SALONS)・FAQ・フッター（PRICEは既定で含まれない）', await page.evaluate(() => [!!document.querySelector('.top'), !!document.querySelector('#hero'), [...document.querySelectorAll('.sec-label')].map((e) => e.textContent.trim())].flat().join(',')), 'true,true,WHY,CURRICULUM,ATTITUDE,TOMOSHIBI,CONTENTS,POSITION,A MONTH HERE,FAQ');
   eq('心得十ヶ条が10項目並ぶ（Wordの正式な文言）', await page.locator('#curriculum').innerText().then((t) => ['時に「ひと呼吸」して待つ', '「責任は我にあり」と受け止める', 'なすべきことはなす誠実さと丁寧さ'].every((s) => t.includes(s))), true);
   check('縁は「準備中」で、リンクではない', (await page.locator('#en').innerText()).includes('準備') && (await page.locator('#en a').count()) === 0, null);
   check('料金（PRICE）は既定で非表示。ナビの「料金」も出ない', !(await page.locator('#price').isVisible()) && !(await page.locator('#nav-price').isVisible()), null);
+  check('料金：既定ではHTMLのソースに金額（円）も叩き台の文言も含まれない', !/円|叩き台|3,300/.test(await res.text()), null);
+  {
+    const P = await newCtx({ name: 'lp-price' });
+    await P.ctx.route('**/salon/lp-config.json', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"showPrice":true}' }));
+    await P.page.goto(base + '/salon/'); await P.page.waitForSelector('#price:not([hidden])');
+    check('料金：showPrice を true にすると、料金欄とナビの「料金」が出る', (await P.page.locator('#price').isVisible()) && (await P.page.locator('#nav-price').isVisible()), null);
+    await P.ctx.close();
+  }
   const hrefs = await page.evaluate(() => [...document.querySelectorAll('[data-cta]')].map((a) => a.getAttribute('data-cta') + '→' + a.getAttribute('href')));
   check('CTA：参加は登録へ（どのCTAか分かる ?cta=）、ログインはログインへ。data-ctaで計測できる', hrefs.includes('hero-join→/salon/tomoshibi/register/?cta=hero') && hrefs.includes('closing-join→/salon/tomoshibi/register/?cta=closing') && hrefs.includes('header-login→/salon/tomoshibi/login/'), hrefs);
   await page.evaluate(() => { document.querySelector('[data-cta="hero-join"]').addEventListener('click', (e) => e.preventDefault()); });

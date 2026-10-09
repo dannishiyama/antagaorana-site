@@ -385,42 +385,7 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
-<section id="price" hidden>
-  <div class="wrap">
-    <div class="sec-label">PRICE</div>
-    <h2 class="lead">教育者のためのサロンです。</h2>
-    <p class="lede" style="margin-bottom:40px">合わないと感じたらいつでも退会できます。引き止めることはしません。</p>
-    <div class="plans">
-      <div class="plan">
-        <div class="tag">FREE</div>
-        <h3>お試し</h3>
-        <div class="for">どなたでも</div>
-        <div class="price">0<span>円／月</span></div>
-        <ul>
-          <li>大久保の投稿 月1本</li>
-          <li>十ヶ条のその月の条</li>
-          <li>お知らせの受け取り</li>
-        </ul>
-        <a href="/salon/tomoshibi/register/?cta=price-free" data-cta="price-free" class="btn" style="margin-top:22px;width:100%;text-align:center">登録する</a>
-      </div>
-      <div class="plan pick">
-        <div class="tag">灯｜TOMOSHIBI</div>
-        <h3>教育者のサロン</h3>
-        <div class="for">教室・スクール運営者／先生</div>
-        <div class="price">3,300<span>円／月（税込）</span></div>
-        <ul>
-          <li>大久保の投稿すべて（週3回）</li>
-          <li>ケース検討スレッドの利用</li>
-          <li>月1の実践講義＋アーカイブ</li>
-          <li>運営相談（募集・月謝・撤退判断）</li>
-          <li>研修・講演の優待価格</li>
-        </ul>
-        <a href="/salon/tomoshibi/register/?cta=price-plan" data-cta="price-plan" class="btn btn-solid" style="margin-top:22px;width:100%;text-align:center">灯に参加する</a>
-      </div>
-    </div>
-    <p class="note">※ 金額は叩き台です。スタッフを複数名登録できる教室単位プラン（月9,900円／3名まで等）を置くと法人契約として通しやすくなります。十ヶ条が一巡するのは10ヶ月なので、年額プラン（2ヶ月分割引）とも相性がよく、「一巡して戻ってくる」ことを継続の理由として説明できます。</p>
-  </div>
-</section>
+<section id="price" hidden></section>
 
 <section class="faq" id="faq">
   <div class="narrow">
@@ -489,11 +454,14 @@ document.addEventListener('click', function (e) {
   window.dataLayer.push({ event: 'cta_click', cta: el.getAttribute('data-cta') });
   if (typeof window.gtag === 'function') window.gtag('event', 'cta_click', { cta: el.getAttribute('data-cta') });
 });
-// 料金セクションの表示／非表示は /salon/lp-config.json の showPrice で切り替える（料金が確定するまでは非表示）。
+// 料金セクションの表示／非表示は /salon/lp-config.json の showPrice で切り替える（料金が確定するまでは非表示。中身も読み込まない）。
 fetch('/salon/lp-config.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (c) {
   if (c && c.showPrice === true) {
-    var p = document.getElementById('price'); if (p) p.hidden = false;
-    var n = document.getElementById('nav-price'); if (n) n.hidden = false;
+    fetch('/salon/lp-price.html', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
+      var p = document.getElementById('price'); if (!p || !html) return;
+      p.innerHTML = html; p.hidden = false;
+      var n = document.getElementById('nav-price'); if (n) n.hidden = false;
+    });
   }
 }).catch(function () {});
 </script>
