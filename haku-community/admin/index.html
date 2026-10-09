@@ -48,7 +48,8 @@ h1{font-size:18px;margin-bottom:4px}
 .evform label{display:block;font-size:11.5px;color:#8a8574;margin:10px 0 4px}
 .evform input,.evform select,.evform textarea{width:100%;padding:8px 10px;border:1px solid #ccc;font-size:13px;font-family:inherit}
 .evform .row2{display:flex;gap:10px}
-.evform .row2>div{flex:1}
+.evform .row2>div{flex:1;min-width:0}
+.evform input,.evform select,.evform textarea{min-width:0;max-width:100%}
 .evform button.submit{margin-top:14px;padding:9px 18px;background:#33472f;color:#fff;border:0;font-size:13px;cursor:pointer}
 .ev{background:#fff;border:1px solid #ddd8cf;padding:14px 18px;margin-bottom:10px}
 .ev b{display:block;font-size:14px}
@@ -157,14 +158,17 @@ h1{font-size:18px;margin-bottom:4px}
       <button class="on" data-mode="applications">会員申請</button>
       <button data-mode="members">会員一覧・検索</button>
       <button data-mode="firebase">拓（既存Community）管理</button>
-      <button data-mode="events">HAKUイベント管理</button>
+      <button data-mode="haku">HAKU Community運営</button>
+      <button data-mode="salon">灯サロン運営</button>
+      <button data-mode="audit">操作履歴</button>
+    </div>
+    <div class="statusfilter" id="hakuSub" style="display:none">
+      <button class="on" data-mode="events">HAKUイベント管理</button>
       <button data-mode="words">HAKUからのことば</button>
       <button data-mode="notes">HAKU NOTE / 今週の問い</button>
       <button data-mode="posts">みんなのことば</button>
       <button data-mode="sessions">セッション（Preview fixture）</button>
       <button data-mode="tane">HAKUポイント</button>
-      <button data-mode="salon">灯 サロン運営</button>
-      <button data-mode="audit">操作履歴</button>
     </div>
 
     <div id="applicationsPanel">
@@ -1034,25 +1038,40 @@ function escapeHtml(s) {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// モード切替（会員申請 / HAKUイベント管理 / みんなのことば）
+// モード切替（親タブ → サブタブ）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 親タブ（.modetabs）と、「HAKU Community運営」配下のサブタブ（#hakuSub）。パネルのID・中のDOM・API呼び出しは従来のまま。
 var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'salon', 'audit'];
+var hakuSubCur = 'events'; // 「HAKU Community運営」を開いたときの初期表示。最後に見たサブタブを覚えている
+function showPanel(mode){
+  MODE_PANELS.forEach(function(m){
+    document.getElementById(m + 'Panel').style.display = (m === mode) ? 'block' : 'none';
+  });
+  if (mode === 'events') loadEvents();
+  if (mode === 'words') loadWords();
+  if (mode === 'notes') loadNotes();
+  if (mode === 'posts') loadPosts();
+  if (mode === 'audit') loadAuditLog();
+  if (mode === 'salon' && window.SalonAdmin) window.SalonAdmin.open();
+  if (mode === 'tane') loadPointsRecent();
+  if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
+}
 document.querySelectorAll('.modetabs button').forEach(function(btn){
   btn.addEventListener('click', function(){
     document.querySelectorAll('.modetabs button').forEach(function(b){ b.classList.remove('on'); });
     btn.classList.add('on');
     var mode = btn.dataset.mode;
-    MODE_PANELS.forEach(function(m){
-      document.getElementById(m + 'Panel').style.display = (m === mode) ? 'block' : 'none';
-    });
-    if (mode === 'events') loadEvents();
-    if (mode === 'words') loadWords();
-    if (mode === 'notes') loadNotes();
-    if (mode === 'posts') loadPosts();
-    if (mode === 'audit') loadAuditLog();
-    if (mode === 'salon' && window.SalonAdmin) window.SalonAdmin.open();
-    if (mode === 'tane') loadPointsRecent();
-    if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
+    var isHaku = (mode === 'haku');
+    document.getElementById('hakuSub').style.display = isHaku ? 'flex' : 'none';
+    showPanel(isHaku ? hakuSubCur : mode);
+  });
+});
+document.querySelectorAll('#hakuSub button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('#hakuSub button').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    hakuSubCur = btn.dataset.mode;
+    showPanel(hakuSubCur);
   });
 });
 

@@ -430,6 +430,22 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   await p.goto(base + '/haku-community/admin/');
   await p.fill('#adminemail', ADMIN.email); await p.fill('#adminpw', ADMIN.password);
   await p.click('#loginbtn'); await p.waitForSelector('#adminPanel', { state: 'visible' });
+  // ── タブの階層（親 → サブ） ──
+  eq('親タブの並び', await p.locator('.modetabs > button').allInnerTexts(), ['会員申請', '会員一覧・検索', '拓（既存Community）管理', 'HAKU Community運営', '灯サロン運営', '操作履歴']);
+  check('「HAKU Community運営」以外では、HAKUのサブタブは出ない', !(await p.locator('#hakuSub').isVisible()), null);
+  await p.click('[data-mode="haku"]');
+  eq('HAKU Community運営のサブタブ6項目', await p.locator('#hakuSub > button').allInnerTexts(), ['HAKUイベント管理', 'HAKUからのことば', 'HAKU NOTE / 今週の問い', 'みんなのことば', 'セッション（Preview fixture）', 'HAKUポイント']);
+  eq('初期表示は「HAKUイベント管理」', await p.evaluate(() => ['eventsPanel', 'wordsPanel', 'notesPanel', 'postsPanel', 'sessionsPanel', 'tanePanel', 'salonPanel', 'applicationsPanel', 'membersPanel', 'auditPanel'].filter((i) => getComputedStyle(document.getElementById(i)).display !== 'none')), ['eventsPanel']);
+  await p.fill('#evTitle', '入力途中のタイトル');
+  for (const [m, panel] of [['words', 'wordsPanel'], ['notes', 'notesPanel'], ['posts', 'postsPanel'], ['sessions', 'sessionsPanel'], ['tane', 'tanePanel'], ['events', 'eventsPanel']]) {
+    await p.click(`#hakuSub [data-mode="${m}"]`);
+    eq(`サブタブ ${m}：そのパネルだけが表示される`, await p.evaluate(() => ['eventsPanel', 'wordsPanel', 'notesPanel', 'postsPanel', 'sessionsPanel', 'tanePanel', 'salonPanel', 'applicationsPanel', 'membersPanel', 'auditPanel'].filter((i) => getComputedStyle(document.getElementById(i)).display !== 'none')), [panel]);
+  }
+  eq('サブタブを移動しても、入力途中の内容は消えない', await p.inputValue('#evTitle'), '入力途中のタイトル');
+  await p.click('#hakuSub [data-mode="tane"]'); await p.click('[data-mode="members"]'); await p.click('[data-mode="haku"]');
+  eq('親タブを往復すると、最後に見たサブタブ（HAKUポイント）に戻る', await p.evaluate(() => document.querySelector('#hakuSub button.on').dataset.mode), 'tane');
+  await p.click('[data-mode="salon"]');
+  check('灯サロン運営を開くと、HAKUのサブタブは隠れる', !(await p.locator('#hakuSub').isVisible()), null);
   await p.click('[data-mode="salon"]'); await p.waitForSelector('#salonBody .app, #salonBody .empty');
   check('運営ロール：登録済みの代表・事務局が一覧に出る', (await p.locator('#salonBody').innerText()).includes(OWNER) && (await p.locator('#salonBody').innerText()).includes(SECR), null);
   check('運営ロール：最高管理者には登録フォームが出る', await p.locator('#stGo').count() === 1, null);
@@ -472,6 +488,14 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   check('会員：申請状況の一覧が出る', (await p.locator('#salonBody').innerText()).includes(SASAKI), null);
   await p.click('#salonSub [data-sub="audit"]'); await p.waitForFunction(() => document.querySelectorAll('#salonBody .audit').length > 0);
   check('操作履歴：灯の操作が記録されている', (await p.locator('#salonBody .audit').count()) > 0, null);
+  await p.setViewportSize({ width: 390, height: 844 });
+  const ovf = () => p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+  for (const [parent, sub] of [['haku', 'events'], ['haku', 'words'], ['haku', 'notes'], ['haku', 'posts'], ['haku', 'sessions'], ['haku', 'tane'], ['salon', null], ['members', null], ['applications', null], ['firebase', null], ['audit', null]]) {
+    await p.click(`.modetabs [data-mode="${parent}"]`); if (sub) await p.click(`#hakuSub [data-mode="${sub}"]`); await W(300);
+    eq(`スマホ幅390px：${parent}${sub ? '／' + sub : ''} で横はみ出しなし`, await ovf(), false);
+  }
+  await p.click('.modetabs [data-mode="haku"]'); await W(200); await shot(p, 'salon-11-admin-mobile.png', { fullPage: false });
+  await p.setViewportSize({ width: 1280, height: 900 });
   await shot(p, 'salon-11-admin.png', { fullPage: true });
   await A.ctx.close();
 

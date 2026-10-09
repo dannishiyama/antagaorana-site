@@ -228,7 +228,7 @@ eq('APIでも、会員資格なし・存在しない会員への付与は拒否'
 eq('拒否された会員にポイントは付いていない（ポイントがある会員は2名だけ）', await page.evaluate(async () => (await (await fetch('/api/admin?action=members&community=haku')).json()).members.filter((m) => m.points).map((m) => m.email + ':' + m.points).sort()), ['jiro.yamada@example.com:50', 'nishiyama.taro@example.com:130']);
 
 console.log('■ J. 「HAKUポイント」タブ（全会員の操作履歴）');
-await page.click('[data-mode="tane"]'); await page.waitForSelector('#pointsRecentList .ptrow');
+await page.click('[data-mode="haku"]'); await page.click('#hakuSub [data-mode="tane"]'); await page.waitForSelector('#pointsRecentList .ptrow');
 const recent = await page.locator('#pointsRecentList .ptrow').evaluateAll((els) => els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
 check('全会員の履歴が出る（太郎3・花子2・次郎2＝7件）', recent.length === 7, recent.length);
 check('会員名・増減・種別・理由・操作者・日時が見える', recent.some((r) => r.includes('西山 太郎') && r.includes('+100pt') && r.includes('付与') && r.includes('HAKU MORNINGのお手伝い') && r.includes('admin@example.test') && /20[0-9]{2}\//.test(r)), recent.find((r) => r.includes('HAKU MORNING')));
