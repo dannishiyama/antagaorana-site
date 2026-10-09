@@ -59,6 +59,7 @@ import {
   joinBlock, leaveBlock, buildMorningDays,
 } from './_lib/morning.js';
 import { parseAvatarDataUrl, AvatarError } from './_lib/avatar.js';
+import { ensureMorningMeet, meetIsConfigured } from './_lib/morning-meet.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { notifyAdminOfApplication, sendPasswordSetupEmail, sendApplicationReceivedEmail, sendCancellationScheduledEmail, sendEmailChangedEmail } from './_lib/notify.js';
 
@@ -133,6 +134,13 @@ export default async function handler(req, res) {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await requireHakuMembership(req, res); if (!session) return;
       return await handleMorningNext(req, res, session);
+    }
+    // 参加表明済みの会員だけが、その日のGoogle MeetのURLを受け取れる（他のAPIにはURLを一切含めない）。
+    if (action === 'morning-meet') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      if (!(await rateLimitGuard(req, res, { key: 'morning-meet', limit: 30, windowSeconds: 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleMorningMeet(req, res, session);
     }
     if (action === 'avatar') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -712,8 +720,28 @@ async function handleMorningJoin(req, res, body, session) {
   }
   const result = await joinEventAtomic(morningEventId(date), session.email, null);
   if (result === 'joined') await logAudit({ actorId: session.email, action: 'morning_joined', targetId: morningEventId(date), metadata: { targetType: 'Event', date } });
+  // その日の開催予定が成立したら、その日専用のGoogle Meetを用意する（参加表明そのものは、Meetの成否に関わらず成功させる）。
+  if (meetIsConfigured()) {
+    try { await Promise.race([ensureMorningMeet(date), new Promise((r) => setTimeout(r, 7000))]); } catch { /* 画面の「参加する」ボタンから再試行できる */ }
+  }
   const [day] = await buildMorningDays([date], session.email);
   return res.status(200).json({ ok: true, alreadyJoined: result === 'already', day });
+}
+
+async function handleMorningMeet(req, res, session) {
+  const date = String(req.query?.date || '').trim();
+  const blocked = leaveBlock(date); // 過去日・不正な日付は対象外
+  if (blocked === 'invalid') return res.status(400).json({ error: MORNING_BLOCK_MESSAGES.invalid, code: 'invalid' });
+  if (blocked === 'past') return res.status(409).json({ error: MORNING_BLOCK_MESSAGES.past, code: 'past' });
+  const id = morningEventId(date);
+  const event = await getEvent(id);
+  if (!event || !(await isEventParticipant(id, session.email))) {
+    return res.status(403).json({ error: 'この朝の集まりに参加表明している会員だけが利用できます。', code: 'not_joined' });
+  }
+  if (event.registration === 'cancelled') return res.status(409).json({ error: MORNING_BLOCK_MESSAGES.cancelled, code: 'cancelled' });
+  const meet = await ensureMorningMeet(date);
+  if (meet.status === 'ready') return res.status(200).json({ ok: true, status: 'ready', url: meet.url });
+  return res.status(meet.status === 'unavailable' ? 200 : 503).json({ ok: false, status: meet.status });
 }
 
 async function handleMorningLeave(req, res, body, session) {

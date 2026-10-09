@@ -257,13 +257,67 @@ test('プロフィール設定：画像（選ぶ・プレビュー・保存・�
   assert.ok((html.match(/avatarHtml\(p(?:, \d+)?\)|avatarHtml\(q, \d+\)|avatarHtml\(p, \d+\)/g) || []).length >= 3, '参加者アイコンも同じ関数');
 });
 
-test('ホーム：朝の集まりは月間カレンダーではなく、直近1件のカード＋「朝の集まりを見る」。情報の順番は変えない', () => {
+test('ホーム：朝の集まりは月間カレンダーではなく、直近1件のカード＋「朝の集まりを見る」。ことば→予定の順', () => {
   const html = render();
   const body = html.split('<script>')[0];
-  const order = ['id="homeStep"', 'id="h-next"', 'id="h-question"', 'id="h-words"'].map((k) => body.indexOf(k));
-  assert.ok(order.every((n) => n > 0) && order.every((n, i) => i === 0 || n > order[i - 1]), '今日の一歩→直近の予定→今週の問い→ことば の順');
+  const order = ['id="homeStep"', 'id="h-words"', 'id="h-question"', 'id="h-next"'].map((k) => body.indexOf(k));
+  assert.ok(order.every((n) => n > 0) && order.every((n, i) => i === 0 || n > order[i - 1]), '冒頭（挨拶・今日の一歩）→ことば→今週の問い→予定（朝の集まり・直近の予定） の順');
   const homeSection = body.match(/<section class="page active" id="p-home"[\s\S]*?<!-- 学ぶ -->/)[0];
   assert.ok(!homeSection.includes('mo-grid') && !homeSection.includes('morningBody'), 'ホームにカレンダーを置かない');
   assert.ok(html.includes('data-go="morning"'));
   assert.ok(html.includes('function renderMorningHome()'));
+});
+
+test('HOME：ことば → 予定（朝の集まり・直近の予定）の順に、それぞれ1つのまとまりとして並ぶ。既存の見出し文言は変えない', () => {
+  const html = render();
+  const body = html.split('<script>')[0];
+  const words = body.indexOf('id="homeWordsGroup"'), plan = body.indexOf('id="homePlanGroup"');
+  assert.ok(words > 0 && plan > words, 'ことばのまとまり → 予定のまとまり');
+  const g1 = body.slice(words, plan), g2 = body.slice(plan, body.indexOf('<!-- 学ぶ -->'));
+  assert.ok(g1.includes('id="h-words"') && g1.includes('id="h-question"') && !g1.includes('id="h-next"'));
+  assert.ok(g2.includes('id="h-next"') && g2.includes('id="homeNextMorning"') && g2.includes('id="homeNextMeet"'), '朝の集まりと直近の予定は同じグループ');
+  assert.deepEqual([UI.home.wordsTitle, UI.home.noteTitle, UI.home.nextTitle, UI.home.nextMorning, UI.home.nextMeet, UI.home.wordLatest, UI.home.membersWords], ['ことば', '今週の問い', '直近の予定', '朝の集まり', '次回の集まり', 'HAKUからのことば', '会員のことば']);
+});
+
+test('カレンダーの日付枠：「○人」の文字を出さず、参加者のアイコン（多いときは＋n）を出す。詳細には人数と一覧を残す', () => {
+  const html = render();
+  const script = html.split('<script>')[1];
+  const cell = script.slice(script.indexOf('function moCellHtml'), script.indexOf('function moDetailHtml'));
+  assert.ok(!/人</.test(cell) && !/\.count\s*\+\s*'人/.test(cell), '日付枠に人数テキストがある');
+  assert.ok(cell.includes('moAvatars(day.participants)') && script.includes('mo-more'));
+  const detail = script.slice(script.indexOf('function moDetailHtml'), script.indexOf('function drawMorning'));
+  assert.ok(detail.includes('UI.morning.people') && detail.includes('mo-person'), '詳細には参加予定の人数と一覧（表示名・アイコン）');
+  assert.equal(UI.morning.more, '＋{n}');
+});
+
+test('Meet：参加登録済みの日にだけ「朝の集まりに参加する」。URLはHTMLにも文言にも含まれず、ボタンを押したときにAPIから受け取る', () => {
+  const html = render();
+  assert.ok(!/meet\.google\.com\/[a-z0-9]/i.test(html.replace(/\^https:\\\/\\\/meet\\\.google\\\.com\\\//g, '')), 'MeetのURLが埋め込まれている');
+  assert.equal(UI.morning.meetJoin, '朝の集まりに参加する');
+  const script = html.split('<script>')[1];
+  const detail = script.slice(script.indexOf('function moDetailHtml'), script.indexOf('function drawMorning'));
+  assert.ok(/day\.joined\s*\n?\s*\? '<button[^]*mo-meet[^]*mo-leave[^]*: '<button[^]*mo-join/.test(detail), '参加済み＝Meet＋取消、未参加＝参加表明');
+  assert.ok(script.includes("action=morning-meet&date="));
+  for (const k of ['meetPreparing', 'meetError', 'meetUnavailable', 'meetRetry']) assert.ok(UI.morning[k], k);
+  assert.ok(!/Google|API|OAuth|トークン|環境変数/.test(UI.morning.meetError + UI.morning.meetUnavailable + UI.morning.meetPreparing), '会員に技術的な説明を出さない');
+});
+
+test('マイページ：最近書いたことば・これまでの集まり・セッションの記録は1つのまとまり（見出し文言は従来のまま）', () => {
+  const html = render();
+  const group = html.match(/<div class="rec-group">[\s\S]*?<section class="block" aria-labelledby="h-settings">/)[0];
+  for (const id of ['h-recent', 'h-gathered', 'h-sessions']) assert.ok(group.includes(`id="${id}"`), id);
+  assert.ok(!group.includes('id="h-goals"') && !group.includes('id="h-settings"'));
+  assert.deepEqual([UI.me.recentTitle, UI.me.gatheredTitle, UI.me.sessionsTitle], ['最近、書いたことば', 'これまでの集まり', 'セッションの記録']);
+});
+
+test('HAKUポイント：活用イメージは構想の紹介だけ。換算率・円・期限などを断定せず、交換や寄付の操作を持たない', () => {
+  const u = UI.point.usage;
+  assert.deepEqual([u.title, u.item1Title, u.item2Title], ['ポイントの活用イメージ', 'インドプロジェクトへの支援', '自分の学びや挑戦への活用']);
+  const text = Object.values(u).join('');
+  assert.ok(/構想/.test(u.note) && !/1\s*pt|1ポイント|＝|=|円|有効期限|上限|換算|交換|寄付|申請|承認/.test(text), '未決定の内容を断定している');
+  const html = render();
+  const fn = html.split('<script>')[1];
+  const usage = fn.slice(fn.indexOf('function pointUsageHtml'), fn.indexOf('function loadPoint'));
+  assert.ok(!/<button|<a |<input|data-act|data-go/.test(usage), '操作（ボタン・リンク）を含まない');
+  assert.ok(fn.includes('pointUsageHtml()'));
 });

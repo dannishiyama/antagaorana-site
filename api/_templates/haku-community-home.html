@@ -245,25 +245,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .mo-nav{flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:none;color:var(--green-deep);font-size:20px;line-height:1;cursor:pointer}
 .mo-nav:hover{background:var(--green-pale)}
 .mo-nav[disabled]{opacity:.3;cursor:default}
-.mo-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.mo-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:minmax(64px,auto);gap:3px}
 .mo-wd{padding:4px 0;text-align:center;font-size:12.5px;color:var(--ink3)}
-.mo-cell{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:64px;padding:5px 1px 4px;border:1.5px solid transparent;border-radius:10px;background:none;color:var(--ink);font-size:14px;cursor:pointer}
+.mo-cell{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:64px;padding:5px 2px 5px;border:1.5px solid transparent;border-radius:10px;background:none;color:var(--ink);font-size:14px;cursor:pointer}
 .mo-cell:hover{background:var(--green-pale)}
 .mo-cell.blank{visibility:hidden;pointer-events:none}
 .mo-cell.past{color:var(--ink3)}
 .mo-cell.live{background:var(--green-pale)}
-.mo-cell.mine{background:var(--green);color:var(--paper)}
+.mo-cell.mine{background:var(--green-pale);border-color:rgba(59,90,58,.55)}
+.mo-cell.mine .mo-d{background:var(--green);color:var(--paper)}
 .mo-cell.cancelled{text-decoration:line-through;color:var(--ink3)}
 .mo-cell[aria-pressed="true"]{border-color:var(--green-deep);box-shadow:inset 0 0 0 1px var(--green-deep)}
 .mo-d{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-variant-numeric:tabular-nums;line-height:1}
 .mo-cell.today .mo-d{box-shadow:inset 0 0 0 2px var(--gold)}
-.mo-n{font-size:12px;line-height:1.2;font-weight:700;color:var(--green-deep)}
-.mo-cell.mine .mo-n{color:var(--paper)}
-.mo-avs{display:flex;justify-content:center;align-items:center;min-height:14px}
-.mo-avs .av{margin-left:-3px;box-shadow:0 0 0 1.5px var(--paper)}
-.mo-avs .av:first-child{margin-left:0}
+.mo-avs{display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;gap:2px;max-width:100%;margin-top:1px}
+.mo-avs .av{box-shadow:0 0 0 1.5px var(--paper)}
 .mo-cell.live .mo-avs .av{box-shadow:0 0 0 1.5px var(--green-pale)}
-.mo-cell.mine .mo-avs .av{box-shadow:0 0 0 1.5px var(--green)}
+.mo-cell.mine .mo-avs .av{box-shadow:0 0 0 1.5px var(--green-pale)}
+.mo-more{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;border-radius:10px;background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);color:var(--green-deep);font-size:10.5px;font-weight:700;line-height:1}
+.mo-avs .av{font-size:11px}
 .mo-day{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
 .mo-day-title{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-family:var(--serif);font-size:19px;line-height:1.6;font-weight:700;color:var(--ink)}
 .mo-people{list-style:none;margin-top:6px}
@@ -276,6 +276,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .pf-now{display:flex;align-items:center;gap:18px;margin:8px 0 6px}
 .pf-hint{margin-top:6px;font-size:13px;color:var(--ink3)}
 .pf-pending{font-size:13.5px;color:var(--ink2)}
+
+/* ───── ホーム：まとまり（ことば → 予定）／マイページ：記録のまとまり ───── */
+.home-group{margin-top:30px;padding:2px 20px 24px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.home-group>.block:first-child{margin-top:20px}
+.home-group>.block+.block{margin-top:28px;padding-top:26px;border-top:1px solid var(--line)}
+.rec-group{margin-top:42px;padding:0 20px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.rec-group>.block{margin-top:0;padding:24px 0}
+.rec-group>.block+.block{border-top:1px solid var(--line)}
+.rec-group .block-title::before{display:none}
+.rec-ic{flex:none;width:22px;height:22px;color:var(--gold-ink)}
+.use-list{list-style:none;margin-top:4px}
+.use-list li{padding:14px 0;border-top:1px solid var(--line)}
+.use-list li:last-child{border-bottom:1px solid var(--line)}
+.use-list b{display:block;font-family:var(--serif);font-size:16px;line-height:1.7;color:var(--ink)}
+.use-list span{display:block;margin-top:2px;font-size:14px;color:var(--ink2)}
+.mo-meet-msg{margin-top:10px;font-size:14px;color:var(--terra-ink)}
+.mo-meet-msg .btn-text{margin-left:4px}
+@media (max-width:560px){.home-group,.rec-group{padding-left:16px;padding-right:16px}}
+@media (max-width:560px){.mo-avs .av{--av:17px!important;font-size:10px}.mo-more{min-width:17px;height:17px;padding:0 3px;border-radius:9px;font-size:10px}.mo-cell{padding-left:1px;padding-right:1px}}
 
 /* ───── PC：細いスマホ幅の列にせず、ヘッダー・メニュー・本文を読みやすい幅でゆったり配置 ───── */
 /* ───── PC：左サイドバー。細いスマホ幅の列＋下部メニューにはしない。
@@ -351,22 +370,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
       </div>
       <div class="step" id="homeStep" aria-live="polite"></div>
 
-      <section class="block" aria-labelledby="h-next">
-        <h2 class="block-title" id="h-next">{{t.home.nextTitle}}</h2>
-        <div class="block-body">
-          <div class="sub-title">{{t.home.nextMorning}}</div>
-          <div id="homeNextMorning"></div>
-          <div class="sub-title">{{t.home.nextMeet}}</div>
-          <div id="homeNextMeet"></div>
-        </div>
-      </section>
-
-      <section class="block" aria-labelledby="h-question">
-        <h2 class="block-title" id="h-question">{{t.home.noteTitle}}</h2>
-        <p class="block-supp">{{t.home.noteSupp}}</p>
-        <div class="block-body" id="homeNote"></div>
-      </section>
-
+      <div class="home-group" id="homeWordsGroup">
       <section class="block" aria-labelledby="h-words">
         <h2 class="block-title" id="h-words">{{t.home.wordsTitle}}</h2>
         <div class="block-body">
@@ -377,6 +381,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
           <div class="actions"><button class="btn-text" type="button" data-go="words">{{t.home.wordsMore}}</button></div>
         </div>
       </section>
+
+      <section class="block" aria-labelledby="h-question">
+        <h2 class="block-title" id="h-question">{{t.home.noteTitle}}</h2>
+        <p class="block-supp">{{t.home.noteSupp}}</p>
+        <div class="block-body" id="homeNote"></div>
+      </section>
+      </div>
+
+      <div class="home-group" id="homePlanGroup">
+      <section class="block" aria-labelledby="h-next">
+        <h2 class="block-title" id="h-next">{{t.home.nextTitle}}</h2>
+        <div class="block-body">
+          <div class="sub-title">{{t.home.nextMorning}}</div>
+          <div id="homeNextMorning"></div>
+          <div class="sub-title">{{t.home.nextMeet}}</div>
+          <div id="homeNextMeet"></div>
+        </div>
+      </section>
+      </div>
     </section>
 
     <!-- 学ぶ -->
@@ -455,21 +478,23 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
         <div class="block-body"><div id="goalsBody"></div></div>
       </section>
 
+      <div class="rec-group">
       <section class="block" aria-labelledby="h-recent">
-        <h2 class="block-title" id="h-recent">{{t.me.recentTitle}}</h2>
+        <h2 class="block-title" id="h-recent"><svg class="rec-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>{{t.me.recentTitle}}</h2>
         <div class="block-body"><div id="recentBody"></div></div>
       </section>
 
       <section class="block" aria-labelledby="h-gathered">
-        <h2 class="block-title" id="h-gathered">{{t.me.gatheredTitle}}</h2>
+        <h2 class="block-title" id="h-gathered"><svg class="rec-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2.5 20c.6-3 3-4.5 5.5-4.5s4.9 1.5 5.5 4.5"/><path d="M13 15.8c.9-.2 1.7-.3 2.5-.3 2.5 0 4.9 1.500 5.500 4.500"/></svg>{{t.me.gatheredTitle}}</h2>
         <div class="block-body"><div id="gatheredBody"></div></div>
       </section>
 
       <section class="block" aria-labelledby="h-sessions">
-        <h2 class="block-title" id="h-sessions">{{t.me.sessionsTitle}}</h2>
+        <h2 class="block-title" id="h-sessions"><svg class="rec-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>{{t.me.sessionsTitle}}</h2>
         <p class="block-supp">{{t.me.sessionsLead}}</p>
         <div class="block-body"><div id="sessionsBody"></div></div>
       </section>
+      </div>
 
       <section class="block" aria-labelledby="h-settings">
         <h2 class="block-title" id="h-settings">{{t.me.settingsTitle}}</h2>
@@ -776,7 +801,7 @@ function setMemberName(name){
   $('greetTxt').textContent = greeting();
   paintAvatars();
 }
-const MO = { today: null, month: null, selected: null, data: null, busy: false };
+const MO = { today: null, month: null, selected: null, data: null, busy: false, meetBusy: false };
 function dateAdd(str, n){ const d = new Date(str + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 function dateParts(str){ const d = new Date(str + 'T00:00:00Z'); return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(), w: String(UI.morning.weekdays).split(',')[d.getUTCDay()] }; }
 function dayTitle(str){ const p = dateParts(str); return fmt(UI.morning.dayTitle, { m: p.m, d: p.d, w: p.w }); }
@@ -1124,18 +1149,24 @@ function refreshEventViews(){
 }
 
 /* ═════════ HAKUポイント ═════════ */
+function pointUsageHtml(){
+  return '<section class="block" style="margin-top:34px" aria-labelledby="h-usage"><h2 class="block-title" id="h-usage">' + esc(UI.point.usage.title) + '</h2><div class="block-body"><ul class="use-list">' +
+    '<li><b>' + esc(UI.point.usage.item1Title) + '</b><span>' + esc(UI.point.usage.item1Body) + '</span></li>' +
+    '<li><b>' + esc(UI.point.usage.item2Title) + '</b><span>' + esc(UI.point.usage.item2Body) + '</span></li></ul>' +
+    '<p class="block-supp" style="margin-top:10px">' + esc(UI.point.usage.note) + '</p></div></section>';
+}
 function loadPoint(){
   invalidate('points');
   loadInto('point', $('pointBody'), async () => {
     const d = await data.points();
     const entries = d.entries || [];
     const philosophy = '<p class="philo">' + esc(UI.point.philosophy1) + '</p><p class="philo-sub">' + esc(UI.point.philosophy2) + '</p>';
-    if (!entries.length) return philosophy + '<span class="prep">' + esc(UI.point.preparing) + '</span>';
+    if (!entries.length) return philosophy + '<span class="prep">' + esc(UI.point.preparing) + '</span>' + pointUsageHtml();
     const rows = entries.map((e) =>
       '<div class="pt-row"><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '<span class="d">' + esc(fmtDate(e.createdAt)) + '</span></div>' +
       '<div class="n">' + (e.delta > 0 ? '+' : '') + Number(e.delta).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</div></div>').join('');
     return philosophy + '<p class="pt-now">' + esc(UI.point.now) + '<b>' + Number(d.balance || 0).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</b></p>' +
-      '<section class="block" style="margin-top:28px"><h2 class="block-title">' + esc(UI.point.history) + '</h2><div class="block-body">' + rows +
+      pointUsageHtml() + '<section class="block" style="margin-top:28px"><h2 class="block-title">' + esc(UI.point.history) + '</h2><div class="block-body">' + rows +
       (d.hasMore ? '<p class="state empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</div></section>';
   });
 }
@@ -1349,6 +1380,13 @@ async function fetchMorningMonth(month){
   MO.data = { month: r.data.month, days: map, min: r.data.minMonth, max: r.data.maxMonth };
 }
 function moDay(date){ return (MO.data && MO.data.days[date]) || { date, count: 0, status: 'none', joined: false, participants: [] }; }
+/* 日付の枠の中：参加者のプロフィールアイコン。多いときは、先頭の3人と「＋n」にして、枠からはみ出さない。 */
+const MO_CELL_MAX = 4;
+function moAvatars(list){
+  const over = list.length > MO_CELL_MAX;
+  const shown = over ? list.slice(0, MO_CELL_MAX - 1) : list;
+  return shown.map((q) => avatarHtml(q, 20)).join('') + (over ? '<span class="mo-more">' + esc(fmt(UI.morning.more, { n: list.length - shown.length })) + '</span>' : '');
+}
 function moCellHtml(date){
   const day = moDay(date), p = dateParts(date);
   const past = MO.today && date < MO.today;
@@ -1357,7 +1395,7 @@ function moCellHtml(date){
   const cls = 'mo-cell' + (past ? ' past' : '') + (date === MO.today ? ' today' : '') + (day.status === 'scheduled' ? ' live' : '') + (day.status === 'cancelled' ? ' cancelled' : '') + (day.joined ? ' mine' : '');
   return '<button class="' + cls + '" type="button" data-act="mo-select" data-date="' + date + '" aria-pressed="' + (MO.selected === date) + '" aria-label="' + esc(aria) + '">' +
     '<span class="mo-d">' + p.d + '</span>' +
-    (day.count > 0 ? '<span class="mo-n">' + day.count + '人</span><span class="mo-avs">' + day.participants.slice(0, 3).map((q) => avatarHtml(q, 14)).join('') + '</span>' : '') + '</button>';
+    (day.count > 0 ? '<span class="mo-avs">' + moAvatars(day.participants) + '</span>' : '') + '</button>';
 }
 function moDetailHtml(date){
   const day = moDay(date);
@@ -1371,10 +1409,11 @@ function moDetailHtml(date){
   let action = '';
   if (!past && day.status !== 'cancelled') {
     action = day.joined
-      ? '<button class="btn-text danger" type="button" data-act="mo-leave" data-date="' + date + '">' + esc(UI.morning.leave) + '</button>'
+      ? '<button class="btn btn-primary" type="button" data-act="mo-meet" data-date="' + date + '">' + esc(UI.morning.meetJoin) + '</button>' +
+        '<button class="btn-text danger" type="button" data-act="mo-leave" data-date="' + date + '">' + esc(UI.morning.leave) + '</button>'
       : '<button class="btn btn-primary" type="button" data-act="mo-join" data-date="' + date + '">' + esc(UI.morning.join) + '</button>';
   }
-  return '<div class="mo-day"><h2 class="mo-day-title" tabindex="-1">' + esc(dayTitle(date)) + '<span class="chip' + (day.status === 'scheduled' ? ' joined' : '') + '">' + esc(chipText) + '</span></h2>' + body + (action ? '<div class="actions">' + action + '</div>' : '') + '</div>';
+  return '<div class="mo-day"><h2 class="mo-day-title" tabindex="-1">' + esc(dayTitle(date)) + '<span class="chip' + (day.status === 'scheduled' ? ' joined' : '') + '">' + esc(chipText) + '</span></h2>' + body + (action ? '<div class="actions">' + action + '</div><div class="mo-meet-msg" id="moMeetMsg" role="alert"></div>' : '') + '</div>';
 }
 function drawMorning(){
   const box = $('morningBody');
@@ -1420,6 +1459,25 @@ async function changeMorning(btn, kind){
   if (r.ok) toast(kind === 'join' ? UI.morning.toastJoined : UI.morning.toastLeft); else toast(errMessage(r));
   await refreshMorningSilently(); // 成功でも失敗でも、いまの本当の状態を取り直して表示する
 }
+/* Google Meetへ。URLはこのボタンを押したときだけ、サーバーから受け取る（参加表明済みの会員だけ）。 */
+async function openMeet(btn){
+  if (MO.meetBusy) return;
+  MO.meetBusy = true;
+  const date = btn.dataset.date, msg = $('moMeetMsg'), label = btn.textContent;
+  msg.textContent = '';
+  btn.disabled = true; btn.textContent = UI.morning.meetPreparing;
+  let w = null;
+  try { w = window.open('', '_blank'); if (w) w.opener = null; } catch (e) { w = null; } // ポップアップを止められないよう、先に窓を開けておく
+  const r = await api('/api/community-auth?action=morning-meet&date=' + encodeURIComponent(date), { method: 'GET', timeout: 25000 });
+  MO.meetBusy = false; btn.disabled = false; btn.textContent = label;
+  const url = r.ok && r.data && r.data.status === 'ready' ? String(r.data.url || '') : '';
+  if (/^https:\/\/meet\.google\.com\//.test(url)) { if (w) w.location.href = url; else location.href = url; return; }
+  if (w) { try { w.close(); } catch (e) {} }
+  const text = r.data && r.data.status === 'unavailable' ? UI.morning.meetUnavailable : (r.status >= 400 && r.status < 500 && r.data && r.data.error) ? r.data.error : UI.morning.meetError;
+  msg.innerHTML = esc(text) + '<button class="btn-text" type="button" data-act="mo-meet" data-date="' + esc(date) + '">' + esc(UI.morning.meetRetry) + '</button>';
+  if (r.status === 403 || r.status === 409) refreshMorningSilently(); // 参加状況・中止などが変わっていたら、画面を最新にする
+}
+actions['mo-meet'] = (btn) => openMeet(btn);
 actions['mo-join'] = (btn) => changeMorning(btn, 'join');
 actions['mo-leave'] = (btn) => { if (confirm(UI.morning.leaveConfirm)) changeMorning(btn, 'leave'); };
 

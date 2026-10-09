@@ -90,9 +90,9 @@ console.log('■ B. カレンダー：参加表明（Aが明日に参加）');
   await p.waitForFunction(() => /開催予定/.test(document.querySelector('#moDetail').innerText) && !/開催予定なし/.test(document.querySelector('#moDetail').innerText));
   const after = await detail(p);
   check('参加すると「開催予定」「参加予定 1人」「タロウ（あなた）」', /開催予定/.test(after) && /参加予定 1人/.test(after) && /タロウ/.test(after) && /あなた/.test(after), after);
-  check('取消ボタンに変わる', (await p.locator('#moDetail [data-act="mo-leave"]').count()) === 1 && (await p.locator('#moDetail [data-act="mo-join"]').count()) === 0, null);
+  check('参加済みは「朝の集まりに参加する」（Meet）と取消の2つ。参加表明ボタンは消える', (await p.locator('#moDetail [data-act="mo-meet"]').count()) === 1 && (await p.locator('#moDetail [data-act="mo-leave"]').count()) === 1 && (await p.locator('#moDetail [data-act="mo-join"]').count()) === 0, null);
   const c = cell(p, tomorrow);
-  check('セル：1人・自分が参加予定（mine）', /1人/.test(await c.innerText()) && (await c.getAttribute('class')).includes('mine') && /あなたは参加予定/.test(await c.getAttribute('aria-label')), await c.getAttribute('class'));
+  check('セル：「○人」の文字はなく、参加者アイコンが1つ・自分が参加予定（mine）', !/人/.test(await c.innerText()) && (await c.locator('.mo-avs .av').count()) === 1 && (await c.getAttribute('class')).includes('mine') && /あなたは参加予定/.test(await c.getAttribute('aria-label')), await c.innerText());
   await p.screenshot({ path: path.join(OUT, 'morning-02-calendar-A.png'), fullPage: false });
 }
 

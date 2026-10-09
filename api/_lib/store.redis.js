@@ -492,6 +492,22 @@ export async function listMorningParticipants(dates) {
   return results.map(([err, members]) => (err ? [] : members || []));
 }
 
+// ── 朝の集まりの Google Meet（開催日ごとに1件。URLはサーバー側だけで持つ）──
+// 同じ日に重複して作らないため、(1) 作成中のロック（SET NX）と (2) 保存も SET NX（先に保存された1件だけが残る）の二重で守る。
+export async function getMorningMeet(date) {
+  return readJSON(`${PREFIX}morning_meet:${date}`);
+}
+export async function saveMorningMeetOnce(date, record) {
+  const ok = await getRedis().set(`${PREFIX}morning_meet:${date}`, JSON.stringify({ ...record, createdAt: Date.now() }), 'NX');
+  return ok ? true : false;
+}
+export async function claimMorningMeetLock(date, seconds = 30) {
+  return Boolean(await getRedis().set(`${PREFIX}morning_meet_lock:${date}`, '1', 'EX', seconds, 'NX'));
+}
+export async function releaseMorningMeetLock(date) {
+  await getRedis().del(`${PREFIX}morning_meet_lock:${date}`);
+}
+
 // ── プロフィール画像 ─────────────────────────────────────────────────
 // 画像本体は別キー（ht:avatar:<avatarId>）に保存し、Userには avatarId だけを持たせる（正は User.avatarId 1か所）。
 // avatarId は保存のたびに新しくなるので、画像を変えると表示側のキャッシュも自然に切り替わる。
