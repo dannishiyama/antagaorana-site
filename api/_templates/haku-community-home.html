@@ -54,11 +54,11 @@ button{font-family:inherit}
 .topbar{order:0;background:var(--green-deep);flex-shrink:0;position:relative;z-index:50;padding-top:env(safe-area-inset-top)}
 .topbar-in{display:flex;align-items:center;gap:10px;padding:5px 18px;min-height:54px;padding-right:150px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
-/* 運営団体のロゴは、総合トップと同じ既存アセット（lp-assets/logo-hero.png）をそのまま使い、
-   画像は切り抜かず、マーク全体が丸いバッジの中に収まるように置く（総合トップと同じ約36px幅）。
-   バッジの色は総合トップのヘッダー背景と同じ生成り。ロゴ自体の色は一切変えていない。 */
-.brand-mark{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:var(--brand-cream);overflow:hidden}
-.brand-mark img{position:absolute;display:block;max-width:none;width:47.64px;height:47.64px;left:-3.2px;top:-0.24px}
+/* 運営団体のロゴは、HAKU Community専用のロゴ（lp-assets/haku-community-logo.png）。
+   総合トップのヘッダー画像（logo-hero.png）とは別ファイル。丸いバッジ（44px）の中に、絵全体が欠けずに収まるよう
+   余白つきで書き出してあるので、画像はバッジいっぱい（44px）に置くだけ。ロゴ自体の色・形は変えていない。 */
+.brand-mark{position:relative;flex:none;width:44px;height:44px;border-radius:50%;background:#fff;overflow:hidden}
+.brand-mark img{position:absolute;display:block;max-width:none;width:44px;height:44px;left:0;top:0}
 .brand-sep{flex:none;width:1px;height:28px;background:rgba(245,239,230,.4)}
 .brand-text{font-family:var(--serif);font-size:12px;font-weight:700;color:rgba(247,240,230,.92);line-height:1.4;white-space:nowrap}
 .brand-text b{display:block;font-size:14px;font-weight:900;color:var(--gold-lt);letter-spacing:.04em}
@@ -270,7 +270,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
     <header class="topbar">
       <div class="topbar-in">
         <div class="brand">
-          <span class="brand-mark"><img src="/lp-assets/logo-hero.png?v=20260501a" alt="" width="48" height="48" decoding="async"></span>
+          <span class="brand-mark"><img src="/lp-assets/haku-community-logo.png?v=20261009a" alt="" width="44" height="44" decoding="async"></span>
           <span class="brand-sep" aria-hidden="true"></span>
           <span class="brand-text">{{t.brand.line1}}<b>{{t.brand.line2}}</b></span>
         </div>

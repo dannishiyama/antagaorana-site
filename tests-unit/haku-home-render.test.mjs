@@ -4,7 +4,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { renderHakuHome, safeJson } from '../api/_lib/haku-home-render.js';
 import { UI } from '../api/_lib/haku-ui-strings.js';
 import { cleanUserText, hasInvalidChars, isDisplayablePost, normalizeRequestId } from '../api/_lib/text-safety.js';
@@ -91,9 +91,11 @@ test('文言ファイルのすべての文言は文字列で、空でなく、�
   }
 });
 
-test('ロゴは総合トップと同じ既存アセット（lp-assets/logo-hero.png）を使い、右側の団体名はそのまま残る', () => {
+test('ロゴはHAKU Community専用（lp-assets/haku-community-logo.png）で、総合トップのヘッダー画像とは別。右側の団体名はそのまま残る', () => {
   const html = render();
-  assert.ok(html.includes('/lp-assets/logo-hero.png?v=20260501a'));
+  assert.ok(html.includes('/lp-assets/haku-community-logo.png?v='));
+  assert.ok(!html.includes('src="/lp-assets/logo-hero.png'), '総合トップのロゴ画像を、会員ホームのヘッダーで使っている');
+  assert.ok(existsSync(new URL('../lp-assets/haku-community-logo.png', import.meta.url)), 'ロゴ画像ファイルがない');
   assert.ok(html.includes('教育支援団体') && html.includes('あんたがおらな'));
   assert.ok(!html.includes('hero-logo-antagaorana'), '旧・文字ロゴを参照している');
 });
@@ -164,11 +166,12 @@ test('PCは左サイドバー、スマホは下部メニュー：ヘッダー・
   assert.deepEqual([...body.matchAll(/data-tab="(\w+)"/g)].map((m) => m[1]), ['home', 'learn', 'words', 'gather', 'point', 'profile']);
 });
 
-test('ロゴ：四角い台座は廃止し、丸いバッジに既存アセットをそのまま（切り抜かず）置く', () => {
+test('ロゴ：丸いバッジ（44px）のまま、HAKU Community専用ロゴを切り抜かず置く', () => {
   const html = render();
-  assert.match(html, /\.brand-mark\{[^}]*border-radius:50%/);
+  assert.match(html, /\.brand-mark\{[^}]*width:44px;height:44px;border-radius:50%/);
   assert.ok(!/\.brand-mark\{[^}]*border-radius:9px/.test(html), '旧・角丸四角の台座が残っている');
-  assert.ok(html.includes('src="/lp-assets/logo-hero.png?v=20260501a"'));
+  assert.ok(html.includes('src="/lp-assets/haku-community-logo.png?v='));
+  assert.match(html.match(/\.brand-mark img\{[^}]*\}/)[0], /width:44px;height:44px/);
   // 画像は加工せず（filter・clip-path・object-fit での切り抜きなし）
   const css = html.match(/\.brand-mark img\{[^}]*\}/)[0];
   assert.ok(!/filter|clip-path|object-fit|mask/.test(css), css);
