@@ -52,10 +52,22 @@ async function login(email, { width = 1280, height = 900, name } = {}) {
 }
 const A = 'nishiyama.taro@example.com', B = 'Hanako.Nishiyama@Example.com';
 const JST = (n = 0) => new Date(Date.now() + 9 * 3600e3 + n * 86400e3).toISOString().slice(0, 10);
-const D1 = JST(1), D2 = JST(2), D3 = JST(3);
+const D1 = JST(3), D2 = JST(4), D3 = JST(5); // 参加申請の締切（前々日23:59:59.999まで）に間に合う日
 const cell = (page, date) => page.locator(`.mo-cell[data-date="${date}"]`);
-async function openMorning(page) { await page.goto(base + '/haku-community/home/#morning'); await page.reload(); await page.waitForSelector('.mo-grid'); }
-async function pick(page, date) { await cell(page, date).click(); await page.waitForFunction((d) => document.querySelector(`.mo-cell[data-date="${d}"]`).getAttribute('aria-pressed') === 'true', date); }
+
+// 参加申請の締切（開催日の前々日23:59:59.999まで）があるので、テストで参加する日は「今日の3日後〜」を使う。月をまたぐ日は、カレンダーを次の月へ送って選ぶ。
+async function gotoMonth(page, date) {
+  for (let i = 0; i < 4; i++) {
+    const label = await page.locator('.mo-month').innerText();
+    const [y, m] = date.split('-');
+    if (label === `${Number(y)}年${Number(m)}月`) return;
+    await page.click('[data-act="mo-next"]');
+    await page.waitForFunction((l) => document.querySelector('.mo-month') && document.querySelector('.mo-month').textContent !== l, label);
+    await page.waitForSelector('.mo-grid');
+  }
+}
+async function openMorning(page, date = D1) { await page.goto(base + '/haku-community/home/#morning'); await page.reload(); await page.waitForSelector('.mo-grid'); await gotoMonth(page, date); }
+async function pick(page, date) { await gotoMonth(page, date); await cell(page, date).click(); await page.waitForFunction((d) => document.querySelector(`.mo-cell[data-date="${d}"]`).getAttribute('aria-pressed') === 'true', date); }
 const detail = (page) => page.locator('#moDetail').innerText();
 async function clickPopup(page, sel) { // クリックの前から「新しいタブが開く」のを待つ
   const [popup] = await Promise.all([page.context().waitForEvent('page', { timeout: 8000 }), page.locator(sel).first().click()]);
@@ -254,6 +266,45 @@ console.log('■ H. スマホ幅（390px）：HOME／カレンダー（アイコ
   eq('ポイント：横スクロールなし', await overflow(), false);
   await p.screenshot({ path: path.join(OUT, 'r3-09-point-m.png'), fullPage: true });
   await m.ctx.close();
+}
+
+console.log('■ I. 参加申請の締切（開催日の前々日23:59まで）の表示と、締切後の挙動');
+{
+  googleOn(true);
+  const p = a.page, q = b.page;
+  const closedDay = JST(1);                          // 明日の開催：すでに締切後（前々日＝今日の0:00〜は不可）
+  const openDay = JST(2);                            // 明後日の開催：今日の23:59:59.999まで申請できる
+  await openMorning(p, openDay);
+  eq('注意書き（カレンダー上部の小さな一文）', await p.locator('.mo-note').innerText(), '朝の集まりへの参加申請は、開催日の前々日23:59まで受け付けています。');
+  const noteBox = await box(p, '.mo-note'), headBox = await box(p, '.mo-head');
+  check('注意書きはカレンダーの月表示の上にあり、大きな警告カードではない（背景・枠なし）', noteBox.y < headBox.y && noteBox.height < 60 && await p.evaluate(() => { const s = getComputedStyle(document.querySelector('.mo-note')); return s.backgroundColor === 'rgba(0, 0, 0, 0)' && s.borderTopWidth === '0px'; }), { noteBox, headBox });
+  // 2日後の開催は、まだ参加できる
+  await pick(p, openDay);
+  check('明後日の開催：参加ボタンがある（締切前）', (await p.locator('#moDetail [data-act="mo-join"]').count()) === 1 && !/受付は終了/.test(await detail(p)), await detail(p));
+  // 明日の開催（締切後）。他の会員Bが締切前に参加していた、という状況を作る
+  await store.ensureMorningEvent(closedDay, 'x'); await store.joinEventAtomic(`morning-${closedDay}`, B.toLowerCase(), null);
+  await openMorning(p, closedDay); await pick(p, closedDay);
+  const d1 = await detail(p);
+  check('締切後・未参加：「参加受付は終了しました」と出て、参加ボタンは出ない。参加者一覧は維持', /参加受付は終了しました/.test(d1) && (await p.locator('#moDetail [data-act="mo-join"]').count()) === 0 && /参加予定 1人/.test(d1) && /ハナ/.test(d1) && (await p.locator('#moDetail .mo-person .av').count()) === 1, d1);
+  check('カレンダーのアイコンも維持', (await cell(p, closedDay).locator('.mo-avs .av').count()) === 1, null);
+  const api = await p.evaluate(async (d) => { const r = await fetch('/api/community-auth?action=morning-join', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ date: d }) }); return { status: r.status, body: await r.json() }; }, closedDay);
+  check('APIを直接呼んでも締切は回避できない（409 deadline・人数は増えない）', api.status === 409 && api.body.code === 'deadline' && (await store.countEventParticipants(`morning-${closedDay}`)) === 1, api);
+  // 締切後も、参加済みの会員（B）は状態維持・Meet導線・取消ができる
+  await openMorning(q, closedDay); await pick(q, closedDay);
+  check('締切後・参加済み：参加状態を維持し、「朝の集まりに参加する」と取消が使える（締切で無効化されない）', (await q.locator('#moDetail [data-act="mo-meet"]').count()) === 1 && (await q.locator('#moDetail [data-act="mo-leave"]').count()) === 1 && await q.locator('#moDetail [data-act="mo-meet"]').first().isEnabled() && !/受付は終了/.test(await detail(q)), await detail(q));
+  const popup = await clickPopup(q, '#moDetail [data-act="mo-meet"]');
+  check('締切後でもMeetへ移動できる', /^https:\/\/meet\.google\.com\/abc\d+-/.test(popup.url()), popup.url());
+  await popup.close();
+  await q.click('#moDetail [data-act="mo-leave"]'); await q.waitForFunction(() => /開催予定なし/.test(document.querySelector('#moDetail').innerText));
+  const d2 = await detail(q);
+  check('締切後に取り消すと開催予定なしに。再び参加はできない（受付終了の表示）', /開催予定なし/.test(d2) && /参加受付は終了しました/.test(d2) && (await q.locator('#moDetail [data-act="mo-join"]').count()) === 0, d2);
+  check('ホームの「今日の一歩」は、締切後の日へ「参加してみませんか」と誘わない', !/朝の集まりが開催予定です。参加してみませんか/.test(await (async () => { await p.goto(base + '/haku-community/home/#home'); await p.reload(); await p.waitForFunction(() => !document.querySelector('#homeStep .pulse')); return p.locator('#homeStep').innerText(); })()), null);
+  await p.screenshot({ path: path.join(OUT, 'r4-01-home.png') });
+  await openMorning(q, closedDay); await pick(q, closedDay);
+  await q.screenshot({ path: path.join(OUT, 'r4-02-closed-day.png'), fullPage: false });
+  await openMorning(p, openDay); await pick(p, openDay);
+  await p.screenshot({ path: path.join(OUT, 'r4-03-calendar-note.png'), fullPage: false });
+  await store.leaveEvent(`morning-${closedDay}`, B.toLowerCase());
 }
 
 googleOn(false);

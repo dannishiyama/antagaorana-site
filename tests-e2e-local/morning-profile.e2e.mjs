@@ -50,11 +50,24 @@ async function login(email, { width = 1280, height = 900, name } = {}) {
 }
 const A = 'nishiyama.taro@example.com', B = 'Hanako.Nishiyama@Example.com';
 const JST = (n = 0) => new Date(Date.now() + 9 * 3600e3 + n * 86400e3).toISOString().slice(0, 10);
-const today = JST(0), tomorrow = JST(1), yesterday = JST(-1);
+const today = JST(0), tomorrow = JST(3), yesterday = JST(-1);
+const dayLabel = (d) => { const t = new Date(d + 'T00:00:00Z'); return `${t.getUTCMonth() + 1}月${t.getUTCDate()}日（${'日月火水木金土'[t.getUTCDay()]}）`; };
 const cell = (page, date) => page.locator(`.mo-cell[data-date="${date}"]`);
 const detail = (page) => page.locator('#moDetail').innerText();
-async function openMorning(page) { await page.goto(base + '/haku-community/home/#morning'); await page.waitForSelector('.mo-grid'); }
-async function pick(page, date) { await cell(page, date).click(); await page.waitForFunction((d) => document.querySelector(`.mo-cell[data-date="${d}"]`).getAttribute('aria-pressed') === 'true', date); }
+
+// 参加申請の締切（開催日の前々日23:59:59.999まで）があるので、テストで参加する日は「今日の3日後〜」を使う。月をまたぐ日は、カレンダーを次の月へ送って選ぶ。
+async function gotoMonth(page, date) {
+  for (let i = 0; i < 4; i++) {
+    const label = await page.locator('.mo-month').innerText();
+    const [y, m] = date.split('-');
+    if (label === `${Number(y)}年${Number(m)}月`) return;
+    await page.click('[data-act="mo-next"]');
+    await page.waitForFunction((l) => document.querySelector('.mo-month') && document.querySelector('.mo-month').textContent !== l, label);
+    await page.waitForSelector('.mo-grid');
+  }
+}
+async function openMorning(page, date = tomorrow) { await page.goto(base + '/haku-community/home/#morning'); await page.waitForSelector('.mo-grid'); await gotoMonth(page, date); }
+async function pick(page, date) { await gotoMonth(page, date); await cell(page, date).click(); await page.waitForFunction((d) => document.querySelector(`.mo-cell[data-date="${d}"]`).getAttribute('aria-pressed') === 'true', date); }
 
 console.log('■ A. ナビ名・ホームの朝の集まり（誰も参加していない状態）');
 const a = await login(A, { name: 'タロウ' });
@@ -102,7 +115,7 @@ const b = await login(B, { name: 'ハナ' });
   const p = b.page;
   await p.waitForFunction(() => document.querySelector('#homeNextMorning') && !document.querySelector('#homeNextMorning .pulse'));
   const home = await p.locator('#homeNextMorning').innerText();
-  check('Bのホーム：「あしたの朝の集まり」参加予定1人・タロウさん', /あしたの朝の集まり/.test(home) && /参加予定 1人/.test(home) && /タロウさん/.test(home), home);
+  check('Bのホーム：「○月○日（曜）の朝の集まり」参加予定1人・タロウさん', new RegExp(dayLabel(tomorrow) + 'の朝の集まり').test(home) && /参加予定 1人/.test(home) && /タロウさん/.test(home), home);
   await p.screenshot({ path: path.join(OUT, 'morning-03-home-B.png') });
   await p.click('#homeNextMorning [data-go="morning"]'); await p.waitForSelector('.mo-grid');
   await pick(p, tomorrow);

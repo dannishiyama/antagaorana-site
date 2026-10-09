@@ -305,6 +305,8 @@ export const UI = {
     cancelledNote: 'この日の朝の集まりは、中止になりました。',
     back: '集うへ戻る',
     gridAria: '朝の集まりのカレンダー',
+    deadlineNote: '朝の集まりへの参加申請は、開催日の前々日23:59まで受け付けています。',
+    closed: '参加受付は終了しました。',
     meetJoin: '朝の集まりに参加する',
     meetPreparing: '準備しています…',
     meetError: 'ミーティングの準備ができませんでした。',

@@ -56,7 +56,7 @@ import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
 import { getMemberView } from './_lib/points.js';
 import {
   MORNING_CONFIG, MORNING_BLOCK_MESSAGES, jstToday, isValidMonth, addDays, monthDates, viewableMonthRange,
-  joinBlock, leaveBlock, buildMorningDays,
+  joinBlock, leaveBlock, buildMorningDays, joinOpenFrom,
 } from './_lib/morning.js';
 import { parseAvatarDataUrl, AvatarError } from './_lib/avatar.js';
 import { ensureMorningMeet, meetIsConfigured } from './_lib/morning-meet.js';
@@ -695,7 +695,7 @@ async function handleMorningMonth(req, res, session) {
   if (month < range.min || month > range.max) return res.status(400).json({ error: 'この月は表示できません。', code: 'out_of_range' });
   const days = await buildMorningDays(monthDates(month), session.email);
   return res.status(200).json({
-    ok: true, month, today: jstToday(), minMonth: range.min, maxMonth: range.max,
+    ok: true, month, today: jstToday(), joinOpenFrom: joinOpenFrom(), minMonth: range.min, maxMonth: range.max,
     days: days.filter((d) => d.count > 0 || d.status === 'cancelled'),
   });
 }
@@ -707,7 +707,7 @@ async function handleMorningNext(req, res, session) {
   const days = await buildMorningDays(dates, session.email);
   const live = days.filter((d) => d.status === 'scheduled');
   const next = live.find((d) => d.joined) || live[0] || null;
-  return res.status(200).json({ ok: true, today, next });
+  return res.status(200).json({ ok: true, today, joinOpenFrom: joinOpenFrom(), next });
 }
 
 async function handleMorningJoin(req, res, body, session) {

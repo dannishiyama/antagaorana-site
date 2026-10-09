@@ -240,7 +240,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .mo-stack{display:flex;align-items:center;margin:8px 0 4px}
 .mo-stack .av{margin-left:-8px;box-shadow:0 0 0 2px var(--bg)}
 .mo-stack .av:first-child{margin-left:0}
-.mo-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 8px}
+.mo-note{margin-top:2px;font-size:13px;line-height:1.8;color:var(--ink3)}
+.mo-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 8px}
 .mo-month{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--green-deep);letter-spacing:.04em}
 .mo-nav{flex:none;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:none;color:var(--green-deep);font-size:20px;line-height:1;cursor:pointer}
 .mo-nav:hover{background:var(--green-pale)}
@@ -680,7 +681,7 @@ const data = {
   sessions: () => getJson('sessions', '/api/community-auth?action=sessions-list').then((d) => d.sessions || []),
   points: () => getJson('points', '/api/community-auth?action=points-me', 5000),
   me: () => getJson('me', '/api/community-auth?action=me'),
-  morningNext: () => getJson('morning-next', '/api/community-auth?action=morning-next', 8000).then((d) => { if (d.today) MO.today = d.today; return d.next || null; }),
+  morningNext: () => getJson('morning-next', '/api/community-auth?action=morning-next', 8000).then((d) => { if (d.today) MO.today = d.today; if (d.joinOpenFrom) MO.joinOpenFrom = d.joinOpenFrom; return d.next || null; }),
 };
 
 /* ═════════ 状態表示（読み込み中・空・エラー）の共通部品 ═════════ */
@@ -801,7 +802,7 @@ function setMemberName(name){
   $('greetTxt').textContent = greeting();
   paintAvatars();
 }
-const MO = { today: null, month: null, selected: null, data: null, busy: false, meetBusy: false };
+const MO = { today: null, joinOpenFrom: null, month: null, selected: null, data: null, busy: false, meetBusy: false };
 function dateAdd(str, n){ const d = new Date(str + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 function dateParts(str){ const d = new Date(str + 'T00:00:00Z'); return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(), w: String(UI.morning.weekdays).split(',')[d.getUTCDay()] }; }
 function dayTitle(str){ const p = dateParts(str); return fmt(UI.morning.dayTitle, { m: p.m, d: p.d, w: p.w }); }
@@ -871,7 +872,7 @@ async function renderHomeStep(){
   let lead, detail = '', btn, go = null, act = null;
   if (soon) { lead = UI.step.joinedSoon.lead; detail = soon.title + '（' + fmtEventDate(soon.startsAt) + '）'; btn = UI.step.joinedSoon.btn; go = 'gather'; }
   else if (morningDay && morningDay.joined && MO.today && morningDay.date <= dateAdd(MO.today, 1)) { lead = UI.step.morningSoon.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }); btn = UI.step.morningSoon.btn; go = 'morning'; }
-  else if (morningDay && !morningDay.joined) { lead = UI.step.nextMorning.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }) + '・' + fmt(UI.morning.people, { n: morningDay.count }); btn = UI.step.nextMorning.btn; go = 'morning'; }
+  else if (morningDay && !morningDay.joined && (!MO.joinOpenFrom || morningDay.date >= MO.joinOpenFrom)) { lead = UI.step.nextMorning.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }) + '・' + fmt(UI.morning.people, { n: morningDay.count }); btn = UI.step.nextMorning.btn; go = 'morning'; }
   else if (morningDay && morningDay.joined) { lead = UI.step.joinedLater.lead; detail = fmt(UI.home.morning.title, { when: morningWhen(morningDay) }); btn = UI.step.joinedLater.btn; go = 'morning'; }
   else if (joinedLater) { lead = UI.step.joinedLater.lead; detail = joinedLater.title + '（' + fmtEventDate(joinedLater.startsAt) + '）'; btn = UI.step.joinedLater.btn; go = 'gather'; }
   else if (note) { lead = UI.step.note.lead; detail = note.title || ''; btn = UI.step.note.btn; go = 'learn'; }
@@ -1375,6 +1376,7 @@ async function fetchMorningMonth(month){
   const r = await api('/api/community-auth?action=morning-month&month=' + encodeURIComponent(month), { method: 'GET' });
   if (!r.ok) throw failure(r);
   MO.today = r.data.today;
+  MO.joinOpenFrom = r.data.joinOpenFrom || null;
   const map = {};
   (r.data.days || []).forEach((d) => { map[d.date] = d; });
   MO.data = { month: r.data.month, days: map, min: r.data.minMonth, max: r.data.maxMonth };
@@ -1400,10 +1402,11 @@ function moCellHtml(date){
 function moDetailHtml(date){
   const day = moDay(date);
   const past = MO.today && date < MO.today;
+  const closed = !past && Boolean(MO.joinOpenFrom) && date < MO.joinOpenFrom; // 参加申請の締切を過ぎた日（新規の参加のみ不可）
   const chipText = day.status === 'cancelled' ? UI.morning.cancelled : day.status === 'scheduled' ? UI.morning.scheduled : UI.morning.none;
   let body = '';
   if (day.status === 'cancelled') body = '<p class="ev-note">' + esc(UI.morning.cancelledNote) + '</p>';
-  else if (day.count === 0) body = '<p class="ev-note">' + esc(past ? UI.morning.pastDay : UI.morning.emptyDay) + '</p>';
+  else if (day.count === 0) body = (past || closed) ? (past ? '<p class="ev-note">' + esc(UI.morning.pastDay) + '</p>' : '') : '<p class="ev-note">' + esc(UI.morning.emptyDay) + '</p>';
   else body = '<p class="ev-meta">' + esc(fmt(UI.morning.people, { n: day.count })) + '</p><ul class="mo-people" aria-label="' + esc(UI.morning.peopleHead) + '">' +
     day.participants.map((q) => '<li class="mo-person">' + avatarHtml(q, 36) + '<span class="nm">' + esc(q.name) + '</span>' + (q.me ? '<span class="me-tag">' + esc(UI.morning.me) + '</span>' : '') + '</li>').join('') + '</ul>';
   let action = '';
@@ -1411,7 +1414,7 @@ function moDetailHtml(date){
     action = day.joined
       ? '<button class="btn btn-primary" type="button" data-act="mo-meet" data-date="' + date + '">' + esc(UI.morning.meetJoin) + '</button>' +
         '<button class="btn-text danger" type="button" data-act="mo-leave" data-date="' + date + '">' + esc(UI.morning.leave) + '</button>'
-      : '<button class="btn btn-primary" type="button" data-act="mo-join" data-date="' + date + '">' + esc(UI.morning.join) + '</button>';
+      : (closed ? '<p class="ev-note" style="margin:0">' + esc(UI.morning.closed) + '</p>' : '<button class="btn btn-primary" type="button" data-act="mo-join" data-date="' + date + '">' + esc(UI.morning.join) + '</button>');
   }
   return '<div class="mo-day"><h2 class="mo-day-title" tabindex="-1">' + esc(dayTitle(date)) + '<span class="chip' + (day.status === 'scheduled' ? ' joined' : '') + '">' + esc(chipText) + '</span></h2>' + body + (action ? '<div class="actions">' + action + '</div><div class="mo-meet-msg" id="moMeetMsg" role="alert"></div>' : '') + '</div>';
 }
@@ -1426,7 +1429,7 @@ function drawMorning(){
   let cells = '';
   for (let i = 0; i < first; i++) cells += '<span class="mo-cell blank" aria-hidden="true"></span>';
   for (let d = 1; d <= days; d++) cells += moCellHtml(month + '-' + String(d).padStart(2, '0'));
-  box.innerHTML = '<div class="mo-head"><button class="mo-nav" type="button" data-act="mo-prev" aria-label="' + esc(UI.morning.prev) + '"' + (month <= MO.data.min ? ' disabled' : '') + '>‹</button>' +
+  box.innerHTML = '<p class="mo-note">' + esc(UI.morning.deadlineNote) + '</p><div class="mo-head"><button class="mo-nav" type="button" data-act="mo-prev" aria-label="' + esc(UI.morning.prev) + '"' + (month <= MO.data.min ? ' disabled' : '') + '>‹</button>' +
     '<div class="mo-month" aria-live="polite">' + esc(fmt(UI.morning.month, { y: mp.y, m: mp.m })) + '</div>' +
     '<button class="mo-nav" type="button" data-act="mo-next" aria-label="' + esc(UI.morning.next) + '"' + (month >= MO.data.max ? ' disabled' : '') + '>›</button></div>' +
     '<div class="mo-grid" role="group" aria-label="' + esc(UI.morning.gridAria) + '">' + String(UI.morning.weekdays).split(',').map((w) => '<span class="mo-wd" aria-hidden="true">' + esc(w) + '</span>').join('') + cells + '</div>' +

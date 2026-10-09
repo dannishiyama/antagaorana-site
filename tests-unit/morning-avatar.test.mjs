@@ -112,7 +112,7 @@ test('最初の複数人が同時に参加表明しても、その日のイベ�
   assert.equal(events.length, 1, 'イベントは1件だけ');
 });
 
-test('過去日・不正な日付・先すぎる日は参加表明も取消もできない（今日はできる）', async () => {
+test('過去日・不正な日付・先すぎる日・締切後は新規の参加表明ができない（過去日は取消もできない）', async () => {
   const a = await member('あや');
   const yesterday = addDays(today, -1);
   const p = await post(a.cookie, 'morning-join', { date: yesterday });
@@ -123,8 +123,10 @@ test('過去日・不正な日付・先すぎる日は参加表明も取消も�
     assert.equal((await post(a.cookie, 'morning-join', { date: bad })).status, 400, String(bad));
   }
   assert.equal((await post(a.cookie, 'morning-join', { date: day(MORNING_CONFIG.maxDaysAhead + 1) })).status, 409);
-  assert.equal((await post(a.cookie, 'morning-join', { date: today })).status, 200, '今日は参加できる');
-  assert.equal(joinBlock(today), null); assert.equal(leaveBlock(today), null);
+  // 参加申請の締切（開催日の前々日23:59:59.999まで）：今日・明日の開催は新規に参加表明できない。2日後からは可能。
+  for (const d of [today, tomorrow]) { const r = await post(a.cookie, 'morning-join', { date: d }); assert.equal(r.status, 409, d); assert.equal(r.body.code, 'deadline'); }
+  assert.equal((await post(a.cookie, 'morning-join', { date: addDays(today, 2) })).status, 200, '2日後の開催は参加できる');
+  assert.equal(joinBlock(today), 'deadline'); assert.equal(leaveBlock(today), null, '取消の既存仕様は変えない（今日の分も取り消せる）');
   assert.equal(isValidDate('2028-02-29'), true); assert.equal(isValidDate('2027-02-29'), false);
   assert.equal(monthDates('2026-02').length, 28);
 });

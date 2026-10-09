@@ -14,6 +14,9 @@ import {
 export const MORNING_CONFIG = {
   // 未決定：何人から「開催」とするか（いまは1人でも開催予定）
   minParticipantsToHold: 1,
+  // 参加申請の締切：開催日の「前々日」の23:59:59.999（日本時間）まで。開催日の前日0:00（日本時間）から新規の参加はできない。
+  // 値は「何日前の終わりまで」。2＝前々日の終わり。
+  joinDeadlineDaysBefore: 2,
   // 未決定：当日参加の受付締切／取消の締切。null＝設けない。例：{ hour: 5, minute: 0 }（日本時間・当日）
   joinCutoff: null,
   cancelCutoff: null,
@@ -59,6 +62,15 @@ export function viewableMonthRange(now = Date.now()) {
   return { min: addMonths(today.slice(0, 7), -MORNING_CONFIG.viewMonthsBack), max: addDays(today, MORNING_CONFIG.maxDaysAhead).slice(0, 7) };
 }
 
+/** 参加申請が締め切られる最初の瞬間（ミリ秒）。前々日の23:59:59.999の次の瞬間＝前日0:00:00.000（日本時間）。 */
+export function joinDeadlineMs(date) {
+  return Date.parse(`${addDays(date, -(MORNING_CONFIG.joinDeadlineDaysBefore - 1))}T00:00:00+09:00`);
+}
+/** いま（日本時間）参加申請できる、いちばん早い開催日。これより前の日は、新規の参加申請は締切済み。 */
+export function joinOpenFrom(now = Date.now()) {
+  return addDays(jstToday(now), MORNING_CONFIG.joinDeadlineDaysBefore);
+}
+
 function afterCutoff(cutoff, date, now) {
   if (!cutoff) return false;
   if (date !== jstToday(now)) return false;
@@ -71,6 +83,7 @@ export function joinBlock(date, now = Date.now()) {
   const today = jstToday(now);
   if (date < today) return 'past';
   if (date > addDays(today, MORNING_CONFIG.maxDaysAhead)) return 'too_far';
+  if (now >= joinDeadlineMs(date)) return 'deadline'; // 締切（サーバー側で厳密に判定。画面のボタンには依存しない）
   if (afterCutoff(MORNING_CONFIG.joinCutoff, date, now)) return 'cutoff';
   return null;
 }
@@ -86,6 +99,7 @@ export const MORNING_BLOCK_MESSAGES = {
   past: '過ぎた日には、参加表明も取り消しもできません。',
   too_far: 'この日は、まだ先すぎて参加表明できません。',
   cutoff: '受付の時間を過ぎています。',
+  deadline: '参加受付は終了しました。',
   cancelled: 'この日の朝の集まりは中止になりました。',
   closed: 'この日の朝の集まりは、受付を終了しました。',
 };
