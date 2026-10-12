@@ -28,13 +28,16 @@
   function viewRoles() {
     call('salon-staff-list').then(function (d) {
       var h = '<p class="note">灯の運営ロール（大久保さん・事務局）に登録された管理者だけが、灯の投稿・会員の管理を行えます。HAKU Communityの管理者というだけでは、灯の内容は見られません。</p>';
-      h += d.you ? '<p class="note">あなたのロール：<b>' + esc(d.you.title || d.you.role) + '</b></p>' : '<p class="note" style="color:#9A3B1F">あなたは灯の運営ロールに登録されていません。最高管理者に登録を依頼してください。</p>';
+      h += d.you ? '<p class="note">あなたのロール：<b>' + esc(d.you.title || d.you.role) + '</b></p>'
+        : d.canEditStaff ? '<p class="note" style="color:#9A3B1F">あなた（最高管理者）は、まだ灯の運営ロールに登録されていません。下のフォームに、ご自身のメールアドレスが入っています。ロールを選んで「登録・更新する」を押すと、灯の申請・投稿などを操作できます。</p>'
+        : '<p class="note" style="color:#9A3B1F">あなたは灯の運営ロールに登録されていません。最高管理者に登録を依頼してください。</p>';
       h += (d.staff || []).map(function (s) { return '<div class="app"><b>' + esc(s.email) + '</b><div class="meta">' + esc(s.role === 'owner' ? '代表' : '事務局') + '／表示：' + esc(s.title || '') + (s.subtitle ? '・' + esc(s.subtitle) : '') + '</div>' + (d.canEditStaff ? '<div class="row"><button class="reject" data-rm="' + esc(s.email) + '">ロールを外す</button></div>' : '') + '</div>'; }).join('') || '<div class="empty">登録されている運営ロールはありません。</div>';
       if (d.canEditStaff) {
         h += '<div class="evform"><label for="stEmail">管理者のメールアドレス</label><input type="email" id="stEmail"><div class="row2"><div><label for="stRole">ロール</label><select id="stRole"><option value="owner">代表（owner）</option><option value="secretariat">事務局（secretariat）</option></select></div><div><label for="stTitle">表示名（バッジ）</label><input type="text" id="stTitle" placeholder="代表／事務局"></div></div><label for="stSub">補足（任意）</label><input type="text" id="stSub"><button class="submit" id="stGo">登録・更新する</button></div>';
       } else h += '<p class="note">運営ロールの追加・削除は、最高管理者のみ行えます。</p>';
       body.innerHTML = h;
       on(body, '[data-rm]', 'click', function (el) { if (confirm(el.dataset.rm + ' のロールを外しますか？')) call('salon-staff-set', { email: el.dataset.rm, role: 'none' }).then(function () { done('外しました。'); viewRoles(); }, function () {}); });
+      if (d.canEditStaff && !d.you && d.actor && /@/.test(d.actor)) { var em = document.getElementById('stEmail'); if (em) { em.value = d.actor; document.getElementById('stRole').value = 'secretariat'; document.getElementById('stTitle').value = '事務局'; } }
       var go = document.getElementById('stGo');
       if (go) go.addEventListener('click', function () { call('salon-staff-set', { email: val('stEmail'), role: val('stRole'), title: val('stTitle'), subtitle: val('stSub') }).then(function () { done('登録しました。'); viewRoles(); }, function () {}); });
     }, function () {});
@@ -185,7 +188,7 @@
         document.getElementById('salonSub').dataset.bound = '1';
         document.querySelectorAll('#salonSub button').forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.sub); }); });
       }
-      show(sub);
+      call('salon-staff-list').then(function (d) { show(d.you ? sub : 'roles'); }, function () { show(sub); });
     }
   };
 })();

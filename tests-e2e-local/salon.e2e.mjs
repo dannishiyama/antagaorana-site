@@ -579,6 +579,14 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   check('会員：申請状況の一覧が出る', (await p.locator('#salonBody').innerText()).includes(SASAKI), null);
   await p.click('#salonSub [data-sub="audit"]'); await p.waitForFunction(() => document.querySelectorAll('#salonBody .audit').length > 0);
   check('操作履歴：灯の操作が記録されている', (await p.locator('#salonBody .audit').count()) > 0, null);
+  // ── 運営ロールが無い最高管理者：エラーではなく、ご自身を登録できる画面から始まる（付与は本人が行う。最高管理者は、灯の運営ロールが無くても付与できる） ──
+  await Salon.setStaff(ADMIN.email, null);
+  await p.reload(); await p.waitForSelector('#adminPanel', { state: 'visible' }); await p.click('[data-mode="salon"]'); await p.waitForSelector('#stGo');
+  eq('運営ロールなし：最初に「運営ロール」画面が開き、ご自身のメールアドレスが入力済み', [await p.inputValue('#stEmail'), await p.evaluate(() => document.querySelector('#salonSub button.on').dataset.sub)], [ADMIN.email, 'roles']);
+  check('運営ロールなし：最高管理者には、ご自身を登録できるという案内が出る', /まだ灯の運営ロールに登録されていません/.test(await p.locator('#salonBody').innerText()), null);
+  eq('運営ロールなしでは、申請の一覧などはAPIが拒否する（403）', (await aCall(await adminCookie(), 'salon-applications')).status, 403);
+  await p.click('#stGo'); await p.waitForFunction(() => document.getElementById('salonBody').innerText.includes('あなたのロール'));
+  eq('登録すると、灯の運営ロール（事務局）が付き、申請・決済を操作できる', [(await Salon.getStaff(ADMIN.email))?.role, (await aCall(await adminCookie(), 'salon-applications')).status], ['secretariat', 200]);
   await p.setViewportSize({ width: 390, height: 844 });
   const ovf = () => p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
   for (const [parent, sub] of [['haku', 'events'], ['haku', 'words'], ['haku', 'notes'], ['haku', 'posts'], ['haku', 'sessions'], ['haku', 'tane'], ['salon', null], ['members', null], ['applications', null], ['firebase', null], ['audit', null]]) {

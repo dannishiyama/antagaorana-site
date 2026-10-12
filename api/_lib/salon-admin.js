@@ -96,7 +96,7 @@ export async function handleSalonAdmin(action, req, res, session) {
     const R = C.makeResolver();
 
     // 運営ロールの一覧・変更（変更は super_admin のみ。一覧は管理者なら確認できる＝最初の登録のため）
-    if (action === 'salon-staff-list') return res.status(200).json({ ok: true, staff: await S.listStaff(), you: await S.getStaff(actor), canEditStaff: session.role === 'super_admin' });
+    if (action === 'salon-staff-list') return res.status(200).json({ ok: true, staff: await S.listStaff(), you: await S.getStaff(actor), canEditStaff: session.role === 'super_admin', actor });
     if (action === 'salon-staff-set') {
       if (session.role !== 'super_admin') throw new C.SalonError(403, '運営ロールの変更は、最高管理者のみ行えます。', 'forbidden');
       const email = String(body.email || '').trim().toLowerCase();
