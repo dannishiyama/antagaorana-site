@@ -20,6 +20,7 @@ const { default: adminHandler } = await import(U('api/admin.js'));
 const { default: authHandler } = await import(U('api/community-auth.js'));
 const { default: homeHandler } = await import(U('api/haku-home.js'));
 const { default: salonHandler } = await import(U('api/salon.js'));
+const { default: salonWebhookHandler } = await import(U('api/salon-stripe-webhook.js'));
 
 export const ADMIN = { email: 'admin@example.test', password: 'AdminTest-12345' };
 export const MEMBER_PASSWORD = 'MemberTest-12345';
@@ -56,10 +57,17 @@ const adapt = (handler) => async (nreq, nres) => {
   try { await handler(nreq, nres); } catch (e) { console.error('handler error', e); nres.statusCode = 500; nres.end('err'); }
 };
 
+// Stripe Webhookは署名検証にraw bodyが必要なので、bodyを読まずに渡す（本物のVercelの bodyParser:false と同じ）
+const rawAdapt = (handler) => async (nreq, nres) => {
+  nres.status = (c) => { nres.statusCode = c; return nres; };
+  nres.json = (o) => { nres.setHeader('Content-Type', 'application/json; charset=utf-8'); nres.end(JSON.stringify(o)); return nres; };
+  try { await handler(nreq, nres); } catch (e) { console.error('handler error', e); nres.statusCode = 500; nres.end('err'); }
+};
+
 // vercel.json の cleanUrls / redirects / rewrites と、ディレクトリの index.html を再現して配信する（本物のVercelの挙動は Preview で別途確認）。
 export function start() {
   const cfg = JSON.parse(fs.readFileSync(path.join(REPO, 'vercel.json'), 'utf8'));
-  const handlers = { '/api/admin': adapt(adminHandler), '/api/community-auth': adapt(authHandler), '/api/haku-home': adapt(homeHandler), '/api/salon': adapt(salonHandler) };
+  const handlers = { '/api/admin': adapt(adminHandler), '/api/community-auth': adapt(authHandler), '/api/haku-home': adapt(homeHandler), '/api/salon': adapt(salonHandler), '/api/salon-stripe-webhook': rawAdapt(salonWebhookHandler) };
   const exists = (f) => fs.existsSync(f) && fs.statSync(f).isFile();
   const server = http.createServer((req, res) => {
     const u = new URL(req.url, 'http://localhost');

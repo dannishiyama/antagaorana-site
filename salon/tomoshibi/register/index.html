@@ -98,7 +98,7 @@ footer a:hover{color:rgba(255,255,255,.8)}
   <div class="card" id="card">
     <div class="mark">教育者のサロン 灯</div>
     <div class="romaji">TOMOSHIBI</div>
-    <p class="sub">新規参加のお申し込み<br>内容を確認のうえ、運営より折り返しご連絡します。</p>
+    <p class="sub">新規参加のお申し込み<br>内容を確認のうえ、運営より折り返しご連絡します。<br>ご承認後、月額2,980円（毎月自動更新）のお支払いでご利用いただけます。この申し込みの時点では、お支払いは発生しません。</p>
 
     <form id="f" novalidate>
       <div class="field">
@@ -145,6 +145,10 @@ footer a:hover{color:rgba(255,255,255,.8)}
           <button type="button" class="toggle-pw" data-target="password2" aria-pressed="false">表示</button>
         </div>
         <input id="password2" name="password2" type="password" autocomplete="new-password" placeholder="••••••••">
+      </div>
+      <div class="field">
+        <label for="referrer">紹介者名（任意）</label>
+        <input id="referrer" name="referrer" type="text" autocomplete="off" placeholder="ご紹介者がいらっしゃる場合のみ" maxlength="60">
       </div>
       <div class="field">
         <label for="reason">教育者のサロン 灯に参加したい理由</label>
@@ -232,14 +236,14 @@ var KANA_RE = /^[぀-ゟ゠-ヿー\s　]+$/;
       body: JSON.stringify({
         community: 'tomoshibi', fullName: fullname, fullNameKana: kana, displayName: nickname,
         email: email, password: pw, password2: pw2, reason: reason, termsAccepted: terms,
-        prefecture: document.getElementById('prefecture').value, facilityLabel: (document.getElementById('facility').value || '').trim(),
+        referrerName: (document.getElementById('referrer').value || '').trim(), prefecture: document.getElementById('prefecture').value, facilityLabel: (document.getElementById('facility').value || '').trim(),
         source: new URLSearchParams(location.search).get('cta') || '',
       }),
     }).then(function(r){ return r.json().then(function(data){ return { status: r.status, data: data }; }); })
       .then(function(res){
         if(res.status !== 200){ showError(res.data.error || '送信に失敗しました。'); reset(); return; }
         form.hidden = true;
-        okmsg.textContent = 'お申し込みありがとうございます。内容を確認のうえ、審査結果をメールでお送りします。承認され次第、ご登録のメールアドレスとパスワードでログインできます。';
+        okmsg.textContent = 'お申し込みありがとうございます。内容を確認のうえ、審査結果をメールでお送りします。承認されましたら、お支払い（月額2,980円）のご案内をお送りします。お支払いの確認後、ご登録のメールアドレスとパスワードでログインできます。';
         okmsg.classList.add('show');
       })
       .catch(function(){ showError('通信に失敗しました。時間をおいて再度お試しください。'); reset(); });

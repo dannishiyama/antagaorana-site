@@ -8,10 +8,12 @@
  * HAKU Communityの管理者というだけでは、灯の投稿内容・会員情報は見られない。
  * 運営ロールの追加・削除は super_admin のみ。すべての変更は監査ログに残す。
  */
-import { blockProduction, checkOrigin } from './http.js';
-import { listApplications, getMembership, setMembership, getUser } from './store.js';
+import { blockProduction, checkOrigin, resolveBaseUrl } from './http.js';
+import { listApplications, getApplication, resolveApplication, getMembership, setMembership, getUser, logAudit, claimIdempotentOp, completeIdempotentOp, releaseIdempotentOp, checkRateLimit } from './store.js';
 import * as S from './salon-store.js';
 import * as C from './salon-core.js';
+import { startCheckout, BillingError } from './salon-billing.js';
+import { mail } from './salon-mail.js';
 
 const bool = (v) => v === true || v === 'true';
 const toMs = (v) => { const n = typeof v === 'number' ? v : Date.parse(v); return Number.isFinite(n) ? n : null; };
@@ -22,13 +24,73 @@ async function needStaff(session) {
   return staff;
 }
 
+const LOGIN_PATH = '/salon/tomoshibi/login/';
+
+// 申請の承認：pending → approved。承認だけでは会員にならない（お支払いをWebhookが確認して初めて有効になる）。
+// 承認ボタンの二重操作は、処理中の印（claimIdempotentOp）と「pendingのときだけ承認できる」確認で防ぐ。
+export async function approveSalonApplication({ email, actor, baseUrl }) {
+  const e = String(email || '').trim().toLowerCase();
+  if (!e) throw new C.SalonError(400, 'メールアドレスを指定してください。', 'bad_email');
+  const claim = await claimIdempotentOp('salon-approve', e);
+  if (claim.status !== 'new') throw new C.SalonError(409, 'この申請は処理中、または処理済みです。', 'duplicate');
+  try {
+    const application = await getApplication(S.SALON_ID, e);
+    if (!application || application.status !== 'pending') throw new C.SalonError(404, '保留中の申請が見つかりません。', 'not_pending');
+    await resolveApplication(S.SALON_ID, e, 'approved', actor);
+    await logAudit({ actorId: actor, action: 'salon_application_approved', targetId: e, metadata: { targetType: 'Application', salon: S.SALON_ID } });
+    const out = await sendPaymentGuide({ email: e, displayName: application.displayName, baseUrl });
+    await completeIdempotentOp('salon-approve', e, 'done');
+    return { ok: true, ...out };
+  } catch (err) { await releaseIdempotentOp('salon-approve', e).catch(() => {}); throw err; }
+}
+
+// 承認メール（お支払いのご案内）。Checkoutの作成に失敗しても承認は取り消さず、ログイン画面から進むご案内にする
+async function sendPaymentGuide({ email, displayName, baseUrl }) {
+  let checkoutUrl = null; let checkout = 'created'; let reason = null;
+  try { checkoutUrl = (await startCheckout({ email, baseUrl })).url; } catch (err) {
+    checkout = 'fallback'; reason = err instanceof BillingError ? err.code : 'error';
+    console.error('[salon-admin] checkout for approval mail failed:', reason);
+  }
+  const sent = await mail.approved({ email, displayName, checkoutUrl, loginUrl: `${baseUrl}${LOGIN_PATH}` });
+  return { checkout, checkoutReason: reason, emailSent: Boolean(sent?.ok) };
+}
+
+export async function rejectSalonApplication({ email, actor }) {
+  const e = String(email || '').trim().toLowerCase();
+  if (!e) throw new C.SalonError(400, 'メールアドレスを指定してください。', 'bad_email');
+  const claim = await claimIdempotentOp('salon-reject', e);
+  if (claim.status !== 'new') throw new C.SalonError(409, 'この申請は処理中、または処理済みです。', 'duplicate');
+  try {
+    const application = await getApplication(S.SALON_ID, e);
+    if (!application || application.status !== 'pending') throw new C.SalonError(404, '保留中の申請が見つかりません。', 'not_pending');
+    await resolveApplication(S.SALON_ID, e, 'rejected', actor);
+    await mail.rejected({ email: e, displayName: application.displayName });
+    await logAudit({ actorId: actor, action: 'salon_application_rejected', targetId: e, metadata: { targetType: 'Application', salon: S.SALON_ID } });
+    await completeIdempotentOp('salon-reject', e, 'done');
+    return { ok: true };
+  } catch (err) { await releaseIdempotentOp('salon-reject', e).catch(() => {}); throw err; }
+}
+
+// 管理画面の申請・決済の1行（運営が見てよい項目。Stripeの内部IDそのものは返さず、契約の有無と期間だけ返す）
+function billingView(app, m) {
+  const unpaid = app.status === 'approved' && !m;
+  return {
+    email: app.email, fullName: app.fullName, fullNameKana: app.fullNameKana, displayName: app.displayName, referrerName: app.referrerName || '', reason: app.reason || '',
+    prefecture: app.prefecture || '', facilityLabel: app.facilityLabel || '', source: app.source || '',
+    application: app.status, submittedAt: app.submittedAt, reviewedAt: app.reviewedAt || null, reviewedBy: app.reviewedBy || null,
+    payment: app.status === 'pending' ? 'review' : app.status === 'rejected' ? 'none' : unpaid ? 'unpaid' : (m?.source === 'stripe' ? 'paid' : m ? 'exempt' : 'unpaid'),
+    membership: m?.status || null, hasSubscription: Boolean(m?.stripeSubscriptionId), currentPeriodEnd: m?.currentPeriodEnd || null, cancelAtPeriodEnd: Boolean(m?.cancelAtPeriodEnd),
+    billingExempt: Boolean(m?.billingExempt), exemptReason: m?.exemptReason || '',
+  };
+}
+
 export async function handleSalonAdmin(action, req, res, session) {
   if (blockProduction(res)) return;
   const body = typeof req.body === 'object' && req.body !== null ? req.body : {};
   const isPost = req.method === 'POST';
   try {
     if (isPost && !checkOrigin(req)) return res.status(403).json({ error: 'Invalid origin' });
-    const POSTS = new Set(['salon-staff-set', 'salon-post-delete', 'salon-post-pin', 'salon-comment-delete', 'salon-creed-set', 'salon-lecture-create', 'salon-lecture-update', 'salon-lecture-delete', 'salon-news-create', 'salon-event-create', 'salon-event-update', 'salon-event-delete', 'salon-member-set']);
+    const POSTS = new Set(['salon-application-approve', 'salon-application-reject', 'salon-payment-link', 'salon-staff-set', 'salon-post-delete', 'salon-post-pin', 'salon-comment-delete', 'salon-creed-set', 'salon-lecture-create', 'salon-lecture-update', 'salon-lecture-delete', 'salon-news-create', 'salon-event-create', 'salon-event-update', 'salon-event-delete', 'salon-member-set']);
     if (POSTS.has(action) !== isPost) return res.status(405).json({ error: 'Method not allowed' });
     const actor = session.actorId;
     const R = C.makeResolver();
@@ -57,23 +119,53 @@ export async function handleSalonAdmin(action, req, res, session) {
         const memberships = await Promise.all(apps.map((a) => getMembership(S.SALON_ID, a.email)));
         return res.status(200).json({ ok: true, applications: apps.length, pending: apps.filter((a) => a.status === 'pending').length, activeMembers: memberships.filter(C.isActiveStatus).length, staff: roster.length, posts: (await S.allPostIds(5000)).length });
       }
+      case 'salon-applications': {
+        const f = ['pending', 'approved', 'rejected', 'all'].includes(req.query?.status) ? req.query.status : 'all';
+        const apps = await listApplications(S.SALON_ID, 'all');
+        const rows = await Promise.all(apps.map(async (a) => billingView(a, await getMembership(S.SALON_ID, a.email))));
+        const list = rows.filter((r) => f === 'all' || (f === 'approved' ? r.application === 'approved' || r.application === 'paid' : r.application === f))
+          .sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+        return res.status(200).json({ ok: true, applications: list });
+      }
+      case 'salon-application-approve': {
+        const baseUrl = resolveBaseUrl(req); if (!baseUrl) return res.status(400).json({ error: 'Invalid host' });
+        return res.status(200).json(await approveSalonApplication({ email: body.email, actor, baseUrl }));
+      }
+      case 'salon-application-reject': return res.status(200).json(await rejectSalonApplication({ email: body.email, actor }));
+      case 'salon-payment-link': { // 承認済み・未決済の人へ、お支払いのご案内を再送する（有効なCheckoutがあれば、同じものを再利用する）
+        const email = String(body.email || '').trim().toLowerCase();
+        const baseUrl = resolveBaseUrl(req); if (!baseUrl) return res.status(400).json({ error: 'Invalid host' });
+        const app = await getApplication(S.SALON_ID, email);
+        const m = await getMembership(S.SALON_ID, email);
+        if (!app || app.status !== 'approved' || m) throw new C.SalonError(409, '承認済みで、未決済の方だけに送れます。', 'not_unpaid');
+        if (!(await checkRateLimit(`salon-paylink:${email}`, 3, 3600))) throw new C.SalonError(429, '送信の回数が多すぎます。しばらく時間をおいてください。', 'rate');
+        const out = await sendPaymentGuide({ email, displayName: app.displayName, baseUrl });
+        await logAudit({ actorId: actor, action: 'salon_payment_link_sent', targetId: email, metadata: { salon: S.SALON_ID, checkout: out.checkout } });
+        return res.status(200).json({ ok: true, ...out });
+      }
       case 'salon-members': {
         const apps = await listApplications(S.SALON_ID, 'all');
         const rows = await Promise.all(apps.map(async (a) => {
           const [m, p, st, u] = await Promise.all([getMembership(S.SALON_ID, a.email), S.getProfile(a.email), S.getStaff(a.email), getUser(a.email)]);
-          return { email: a.email, name: p?.displayName || u?.displayName || a.displayName || '', application: a.status, membership: m?.status || null, prefecture: p?.prefecture || '', facilityLabel: p?.facilityLabel || '', listVisibility: p?.listVisibility || 'public', role: st?.role || null, since: m?.activatedAt || null, source: a.source || null };
+          const b = billingView(a, m);
+          return { email: a.email, name: p?.displayName || u?.displayName || a.displayName || '', application: a.status, membership: m?.status || null, prefecture: p?.prefecture || '', facilityLabel: p?.facilityLabel || '', listVisibility: p?.listVisibility || 'public', role: st?.role || null, since: m?.activatedAt || null, source: a.source || null, payment: b.payment, hasSubscription: b.hasSubscription, currentPeriodEnd: b.currentPeriodEnd, cancelAtPeriodEnd: b.cancelAtPeriodEnd, billingExempt: b.billingExempt };
         }));
         return res.status(200).json({ ok: true, members: rows });
       }
-      case 'salon-member-set': { // 手動の有効化／無効化（決済確認後・退会処理・Previewでのテスト用）。審査（承認）は既存の「申請」画面で行う
+      case 'salon-member-set': { // 決済を経ない手動の有効化／無効化（招待・テスト・退会処理用）。理由が必要。審査（承認）は「申請・決済」で行う
         const email = String(body.email || '').trim().toLowerCase();
         const status = body.status;
+        const reason = C.cleanLabel(body.reason || '', 80);
         if (!['active', 'inactive'].includes(status)) throw new C.SalonError(400, '状態が正しくありません。', 'bad_status');
+        if (!reason) throw new C.SalonError(400, '理由を入力してください（記録に残ります）。', 'reason_required');
         const apps = await listApplications(S.SALON_ID, 'all');
         const app = apps.find((a) => a.email === email);
         if (!app || !['approved', 'paid'].includes(app.status)) throw new C.SalonError(409, '承認済みの申請がある会員だけ変更できます。', 'not_approved');
-        await setMembership(S.SALON_ID, email, status === 'active' ? { status, activatedAt: Date.now(), source: 'salon-admin' } : { status });
-        await C.audit(actor, 'member_status_set', email, { status });
+        const cur = await getMembership(S.SALON_ID, email);
+        // Stripeの契約が生きている人は、手動では変えない（請求だけが続くのを防ぐ）。本人の退会、またはStripeでの解約を先に行う
+        if (cur?.stripeSubscriptionId && ['active', 'canceling', 'past_due'].includes(cur.status)) throw new C.SalonError(409, 'お支払い（Stripe）の契約がある会員は、ここでは変更できません。本人の退会、またはStripeでの解約をしてください。', 'has_subscription');
+        await setMembership(S.SALON_ID, email, status === 'active' ? { status, activatedAt: Date.now(), source: 'salon-admin', billingExempt: true, exemptReason: reason, stripeSubscriptionId: null } : { status });
+        await C.audit(actor, 'member_status_set', email, { status, reason });
         return res.status(200).json({ ok: true });
       }
       case 'salon-posts': {

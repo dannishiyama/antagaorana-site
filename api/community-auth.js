@@ -55,6 +55,8 @@ import { cleanUserText, hasInvalidChars, isDisplayablePost, normalizeRequestId }
 import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
 import * as Salon from './_lib/salon-store.js';
 import { PREFECTURES } from './_lib/salon-core.js';
+import { cancelSalonMembership, BillingError } from './_lib/salon-billing.js';
+import { mail as salonMail } from './_lib/salon-mail.js';
 import { getMemberView } from './_lib/points.js';
 import {
   MORNING_CONFIG, MORNING_BLOCK_MESSAGES, jstToday, isValidMonth, addDays, monthDates, viewableMonthRange,
@@ -358,7 +360,7 @@ async function handleRegister(req, res, body) {
       // 管理者承認済み。決済（/api/haku-checkout）へ進めてよい合図をclientへ返す。
       return res.status(200).json({ ok: true, email, resumed: true });
     }
-    return res.status(409).json({ error: 'このメールアドレスはすでに承認済みです。ログインページからお進みください。' });
+    return res.status(409).json({ error: 'このメールアドレスはすでに承認済みです。ログインページから、お支払いへお進みください。' });
   }
   if (existingApplication?.status === 'rejected') {
     return res.status(409).json({ error: 'このメールアドレスでのお申し込みは受け付けできません。お問い合わせください。' });
@@ -386,8 +388,13 @@ async function handleRegister(req, res, body) {
   // 既に保存済みであり、管理画面から引き続き確認・承認できる（notify.js の各関数は
   // 例外を投げず、成否をEmailLogへ記録する設計）。
   const baseUrl = resolveBaseUrl(req);
-  await notifyAdminOfApplication({ community, fullName, displayName, email, referrerName, reason, submittedAt, baseUrl });
-  await sendApplicationReceivedEmail({ community, email, displayName });
+  if (isSalon) { // 灯：灯専用の文面（HAKUのテンプレートは使わない）
+    await salonMail.adminNotice({ fullName, displayName, email, referrerName, reason, submittedAt, baseUrl });
+    await salonMail.applicationReceived({ email, displayName });
+  } else {
+    await notifyAdminOfApplication({ community, fullName, displayName, email, referrerName, reason, submittedAt, baseUrl });
+    await sendApplicationReceivedEmail({ community, email, displayName });
+  }
 
   return res.status(200).json({ ok: true, email, pendingApproval: true });
 }
@@ -455,8 +462,14 @@ async function handleLogin(req, res, body) {
     const reasonText = membership?.status === 'past_due' ? 'お支払い方法をご確認ください。運営からのメールをご確認いただくか、運営までお問い合わせください。'
       : membership?.status === 'canceled' ? '解約済みです。'
       : `${label}の会員として有効化されていません。`;
-    // 灯：未入金・退会済みなどは、再登録のご案内（code）を添える
-    return res.status(403).json({ error: `このメールアドレスは${reasonText}`, ...(isSalon ? { code: 'reregister' } : {}) });
+    if (isSalon) {
+      // 灯：承認済みでお支払い前 → お支払いへ進める。お支払い遅れ → 運営への確認。ここでは会員画面に入れない
+      const salonApp = await getApplication('tomoshibi', email);
+      if (!membership && (salonApp?.status === 'approved' || salonApp?.status === 'paid')) return res.status(403).json({ error: 'お申し込みは承認されています。お支払いが完了していないため、まだサロンをご利用いただけません。', code: 'payment_required' });
+      if (membership?.status === 'past_due') return res.status(403).json({ error: 'お支払いが確認できていません。お支払い方法をご確認ください。運営からのメールをご確認いただくか、運営までお問い合わせください。', code: 'past_due' });
+      return res.status(403).json({ error: `このメールアドレスは${reasonText}`, code: 'reregister' });
+    }
+    return res.status(403).json({ error: `このメールアドレスは${reasonText}` });
   }
 
   // 「ログインしたままにする」（灯の初期値はON）。OFFのときはブラウザを閉じると切れる＋サーバー側も12時間で切れる。
@@ -1016,7 +1029,8 @@ async function handleChangeEmail(req, res, body, session) {
   if (tomoshibiMembership) {
     await setMembership('tomoshibi', newEmail, tomoshibiMembership);
     await deleteMembership('tomoshibi', oldEmail);
-    if (tomoshibiMembership.stripeCustomerId) await setStripeCustomerEmail(tomoshibiMembership.stripeCustomerId, newEmail);
+    // 灯の顧客の索引は灯専用（HAKUの索引には書かない。書くとHAKUのWebhookが灯の顧客を取り違える）
+    if (tomoshibiMembership.stripeCustomerId) await Salon.setStripeCustomer(tomoshibiMembership.stripeCustomerId, newEmail);
   }
   // Applicationも新emailへ再配置しないと、Application/Membershipのemailがずれてしまい、
   // 決済・承認済みの会員がログイン後にHOMEへアクセスできなくなる（haku-home.js等が
@@ -1067,13 +1081,15 @@ async function handleWithdraw(req, res, body, session) {
 
   if (blockProductionForCommunity(res, community)) return;
 
-  const membership = await getMembership(community, session.email);
-  if (!membership || membership.status !== 'active') {
-    return res.status(404).json({ error: '有効な会員登録が見つかりません。' });
+  // 灯：決済のある会員は、Stripe側で「期間の終わりに解約」にする（期間の終わりまで利用でき、終了はWebhookが行う）。HAKUの解約と同じ方針
+  try {
+    const user = await getUser(session.email);
+    const out = await cancelSalonMembership(session.email, { displayName: user?.displayName });
+    return res.status(200).json({ ok: true, requiresStripePortal: false, currentPeriodEnd: out.currentPeriodEnd, immediate: out.immediate });
+  } catch (err) {
+    if (err instanceof BillingError) return res.status(err.status).json({ error: err.message, code: err.code, ...err.extra });
+    throw err;
   }
-  await setMembership(community, session.email, { status: 'inactive' });
-  await logAudit({ actorId: session.email, action: 'membership_withdrawn', targetId: session.email, metadata: { community } });
-  return res.status(200).json({ ok: true, requiresStripePortal: false });
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━

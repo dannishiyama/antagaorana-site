@@ -235,3 +235,27 @@ export async function loginFailure(email, windowSeconds = 900) {
 }
 export async function loginFailureCount(email) { return Number(await getRedis().get(k('loginfail', normEmail(email)))) || 0; }
 export async function clearLoginFailures(email) { await getRedis().del(k('loginfail', normEmail(email))); }
+
+// ── 決済（Stripe）。HAKU Communityの同種のキー（ht:checkout_lock:* / ht:stripe_customer:* / ht:processed_event:*）とは
+//    接頭辞（ht:salon:tomoshibi:）で完全に分けている。同じStripeアカウントでは同じevent.idが複数のWebhookへ届くため、
+//    「処理済み」の記録も灯専用に持たないと、HAKU側の処理済み記録に灯のイベントが巻き込まれて取りこぼす ──
+// Checkout Sessionの排他ロック。値は 'pending'（作成中）→ Checkout Session ID（作成後）。ロックのあいだは新しいSessionを作らない。
+export async function acquireCheckoutLock(email, ttlSeconds = 60 * 60 * 25) {
+  return (await getRedis().set(k('checkout_lock', normEmail(email)), 'pending', 'EX', ttlSeconds, 'NX')) === 'OK';
+}
+export async function getCheckoutLock(email) { return getRedis().get(k('checkout_lock', normEmail(email))); }
+export async function setCheckoutLockSession(email, sessionId, ttlSeconds = 60 * 60 * 25) { await getRedis().set(k('checkout_lock', normEmail(email)), String(sessionId), 'EX', ttlSeconds); }
+export async function releaseCheckoutLock(email) { await getRedis().del(k('checkout_lock', normEmail(email))); }
+
+// Stripe顧客 → 灯の会員メール（灯専用の索引。HAKUの索引には書かない）
+export async function setStripeCustomer(customerId, email) { if (customerId) await getRedis().set(k('stripe_customer', customerId), normEmail(email)); }
+export async function emailByStripeCustomer(customerId) { return customerId ? getRedis().get(k('stripe_customer', customerId)) : null; }
+
+// Webhookイベントの処理済み記録。claim（処理中の印）→ done（完了）。失敗したときは release して、Stripeの再送で処理し直せるようにする。
+export async function claimStripeEvent(eventId) {
+  const ok = await getRedis().set(k('stripe_event', eventId), 'processing', 'EX', 300, 'NX');
+  if (ok === 'OK') return { status: 'new' };
+  return { status: (await getRedis().get(k('stripe_event', eventId))) === 'done' ? 'done' : 'in_flight' };
+}
+export async function markStripeEventDone(eventId) { await getRedis().set(k('stripe_event', eventId), 'done', 'EX', 60 * 60 * 24 * 35); }
+export async function releaseStripeEvent(eventId) { await getRedis().del(k('stripe_event', eventId)); }

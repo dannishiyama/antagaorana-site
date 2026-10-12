@@ -2,7 +2,7 @@
    権限はサーバー側で判定する（管理者ログイン＋灯の運営ロール）。この画面側の表示切替は案内のためだけ。 */
 (function () {
   var CH = [['home', 'ホーム'], ['creed', '今月の一条'], ['case', 'ケース検討'], ['mgmt', '運営の相談'], ['archive', '実践講義アーカイブ'], ['news', 'お知らせ']];
-  var body, msg, sub = 'roles', state = { ch: 'home' }, keepMsg = false;
+  var body, msg, sub = 'applications', state = { ch: 'home', appStatus: 'pending' }, keepMsg = false;
 
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
   function fmt(ms) { if (!ms) return ''; var d = new Date(ms + 9 * 3600 * 1000); return (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + ' ' + String(d.getUTCHours()).padStart(2, '0') + ':' + String(d.getUTCMinutes()).padStart(2, '0'); }
@@ -104,17 +104,57 @@
     }, function () {});
   }
 
-  // ── 会員 ──
+  // ── 申請・決済（申請の確認 → 承認／却下 → お支払い状況） ──
+  var PAY = { review: '審査中', unpaid: '未決済（お支払い待ち）', paid: '決済済み（Stripe）', exempt: '決済免除（運営が有効化）', none: '—' };
+  var MEM = { active: '有効', canceling: '解約予約中（期間の終わりまで利用可）', past_due: 'お支払い遅れ（利用停止中）', canceled: '解約済み', inactive: '無効' };
+  var APP = { pending: '審査中', approved: '承認済み', paid: '承認済み', rejected: '却下' };
+  function dateOnly(ms) { if (!ms) return ''; var d = new Date(ms + 9 * 3600 * 1000); return d.getUTCFullYear() + '/' + (d.getUTCMonth() + 1) + '/' + d.getUTCDate(); }
+  function viewApplications() {
+    var f = state.appStatus;
+    var h = '<p class="note">灯への参加申請です。承認すると、お支払いのご案内（月額2,980円・Stripe）を本人へ送ります。承認前はお支払いできません。お支払いが確認されると（Stripe Webhook）、自動で会員になります。</p><div class="statusfilter">' + [['pending', '審査中'], ['approved', '承認済み'], ['rejected', '却下'], ['all', 'すべて']].map(function (x) { return '<button data-af="' + x[0] + '"' + (f === x[0] ? ' class="on"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div><div id="slApps"><div class="empty">読み込み中…</div></div>';
+    body.innerHTML = h;
+    on(body, '[data-af]', 'click', function (el) { state.appStatus = el.dataset.af; viewApplications(); });
+    call('salon-applications', undefined, '&status=' + f).then(function (d) {
+      var box = document.getElementById('slApps');
+      box.innerHTML = (d.applications || []).map(function (a) {
+        var st = a.application === 'paid' ? 'approved' : a.application;
+        var meta = esc(a.email) + '｜申請：' + fmt(a.submittedAt) + (a.referrerName ? '｜紹介者：' + esc(a.referrerName) : '') + (a.prefecture ? '｜' + esc(a.prefecture) : '') + (a.facilityLabel ? '｜' + esc(a.facilityLabel) : '');
+        var pay = '<div class="meta">申請：<b style="display:inline">' + esc(APP[a.application] || a.application) + '</b>｜お支払い：<b style="display:inline" data-pay="' + esc(a.payment) + '">' + esc(PAY[a.payment] || a.payment) + '</b>' + (a.membership ? '｜会員資格：' + esc(MEM[a.membership] || a.membership) : '') + (a.hasSubscription ? '｜月額契約あり' : '') + (a.currentPeriodEnd ? '｜期間の終わり：' + dateOnly(a.currentPeriodEnd) : '') + (a.exemptReason ? '｜免除の理由：' + esc(a.exemptReason) : '') + '</div>';
+        var btns = a.application === 'pending' ? '<div class="row"><button class="approve" data-ap="approve">承認する</button><button class="reject" data-ap="reject">却下する</button></div>'
+          : (a.application === 'approved' && a.payment === 'unpaid') ? '<div class="row"><button data-ap="link">お支払いのご案内を再送する</button></div>' : '';
+        return '<div class="app" data-email="' + esc(a.email) + '"><span class="cat st-' + esc(st) + '">' + esc(APP[a.application] || a.application) + '</span><b>' + esc(a.fullName) + '（' + esc(a.displayName) + '）</b><div class="meta">' + meta + '</div><div class="reason">' + esc(a.reason) + '</div>' + pay + btns + '</div>';
+      }).join('') || '<div class="empty">該当する申請はありません。</div>';
+      on(box, '[data-ap]', 'click', function (el) {
+        var email = el.closest('[data-email]').dataset.email, act = el.dataset.ap;
+        var q = act === 'approve' ? email + ' を承認し、お支払いのご案内を送ります。よろしいですか？' : act === 'reject' ? email + ' を却下します。よろしいですか？' : email + ' へ、お支払いのご案内を再送します。よろしいですか？';
+        if (!confirm(q)) return;
+        el.disabled = true; // 二重操作を防ぐ
+        call(act === 'approve' ? 'salon-application-approve' : act === 'reject' ? 'salon-application-reject' : 'salon-payment-link', { email: email }).then(function (r) {
+          var verb = act === 'approve' ? '承認しました。' : '送信しました。';
+          var t = act === 'reject' ? '却下しました。' : (r.emailSent === false ? verb + 'ただし、メールの送信に失敗しました。「お支払いのご案内を再送する」を押してください。' : r.checkout === 'fallback' ? verb + '決済の設定が未完了のため、ログイン画面から進むご案内を送りました。' : verb + 'お支払いのご案内を送りました。');
+          done(t); viewApplications();
+        }, function () { el.disabled = false; });
+      });
+    }, function () {});
+  }
+
+  // ── 会員（会員資格の状態。決済を経ない手動の有効化は、理由つきで記録される） ──
   function viewMembers() {
     call('salon-overview').then(function (o) {
       return call('salon-members').then(function (m) { return { o: o, m: m }; });
     }).then(function (r) {
-      var h = '<p class="note">申請数 ' + r.o.applications + '／審査中 ' + r.o.pending + '／有効会員 ' + r.o.activeMembers + '／運営ロール ' + r.o.staff + '／投稿 ' + r.o.posts + '。審査（承認・却下）は「会員申請」タブで行います。決済方法が決まるまでは、ここで有効・無効を手動で切り替えられます。</p>';
+      var h = '<p class="note">申請数 ' + r.o.applications + '／審査中 ' + r.o.pending + '／有効会員 ' + r.o.activeMembers + '／運営ロール ' + r.o.staff + '／投稿 ' + r.o.posts + '。審査（承認・却下）と、お支払いのご案内は「申請・決済」で行います。会員資格はお支払い（Stripe）の確認で自動的に変わります。招待・テストなどで決済を経ずに有効にするときだけ、下の操作を使います（理由が記録に残ります）。</p>';
       h += (r.m.members || []).map(function (x) {
-        return '<div class="app" data-email="' + esc(x.email) + '"><b>' + esc(x.name || '(名前なし)') + (x.role ? '（運営：' + esc(x.role) + '）' : '') + '</b><div class="meta">' + esc(x.email) + '｜申請：' + esc(x.application) + '｜会員状態：' + esc(x.membership || '未設定') + (x.prefecture ? '｜' + esc(x.prefecture) : '') + '</div>' + ((x.application === 'approved' || x.application === 'paid') ? '<div class="row"><button class="approve" data-st="active">有効にする</button><button class="reject" data-st="inactive">無効にする</button></div>' : '') + '</div>';
+        var manual = (x.application === 'approved' || x.application === 'paid') && !(x.hasSubscription && ['active', 'canceling', 'past_due'].indexOf(x.membership) >= 0);
+        return '<div class="app" data-email="' + esc(x.email) + '"><b>' + esc(x.name || '(名前なし)') + (x.role ? '（運営：' + esc(x.role) + '）' : '') + '</b><div class="meta">' + esc(x.email) + '｜申請：' + esc(APP[x.application] || x.application) + '｜お支払い：' + esc(PAY[x.payment] || x.payment) + '｜会員状態：' + esc(MEM[x.membership] || x.membership || '未設定') + (x.currentPeriodEnd ? '｜期間の終わり：' + dateOnly(x.currentPeriodEnd) : '') + (x.prefecture ? '｜' + esc(x.prefecture) : '') + '</div>' + (manual ? '<div class="row"><button data-st="active">決済を免除して有効にする</button><button class="reject" data-st="inactive">無効にする</button></div>' : '') + '</div>';
       }).join('') || '<div class="empty">申請はまだありません。</div>';
       body.innerHTML = h;
-      on(body, '[data-st]', 'click', function (el) { var email = el.closest('[data-email]').dataset.email; if (confirm(email + ' を「' + (el.dataset.st === 'active' ? '有効' : '無効') + '」にします。よろしいですか？')) call('salon-member-set', { email: email, status: el.dataset.st }).then(function () { done('更新しました。'); viewMembers(); }, function () {}); });
+      on(body, '[data-st]', 'click', function (el) {
+        var email = el.closest('[data-email]').dataset.email;
+        var reason = prompt(email + ' を「' + (el.dataset.st === 'active' ? '決済を免除して有効' : '無効') + '」にします。理由を入力してください（記録に残ります）。', '');
+        if (!reason) return;
+        call('salon-member-set', { email: email, status: el.dataset.st, reason: reason }).then(function () { done('更新しました。'); viewMembers(); }, function () {});
+      });
     }, function () {});
   }
 
@@ -125,7 +165,7 @@
     }, function () {});
   }
 
-  var VIEWS = { roles: viewRoles, creed: viewCreed, posts: viewPosts, lectures: viewLectures, events: viewEvents, members: viewMembers, audit: viewAudit };
+  var VIEWS = { applications: viewApplications, roles: viewRoles, creed: viewCreed, posts: viewPosts, lectures: viewLectures, events: viewEvents, members: viewMembers, audit: viewAudit };
   function show(name) {
     sub = name;
     document.querySelectorAll('#salonSub button').forEach(function (b) { b.classList.toggle('on', b.dataset.sub === name); });
@@ -136,6 +176,11 @@
   window.SalonAdmin = {
     open: function () {
       body = document.getElementById('salonBody'); msg = document.getElementById('salonMsg');
+      var bar = document.getElementById('salonSub');
+      if (!bar.querySelector('[data-sub="applications"]')) { // 「申請・決済」を先頭に追加する（管理画面のHTMLは変えず、ここで足す）
+        var b0 = document.createElement('button'); b0.dataset.sub = 'applications'; b0.textContent = '申請・決済';
+        bar.insertBefore(b0, bar.firstChild);
+      }
       if (!document.getElementById('salonSub').dataset.bound) {
         document.getElementById('salonSub').dataset.bound = '1';
         document.querySelectorAll('#salonSub button').forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.sub); }); });

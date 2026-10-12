@@ -119,6 +119,24 @@ footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
     if (link) { err.appendChild(document.createTextNode(' ')); var a = document.createElement('a'); a.href = link.href; a.textContent = link.text; err.appendChild(a); }
   }
   function reset(){ go.disabled = false; go.textContent = LABEL; }
+  // 承認済み・お支払い前：その場で、灯専用の決済画面（月額2,980円）へ進める。入力したメールとパスワードで本人確認される
+  function showPay(msg, id, pw){
+    err.textContent = msg;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'go'; b.id = 'pay'; b.style.marginTop = '14px';
+    b.textContent = 'お支払いへ進む（月額2,980円）';
+    b.addEventListener('click', function(){
+      b.disabled = true; b.textContent = '決済画面を開いています…';
+      fetch('/api/salon?action=checkout', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: id, password: pw }) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { status: r.status, data: d }; }); })
+        .then(function(res){
+          if (res.status === 200 && res.data.url) { location.href = res.data.url; return; }
+          err.textContent = (res.data && res.data.error) || '決済画面を開けませんでした。時間をおいて、もう一度お試しください。';
+          b.disabled = false; b.textContent = 'お支払いへ進む（月額2,980円）';
+        })
+        .catch(function(){ err.textContent = '通信に失敗しました。時間をおいて、もう一度お試しください。'; b.disabled = false; b.textContent = 'お支払いへ進む（月額2,980円）'; });
+    });
+    err.appendChild(b);
+  }
   window.addEventListener('pageshow', reset);
 
   form.addEventListener('submit', function(e){
@@ -135,6 +153,7 @@ footer a{color:rgba(255,255,255,.55);text-decoration:none;margin:0 10px}
     }).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { status: r.status, data: d }; }); })
       .then(function(res){
         if (res.status === 200 && res.data.ok) { location.href = safeNext(params.get('next')) || res.data.redirect || '/salon/tomoshibi/'; return; }
+        if (res.data && res.data.code === 'payment_required') { showPay(res.data.error, id, pw); reset(); return; }
         if (res.data && res.data.code === 'reregister') show(res.data.error, { href: '/salon/tomoshibi/register/', text: '再登録のご案内を見る' });
         else show((res.data && res.data.error) || 'メールアドレスまたはパスワードが違います。');
         reset();

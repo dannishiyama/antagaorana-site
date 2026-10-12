@@ -17,6 +17,17 @@ const { start, seed, store, ADMIN, MEMBER_PASSWORD } = await import('./e2e-serve
 const Salon = await import(new URL('api/_lib/salon-store.js', REPO_URL).href);
 const security = await import(new URL('api/_lib/security.js', REPO_URL).href);
 const { hooks } = await import(new URL('api/salon.js', REPO_URL).href);
+// ── 決済：偽のStripe（本物のStripeには接続しない）・メールは記録だけ ──
+const Stripe = require('stripe');
+const { FakeStripe, stripeEvent, completedEvent } = await import('./fake-stripe.mjs');
+const billing = await import(new URL('api/_lib/salon-billing.js', REPO_URL).href);
+const { mail } = await import(new URL('api/_lib/salon-mail.js', REPO_URL).href);
+Object.assign(process.env, { STRIPE_SECRET_KEY: 'sk_test_dummy_e2e', STRIPE_PRICE_ID: 'price_haku_test', SALON_STRIPE_PRICE_ID: 'price_salon_test', SALON_STRIPE_WEBHOOK_SECRET: 'whsec_salon_e2e' });
+const fake = new FakeStripe();
+billing.deps.stripeFactory = () => fake.api;
+const sentMail = [];
+for (const k of Object.keys(mail)) mail[k] = async (a) => { sentMail.push({ name: k, args: a }); return { ok: true }; };
+const mailsOf = (name, email) => sentMail.filter((m) => m.name === name && m.args.email === email);
 await seed();
 const { server, base } = await start();
 const OUT = process.env.OUT_DIR || os.tmpdir();
@@ -47,8 +58,11 @@ await addMember(HIMITSU, 'ひみつ希望', { profile: { prefecture: '福島県'
 await Salon.setStaff(ADMIN.email, { role: 'secretariat', title: '事務局', addedBy: 'seed', addedAt: Date.now() }); // 管理画面のテスト用
 
 const errors = [];
+let ctxSeq = 0;
 async function newCtx({ width = 1280, height = 900, name = 'x' } = {}) {
-  const ctx = await browser.newContext({ viewport: { width, height }, locale: 'ja-JP' });
+  // 画面ごとに別のIPとして扱う（ログイン等の回数制限は、同じIPからの連続操作を数えるため。テストの数が増えても当たらないように）
+  const n = ++ctxSeq;
+  const ctx = await browser.newContext({ viewport: { width, height }, locale: 'ja-JP', extraHTTPHeaders: { 'x-forwarded-for': `10.20.${(n >> 8) & 255}.${n & 255}` } });
   await ctx.route('https://meet.google.com/**', (r) => r.fulfill({ status: 200, contentType: 'text/html', body: '<title>meet</title>fake meet' }));
   await ctx.route('https://media.example.test/**', (r) => r.fulfill({ status: 200, contentType: 'video/mp4', body: Buffer.alloc(16) }));
   await ctx.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
@@ -69,6 +83,13 @@ async function login(page, email, { next = null } = {}) {
 const adminCookie = async () => { const r = await realFetch(base + '/api/admin?action=login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: ADMIN.email, password: ADMIN.password }) }); return r.headers.getSetCookie().map((c) => c.split(';')[0]).join('; '); };
 const aCall = async (cookie, action, body, query) => { const r = await realFetch(`${base}/api/admin?action=${action}${query || ''}`, { method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json', Cookie: cookie }, body: body ? JSON.stringify(body) : undefined }); return { status: r.status, body: await r.json().catch(() => ({})) }; };
 const W = (n) => new Promise((r) => setTimeout(r, n));
+// 署名つきのWebhookを、実際のサーバーへHTTPで送る
+async function webhook(ev, { secret = 'whsec_salon_e2e', signature } = {}) {
+  const payload = JSON.stringify(ev);
+  const header = signature === undefined ? Stripe.webhooks.generateTestHeaderString({ payload, secret }) : signature;
+  const r = await realFetch(base + '/api/salon-stripe-webhook', { method: 'POST', headers: { 'Content-Type': 'application/json', 'stripe-signature': header }, body: payload });
+  return { status: r.status, body: await r.json().catch(() => ({})) };
+}
 
 /* ═════════ 1. 紹介ページ（LP） ═════════ */
 console.log('■ 1. 紹介ページ /salon/');
@@ -79,16 +100,23 @@ console.log('■ 1. 紹介ページ /salon/');
   const html = await page.content();
   check('noindex・OGP・canonical', /name="robots" content="noindex/.test(html) && /property="og:title"/.test(html) && /rel="canonical" href="https:\/\/antagaorana.com\/salon\/"/.test(html), null);
   eq('ヒーローの見出し（Word指定の文言）', (await page.locator('.hero h1').innerText()).replace(/\s+/g, ''), '居場所は、つくれた。そのあとが、わからない。');
-  eq('セクション：ヘッダー・ヒーロー・WHY・CURRICULUM・TOMOSHIBI(TWO SALONS)・FAQ・フッター（PRICEは既定で含まれない）', await page.evaluate(() => [!!document.querySelector('.top'), !!document.querySelector('#hero'), [...document.querySelectorAll('.sec-label')].map((e) => e.textContent.trim())].flat().join(',')), 'true,true,WHY,CURRICULUM,ATTITUDE,TOMOSHIBI,CONTENTS,POSITION,A MONTH HERE,FAQ');
+  await page.waitForSelector('#price:not([hidden])');
+  eq('セクション：ヘッダー・ヒーロー・WHY・CURRICULUM・TOMOSHIBI(TWO SALONS)・PRICE・FAQ・フッター', await page.evaluate(() => [!!document.querySelector('.top'), !!document.querySelector('#hero'), [...document.querySelectorAll('.sec-label')].map((e) => e.textContent.trim())].flat().join(',')), 'true,true,WHY,CURRICULUM,ATTITUDE,TOMOSHIBI,CONTENTS,POSITION,A MONTH HERE,PRICE,FAQ');
   eq('心得十ヶ条が10項目並ぶ（Wordの正式な文言）', await page.locator('#curriculum').innerText().then((t) => ['時に「ひと呼吸」して待つ', '「責任は我にあり」と受け止める', 'なすべきことはなす誠実さと丁寧さ'].every((s) => t.includes(s))), true);
   check('縁は「準備中」で、リンクではない', (await page.locator('#en').innerText()).includes('準備') && (await page.locator('#en a').count()) === 0, null);
-  check('料金（PRICE）は既定で非表示。ナビの「料金」も出ない', !(await page.locator('#price').isVisible()) && !(await page.locator('#nav-price').isVisible()), null);
-  check('料金：既定ではHTMLのソースに金額（円）も叩き台の文言も含まれない', !/円|叩き台|3,300/.test(await res.text()), null);
+  check('料金：ページ本体のHTMLには金額（円）が含まれない（料金欄は別ファイルから読み込む）', !/円/.test(await res.text()), null);
+  await page.waitForSelector('#price:not([hidden])');
   {
-    const P = await newCtx({ name: 'lp-price' });
-    await P.ctx.route('**/salon/lp-config.json', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"showPrice":true}' }));
-    await P.page.goto(base + '/salon/'); await P.page.waitForSelector('#price:not([hidden])');
-    check('料金：showPrice を true にすると、料金欄とナビの「料金」が出る', (await P.page.locator('#price').isVisible()) && (await P.page.locator('#nav-price').isVisible()), null);
+    const t = await page.locator('#price').innerText();
+    check('料金（PRICE）：月額2,980円（税込）・毎月自動更新。以前の叩き台（3,300円・FREE・教室単位プラン）は出ない', /2,980/.test(t) && /毎月自動更新/.test(t) && !/3,300|FREE|9,900|叩き台|教室単位/.test(t), t.slice(0, 200));
+    check('料金：「承認後にお支払い・申し込み時点では支払いは発生しない」の案内。参加ボタンは登録へ', /承認ののち、お支払いのご案内/.test(t) && /発生しません/.test(t) && (await page.locator('#price [data-cta="price-plan"]').getAttribute('href')) === '/salon/tomoshibi/register/?cta=price-plan', null);
+    check('ナビの「料金」が出る', await page.locator('#nav-price').isVisible(), null);
+  }
+  {
+    const P = await newCtx({ name: 'lp-price-off' });
+    await P.ctx.route('**/salon/lp-config.json', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"showPrice":false}' }));
+    await P.page.goto(base + '/salon/'); await W(800);
+    check('料金：showPrice を false にすると、料金欄は出ない（隠せる）', !(await P.page.locator('#price').isVisible()) && !(await P.page.locator('#nav-price').isVisible()), null);
     await P.ctx.close();
   }
   const hrefs = await page.evaluate(() => [...document.querySelectorAll('[data-cta]')].map((a) => a.getAttribute('data-cta') + '→' + a.getAttribute('href')));
@@ -131,13 +159,52 @@ const NEWB = `newbie${Date.now()}@example.test`;
   await page.fill('#uid', NEWB); await page.fill('#pw', MEMBER_PASSWORD); await page.click('#go', { force: true });
   await page.waitForFunction(() => document.getElementById('err').textContent.length > 0);
   check('審査中は「確認中です」と案内される', /確認中/.test(await page.locator('#err').innerText()), await page.locator('#err').innerText());
-  // 管理画面（既存の申請管理）に灯の申請として反映 → 承認
+  // 管理画面（既存の申請管理）に灯の申請として反映 → 承認（承認だけでは会員にならない）
   const ac = await adminCookie();
   const list = await aCall(ac, 'applications', null, '&community=tomoshibi&status=pending');
   check('既存の管理画面の「灯」申請一覧に反映される', list.body.applications.some((a) => a.email === NEWB), list.status);
-  eq('承認できる', (await aCall(ac, 'approve', { community: 'tomoshibi', email: NEWB })).status, 200);
+  check('管理者への申請通知メール（灯専用の文面）が送られる', mailsOf('applicationReceived', NEWB).length === 1 && sentMail.some((m) => m.name === 'adminNotice' && m.args.email === NEWB), sentMail.map((m) => m.name));
+  const ap = await aCall(ac, 'approve', { community: 'tomoshibi', email: NEWB });
+  eq('承認できる（お支払いのご案内つき）', [ap.status, ap.body.checkout], [200, 'created']);
+  const approved = mailsOf('approved', NEWB);
+  eq('承認メールは1通で、灯専用のCheckoutのリンクを含む', [approved.length, /^https:\/\/checkout\.stripe\.test\//.test(approved[0]?.args.checkoutUrl || '')], [1, true]);
+  eq('承認だけでは会員にならない', await store.getMembership('tomoshibi', NEWB), null);
+  // 承認済み・お支払い前：ログインしても入れない。「お支払いへ進む」が出る
+  await page.goto(base + '/salon/tomoshibi/login/');
+  await page.fill('#uid', NEWB); await page.fill('#pw', MEMBER_PASSWORD); await page.click('#go', { force: true });
+  await page.waitForSelector('#pay');
+  check('お支払い前：承認済みだがまだ利用できない、という案内と「お支払いへ進む（月額2,980円）」', /承認されています/.test(await page.locator('#err').innerText()) && /2,980/.test(await page.locator('#pay').innerText()), await page.locator('#err').innerText());
+  eq('お支払い前は、サロンのAPIに入れない（Cookieなし）', (await ctx.cookies()).find((c) => c.name === 'ht_session'), undefined);
+  eq('お支払い前に、サロン画面のURLを開いてもログインへ戻る', await page.goto(base + '/salon/tomoshibi/').then(() => new URL(page.url()).pathname), '/salon/tomoshibi/login/');
+  await page.goto(base + '/salon/tomoshibi/login/');
+  await page.fill('#uid', NEWB); await page.fill('#pw', MEMBER_PASSWORD); await page.click('#go', { force: true }); await page.waitForSelector('#pay');
+  await ctx.route('https://checkout.stripe.test/**', (r) => r.fulfill({ status: 200, contentType: 'text/html', body: '<title>fake checkout</title>' }));
+  await page.click('#pay'); await page.waitForURL('https://checkout.stripe.test/**');
+  const session = [...fake.sessions.values()].at(-1);
+  eq('決済ページ：承認時に作った同じCheckoutへ進む（新しく作らない）', [fake.calls.sessionCreate, approved[0].args.checkoutUrl === session.url], [1, true]);
+  eq('決済ページ：灯専用のPrice・商品の目印・本人のメール', [session.params.line_items[0].price, session.metadata.product, session.params.customer_email], ['price_salon_test', 'tomoshibi_salon', NEWB]);
+  // 決済を中断して戻る
+  await page.goto(base + '/salon/tomoshibi/cancel/');
+  check('決済を中断：お支払いは完了していない、の案内とログインへの導線', /完了していません/.test(await page.locator('.msg').innerText()) && (await page.locator('a.go').getAttribute('href')) === '/salon/tomoshibi/login/', null);
+  // 支払い後、Webhookが届く前：確認中。成功ページに戻っただけでは会員にならない
+  fake.pay(session);
+  await page.goto(base + '/salon/tomoshibi/thanks/?session_id=' + session.id);
+  await page.waitForFunction(() => /確認しています/.test(document.getElementById('msg').textContent));
+  eq('成功ページに戻っただけでは、会員にならない', await store.getMembership('tomoshibi', NEWB), null);
+  eq('Webhookが未到達の間は、ログインしても入れない', (await store.getMembership('tomoshibi', NEWB)) === null && (await page.evaluate(() => fetch('/api/salon?action=bootstrap', { credentials: 'same-origin' }).then((r) => r.status))), 401);
+  // Webhook（署名つき）で決済を確認 → 会員になる
+  eq('不正な署名のWebhookは拒否される（400）', (await webhook(completedEvent(session), { signature: 't=1,v1=bad' })).status, 400);
+  const doneEvent = completedEvent(session);
+  eq('署名つきWebhook：決済を確認', (await webhook(doneEvent)).status, 200);
+  await page.waitForFunction(() => /お支払いを確認しました/.test(document.getElementById('msg').textContent), null, { timeout: 20000 });
+  check('決済完了ページ：ご利用を開始できる・ログインの導線', await page.locator('#login').isVisible(), null);
+  const mem = await store.getMembership('tomoshibi', NEWB);
+  eq('会員の状態：有効・Stripeで確認・契約あり', [mem.status, mem.source, Boolean(mem.stripeSubscriptionId), (await store.getApplication('tomoshibi', NEWB)).status], ['active', 'stripe', true, 'paid']);
+  eq('利用開始メールは1通', mailsOf('usageStart', NEWB).length, 1);
+  eq('同じWebhookが重複して届いても、二重に処理しない', [(await webhook(doneEvent)).body.skipped, mailsOf('usageStart', NEWB).length], ['duplicate_event', 1]);
   await login(page, NEWB, { next: '/salon/tomoshibi/' });
-  eq('承認後、ログインしてサロン画面に入れる', new URL(page.url()).pathname, '/salon/tomoshibi/');
+  eq('決済後、ログインしてサロン画面に入れる', new URL(page.url()).pathname, '/salon/tomoshibi/');
+  eq('HAKUの会員資格は作られない（同じメールでも別々）', await store.getMembership('haku', NEWB), null);
   await ctx.close();
 }
 
@@ -447,6 +514,30 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   await p.click('[data-mode="salon"]');
   check('灯サロン運営を開くと、HAKUのサブタブは隠れる', !(await p.locator('#hakuSub').isVisible()), null);
   await p.click('[data-mode="salon"]'); await p.waitForSelector('#salonBody .app, #salonBody .empty');
+  // ── 申請・決済（先頭のサブタブ。申請→承認→お支払い待ち→案内の再送） ──
+  eq('灯サロン運営のサブタブ：「申請・決済」が先頭で、最初に開く', await p.evaluate(() => [document.querySelector('#salonSub button').textContent, document.querySelector('#salonSub button').classList.contains('on')]), ['申請・決済', true]);
+  const UIAPP = `uiapp${Date.now()}@example.test`;
+  await store.saveUser({ email: UIAPP, displayName: '画面申請', fullName: '画面 申請', fullNameKana: 'がめん しんせい', passwordHash: hash });
+  await store.createApplication('tomoshibi', { email: UIAPP, fullName: '画面 申請', fullNameKana: 'がめん しんせい', displayName: '画面申請', reason: '画面から承認のテストです。', referrerName: '紹介のひと' });
+  await p.click('#salonSub [data-sub="applications"]'); await p.waitForSelector(`#slApps [data-email="${UIAPP}"]`);
+  check('申請・決済：申請内容（理由・紹介者）が見え、承認／却下ボタンがある', /画面から承認のテスト/.test(await p.locator(`#slApps [data-email="${UIAPP}"]`).innerText()) && /紹介のひと/.test(await p.locator(`#slApps [data-email="${UIAPP}"]`).innerText()) && (await p.locator(`#slApps [data-email="${UIAPP}"] [data-ap]`).count()) === 2, null);
+  await p.click(`#slApps [data-email="${UIAPP}"] [data-ap="approve"]`);
+  await p.waitForFunction(() => /承認しました/.test(document.getElementById('salonMsg').textContent));
+  eq('申請・決済：承認すると、承認済み・未会員。お支払いのご案内が送られる', [(await store.getApplication('tomoshibi', UIAPP)).status, await store.getMembership('tomoshibi', UIAPP), mailsOf('approved', UIAPP).length], ['approved', null, 1]);
+  await p.click('#salonBody [data-af="approved"]'); await p.waitForSelector(`#slApps [data-email="${UIAPP}"] [data-pay="unpaid"]`);
+  check('申請・決済：承認済みの人は「未決済（お支払い待ち）」と表示。案内の再送ボタンがある', (await p.locator(`#slApps [data-email="${UIAPP}"] [data-ap="link"]`).count()) === 1, null);
+  await p.click(`#slApps [data-email="${UIAPP}"] [data-ap="link"]`);
+  await p.waitForFunction(() => /送信しました/.test(document.getElementById('salonMsg').textContent));
+  eq('申請・決済：再送しても、Checkoutは増えない（同じものを再利用）', [mailsOf('approved', UIAPP).length, mailsOf('approved', UIAPP)[1].args.checkoutUrl === mailsOf('approved', UIAPP)[0].args.checkoutUrl], [2, true]);
+  const UIREJ = `uirej${Date.now()}@example.test`;
+  await store.saveUser({ email: UIREJ, displayName: '画面却下', fullName: '画面 却下', fullNameKana: 'がめん きゃっか', passwordHash: hash });
+  await store.createApplication('tomoshibi', { email: UIREJ, fullName: '画面 却下', fullNameKana: 'がめん きゃっか', displayName: '画面却下', reason: '却下のテスト' });
+  await p.click('#salonBody [data-af="pending"]'); await p.waitForSelector(`#slApps [data-email="${UIREJ}"]`);
+  await p.click(`#slApps [data-email="${UIREJ}"] [data-ap="reject"]`);
+  await p.waitForFunction(() => /却下しました/.test(document.getElementById('salonMsg').textContent));
+  eq('申請・決済：却下できる（却下メール・決済は不可）', [(await store.getApplication('tomoshibi', UIREJ)).status, mailsOf('rejected', UIREJ).length], ['rejected', 1]);
+  // ── 運営ロール ──
+  await p.click('#salonSub [data-sub="roles"]'); await p.waitForSelector('#stGo');
   check('運営ロール：登録済みの代表・事務局が一覧に出る', (await p.locator('#salonBody').innerText()).includes(OWNER) && (await p.locator('#salonBody').innerText()).includes(SECR), null);
   check('運営ロール：最高管理者には登録フォームが出る', await p.locator('#stGo').count() === 1, null);
   await p.fill('#stEmail', 'newstaff@example.test'); await p.selectOption('#stRole', 'secretariat'); await p.click('#stGo');
@@ -504,6 +595,48 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   const ac2 = await adminCookie();
   eq('運営ロールのない管理者は、灯の投稿一覧をAPIで取得できない（403）', (await aCall(ac2, 'salon-posts', undefined, '&ch=home')).status, 403);
   await Salon.setStaff(ADMIN.email, { role: 'secretariat', title: '事務局', addedBy: 'seed', addedAt: Date.now() });
+}
+
+/* ═════════ 12. 決済まわりの状態・退会（解約）・スマホ ═════════ */
+console.log('■ 12. 決済の状態・退会・スマホ');
+{
+  // お支払い遅れ：ログインできず、お支払いの案内ボタンは出ない（新しい契約を作らせない）
+  const PD = 'pastdue@example.test'; await addMember(PD, 'おくれ'); await store.setMembership('tomoshibi', PD, { status: 'past_due', stripeSubscriptionId: 'sub_pd' });
+  const A1 = await newCtx({ name: 'pastdue' }); const p1 = A1.page;
+  await p1.goto(base + '/salon/tomoshibi/login/'); await p1.fill('#uid', PD); await p1.fill('#pw', MEMBER_PASSWORD); await p1.click('#go', { force: true });
+  await p1.waitForFunction(() => document.getElementById('err').textContent.length > 0);
+  check('お支払い遅れ：確認を促す案内。「お支払いへ進む」は出ない', /お支払いが確認できていません/.test(await p1.locator('#err').innerText()) && (await p1.locator('#pay').count()) === 0, await p1.locator('#err').innerText());
+  await A1.ctx.close();
+  // 却下された人：ログインできない・決済へ進めない
+  const RJ = 'rejected@example.test'; await addMember(RJ, 'きゃっか'); await store.resolveApplication('tomoshibi', RJ, 'rejected', 'x'); await store.setMembership('tomoshibi', RJ, { status: 'inactive' });
+  eq('却下された人は、決済を始められない（403）', (await realFetch(base + '/api/salon?action=checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: RJ, password: MEMBER_PASSWORD }) })).status, 403);
+  // 退会（解約）：期間の終わりまで利用できる。ログアウトせず、メールが届く
+  const CB = 'canceler@example.test'; await addMember(CB, 'かいやく');
+  const sub = { id: 'sub_cb_e2e', status: 'active', customer: 'cus_cb_e2e', cancel_at_period_end: false, metadata: { product: 'tomoshibi_salon', community: 'tomoshibi', email: CB }, items: { data: [{ price: { id: 'price_salon_test' }, current_period_end: Math.floor(Date.now() / 1000) + 20 * 86400 }] } };
+  fake.subs.set(sub.id, sub); await store.setMembership('tomoshibi', CB, { status: 'active', source: 'stripe', stripeSubscriptionId: sub.id, stripeCustomerId: sub.customer });
+  const A2 = await newCtx({ name: 'cancel' }); const p2 = A2.page; await login(p2, CB);
+  await p2.goto(base + '/salon/tomoshibi/#withdraw'); await p2.waitForSelector('#withdrawBtn');
+  check('退会の案内：次回以降の自動更新は行われず、期間の終わりまで利用できる、という説明', /自動更新は行われません/.test(await p2.locator('#withdrawPanel').innerText()) && /期間の終わりまで/.test(await p2.locator('#withdrawPanel').innerText()), null);
+  await p2.click('#withdrawBtn'); await p2.waitForFunction(() => /受け付けました/.test(document.getElementById('wdErr').textContent));
+  eq('退会（解約）：Stripeに「期間の終わりに解約」を設定。会員は解約予約中', [fake.calls.subUpdate.at(-1)[1], (await store.getMembership('tomoshibi', CB)).status], [{ cancel_at_period_end: true }, 'canceling']);
+  eq('解約予約中も、期間の終わりまではサロンに入れる（ログアウトされない）', await p2.evaluate(() => fetch('/api/salon?action=bootstrap', { credentials: 'same-origin' }).then((r) => r.status)), 200);
+  eq('解約のメールは1通', mailsOf('cancelScheduled', CB).length, 1);
+  sub.status = 'canceled';
+  eq('期間の終わりにStripeが終了を通知 → 会員は解約済みになり、入れなくなる', [(await webhook(stripeEvent('customer.subscription.deleted', { ...sub }))).status, (await store.getMembership('tomoshibi', CB)).status, await p2.evaluate(() => fetch('/api/salon?action=bootstrap', { credentials: 'same-origin' }).then((r) => r.status))], [200, 'canceled', 403]);
+  await A2.ctx.close();
+  // HAKUの決済イベントは、灯のWebhookに届いても無視される
+  const hk = await webhook(stripeEvent('customer.subscription.updated', { id: 'sub_hk', customer: 'cus_hk', status: 'canceled', metadata: { product: 'haku_community', community: 'haku', email: CB } }));
+  eq('HAKUの決済イベントは、灯のWebhookでは無視される', hk.body.skipped, 'not_salon');
+  // スマホ幅：決済の各画面で横はみ出しなし
+  const M = await newCtx({ width: 390, height: 844, name: 'pay-mobile' }); const pm = M.page;
+  const ovf = () => pm.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+  for (const u of ['/salon/tomoshibi/cancel/', '/salon/tomoshibi/thanks/?session_id=bad', '/salon/tomoshibi/register/', '/salon/']) { await pm.goto(base + u); await W(400); eq(`スマホ幅390px：${u} で横はみ出しなし`, await ovf(), false); }
+  await pm.goto(base + '/salon/tomoshibi/login/'); await pm.fill('#uid', NEWB); await pm.fill('#pw', 'wrong-password-xyz'); await pm.click('#go', { force: true }); await W(600);
+  const PAYM = 'paymobile@example.test'; await store.saveUser({ email: PAYM, displayName: 'pm', fullName: 'pm', fullNameKana: 'ぴーえむ', passwordHash: hash }); await store.createApplication('tomoshibi', { email: PAYM, fullName: 'pm', fullNameKana: 'ぴーえむ', displayName: 'pm' }); await store.resolveApplication('tomoshibi', PAYM, 'approved', 'x');
+  await pm.goto(base + '/salon/tomoshibi/login/'); await pm.fill('#uid', PAYM); await pm.fill('#pw', MEMBER_PASSWORD); await pm.click('#go', { force: true }); await pm.waitForSelector('#pay');
+  eq('スマホ幅390px：ログイン画面の「お支払いへ進む」表示でも横はみ出しなし', await ovf(), false);
+  await shot(pm, 'salon-12-login-pay-mobile.png', { fullPage: true });
+  await M.ctx.close();
 }
 
 eq('画面のJavaScriptエラー・予期しないエラーなし', errors, []);

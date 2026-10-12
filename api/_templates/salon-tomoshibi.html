@@ -539,7 +539,7 @@ function showWithdraw() {
   S.view = 'withdraw'; hideAll(); setNav(''); setHead('退会について', '');
   $('composer').hidden = true; $('posts').hidden = true; $('empty').hidden = true; $('more').hidden = true;
   var panel = $('withdrawPanel'); panel.hidden = false;
-  panel.innerHTML = '<p class="lead" style="color:var(--ink)">退会のお手続きをすると、この会員資格ではサロンに入れなくなります。投稿の取り扱いなど、詳しい決まりは、正式に決まり次第お知らせします。ご不明な点は、<a href="mailto:info@antagaorana.com" style="color:var(--terra)">info@antagaorana.com</a> までお問い合わせください。</p>' +
+  panel.innerHTML = '<p class="lead" style="color:var(--ink)">退会（解約）のお手続きをすると、次回以降の自動更新は行われません。お支払い済みの期間の終わりまでは、引き続きサロンをご利用いただけます。投稿の取り扱いなど、詳しい決まりは、正式に決まり次第お知らせします。ご不明な点は、<a href="mailto:info@antagaorana.com" style="color:var(--terra)">info@antagaorana.com</a> までお問い合わせください。</p>' +
     '<div style="margin-top:18px"><button class="btn-s danger" type="button" id="withdrawBtn">退会する</button></div><div class="form-err" id="wdErr" role="alert"></div>';
   window.scrollTo(0, 0);
 }
@@ -766,10 +766,15 @@ document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$
 
 document.addEventListener('click', function (e) {
   if (e.target.id === 'withdrawBtn') {
-    if (!confirm('退会しますか？この会員資格では、サロンに入れなくなります。')) return;
+    if (!confirm('退会（解約）しますか？次回以降の自動更新は行われません。お支払い済みの期間の終わりまでは、引き続きご利用いただけます。')) return;
     e.target.disabled = true;
     ext('/api/community-auth?action=withdraw', { community: 'tomoshibi' }).then(function (r) {
       if (!r.ok) { e.target.disabled = false; $('wdErr').textContent = (r.data && r.data.error) || '退会の手続きができませんでした。時間をおいて、もう一度お試しください。'; return; }
+      if (r.data && r.data.immediate === false) { // お支払い済みの期間の終わりまで利用できる（解約の予約）。ログアウトはしない
+        var wd = $('wdErr'); wd.style.color = 'var(--green-lt)';
+        wd.textContent = '退会（解約）を受け付けました。' + (r.data.currentPeriodEnd ? new Date(r.data.currentPeriodEnd).toLocaleDateString('ja-JP') + 'まで、' : 'お支払い済みの期間の終わりまで、') + '引き続きご利用いただけます。確認のメールをお送りしました。';
+        e.target.hidden = true; return;
+      }
       ext('/api/community-auth?action=logout', {}).then(function () { location.href = '/salon/'; });
     });
   }

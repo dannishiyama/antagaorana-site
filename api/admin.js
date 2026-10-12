@@ -590,6 +590,8 @@ async function handleApprove(req, res, session) {
   const body = typeof req.body === 'object' && req.body !== null ? req.body : {};
   const community = body.community === 'haku' ? 'haku' : 'tomoshibi';
   if (blockProductionForCommunity(res, community)) return;
+  // 灯（tomoshibi）は灯専用の処理（運営ロールの確認・承認・お支払い案内）へ。HAKUの処理は下をそのまま通る。
+  if (community === 'tomoshibi') return handleSalonAdmin('salon-application-approve', req, res, session);
   const email = String(body.email || '').trim().toLowerCase();
   if (!email) return res.status(400).json({ error: 'メールアドレスを指定してください。' });
 
@@ -605,14 +607,9 @@ async function handleApprove(req, res, session) {
 
   await resolveApplication(community, email, 'approved', session.actorId);
 
-  // 灯（tomoshibi）は決済不要のため、承認と同時に利用開始してよい。
   // HAKU Community は完全紹介制＋決済必須のため、承認だけではMembershipを有効化しない。
   // Membershipが実際にactiveになるのは、承認後にStripe決済が完了しWebhookが確認してから
   // （api/haku-stripe-webhook.js 側で「承認済みApplicationのみ」を条件に有効化する）。
-  if (community === 'tomoshibi' && process.env.SALON_REQUIRE_PAYMENT !== '1') {
-    // SALON_REQUIRE_PAYMENT=1 のときは、承認だけでは有効にしない（料金・決済が決まったあと、確認できた会員を運営が有効化する）。
-    await setMembership(community, email, { status: 'active', activatedAt: Date.now(), source: 'admin' });
-  }
 
   // 登録時（api/community-auth.js?action=register）に既にパスワードを設定済みのはずなので、
   // 通常はログイン案内メールのみでよい。万一パスワード未設定（旧フローの名残）であれば、
@@ -662,6 +659,7 @@ async function handleReject(req, res, session) {
   const body = typeof req.body === 'object' && req.body !== null ? req.body : {};
   const community = body.community === 'haku' ? 'haku' : 'tomoshibi';
   if (blockProductionForCommunity(res, community)) return;
+  if (community === 'tomoshibi') return handleSalonAdmin('salon-application-reject', req, res, session);
   const email = String(body.email || '').trim().toLowerCase();
   if (!email) return res.status(400).json({ error: 'メールアドレスを指定してください。' });
 

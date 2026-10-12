@@ -466,11 +466,13 @@ test('管理API：投稿・コメントの削除とピン留め、お知らせ�
   assert.equal((await S(m.cookie, 'post', { id: post.id })).status, 404);
   // 会員の状態（決済確認後の有効化・退会）。承認済みの申請がある人だけ
   const none = await member('みしょうにん', { status: null }); await store.resolveApplication('tomoshibi', none.email, 'pending', 'x');
-  assert.equal((await AP(adm, 'salon-member-set', { email: none.email, status: 'active' })).status, 409, '承認前は有効化できない');
+  assert.equal((await AP(adm, 'salon-member-set', { email: none.email, status: 'active', reason: 'テスト' })).status, 409, '承認前は有効化できない');
+  assert.equal((await AP(adm, 'salon-member-set', { email: none.email, status: 'active' })).status, 400, '理由がないと変更できない');
   const appr = await member('しょうにん', { status: null });
-  assert.equal((await AP(adm, 'salon-member-set', { email: appr.email, status: 'active' })).status, 200);
+  assert.equal((await AP(adm, 'salon-member-set', { email: appr.email, status: 'active', reason: '招待のため' })).status, 200);
+  assert.equal((await store.getMembership('tomoshibi', appr.email)).billingExempt, true, '決済免除として記録される');
   assert.equal((await S(appr.cookie, 'bootstrap')).status, 200);
-  assert.equal((await AP(adm, 'salon-member-set', { email: appr.email, status: 'inactive' })).status, 200);
+  assert.equal((await AP(adm, 'salon-member-set', { email: appr.email, status: 'inactive', reason: '退会処理' })).status, 200);
   assert.equal((await S(appr.cookie, 'bootstrap')).status, 403);
   const audit = (await A(adm, 'salon-audit')).body.entries.map((e) => e.action);
   for (const a of ['salon_comment_deleted_by_staff', 'salon_post_pinned', 'salon_news_created', 'salon_post_deleted_by_staff', 'salon_member_status_set']) assert.ok(audit.includes(a), a);
@@ -491,9 +493,15 @@ test('登録→管理者の承認→ログイン。登録時の都道府県・�
   assert.equal(login0.status, 403); assert.equal(login0.body.code, 'pending');
   // 管理画面の申請一覧に「灯」の申請として出る → 承認
   const adm = await adminCookie('root@example.com', 'super_admin');
+  assert.equal((await AP(adm, 'approve', { community: 'tomoshibi', email })).status, 403, '灯の運営ロールがない管理者は、灯の申請を承認できない');
+  await Salon.setStaff('root@example.com', SEC);
   const list = await A(adm, 'applications', { query: { community: 'tomoshibi', status: 'pending' } });
   assert.ok(list.body.applications.some((a) => a.email === email), '管理画面の灯の申請一覧に反映される');
   assert.equal((await AP(adm, 'approve', { community: 'tomoshibi', email })).status, 200);
+  const unpaid = await call(auth, '', 'login', { method: 'POST', body: { community: 'tomoshibi', email, password: 'password-1234' } });
+  assert.equal(unpaid.status, 403); assert.equal(unpaid.body.code, 'payment_required', '承認済みでも、お支払い前は入れない');
+  assert.equal(await store.getMembership('tomoshibi', email), null, '承認だけでは会員にならない');
+  await store.setMembership('tomoshibi', email, { status: 'active', activatedAt: Date.now(), source: 'stripe' }); // お支払いの確認（Webhook）の代わり。実際の流れは salon-billing.test.mjs
   const login = await call(auth, '', 'login', { method: 'POST', body: { community: 'tomoshibi', email, password: 'password-1234' } });
   assert.equal(login.status, 200); assert.equal(login.body.redirect, '/salon/tomoshibi/');
   assert.match(String([].concat(login.headers['set-cookie'] || []).join(';')), /Max-Age=\d+/, '既定はログインしたまま（Max-Ageあり）');
@@ -507,21 +515,20 @@ test('登録→管理者の承認→ログイン。登録時の都道府県・�
   assert.equal(rl.status, 403); assert.equal(rl.body.code, 'rejected');
 });
 
-test('決済を求める設計（SALON_REQUIRE_PAYMENT=1）：承認だけでは有効にならず、運営が有効化するまで入れない', async () => {
-  process.env.SALON_REQUIRE_PAYMENT = '1';
+test('承認済み・お支払い前：サロンには入れない。運営が理由つきで決済を免除して有効にすると入れる（記録に残る）', async () => {
+  const email = `pay${Date.now()}@example.com`;
+  await store.saveUser({ email, displayName: 'ぺい', fullName: 'ぺい', fullNameKana: 'ぺい', passwordHash: await hashPassword('password-1234') });
+  await store.createApplication('tomoshibi', { email, fullName: 'ぺい', fullNameKana: 'ぺい', displayName: 'ぺい' });
+  await Salon.setStaff('root@example.com', SEC);
+  const adm = await adminCookie('root@example.com', 'super_admin');
   try {
-    const email = `pay${Date.now()}@example.com`;
-    await store.saveUser({ email, displayName: 'ぺい', fullName: 'ぺい', fullNameKana: 'ぺい', passwordHash: await hashPassword('password-1234') });
-    await store.createApplication('tomoshibi', { email, fullName: 'ぺい', fullNameKana: 'ぺい', displayName: 'ぺい' });
-    const adm = await adminCookie('root@example.com', 'super_admin');
     assert.equal((await AP(adm, 'approve', { community: 'tomoshibi', email })).status, 200);
     assert.equal(await store.getMembership('tomoshibi', email), null, '承認しても有効にならない');
     const l = await call(auth, '', 'login', { method: 'POST', body: { community: 'tomoshibi', email, password: 'password-1234' } });
-    assert.equal(l.status, 403); assert.equal(l.body.code, 'reregister', '再登録のご案内（code）');
-    await Salon.setStaff('root@example.com', SEC);
-    assert.equal((await AP(adm, 'salon-member-set', { email, status: 'active' })).status, 200);
+    assert.equal(l.status, 403); assert.equal(l.body.code, 'payment_required');
+    assert.equal((await AP(adm, 'salon-member-set', { email, status: 'active', reason: '招待のテスト' })).status, 200);
     assert.equal((await call(auth, '', 'login', { method: 'POST', body: { community: 'tomoshibi', email, password: 'password-1234' } })).status, 200);
-  } finally { delete process.env.SALON_REQUIRE_PAYMENT; await Salon.setStaff('root@example.com', null); }
+  } finally { await Salon.setStaff('root@example.com', null); }
 });
 
 test('ログイン：連続失敗でロック（5回）。ロック中は正しいパスワードでも入れない。ログインしたまま=OFFは期限つきCookie。HAKUのログインは影響を受けない', async () => {

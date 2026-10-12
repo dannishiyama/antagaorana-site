@@ -17,11 +17,15 @@
  * GET  ?action=event-url&id=              参加予定の会員にだけ、開催URLを返す
  * GET  ?action=lecture-play&id=           会員にだけ、講義動画のURLを返す（一覧には含めない）
  * GET  ?action=cron-reminders             講義の前日リマインド（CRON_SECRET必須）
+ * POST ?action=checkout                   承認済みの申請者を、灯専用のStripe Checkout（月額2,980円）へ。メール＋パスワードで本人確認（未ログイン可）
+ * GET  ?action=payment-status&session_id= 決済ページから戻ったあとの状況（会員資格は変えない。変えるのはStripe Webhookだけ）
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getSession, listApplications, claimIdempotentOp, completeIdempotentOp, releaseIdempotentOp } from './_lib/store.js';
+import { getSession, getUser, listApplications, claimIdempotentOp, completeIdempotentOp, releaseIdempotentOp } from './_lib/store.js';
+import { verifyPassword } from './_lib/security.js';
+import { startCheckout, paymentStatus, BillingError } from './_lib/salon-billing.js';
 import { parseCookies } from './_lib/cookies.js';
 import { blockProduction, checkOrigin, rateLimitGuard, resolveBaseUrl } from './_lib/http.js';
 import { normalizeRequestId } from './_lib/text-safety.js';
@@ -392,6 +396,27 @@ export default async function handler(req, res) {
     if (isPost && !checkOrigin(req)) return res.status(403).json({ error: 'Invalid origin' });
     if (isPost && WRITE_LIMITS[action] && !(await rateLimitGuard(req, res, { key: `salon-${action}`, limit: WRITE_LIMITS[action][0], windowSeconds: WRITE_LIMITS[action][1] }))) return;
 
+    // ── 決済（未ログインでも、承認済みの本人だけが進める） ──
+    if (action === 'checkout') {
+      if (!isPost) return res.status(405).json({ error: 'Method not allowed' });
+      if (!(await rateLimitGuard(req, res, { key: 'salon-checkout', limit: 12, windowSeconds: 600 }))) return;
+      const email = String(body.email || '').trim().toLowerCase();
+      const GENERIC = 'メールアドレスまたはパスワードが違います。';
+      if (!email || !body.password) return res.status(400).json({ error: GENERIC });
+      if ((await S.loginFailureCount(email)) >= 5) return res.status(429).json({ error: 'ログインに連続して失敗したため、しばらく時間をおいて、もう一度お試しください。', code: 'locked' });
+      const user = await getUser(email);
+      if (!user || !(await verifyPassword(String(body.password), user.passwordHash))) { await S.loginFailure(email); return res.status(401).json({ error: GENERIC }); }
+      const baseUrl = resolveBaseUrl(req);
+      if (!baseUrl) return res.status(400).json({ error: 'Invalid host' });
+      const out = await startCheckout({ email, baseUrl });
+      return res.status(200).json({ ok: true, url: out.url });
+    }
+    if (action === 'payment-status') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      if (!(await rateLimitGuard(req, res, { key: 'salon-paystatus', limit: 60, windowSeconds: 60 }))) return;
+      return res.status(200).json({ ok: true, ...(await paymentStatus(String(req.query?.session_id || ''))) });
+    }
+
     if (action === 'page') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await getSession(parseCookies(req).ht_session);
@@ -449,6 +474,7 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     if (err instanceof C.SalonError) return res.status(err.status).json({ error: err.message, code: err.code });
+    if (err instanceof BillingError) return res.status(err.status).json({ error: err.message, code: err.code, ...err.extra });
     console.error('[salon] error:', err.message);
     return res.status(500).json({ error: '処理できませんでした。時間をおいて、もう一度お試しください。' });
   }

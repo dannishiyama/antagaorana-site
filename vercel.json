@@ -15,6 +15,9 @@
       "memory": 256,
       "maxDuration": 10
     },
+    "api/salon-stripe-webhook.js": {
+      "maxDuration": 10
+    },
     "api/haku-home.js": {
       "includeFiles": "api/_templates/haku-community-home.html"
     },
@@ -248,6 +251,16 @@
     {
       "source": "/salon/tomoshibi/set-password",
       "destination": "/salon/tomoshibi/set-password/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi/thanks",
+      "destination": "/salon/tomoshibi/thanks/",
+      "permanent": true
+    },
+    {
+      "source": "/salon/tomoshibi/cancel",
+      "destination": "/salon/tomoshibi/cancel/",
       "permanent": true
     },
     {
