@@ -38,7 +38,7 @@ console.log('■ A. 管理者ログイン〜会員一覧');
 await page.goto(base + '/haku-community/admin/');
 await page.fill('#adminemail', ADMIN.email); await page.fill('#adminpw', ADMIN.password);
 await page.click('#loginbtn'); await page.waitForSelector('#adminPanel', { state: 'visible' });
-await page.click('[data-mode="members"]'); await waitList();
+await page.click('#adminNav [data-mode="members"]'); await waitList();
 eq('既定の会員一覧はHAKU Community', await page.evaluate(() => document.querySelector('#membersPanel [data-mc].on').dataset.mc), 'haku');
 eq('HAKU Communityの申込者7名が一覧に出る', (await visibleNames()).length, 7);
 eq('件数表示（検索なし）', await countText(), '全7件');
@@ -228,7 +228,7 @@ eq('APIでも、会員資格なし・存在しない会員への付与は拒否'
 eq('拒否された会員にポイントは付いていない（ポイントがある会員は2名だけ）', await page.evaluate(async () => (await (await fetch('/api/admin?action=members&community=haku')).json()).members.filter((m) => m.points).map((m) => m.email + ':' + m.points).sort()), ['jiro.yamada@example.com:50', 'nishiyama.taro@example.com:130']);
 
 console.log('■ J. 「HAKUポイント」タブ（全会員の操作履歴）');
-await page.click('[data-mode="haku"]'); await page.click('#hakuSub [data-mode="tane"]'); await page.waitForSelector('#pointsRecentList .ptrow');
+await page.click('#adminNav [data-mode="tane"]'); await page.waitForSelector('#pointsRecentList .ptrow');
 const recent = await page.locator('#pointsRecentList .ptrow').evaluateAll((els) => els.map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
 check('全会員の履歴が出る（太郎3・花子2・次郎2＝7件）', recent.length === 7, recent.length);
 check('会員名・増減・種別・理由・操作者・日時が見える', recent.some((r) => r.includes('西山 太郎') && r.includes('+100pt') && r.includes('付与') && r.includes('HAKU MORNINGのお手伝い') && r.includes('admin@example.test') && /20[0-9]{2}\//.test(r)), recent.find((r) => r.includes('HAKU MORNING')));

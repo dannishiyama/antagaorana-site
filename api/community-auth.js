@@ -56,6 +56,7 @@ import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
 import * as Salon from './_lib/salon-store.js';
 import { PREFECTURES } from './_lib/salon-core.js';
 import { cancelSalonMembership, BillingError } from './_lib/salon-billing.js';
+import { getStampDates } from './_lib/morning-attendance.js';
 import { mail as salonMail } from './_lib/salon-mail.js';
 import { getMemberView } from './_lib/points.js';
 import {
@@ -133,6 +134,12 @@ export default async function handler(req, res) {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await requireHakuMembership(req, res); if (!session) return;
       return await handleMorningMonth(req, res, session);
+    }
+    // 参加の記録（スタンプ）：本人が実際に参加した日だけ。他の会員の記録は返さない。
+    if (action === 'morning-stamps') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      return await handleMorningStamps(req, res, session);
     }
     if (action === 'morning-next') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -737,6 +744,15 @@ async function handleMorningMonth(req, res, session) {
     ok: true, month, today: jstToday(), joinOpenFrom: joinOpenFrom(), minMonth: range.min, maxMonth: range.max,
     days: days.filter((d) => d.count > 0 || d.status === 'cancelled'),
   });
+}
+
+async function handleMorningStamps(req, res, session) {
+  const month = String(req.query?.month || jstToday().slice(0, 7));
+  if (!isValidMonth(month)) return res.status(400).json({ error: '月を正しく指定してください。' });
+  const range = viewableMonthRange();
+  if (month < range.min || month > range.max) return res.status(400).json({ error: 'この月は表示できません。', code: 'out_of_range' });
+  const dates = await getStampDates(session.email, month);
+  return res.status(200).json({ ok: true, month, today: jstToday(), minMonth: range.min, maxMonth: range.max, stamps: dates, count: dates.length });
 }
 
 // ホーム用：自分が参加予定の直近、なければ開催予定の直近（なければ null）。

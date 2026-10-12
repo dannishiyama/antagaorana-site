@@ -70,3 +70,22 @@ export async function createMeetSpace() {
   if (!/^https:\/\/meet\.google\.com\/[a-z0-9-]+$/i.test(uri)) throw new MeetError('api', 'Google Meet API の応答にURLがありません。');
   return { spaceName: String(data.name || ''), meetingUri: uri, meetingCode: String(data.meetingCode || '') };
 }
+
+/**
+ * Google Meet REST API の読み取り（GET）。会議記録・参加者・参加セッションの取得に使う（api/_lib/meet-attendance.js）。
+ * 認証は spaces.create と同じリフレッシュトークン。読み取りには、そのトークンに会議記録の閲覧権限
+ * （meetings.space.created：このアプリで作った会議の記録／meetings.space.readonly）が含まれている必要がある。
+ * 権限が足りなければ 'permission' を投げる（呼び出し側は何も付与しない）。
+ */
+export async function meetApiGet(pathOrUrl, params = {}) {
+  const cfg = meetConfig();
+  if (!cfg.configured) throw new MeetError('unconfigured', 'Google Meet の連携が未設定です。');
+  const token = await getAccessToken(cfg);
+  const url = new URL(pathOrUrl.startsWith('http') ? pathOrUrl : `https://meet.googleapis.com/v2/${pathOrUrl.replace(/^\//, '')}`);
+  for (const [key, v] of Object.entries(params)) if (v !== undefined && v !== null && v !== '') url.searchParams.set(key, String(v));
+  const res = await timedFetch(url.toString(), { method: 'GET', headers: { Authorization: `Bearer ${token}` } }, 10000);
+  let data = null;
+  try { data = await res.json(); } catch { data = null; }
+  if (!res.ok || !data) throw new MeetError(res.status === 403 || res.status === 401 ? 'permission' : res.status === 404 ? 'not_found' : 'api', `Google Meet API がエラーを返しました（${res.status}）。`);
+  return data;
+}

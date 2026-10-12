@@ -171,13 +171,15 @@
   var VIEWS = { applications: viewApplications, roles: viewRoles, creed: viewCreed, posts: viewPosts, lectures: viewLectures, events: viewEvents, members: viewMembers, audit: viewAudit };
   function show(name) {
     sub = name;
+    window.dispatchEvent(new CustomEvent('salon-sub', { detail: name })); // 管理メニューの選択表示を合わせる
     document.querySelectorAll('#salonSub button').forEach(function (b) { b.classList.toggle('on', b.dataset.sub === name); });
     body.innerHTML = '<div class="empty">読み込み中…</div>';
     VIEWS[name]();
   }
 
   window.SalonAdmin = {
-    open: function () {
+    open: function (requested) {
+      if (requested && VIEWS[requested]) sub = requested;
       body = document.getElementById('salonBody'); msg = document.getElementById('salonMsg');
       var bar = document.getElementById('salonSub');
       if (!bar.querySelector('[data-sub="applications"]')) { // 「申請・決済」を先頭に追加する（管理画面のHTMLは変えず、ここで足す）

@@ -66,6 +66,7 @@ import { randomToken, hashPassword, verifyPassword, stripSecrets } from './_lib/
 import { createHakuCheckoutSession } from './_lib/stripe-checkout.js';
 import { grantPoints, adjustPoints, reversePoints, getBalance, getAdminMemberView, listRecent, PointError } from './_lib/points.js';
 import { handleSalonAdmin } from './_lib/salon-admin.js';
+import { handleAttendanceAdmin } from './_lib/attendance-admin.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { sendPasswordSetupEmail, sendRejectionEmail, sendApprovalEmail, sendAdminSetupEmail } from './_lib/notify.js';
 
@@ -191,6 +192,12 @@ export default async function handler(req, res) {
       const session = await requireAdminHere(req, res); if (!session) return;
       const entries = await listAuditLog(200);
       return res.status(200).json({ ok: true, entries });
+    }
+    // 朝の集まりの出席（スタンプ＋ポイント）の管理。cronだけは管理者ではなく CRON_SECRET で認証する。
+    if (action === 'attendance-cron') return await handleAttendanceAdmin(action, req, res, null);
+    if (typeof action === 'string' && action.startsWith('attendance-')) {
+      const session = await requireAdminHere(req, res); if (!session) return;
+      return await handleAttendanceAdmin(action, req, res, session);
     }
     // 灯サロンの運営向け管理（管理者ログイン＋灯の運営ロールの両方をサーバー側で確認する）
     if (typeof action === 'string' && action.startsWith('salon-')) {

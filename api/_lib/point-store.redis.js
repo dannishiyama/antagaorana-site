@@ -160,7 +160,12 @@ export function createPointStore(getClient = getRedis) {
     return entries.map((e, i) => ({ ...e, reversed: Number(flags[i]?.[1]) === 1 }));
   }
 
-  return { appendEntry, getBalance, listEntries, listRecentEntries, getEntry };
+  // この履歴が取り消し済みか（取消の履歴が追記されているか）。出席の記録と台帳の食い違いを検出するために使う。
+  async function isReversed(id) {
+    return Number(await getClient().exists(k.reversed(id))) === 1;
+  }
+
+  return { appendEntry, getBalance, listEntries, listRecentEntries, getEntry, isReversed };
 }
 
 export const redisPointStore = createPointStore();

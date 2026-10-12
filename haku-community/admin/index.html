@@ -14,7 +14,7 @@
 :root{color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;font-size:14px;line-height:1.8;color:#2b2926;background:#f7f3ec}
-.wrap{max-width:840px;margin:0 auto;padding:40px 20px 80px}
+.wrap{max-width:1200px;margin:0 auto;padding:28px 20px 80px}
 h1{font-size:18px;margin-bottom:4px}
 .note{font-size:12px;color:#8a8574;margin-bottom:28px}
 .loginbox{max-width:320px;margin:60px auto;background:#fff;border:1px solid #ddd8cf;padding:28px}
@@ -113,6 +113,46 @@ h1{font-size:18px;margin-bottom:4px}
 .ptBox .ptrevbox{margin:6px 0 4px;padding:8px 10px;background:#faf7f0;border:1px solid #eee}
 .ptBox .ptrevbox[hidden]{display:none}
 .ptBox .ptamt{max-width:160px}
+/* ───── 管理メニュー（サービスごとのまとまり・現在地の表示） ───── */
+.shell{display:flex;gap:28px;align-items:flex-start}
+#adminNav{flex:0 0 244px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid #ddd8cf;padding:2px 0 12px}
+.nav-toggle{display:none;width:100%;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:0;background:#fff;font-size:14px;font-weight:700;color:#2b2926;cursor:pointer}
+.nav-toggle .cur{font-weight:400;color:#8a8574;font-size:12.5px}
+.ng{margin-top:12px;border-left:4px solid var(--c)}
+.ng-common,.ng-log{--c:#8a8574}.ng-haku{--c:#33472f}.ng-salon{--c:#B4552F}.ng-legacy{--c:#c9c3b4}
+.ng-h{padding:6px 14px 4px;font-size:12.5px;font-weight:700;letter-spacing:.05em;color:var(--c)}
+.ng-h small{display:block;margin-top:1px;font-weight:400;color:#8a8574;font-size:10.5px;letter-spacing:0}
+#adminNav .ni{display:block;width:100%;text-align:left;padding:7px 14px 7px 16px;border:0;background:none;font-size:13px;line-height:1.5;color:#2b2926;cursor:pointer;font-family:inherit}
+#adminNav .ni:hover{background:#f3efe6}
+#adminNav .ni:focus-visible{outline:2px solid #8c692c;outline-offset:-2px}
+#adminNav .ni.on{background:var(--c);color:#fff;font-weight:700}
+.ng-legacy .ni{font-size:12px;color:#6f6a5b}
+.ng-legacy .ni.on{color:#fff}
+.content{flex:1;min-width:0}
+.crumb{--c:#8a8574;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:4px 0 12px;margin-bottom:16px;border-bottom:3px solid var(--c)}
+.crumb[data-svc="haku"]{--c:#33472f}.crumb[data-svc="salon"]{--c:#B4552F}.crumb[data-svc="legacy"]{--c:#c9c3b4}
+.crumb-svc{font-size:12px;font-weight:700;color:#fff;background:var(--c);padding:3px 10px;border-radius:3px}
+.crumb-sep{color:#8a8574}
+.crumb-page{font-size:18px;margin:0}
+.crumb-ver{margin-left:auto;font-size:11px;color:#8a8574}
+#salonSub{display:none}
+.attrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.attrow .grow{flex:1;min-width:200px}
+.attrow button{padding:5px 12px;font-size:12px;cursor:pointer;border:1px solid #33472f;background:#fff;color:#33472f}
+.attrow button.danger{border-color:#9A3B1F;color:#9A3B1F}
+.attstat{display:inline-block;font-size:11px;border-radius:20px;padding:1px 9px;border:1px solid #ddd8cf}
+.attstat.ok{background:#e9f2ea;border-color:#bcd8c1;color:#2f5a3a}.attstat.warn{background:#fdf3e2;border-color:#e8d3a6;color:#8a5a1f}.attstat.no{color:#8a8574}
+.audpv{margin-top:6px}.audpv audio{width:100%;max-width:420px}
+.audnote{font-size:11.5px;color:#8a8574;margin-top:4px}
+@media(max-width:860px){
+  .shell{display:block}
+  #adminNav{position:static;max-height:none;margin-bottom:14px}
+  .nav-toggle{display:flex}
+  #navList{display:none;padding-bottom:4px}
+  #adminNav.open #navList{display:block}
+  .wrap{padding:16px 14px 60px}
+  .crumb-ver{margin-left:0;width:100%}
+}
 </style>
 </head>
 <body>
@@ -152,27 +192,46 @@ h1{font-size:18px;margin-bottom:4px}
   </div>
 
   <div id="adminPanel">
-    <h1>管理画面</h1>
-    <p class="note">承認するとmembershipを作成し、パスワード設定メールを送信します。<span id="uiVersion" style="margin-left:8px;opacity:.8"></span></p>
-    <div class="modetabs">
-      <button class="on" data-mode="applications">会員申請</button>
-      <button data-mode="members">会員一覧・検索</button>
-      <button data-mode="firebase">拓（既存Community）管理</button>
-      <button data-mode="haku">HAKU Community運営</button>
-      <button data-mode="salon">灯サロン運営</button>
-      <button data-mode="audit">操作履歴</button>
-    </div>
-    <div class="statusfilter" id="hakuSub" style="display:none">
-      <button class="on" data-mode="events">HAKUイベント管理</button>
-      <button data-mode="words">HAKUからのことば</button>
-      <button data-mode="notes">HAKU NOTE / 今週の問い</button>
-      <button data-mode="posts">みんなのことば</button>
-      <button data-mode="sessions">セッション（Preview fixture）</button>
-      <button data-mode="tane">HAKUポイント</button>
-    </div>
+    <div class="shell">
+      <nav id="adminNav" aria-label="管理メニュー">
+        <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navList"><span>管理メニュー</span><span class="cur" id="navCur">会員申請</span></button>
+        <div id="navList">
+          <div class="ng ng-common"><div class="ng-h">共通管理<small>HAKU・灯の会員</small></div>
+            <button type="button" class="ni on" data-mode="applications" aria-current="page">会員申請</button>
+            <button type="button" class="ni" data-mode="members">会員一覧・検索</button>
+          </div>
+          <div class="ng ng-haku"><div class="ng-h">HAKU Community運営<small>HAKU Community</small></div>
+            <button type="button" class="ni" data-mode="events">HAKUイベント管理</button>
+            <button type="button" class="ni" data-mode="attendance">朝の集まり・出席</button>
+            <button type="button" class="ni" data-mode="words">HAKUからのことば</button>
+            <button type="button" class="ni" data-mode="notes">HAKU NOTE / 今週の問い</button>
+            <button type="button" class="ni" data-mode="posts">みんなのことば</button>
+            <button type="button" class="ni" data-mode="sessions">セッション（Preview fixture）</button>
+            <button type="button" class="ni" data-mode="tane">HAKUポイント</button>
+          </div>
+          <div class="ng ng-salon"><div class="ng-h">灯サロン運営<small>教育者のサロン 灯</small></div>
+            <button type="button" class="ni" data-mode="salon" data-sub="applications">申請・決済</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="roles">運営ロール</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="creed">今月の一条</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="posts">投稿・コメント</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="lectures">講義アーカイブ</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="events">お知らせ・イベント</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="members">会員</button>
+            <button type="button" class="ni" data-mode="salon" data-sub="audit">操作履歴（灯）</button>
+          </div>
+          <div class="ng ng-log"><div class="ng-h">記録</div>
+            <button type="button" class="ni" data-mode="audit">操作履歴</button>
+          </div>
+          <div class="ng ng-legacy"><div class="ng-h">旧Community<small>旧サービス（拓・Firebase）</small></div>
+            <button type="button" class="ni" data-mode="firebase">旧Community（拓）管理</button>
+          </div>
+        </div>
+      </nav>
+      <div class="content" id="adminContent">
+    <header class="crumb" id="crumb" data-svc="common"><span class="crumb-svc" id="crumbSvc">共通管理</span><span class="crumb-sep" aria-hidden="true">›</span><h1 class="crumb-page" id="crumbPage" tabindex="-1">会員申請</h1><span class="crumb-ver" id="uiVersion"></span></header>
 
     <div id="applicationsPanel">
-      <p class="note" style="margin-bottom:14px">会員の検索や、HAKUポイントの付与・調整・取消は、<a href="#" id="gotoMembers" style="color:#33472f;font-weight:700">「会員一覧・検索」タブ</a>から行います。</p>
+      <p class="note" style="margin-bottom:14px">会員の検索や、HAKUポイントの付与・調整・取消は、<a href="#" id="gotoMembers" style="color:#33472f;font-weight:700">「会員一覧・検索」</a>から行います。</p>
       <div class="tabs">
         <button class="on" data-c="tomoshibi">教育者のサロン 灯</button>
         <button data-c="haku">HAKU Community</button>
@@ -455,9 +514,22 @@ h1{font-size:18px;margin-bottom:4px}
       <div id="salonBody"></div>
     </div>
 
+    <div id="attendancePanel" style="display:none">
+      <p class="note">朝の集まりの出席の確認状況です。出席は、Google Meetの参加履歴との照合で自動的に確定する方針で、毎朝の手動確認は前提にしていません。ここは、確認状況の確認と、照合できなかった・誤記録のときの例外対応（出席訂正）に使います。出席が確定すると、スタンプと<span id="attPts">10</span>ポイントが付きます（参加表明だけでは付きません）。</p>
+      <div class="evform">
+        <div class="attrow"><div><label for="attDate">開催日</label><input type="date" id="attDate"></div><button type="button" id="attLoad" style="margin-top:20px">表示する</button><button type="button" id="attSync" style="margin-top:20px">Googleの参加履歴と照合する</button></div>
+        <div class="err" id="attErr"></div>
+        <div id="attStatus" class="safe-setup" style="margin:12px 0 0"></div>
+      </div>
+      <div id="attMembers"><div class="empty">開催日を選んで「表示する」を押してください。</div></div>
+      <div id="attPending"></div>
+    </div>
+
     <div id="auditPanel" style="display:none">
       <p class="note">HAKU Community側（Redis）の管理者操作履歴です。既存/community（Firebase）側の操作は現状ログが無く、既存実装からの変更もしていません。</p>
       <div id="auditList"><div class="empty">読み込み中…</div></div>
+    </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1040,10 +1112,18 @@ function escapeHtml(s) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // モード切替（親タブ → サブタブ）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 親タブ（.modetabs）と、「HAKU Community運営」配下のサブタブ（#hakuSub）。パネルのID・中のDOM・API呼び出しは従来のまま。
-var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'salon', 'audit'];
-var hakuSubCur = 'events'; // 「HAKU Community運営」を開いたときの初期表示。最後に見たサブタブを覚えている
-function showPanel(mode){
+// 左の管理メニュー（#adminNav）。サービスごとに、共通管理／HAKU Community運営／灯サロン運営／記録／旧Community に分けてある。
+// パネルのID・中のDOM・API呼び出しは従来のまま。メニューは「どのパネルを出すか」と「現在地の表示」だけを担当する。
+var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'attendance', 'salon', 'audit'];
+var NAV_INFO = {
+  applications: ['common', '共通管理', '会員申請'], members: ['common', '共通管理', '会員一覧・検索'],
+  events: ['haku', 'HAKU Community運営', 'HAKUイベント管理'], attendance: ['haku', 'HAKU Community運営', '朝の集まり・出席'],
+  words: ['haku', 'HAKU Community運営', 'HAKUからのことば'], notes: ['haku', 'HAKU Community運営', 'HAKU NOTE / 今週の問い'],
+  posts: ['haku', 'HAKU Community運営', 'みんなのことば'], sessions: ['haku', 'HAKU Community運営', 'セッション（Preview fixture）'],
+  tane: ['haku', 'HAKU Community運営', 'HAKUポイント'], audit: ['log', '記録', '操作履歴'], firebase: ['legacy', '旧Community（拓）', '旧Community（拓）管理'],
+};
+var SALON_LABELS = { applications: '申請・決済', roles: '運営ロール', creed: '今月の一条', posts: '投稿・コメント', lectures: '講義アーカイブ', events: 'お知らせ・イベント', members: '会員', audit: '操作履歴（灯）' };
+function showPanel(mode, sub){
   MODE_PANELS.forEach(function(m){
     document.getElementById(m + 'Panel').style.display = (m === mode) ? 'block' : 'none';
   });
@@ -1052,26 +1132,104 @@ function showPanel(mode){
   if (mode === 'notes') loadNotes();
   if (mode === 'posts') loadPosts();
   if (mode === 'audit') loadAuditLog();
-  if (mode === 'salon' && window.SalonAdmin) window.SalonAdmin.open();
+  if (mode === 'salon' && window.SalonAdmin) window.SalonAdmin.open(sub);
   if (mode === 'tane') loadPointsRecent();
+  if (mode === 'attendance') loadAttendance();
   if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
 }
-document.querySelectorAll('.modetabs button').forEach(function(btn){
+// メニューの選択状態と、画面上部の現在地（サービス名 › 機能名）を合わせる
+function setNavState(mode, sub){
+  var info = mode === 'salon' ? ['salon', '灯サロン運営', SALON_LABELS[sub] || SALON_LABELS.applications] : (NAV_INFO[mode] || ['common', '共通管理', '']);
+  document.querySelectorAll('#adminNav .ni').forEach(function(b){
+    var on = b.dataset.mode === mode && (mode !== 'salon' || b.dataset.sub === (sub || 'applications'));
+    b.classList.toggle('on', on);
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  document.getElementById('crumb').dataset.svc = info[0];
+  document.getElementById('crumbSvc').textContent = info[1];
+  document.getElementById('crumbPage').textContent = info[2];
+  document.getElementById('navCur').textContent = info[1] + ' › ' + info[2];
+}
+function closeNavMenu(){ var nav = document.getElementById('adminNav'); nav.classList.remove('open'); document.getElementById('navToggle').setAttribute('aria-expanded', 'false'); }
+document.querySelectorAll('#adminNav .ni').forEach(function(btn){
   btn.addEventListener('click', function(){
-    document.querySelectorAll('.modetabs button').forEach(function(b){ b.classList.remove('on'); });
-    btn.classList.add('on');
-    var mode = btn.dataset.mode;
-    var isHaku = (mode === 'haku');
-    document.getElementById('hakuSub').style.display = isHaku ? 'flex' : 'none';
-    showPanel(isHaku ? hakuSubCur : mode);
+    var mode = btn.dataset.mode, sub = btn.dataset.sub;
+    setNavState(mode, sub);
+    showPanel(mode, sub);
+    closeNavMenu();
+    window.scrollTo(0, 0);
   });
 });
-document.querySelectorAll('#hakuSub button').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    document.querySelectorAll('#hakuSub button').forEach(function(b){ b.classList.remove('on'); });
-    btn.classList.add('on');
-    hakuSubCur = btn.dataset.mode;
-    showPanel(hakuSubCur);
+document.getElementById('navToggle').addEventListener('click', function(){
+  var nav = document.getElementById('adminNav'); var open = !nav.classList.contains('open');
+  nav.classList.toggle('open', open); this.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+// 灯サロン運営の中で、画面側が自動で別の機能を開いた（例：運営ロールが無いとき「運営ロール」から始める）ときも、メニューの表示を合わせる
+window.addEventListener('salon-sub', function(ev){ setNavState('salon', ev.detail); });
+
+// 出席の管理（朝の集まり・出席）。通常運用は、Google Meetの参加履歴との自動の照合。ここは確認状況と、例外対応（出席訂正）。
+var ATT_KIND = { signedin: 'Googleアカウント（未確認）', anonymous: '匿名の参加', phone: '電話での参加', unknown: '不明' };
+function jstDateOffset(n){ return new Date(Date.now() + 9 * 3600 * 1000 + n * 86400000).toISOString().slice(0, 10); }
+function loadAttendance(keepMsg){
+  var input = document.getElementById('attDate');
+  if (!input.value) input.value = jstDateOffset(-1);
+  var date = input.value, err = document.getElementById('attErr'); if (!keepMsg) { err.textContent = ''; err.style.color = ''; }
+  api('/api/admin?action=attendance-day&date=' + encodeURIComponent(date), { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status !== 200) { err.textContent = res.data.error || '読み込めませんでした。'; return; }
+    var d = res.data, a = d.automation;
+    document.getElementById('attPts').textContent = d.pointsPerAttendance;
+    var ready = a.googleConfigured && a.dateMeet && a.ruleSet;
+    function chip(ok, t){ return '<span class="attstat ' + (ok ? 'ok' : 'warn') + '">' + escapeHtml(t) + '</span>'; }
+    document.getElementById('attStatus').innerHTML = '<b style="display:inline">自動の出席確認：</b>' + chip(ready && a.autoEnabled, ready ? (a.autoEnabled ? '有効' : '設定済み・定期実行は無効') : '設定待ち（自動付与は行いません）') + '　' +
+      chip(a.googleConfigured, 'Google連携：' + (a.googleConfigured ? '設定済み' : '未設定')) + ' ' + chip(a.dateMeet, '日付別のMeet：' + (a.dateMeet ? 'あり' : (a.legacyMeetOnly ? 'なし（暫定の共通Meet）' : 'なし'))) + ' ' + chip(a.ruleSet, '出席の条件：' + (a.ruleSet ? (a.minMinutes + '分以上') : '未決定'));
+    document.getElementById('attMembers').innerHTML = (d.members || []).map(function(m){
+      var st = m.attendance === 'attended' ? '<span class="attstat ok">出席確認済み +' + m.points + 'pt（' + (m.source === 'google' ? 'Google照合' : '運営の訂正') + '）</span>' : m.attendance === 'cancelled' ? '<span class="attstat warn">出席を取り消し済み</span>' : '<span class="attstat no">未確認</span>';
+      var btn = m.attendance === 'attended' ? '<button type="button" class="danger" data-att="cancel">出席を取り消す</button>' : '<button type="button" data-att="confirm">出席にする（訂正）</button>';
+      return '<div class="app" data-email="' + escapeHtml(m.email) + '"><div class="attrow"><div class="grow"><b style="display:inline">' + escapeHtml(m.name || '(名前なし)') + '</b> <span class="meta" style="display:inline">' + escapeHtml(m.email) + '｜' + (m.joined ? '参加表明あり' : '参加表明なし') + (m.membership ? '｜会員：' + escapeHtml(m.membership) : '') + '</span></div>' + st + btn + '</div></div>';
+    }).join('') || '<div class="empty">この日の参加表明・出席の記録はありません。</div>';
+    document.querySelectorAll('#attMembers [data-att]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var email = b.closest('[data-email]').dataset.email, op = b.dataset.att;
+        var reason = prompt((op === 'confirm' ? '出席にします。' : '出席を取り消します。') + '（' + email + '）理由を入力してください（記録に残ります）。', '');
+        if (!reason) return;
+        b.disabled = true;
+        api('/api/admin?action=attendance-set', { method: 'POST', body: JSON.stringify({ date: date, email: email, op: op, reason: reason }) }).then(function(r){
+          if (r.status !== 200) { err.textContent = r.data.error || '処理できませんでした。'; b.disabled = false; return; }
+          loadAttendance();
+        });
+      });
+    });
+    var pend = d.pending || [];
+    document.getElementById('attPending').innerHTML = pend.length ? '<h3 style="font-size:14px;margin:18px 0 8px">確認待ち（Googleの参加者のうち、会員と照合できなかった人）</h3>' + pend.map(function(p){
+      return '<div class="app" data-pk="' + escapeHtml(p.participantKey) + '"><div class="attrow"><div class="grow"><b style="display:inline">' + escapeHtml(p.displayName || '(名前なし)') + '</b> <span class="meta" style="display:inline">' + escapeHtml(ATT_KIND[p.kind] || p.kind) + '｜滞在 約' + p.minutes + '分</span></div>' + (p.linkable ? '<button type="button" data-link="1">会員に結び付けて出席にする</button>' : '<span class="audnote">アカウントがないため、上の一覧から出席訂正してください</span>') + '</div></div>';
+    }).join('') : '';
+    document.querySelectorAll('#attPending [data-link]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var pk = b.closest('[data-pk]').dataset.pk;
+        var email = prompt('このGoogleアカウントの会員のメールアドレスを入力してください。以後、このアカウントは自動で照合されます。', '');
+        if (!email) return;
+        var reason = prompt('確認した理由を入力してください（記録に残ります）。', '');
+        if (!reason) return;
+        api('/api/admin?action=attendance-link', { method: 'POST', body: JSON.stringify({ date: date, participantKey: pk, email: email, reason: reason }) }).then(function(r){
+          if (r.status !== 200) { err.textContent = r.data.error || '処理できませんでした。'; return; }
+          loadAttendance();
+        });
+      });
+    });
+  });
+}
+document.getElementById('attLoad').addEventListener('click', loadAttendance);
+document.getElementById('attSync').addEventListener('click', function(){
+  var date = document.getElementById('attDate').value, err = document.getElementById('attErr');
+  var MSG = { unconfigured: 'Google連携が未設定のため、照合しませんでした（何も付与していません）。', rule_unset: '出席の条件（滞在時間）が未決定のため、照合しませんでした（何も付与していません）。', no_meet: 'この日は日付別のMeetがないため、照合できません（暫定の共通Meetでは、日付ごとの出席を判定できません）。', in_progress: '会議がまだ終了していない（または退出していない参加者がいる）ため、確定しませんでした。', no_record: 'この日の会議記録がありません。' };
+  err.textContent = '';
+  api('/api/admin?action=attendance-sync', { method: 'POST', body: JSON.stringify({ date: date }) }).then(function(r){
+    if (r.status !== 200) { err.textContent = r.data.error || '照合できませんでした。'; return; }
+    err.style.color = '#2f5a3a';
+    err.textContent = r.data.status === 'done' ? ('照合しました：出席確定 ' + r.data.confirmed + '人（うち確定済み ' + r.data.already + '人）／確認待ち ' + r.data.pending + '人／条件未満 ' + r.data.belowRule + '人') : (MSG[r.data.status] || '完了しました。');
+    if (r.data.status !== 'done') err.style.color = '#8a5a1f';
+    loadAttendance(true);
   });
 });
 
@@ -1662,10 +1820,28 @@ function deleteNote(id){
   });
 }
 
+// 音声URLの入力欄：登録前に「再生して確認」できるようにする。音声ファイルは、URL（https://）で登録する方式（保存先のストレージは未設定）。
+function attachAudioPreview(inputId, where){
+  var input = document.getElementById(inputId); if (!input) return;
+  var box = document.createElement('div'); box.className = 'audpv';
+  box.innerHTML = '<button type="button" class="ptq" style="margin:0">再生して確認</button><div class="audnote">' + escapeHtml(where) + 'の音声は、https:// から始まるURLで登録します（mp3・m4a・wav・aac・ogg 形式）。登録前に、ここで再生を確認できます。音声ファイルそのもののアップロード用の保存先は、まだ設定されていません。</div><div class="audbox"></div>';
+  input.insertAdjacentElement('afterend', box);
+  box.querySelector('button').addEventListener('click', function(){
+    var url = input.value.trim(), out = box.querySelector('.audbox');
+    out.innerHTML = '';
+    if (!/^https:\/\//.test(url)) { out.innerHTML = '<div class="audnote" style="color:#9A3B1F">https:// から始まるURLを入力してください。</div>'; return; }
+    var au = document.createElement('audio'); au.controls = true; au.preload = 'none'; au.src = url;
+    au.addEventListener('error', function(){ out.innerHTML = '<div class="audnote" style="color:#9A3B1F">再生できませんでした。URLと、音声の形式をご確認ください。</div>'; });
+    out.appendChild(au);
+  });
+}
+attachAudioPreview('wordAudioUrl', 'HAKUからのことば');
+attachAudioPreview('sessUrl', 'セッション');
+
 // 画面バージョン（ブラウザが古い画面を表示していないかを、目で確認できるようにする）
-var ADMIN_UI_VERSION = '2026.10.07-c（会員検索・HAKUポイント操作）';
+var ADMIN_UI_VERSION = '2026.10.13（管理メニュー再編・出席管理）';
 document.getElementById('uiVersion').textContent = '画面バージョン: ' + ADMIN_UI_VERSION;
-document.getElementById('gotoMembers').addEventListener('click', function(ev){ ev.preventDefault(); document.querySelector('.modetabs [data-mode="members"]').click(); });
+document.getElementById('gotoMembers').addEventListener('click', function(ev){ ev.preventDefault(); document.querySelector('#adminNav [data-mode="members"]').click(); });
 
 // ページを開き直したとき、有効な管理者ログイン（Cookie）が残っていれば、ログイン画面を飛ばして管理画面を復元する。
 api('/api/admin?action=whoami', { method: 'GET' }).then(function(res){

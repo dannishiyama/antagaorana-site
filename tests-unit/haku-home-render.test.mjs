@@ -215,7 +215,7 @@ test('旧コミュニティ（community.html）のHAKUタブ：会員に見え�
 
 test('管理画面の表示名は「HAKUポイント」に統一（内部名 tane は維持）', () => {
   const html = readFileSync(new URL('../haku-community/admin/index.html', import.meta.url), 'utf8');
-  assert.ok(html.includes('<button data-mode="tane">HAKUポイント</button>'));
+  assert.ok(/<button[^>]*data-mode="tane">HAKUポイント<\/button>/.test(html));
   assert.ok(!/<button[^>]*>[^<]*HAKU POINT/.test(html));
 });
 

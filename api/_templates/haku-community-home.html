@@ -272,6 +272,21 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .mo-person:last-child{border-bottom:1px solid var(--line)}
 .mo-person .nm{flex:1;min-width:0;overflow-wrap:anywhere}
 .mo-person .me-tag{font-size:12.5px;color:var(--green-deep);font-weight:700}
+/* ───── 参加の記録（スタンプ）：実際に参加した日だけ。小さく静かに（朝の集まりのカレンダーの下） ───── */
+.st-box{margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+.st-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;margin-bottom:8px}
+.st-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--green-deep);letter-spacing:.04em}
+.st-ctl{display:flex;align-items:center;gap:6px}
+.st-month{min-width:7.4em;text-align:center;font-size:14px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.st-nav{flex:none;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:none;color:var(--green-deep);font-size:17px;line-height:1;cursor:pointer}
+.st-nav:hover{background:var(--green-pale)}
+.st-nav[disabled]{opacity:.3;cursor:default}
+.st-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;max-width:340px}
+.st-wd{padding:2px 0;text-align:center;font-size:11.5px;color:var(--ink3)}
+.st-cell{display:flex;align-items:center;justify-content:center;height:36px;font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.st-cell.blank{visibility:hidden}
+.st-cell.on span{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--green);color:var(--paper);font-family:var(--serif);font-size:13px;font-weight:700;box-shadow:0 0 0 1.5px var(--paper),0 0 0 3px var(--gold)}
+.st-count{margin-top:6px;font-size:13px;color:var(--ink3)}
 
 /* ───── プロフィール設定 ───── */
 .pf-now{display:flex;align-items:center;gap:18px;margin:8px 0 6px}
@@ -802,7 +817,7 @@ function setMemberName(name){
   $('greetTxt').textContent = greeting();
   paintAvatars();
 }
-const MO = { today: null, joinOpenFrom: null, month: null, selected: null, data: null, busy: false, meetBusy: false };
+const MO = { today: null, joinOpenFrom: null, month: null, selected: null, data: null, busy: false, meetBusy: false, stamp: null, stampMonth: null };
 function dateAdd(str, n){ const d = new Date(str + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 function dateParts(str){ const d = new Date(str + 'T00:00:00Z'); return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(), w: String(UI.morning.weekdays).split(',')[d.getUTCDay()] }; }
 function dayTitle(str){ const p = dateParts(str); return fmt(UI.morning.dayTitle, { m: p.m, d: p.d, w: p.w }); }
@@ -1433,12 +1448,52 @@ function drawMorning(){
     '<div class="mo-month" aria-live="polite">' + esc(fmt(UI.morning.month, { y: mp.y, m: mp.m })) + '</div>' +
     '<button class="mo-nav" type="button" data-act="mo-next" aria-label="' + esc(UI.morning.next) + '"' + (month >= MO.data.max ? ' disabled' : '') + '>›</button></div>' +
     '<div class="mo-grid" role="group" aria-label="' + esc(UI.morning.gridAria) + '">' + String(UI.morning.weekdays).split(',').map((w) => '<span class="mo-wd" aria-hidden="true">' + esc(w) + '</span>').join('') + cells + '</div>' +
-    '<div id="moDetail" aria-live="polite">' + moDetailHtml(MO.selected) + '</div>';
+    '<div id="moDetail" aria-live="polite">' + moDetailHtml(MO.selected) + '</div>' +
+    '<section class="st-box" id="moStamps" aria-labelledby="moStampTitle"></section>';
+  drawStamps();
+  if (!MO.stamp) loadStamps();
+}
+/* 参加の記録（スタンプ）：本人が実際に参加した日だけ（サーバーが確定した出席）。参加表明・Meetのボタンでは付かない。 */
+async function fetchStamps(month){
+  const r = await api('/api/community-auth?action=morning-stamps&month=' + encodeURIComponent(month), { method: 'GET' });
+  if (!r.ok) throw failure(r);
+  MO.stamp = { month: r.data.month, set: new Set(r.data.stamps || []), min: r.data.minMonth, max: r.data.maxMonth, count: r.data.count || 0 };
+}
+function drawStamps(){
+  const box = $('moStamps'); if (!box) return;
+  const s = MO.stamp;
+  if (!s) { box.innerHTML = ''; return; }
+  const mp = monthParts(s.month);
+  const first = new Date(Date.UTC(mp.y, mp.m - 1, 1)).getUTCDay();
+  const days = new Date(Date.UTC(mp.y, mp.m, 0)).getUTCDate();
+  let cells = '';
+  for (let i = 0; i < first; i++) cells += '<span class="st-cell blank" aria-hidden="true"></span>';
+  for (let d = 1; d <= days; d++) {
+    const date = s.month + '-' + String(d).padStart(2, '0');
+    cells += s.set.has(date)
+      ? '<span class="st-cell on" role="img" aria-label="' + esc(fmt(UI.morning.stampCellAria, { m: mp.m, d: d })) + '"><span>' + d + '</span></span>'
+      : '<span class="st-cell" aria-hidden="true">' + d + '</span>';
+  }
+  box.innerHTML = '<div class="st-head"><h2 class="st-title" id="moStampTitle">' + esc(UI.morning.stampTitle) + '</h2><div class="st-ctl">' +
+    '<button class="st-nav" type="button" data-act="st-prev" aria-label="' + esc(UI.morning.prev) + '"' + (s.month <= s.min ? ' disabled' : '') + '>‹</button>' +
+    '<span class="st-month" aria-live="polite">' + esc(fmt(UI.morning.month, { y: mp.y, m: mp.m })) + '</span>' +
+    '<button class="st-nav" type="button" data-act="st-next" aria-label="' + esc(UI.morning.next) + '"' + (s.month >= s.max ? ' disabled' : '') + '>›</button></div></div>' +
+    '<div class="st-grid" role="group" aria-label="' + esc(UI.morning.stampAria) + '">' + String(UI.morning.weekdays).split(',').map((w) => '<span class="st-wd" aria-hidden="true">' + esc(w) + '</span>').join('') + cells + '</div>' +
+    '<p class="st-count">' + esc(fmt(UI.morning.stampCount, { n: s.count })) + '</p>';
+}
+async function loadStamps(){
+  const month = MO.stampMonth || (MO.today ? MO.today.slice(0, 7) : '');
+  if (!month) return;
+  MO.stampBusy = true;
+  try { await fetchStamps(month); MO.stampMonth = MO.stamp.month; drawStamps(); } // 切り替え中は、前の月の表示を残す
+  catch (e) { MO.stamp = null; const box = $('moStamps'); if (box) box.innerHTML = ''; } // 取得できないときは、偽のスタンプを出さず、何も表示しない
+  finally { MO.stampBusy = false; }
 }
 function loadMorning(){
   if (!MO.month) MO.month = null;
   const month = MO.month || (MO.today ? MO.today.slice(0, 7) : '');
   invalidate('morning-next');
+  MO.stamp = null; // ページを開くたびに、最新の記録を取り直す
   loadInto('morning', $('morningBody'), async () => {
     await fetchMorningMonth(month);
     MO.month = MO.data.month;
@@ -1450,6 +1505,8 @@ async function refreshMorningSilently(){
   invalidate('morning-next');
 }
 actions['mo-select'] = (btn) => { MO.selected = btn.dataset.date; drawMorning(); };
+actions['st-prev'] = () => { if (MO.stampBusy) return; MO.stampMonth = shiftMonth(MO.stampMonth || MO.stamp.month, -1); loadStamps(); };
+actions['st-next'] = () => { if (MO.stampBusy) return; MO.stampMonth = shiftMonth(MO.stampMonth || MO.stamp.month, 1); loadStamps(); };
 actions['mo-prev'] = () => { MO.month = shiftMonth(MO.month, -1); MO.selected = null; loadMorning(); };
 actions['mo-next'] = () => { MO.month = shiftMonth(MO.month, 1); MO.selected = null; loadMorning(); };
 async function changeMorning(btn, kind){

@@ -17,6 +17,7 @@ export const POINT_KINDS = {
   ADMIN_GRANT: 'admin_grant',
   ADMIN_ADJUST: 'admin_adjust',
   ADMIN_REVERSAL: 'admin_reversal',
+  MORNING_ATTENDANCE: 'morning_attendance', // 朝の集まりに実際に参加したとき（自動／出席訂正）
 };
 
 // 会員本人に見せる名称（運営の個人名・メールアドレスは見せない）。
@@ -24,6 +25,7 @@ export const POINT_KIND_LABELS = {
   admin_grant: '運営からのポイント',
   admin_adjust: 'ポイントの調整',
   admin_reversal: 'ポイントの取り消し',
+  morning_attendance: '朝の集まりへの参加',
 };
 
 export const MAX_POINTS_PER_OPERATION = 1_000_000;
@@ -123,6 +125,24 @@ export function createPointService({ store = redisPointStore, logAudit = default
     return { ...out, balance: await store.getBalance(target) };
   }
 
+  // システムによる付与（朝の集まりへの実参加など）。操作キー（idempotencyKey）が同じなら、何度呼んでも1回しか付与されない。
+  async function awardPoints({ email, amount, kind, reason, idempotencyKey, actorId = 'system', refType = null, refId = null }) {
+    const target = normalizeEmail(email);
+    const delta = parseAmount(amount, { allowNegative: false });
+    if (!Object.values(POINT_KINDS).includes(kind)) throw new PointError('invalid_kind', 'ポイントの種別が不正です。');
+    if (!/^[A-Za-z0-9_:.@+-]{8,200}$/.test(String(idempotencyKey || ''))) throw new PointError('invalid_request_id', '操作キーが不正です。');
+    const result = await store.appendEntry({
+      email: target, delta, kind, reason: parseReason(reason, { required: false }), actorId,
+      idempotencyKey: `auto:${idempotencyKey}`, refType, refId, allowNegative: false,
+    });
+    const out = resolveAppend(result, { email: target, delta, kind });
+    if (!out.duplicate) await audit(actorId, 'point_award', target, out.entry);
+    return { ...out, balance: await store.getBalance(target) };
+  }
+
+  const isEntryReversed = (id) => store.isReversed(String(id || ''));
+  const getEntryById = (id) => store.getEntry(String(id || ''));
+
   // 管理者による調整（プラスもマイナスも可。理由必須。残高がマイナスになる調整は不可）。
   async function adjustPoints({ email, amount, reason, requestId, actorId }) {
     const target = normalizeEmail(email);
@@ -173,9 +193,9 @@ export function createPointService({ store = redisPointStore, logAudit = default
 
   const listRecent = (limit = 100) => store.listRecentEntries(limit);
 
-  return { grantPoints, adjustPoints, reversePoints, getBalance, getMemberView, getAdminMemberView, listRecent };
+  return { grantPoints, adjustPoints, reversePoints, awardPoints, isEntryReversed, getEntryById, getBalance, getMemberView, getAdminMemberView, listRecent };
 }
 
 export const {
-  grantPoints, adjustPoints, reversePoints, getBalance, getMemberView, getAdminMemberView, listRecent,
+  grantPoints, adjustPoints, reversePoints, awardPoints, isEntryReversed, getEntryById, getBalance, getMemberView, getAdminMemberView, listRecent,
 } = createPointService();

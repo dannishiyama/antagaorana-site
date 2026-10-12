@@ -25,6 +25,9 @@ export const MORNING_CONFIG = {
   viewMonthsBack: 6,
   // HOMEで「次の朝の集まり」を探す日数
   nextScanDays: 60,
+  // 朝の集まりへの「実参加」1回あたりのポイント（暫定の仮設定。ここだけを直せば変えられる）。
+  // 参加表明・Meetのボタンを押しただけでは付与しない。付与は api/_lib/morning-attendance.js の confirmAttendance だけが行う。
+  attendancePoints: 10,
   // 未決定：参加者の名前・アイコンを誰に見せるか。いまは会員全員（表示名とアイコンだけ。氏名・メールは出さない）
   publicFields: ['name', 'avatarId'],
 };

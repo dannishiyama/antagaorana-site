@@ -313,6 +313,10 @@ export const UI = {
     meetUnavailable: 'ミーティングのURLは、準備ができ次第こちらに表示します。',
     meetRetry: 'もう一度試す',
     more: '＋{n}',
+    stampTitle: '参加の記録',
+    stampAria: '参加の記録のカレンダー',
+    stampCellAria: '{m}月{d}日、参加',
+    stampCount: '{n}回',
   },
 
   // プロフィール設定（マイページ →「設定とサポート」→ プロフィール設定）
