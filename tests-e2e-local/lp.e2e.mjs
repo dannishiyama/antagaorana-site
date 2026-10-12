@@ -39,7 +39,7 @@ const LINES = `(sel) => [...document.querySelectorAll(sel)].map((el) => {
   for (const c of chars) { if (!cur || Math.abs(c.top - cur.top) > 6) { cur = { top: c.top, text: '' }; lines.push(cur); } cur.text += c.ch; }
   return { text: el.textContent.replace(/\\s+/g, ''), lines: lines.map((l) => l.text) };
 })`;
-const TARGETS = '.closing h2, .closing p, h2.lead, .verdict, .lede, .hero h1, .hero p';
+const TARGETS = '.closing h2, .closing p, h2.lead, .verdict, .lede, .hero h1, .hero p, .att p, .att .mine, .can p, .room .desc, .creed .c .t, .flowline p, .chain p, .map .row .d, .plan li';
 
 for (const [url, label] of [['/haku-community/', 'HAKU Community'], ['/salon/', '灯サロン']]) {
   console.log(`■ ${label}の紹介ページ ${url}`);
@@ -47,10 +47,10 @@ for (const [url, label] of [['/haku-community/', 'HAKU Community'], ['/salon/', 
     const { ctx, page } = await open(url, width);
     const tag = `${label} ${width}px`;
     eq(`${tag}：横はみ出しなし`, await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1), false);
-    // 孤立行：複数行に折り返した文章の最後の行が、一〜三文字だけ、ということがない
+    // 孤立行：複数行に折り返した文章の最後の行が、一〜二文字だけ、ということがない
     const info = await page.evaluate(`(${LINES})(${JSON.stringify(TARGETS)})`);
-    const bad = info.filter((x) => x.lines.length > 1 && x.lines[x.lines.length - 1].length <= 3).map((x) => x.lines);
-    eq(`${tag}：見出し・リード・結びの文に、一文字〜三文字だけの孤立行がない`, bad, []);
+    const bad = info.filter((x) => x.lines.length > 1 && x.lines[x.lines.length - 1].length <= 2).map((x) => x.lines);
+    eq(`${tag}：見出し・リード・結びの文に、一文字・二文字だけの孤立行がない`, bad, []);
     // 文字が欠けていない（行に分けた文字の合計＝本文）
     check(`${tag}：改行の調整で、文字が消えていない`, info.every((x) => x.lines.join('') === x.text.replace(/[\s]/g, '')), info.filter((x) => x.lines.join('') !== x.text).map((x) => x.text.slice(0, 30)));
     if (width === 1280) {

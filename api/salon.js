@@ -396,6 +396,13 @@ export default async function handler(req, res) {
     if (isPost && !checkOrigin(req)) return res.status(403).json({ error: 'Invalid origin' });
     if (isPost && WRITE_LIMITS[action] && !(await rateLimitGuard(req, res, { key: `salon-${action}`, limit: WRITE_LIMITS[action][0], windowSeconds: WRITE_LIMITS[action][1] }))) return;
 
+    // 紹介ページ用：運営が設定した「今月の一条」の番号だけを返す（未設定なら null。会員情報は含まない）
+    if (action === 'public-creed') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const cur = await S.getCreed();
+      return res.status(200).json({ ok: true, n: cur?.n || null });
+    }
+
     // ── 決済（未ログインでも、承認済みの本人だけが進める） ──
     if (action === 'checkout') {
       if (!isPost) return res.status(405).json({ error: 'Method not allowed' });

@@ -295,3 +295,29 @@ test('既存の管理者によるポイント付与・調整・取消は、こ�
   const rev = await AP(adm, 'points-reverse', { entryId: att1.id, reason: '管理画面から取消', requestId: 'manual-rev-87654321' });
   assert.equal(rev.status, 200); assert.equal(rev.body.balance, 5);
 });
+
+test('出席の条件1分（暫定）：同じ日の入退室を合算して、合計1分以上で出席。重なった時間は二重に数えない。59秒は出席にしない', async () => {
+  const { unionMs } = meetAtt;
+  const m = (a, b) => [Date.parse(T(a)), Date.parse(T(b))];
+  assert.equal(unionMs([m(0, 10), m(5, 15)]), 15 * 60000, '重なりは1回分');
+  assert.equal(unionMs([m(0, 1), m(10, 11)]), 2 * 60000, '離れた入退室は合算');
+  assert.equal(unionMs([m(0, 10), m(2, 4)]), 10 * 60000, '含まれる時間は数えない');
+  assert.equal(unionMs([]), 0);
+  await withGoogle(async () => {
+    const date = past(22); const space = `spaces/m${Date.now()}`;
+    const [a, b, c, d] = await Promise.all(['いち', 'にい', 'さん', 'よん'].map((n) => member(n)));
+    await store.saveMorningMeetOnce(date, { url: 'https://meet.google.com/mmm-mmmm-mmm', spaceName: space, meetingCode: 'mmm' });
+    for (const x of [a, b, c, d]) { await joinDay(date, x.email); }
+    await att.linkGoogleIdentity('users/3001', a.email); await att.linkGoogleIdentity('users/3002', b.email); await att.linkGoogleIdentity('users/3003', c.email); await att.linkGoogleIdentity('users/3004', d.email);
+    const S = (s0, s1) => ({ startTime: new Date(Date.UTC(2026, 9, 1, 21, 0, s0)).toISOString(), endTime: new Date(Date.UTC(2026, 9, 1, 21, 0, s1)).toISOString() });
+    setConference({ spaceName: space, people: [
+      { who: { signedinUser: { user: 'users/3001', displayName: 'a' } }, sessions: [S(0, 30), S(300, 330)] }, // 30秒＋30秒（入り直し）= 60秒 → 出席
+      { who: { signedinUser: { user: 'users/3002', displayName: 'b' } }, sessions: [S(0, 59)] }, // 59秒 → 出席にしない
+      { who: { signedinUser: { user: 'users/3003', displayName: 'c' } }, sessions: [S(0, 40), S(20, 50)] }, // 重なり：実際は50秒 → 出席にしない（二重計上しない）
+      { who: { signedinUser: { user: 'users/3004', displayName: 'd' } }, sessions: [S(0, 600), S(0, 600)] }, // 2台で同時に10分 → 出席
+    ] });
+    const r = await meetAtt.syncDayAttendance(date);
+    assert.deepEqual([r.status, r.confirmed, r.belowRule], ['done', 2, 2]);
+    assert.deepEqual([await balance(a.email), await balance(b.email), await balance(c.email), await balance(d.email)], [10, 0, 0, 10]);
+  }, { rule: '1' });
+});

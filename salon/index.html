@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>教育者のサロン 灯｜あんたがおらな</title>
-<meta name="description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝が毎日いる、預かる側のためのコミュニティです。">
+<meta name="description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝（教育学者）が毎日いる、預かる側のためのコミュニティです。">
 <link rel="canonical" href="https://antagaorana.com/salon/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="あんたがおらな">
 <meta property="og:title" content="教育者のサロン 灯｜あんたがおらな">
-<meta property="og:description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝が毎日いる、預かる側のためのコミュニティです。">
+<meta property="og:description" content="教室・スクール運営者や先生のための会員制サロン「灯（TOMOSHIBI）」。3万件の教育相談に立ち会ってきた大久保俊輝（教育学者）が毎日いる、預かる側のためのコミュニティです。">
 <meta property="og:url" content="https://antagaorana.com/salon/">
 <meta property="og:image" content="https://antagaorana.com/lp-assets/logo-hero.png?v=20260501a">
 <meta name="twitter:card" content="summary">
@@ -193,12 +193,95 @@ footer a:hover{color:#fff}
 
 /* ---- 日本語の組版：一文字だけの孤立行を防ぐ（文字は変えず、改行の仕方だけを整える） ----
    見出し・リード・結びの文は、行の長さを均等にし、文節の途中では折り返さない。長い本文は、最後の行が短くなりすぎないようにする。 */
-h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-phrase;line-break:strict}
-.faq p,.can p,.chain p,.flowline p,.note,.plan li,.for-card p,.people-list .value{text-wrap:pretty;word-break:auto-phrase;line-break:strict}
+h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p,.creed .c .t,.att b,.room .who{text-wrap:balance;word-break:auto-phrase;line-break:strict}
+.faq p,.can p,.chain p,.flowline p,.note,.plan li,.for-card p,.people-list .value,.att p,.att .mine,.room .desc,.room .name small,.room ul li,.map .row .d,.map .row .r{text-wrap:pretty;word-break:auto-phrase;line-break:strict}
 .closing .narrow{max-width:880px}
 .closing p{max-width:42em}
 .closing h2{overflow-wrap:break-word}
 @media(max-width:600px){.closing h2{font-size:22px}}
+
+/* ---- 紹介ページの見やすさ（文章・情報量・順序は変えず、見出しの強弱・まとまり・背景の切り替え・余白だけを整える） ---- */
+.sec-label::before{content:"";display:block;width:28px;height:2px;background:var(--gold);margin-bottom:14px}
+.lede{max-width:34em}
+
+/* WHY：居場所ができてから続けられなくなるまでを、つながった5段階として見せる */
+.why .chain{margin-top:36px;border-top:0}
+.why .chain .step{position:relative;grid-template-columns:44px 1fr;gap:20px;padding:16px 0;border-bottom:0;align-items:start}
+.why .chain .step::before{content:"";position:absolute;left:21px;top:56px;bottom:-12px;width:1px;background:var(--line)}
+.why .chain .step:last-child::before{display:none}
+.why .chain .n{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:var(--paper);color:var(--terra);font-size:13px;letter-spacing:.04em;position:relative;z-index:1}
+.why .chain .step.last .n{background:var(--terra);border-color:var(--terra);color:#fff}
+.why .chain b{font-size:17px;margin-top:2px}
+.why .verdict{margin-top:40px;padding:22px 22px 22px 26px;background:var(--paper);border-left:3px solid var(--gold);font-size:21px;line-height:1.9;letter-spacing:.02em}
+
+/* 心得十ヶ条：ひとつの枠の中に、条の番号と見出しを、読み取りやすい行として並べる。「今月の一条」だけが、印つきで強調される */
+.creed{grid-template-columns:1fr 1fr;gap:0;margin-top:34px;border:1px solid var(--line);background:var(--paper)}
+.creed .c{grid-template-columns:76px 1fr;gap:12px;padding:18px 26px;border-bottom:1px solid var(--line-soft);align-items:baseline}
+.creed .c:nth-child(odd){border-right:1px solid var(--line-soft)}
+.creed .c:nth-last-child(-n+2){border-bottom:0}
+.creed .c .no{font-size:13px;color:var(--terra)}
+.creed .c .t{font-size:17px}
+.creed .c.now{background:var(--cream);box-shadow:inset 3px 0 0 var(--terra)}
+.creed .c .tag{display:block;width:fit-content;margin-top:6px;padding:0 9px;font-family:var(--sans);font-size:11px;line-height:1.9;letter-spacing:.08em;color:#fff;background:var(--terra);white-space:nowrap}
+
+/* ATTITUDE：3つの姿勢を、同じ重さのまとまりに。「だから、」の一文は、左の線で、本文と分ける */
+.attitude .att{gap:18px;margin-top:34px;border-top:0}
+.attitude .att > div{padding:26px 26px 28px;border:1px solid var(--line);border-top:3px solid var(--green);background:var(--cream)}
+.attitude .att > div:nth-child(2){border-top-color:var(--gold)}
+.attitude .att > div:nth-child(3){border-top-color:var(--terra)}
+.attitude .att .mine{margin-top:16px;padding:12px 14px;border-top:0;background:var(--paper);border-left:2px solid var(--terra)}
+
+/* TOMOSHIBI：灯を主役の枠に、準備中の縁は控えめな点線の枠に */
+.room{padding:0 32px 30px;margin-top:28px;border:1px solid var(--line);border-top:3px solid var(--green);background:var(--paper)}
+.room .name,.room .who,.room ul{padding-top:30px}
+#en.room{border-top:1px dashed var(--line);border-style:dashed;background:transparent}
+
+/* CONTENTS：6つを同じ重さで並べる */
+.contents .can{gap:18px;margin-top:34px}
+.contents .can > div{padding:24px 26px 26px;border:1px solid var(--line);border-top:3px solid var(--green);background:var(--paper)}
+.contents .can h4{color:var(--green);font-size:18px}
+
+/* POSITION：表の見出しを濃い帯に、行はまとまりごとに */
+.position .map{margin-top:34px;border:1px solid var(--line);background:var(--cream)}
+.position .map .head{padding:12px 24px;background:var(--green);color:rgba(255,255,255,.78);border-bottom:0}
+.position .map .row{padding:20px 24px}
+.position .map .row:last-child{border-bottom:0}
+.position .map .row .s{font-size:17px}
+
+/* ひと月の流れ：週が進む線の上に、4つの場面を置く */
+.month .flowline{position:relative;border-top:0;margin-top:30px}
+.month .flowline::before{content:"";position:absolute;left:0;right:0;top:6px;height:1px;background:var(--gold)}
+.month .flowline div{position:relative;padding:34px 22px 8px 0;border-right:0}
+.month .flowline div::before{content:"";position:absolute;left:0;top:0;width:13px;height:13px;border-radius:50%;background:var(--cream);border:2px solid var(--gold)}
+.month .flowline div:last-child::before{background:var(--gold)}
+.month .flowline b{font-size:15px;color:var(--green)}
+
+/* 下部のご案内：金の細い線から始め、ボタンとの間隔を整える */
+.closing .narrow::before{content:"";display:block;width:40px;height:2px;background:var(--gold);margin:0 auto 30px}
+.closing .ctas{gap:14px;flex-wrap:wrap}
+
+@media(max-width:900px){
+  .why .verdict{font-size:19px;padding:20px}
+  .creed{grid-template-columns:1fr;margin-top:26px}
+  .creed .c{padding:16px 16px;grid-template-columns:58px 1fr;gap:8px}
+  .creed .c .t{font-size:16px}
+  .creed .c .no{letter-spacing:.04em}
+  .creed .c:nth-child(odd){border-right:0}
+  .creed .c:nth-last-child(-n+2){border-bottom:1px solid var(--line-soft)}
+  .creed .c:last-child{border-bottom:0}
+  .attitude .att{grid-template-columns:1fr;gap:14px}
+  .attitude .att > div{padding:22px 22px 24px;border-bottom:1px solid var(--line)}
+  .room{padding:0 22px 24px}
+  .room .name,.room .who,.room ul{padding-top:22px}
+  .room .name{padding-top:26px}
+  .contents .can{grid-template-columns:1fr;gap:14px;margin-top:26px}
+  .contents .can > div{padding:22px 22px 24px}
+  .position .map .row{padding:18px 20px}
+  .month .flowline{grid-template-columns:1fr;margin-top:24px}
+  .month .flowline::before{left:6px;right:auto;top:6px;bottom:20px;width:1px;height:auto}
+  .month .flowline div{padding:0 0 26px 34px;border-bottom:0}
+  .month .flowline div::before{left:0;top:6px}
+}
 </style>
 </head>
 <body>
@@ -228,7 +311,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
       <a href="/salon/tomoshibi/login/" data-cta="hero-login" class="btn btn-ghost">ログイン</a>
     </div>
     <div class="hero-meta">
-      <div><b>週3回</b><span>大久保からの投稿</span></div>
+      <div><b>週3回</b><span>大久保先生からの投稿</span></div>
       <div><b>月1回</b><span>実践講義</span></div>
       <div><b>十ヶ条</b><span>毎月ひとつを学ぶ</span></div>
       <div><b>匿名可</b><span>運営の相談</span></div>
@@ -236,7 +319,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   </div>
 </div>
 
-<section>
+<section class="why">
   <div class="narrow">
     <div class="sec-label">WHY</div>
     <h2 class="lead">場所があれば続く、<br>というわけではありませんでした。</h2>
@@ -256,14 +339,14 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   <div class="wrap">
     <div class="sec-label">CURRICULUM</div>
     <h2 class="lead">負の連鎖を止める心得十ヶ条</h2>
-    <p class="lede">大久保が現場で積み上げてきた十ヶ条を、サロンの背骨にします。毎月ひとつを取り上げ、投稿・講義すべてをその条に沿って進めます。10ヶ月で一巡し、また同じ条に戻ってきます。そのとき自分の答えが変わっていることが、いちばんわかりやすい成長の記録になります。</p>
+    <p class="lede">大久保先生が現場で積み上げてきた十ヶ条を、サロンの背骨にします。毎月ひとつを取り上げ、投稿・講義すべてをその条に沿って進めます。10ヶ月で一巡し、また同じ条に戻ってきます。そのとき自分の答えが変わっていることが、いちばんわかりやすい成長の記録になります。</p>
     <div class="creed">
       <div class="c"><div class="no">第一条</div><div class="t">「不登校・いじめ」に負けない・気にしない技</div></div>
       <div class="c"><div class="no">第二条</div><div class="t">「何のために」を常に自己に問い、志を堅実する</div></div>
       <div class="c"><div class="no">第三条</div><div class="t">リフレクションして、自らの力を客観する</div></div>
       <div class="c"><div class="no">第四条</div><div class="t">背水・不退転の覚悟を決めて臨む</div></div>
       <div class="c"><div class="no">第五条</div><div class="t">決めつけない・慣習にとらわれない</div></div>
-      <div class="c now"><div class="no">第六条</div><div class="t">時に「ひと呼吸」して待つ</div></div>
+      <div class="c"><div class="no">第六条</div><div class="t">時に「ひと呼吸」して待つ</div></div>
       <div class="c"><div class="no">第七条</div><div class="t">後継を自分以上に育てる覚悟で鍛える</div></div>
       <div class="c"><div class="no">第八条</div><div class="t">「責任は我にあり」と受け止める</div></div>
       <div class="c"><div class="no">第九条</div><div class="t">率直な意見を聞ける寛容性と度量の鍛錬</div></div>
@@ -273,7 +356,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   </div>
 </section>
 
-<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<section class="attitude" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-label">ATTITUDE</div>
     <h2 class="lead">ブランドの3つの姿勢を、<br>そのまま場のルールにしています。</h2>
@@ -335,12 +418,12 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   </div>
 </section>
 
-<section>
+<section class="contents">
   <div class="wrap">
     <div class="sec-label">CONTENTS</div>
     <h2 class="lead">灯にあるもの</h2>
     <div class="can">
-      <div><h4>大久保の投稿を読む</h4><p>週3回。現場の相談から、そのまま投稿します。</p></div>
+      <div><h4>大久保先生の投稿を読む</h4><p>週3回。現場の相談から、そのまま投稿します。</p></div>
       <div><h4>自分のケースで聞く</h4><p>実際に関わっている子のことを、名前を伏せて相談できます。回答はサロン内に残ります。</p></div>
       <div><h4>月1の学びの場</h4><p>実践講義。カメラオフ・聴くだけ参加を歓迎します。</p></div>
       <div><h4>アーカイブを見る</h4><p>過去の講義をライブラリから視聴。入会前の回もさかのぼれます。</p></div>
@@ -350,7 +433,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   </div>
 </section>
 
-<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<section class="position" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-label">POSITION</div>
     <h2 class="lead">既存のサービスと、どう並ぶか。</h2>
@@ -381,12 +464,12 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   </div>
 </section>
 
-<section>
+<section class="month">
   <div class="wrap">
     <div class="sec-label">A MONTH HERE</div>
     <h2 class="lead">ひと月の流れ</h2>
     <div class="flowline">
-      <div><b>第1週</b><p>その月の一条が示されます。大久保が自身の失敗から書き起こします。</p></div>
+      <div><b>第1週</b><p>その月の一条が示されます。大久保先生が自身の失敗から書き起こします。</p></div>
       <div><b>第2週</b><p>相談が動く週。その条に照らして、自分の現場を持ち寄ります。</p></div>
       <div><b>第3週</b><p>実践講義。日程に沿って開催。</p></div>
       <div><b>第4週</b><p>アーカイブ公開とふりかえり。その条で何が変わったかを書き残します。</p></div>
@@ -423,6 +506,19 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
   <a href="mailto:info@antagaorana.com">お問い合わせ</a>
   <br>© 教育支援団体あんたがおらな
 </footer>
+
+
+<script>
+// 「今月の一条」：運営が設定した今月の条を、十ヶ条の一覧で、印つきで強調する（未設定の月は、強調しない）
+(function(){
+  fetch('/api/salon?action=public-creed', { cache: 'no-store' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    if (!d || !d.n) return;
+    var row = document.querySelectorAll('.creed .c')[d.n - 1]; if (!row) return;
+    row.classList.add('now');
+    var t = row.querySelector('.t'); var tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = '今月の一条'; t.appendChild(tag);
+  }).catch(function(){});
+})();
+</script>
 
 <script type="module">
 (async () => {

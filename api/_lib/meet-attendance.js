@@ -10,7 +10,7 @@
  *   - 照合できなかった参加者は「確認待ち」として記録するだけ（付与しない）。運営の出席訂正で解決する。
  *   - 参加表明済みで、有効な会員だけが対象。表明していない会員の参加では付与しない。欠席者には付与しない。
  *   - 出席の条件（滞在時間）は未確定。環境変数 MORNING_ATTENDANCE_MIN_MINUTES が設定されるまで、何も確定しない（'rule_unset'）。
- *     0 を設定すると「参加の記録があれば出席」、15 なら「合計15分以上」。
+ *     0 を設定すると「参加の記録があれば出席」、1 なら「同じ日の入退室の合計が1分以上」（暫定。依頼主の指示）、15 なら「合計15分以上」。
  *   - 会議がまだ終了していない／Google APIが失敗した場合は、途中までの結果で付与しない。取得が全部成功した後にだけ確定する。
  *   - 再実行しても二重に付与されない（confirmAttendance が台帳の操作キーで守る）。
  *   - 定期実行（cron）は MORNING_ATTENDANCE_AUTO=1 のときだけ。既定では無効。
@@ -58,18 +58,29 @@ export async function fetchParticipation(spaceName) {
       const userId = su?.user || null;
       const key = userId || p.name;
       const sessions = await listAll(`${p.name}/participantSessions`, 'participantSessions');
-      let totalMs = 0; let open = false;
+      const cur = byKey.get(key) || { participantKey: key, userId, kind, displayName: (su || p.anonymousUser || p.phoneUser || {}).displayName || '', totalMs: 0, open: false, intervals: [] };
       for (const s of sessions) {
         if (!s.startTime) continue;
-        if (!s.endTime) { open = true; continue; }
-        totalMs += Math.max(0, Date.parse(s.endTime) - Date.parse(s.startTime));
+        if (!s.endTime) { cur.open = true; continue; } // まだ退出していない（会議が続いている）
+        const a = Date.parse(s.startTime); const b = Date.parse(s.endTime);
+        if (Number.isFinite(a) && Number.isFinite(b) && b > a) cur.intervals.push([a, b]);
       }
-      const cur = byKey.get(key) || { participantKey: key, userId, kind, displayName: (su || p.anonymousUser || p.phoneUser || {}).displayName || '', totalMs: 0, open: false };
-      cur.totalMs += totalMs; cur.open = cur.open || open;
       byKey.set(key, cur);
     }
   }
-  return { ended, participants: [...byKey.values()] };
+  // 同じ人の入退室を合算する。2台の端末で同時に入っていた時間などの重なりは、二重に数えない（時間帯を統合してから合計する）
+  const participants = [...byKey.values()].map(({ intervals, ...rest }) => ({ ...rest, totalMs: unionMs(intervals) }));
+  return { ended, participants };
+}
+
+export function unionMs(intervals) {
+  const sorted = [...intervals].sort((x, y) => x[0] - y[0]);
+  let total = 0; let curS = null; let curE = null;
+  for (const [a, b] of sorted) {
+    if (curE === null || a > curE) { if (curE !== null) total += curE - curS; curS = a; curE = b; } else if (b > curE) curE = b;
+  }
+  if (curE !== null) total += curE - curS;
+  return total;
 }
 
 /**

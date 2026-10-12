@@ -91,3 +91,13 @@ node tests-e2e-local/lp.e2e.mjs
 
 - `/haku-community/` `/salon/`：FAQ初期状態（すべて閉じる）と開閉（クリック・Enter・Space）、見出し・リード・結びの文に孤立行がない（PC／タブレット／スマホ）、横はみ出しなし、サイト内リンク・ページ内リンク
 - `lp-text.test.mjs`：変更前のコミットと比べて、本文・見出し・FAQ・CTAのリンクが変わっていない（変えてよいのは、FAQの初期状態と、灯の運営団体の表記だけ）
+
+## HAKU Communityの配色が灯と一致していること（`palette.e2e.mjs`／`tests-unit/palette.test.mjs`）
+
+```bash
+node tests-e2e-local/palette.e2e.mjs
+```
+
+- 灯サロンの実際のCSS（描画された値）を基準に、HAKU Communityの全関連画面（紹介・新規登録・ログイン・決済完了・中断・アカウント設定・パスワード・会員HOMEの全タブ）で、実際に使われている色（文字・背景・罫線・グラデーション）が灯の色だけであること
+- 文字のコントラスト比（本文4.3以上・大きな文字3以上。灯の標準アクセント色 #B4552F を生成り #F6F2E9 の上で使う場合の4.39を許容）、PC／スマホの横はみ出しなし
+- 色の定義は `lp-assets/haku-palette.css` に集約（灯のCSSは変更しない）

@@ -10,6 +10,7 @@
 <link rel="icon" type="image/png" href="/lp-assets/logo-hero.png?v=20260501a">
 <link rel="apple-touch-icon" href="/lp-assets/logo-hero.png?v=20260501a">
 <link rel="stylesheet" href="/lp-assets/community-tokens.css">
+<link rel="stylesheet" href="/lp-assets/haku-palette.css">
 <style>
 :root{color-scheme:light;box-sizing:border-box}
 body{margin:0;padding:0}
@@ -25,9 +26,9 @@ img{max-width:100%}
   --ink:var(--color-text);
   --mid:var(--color-text-muted);
   --faint:var(--color-text-faint);
-  --terra:#8c692c;
+  --terra:var(--haku-terra);
   --gold:var(--color-gold);
-  --accent-ink:#8a5a1f;
+  --accent-ink:var(--haku-terra);
   --line:var(--color-border);
   --line-soft:var(--color-border-soft);
   --serif:var(--font-serif);
@@ -60,20 +61,20 @@ input{font-family:inherit;font-size:14px}
 }
 
 .hero{background:var(--green-dk);color:#fff;padding:96px 0 80px}
-.hero .eyebrow{font-size:12px;letter-spacing:.2em;color:#b9c7b2;margin-bottom:34px}
+.hero .eyebrow{font-size:12px;letter-spacing:.2em;color:rgba(255,255,255,.72);margin-bottom:34px}
 .hero h1{font-size:40px;line-height:1.55;margin-bottom:12px}
-.hero .en{font-family:var(--serif);font-size:13px;letter-spacing:.26em;color:#b9c7b2;margin-bottom:30px}
+.hero .en{font-family:var(--serif);font-size:13px;letter-spacing:.26em;color:rgba(255,255,255,.72);margin-bottom:30px}
 .hero p{max-width:32em;color:rgba(255,255,255,.85);font-size:15px}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:14px 30px;font-size:14px;letter-spacing:.08em;border:1px solid currentColor;background:none;color:inherit;cursor:pointer;font-family:var(--sans);text-decoration:none}
 .btn-solid{background:var(--terra);border-color:var(--terra);color:#fff}
 .btn-ghost{border-color:rgba(255,255,255,.5);color:#fff}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.invite-line{font-size:12.5px;color:#b9c7b2;letter-spacing:.02em;margin-bottom:22px}
+.invite-line{font-size:12.5px;color:rgba(255,255,255,.72);letter-spacing:.02em;margin-bottom:22px}
 .hero-meta{display:flex;flex-wrap:wrap;gap:40px;margin-top:64px;padding-top:28px;border-top:1px solid rgba(255,255,255,.2)}
 .hero-meta div{min-width:110px}
 .hero-meta b{display:block;font-family:var(--serif);font-size:26px;font-weight:500;line-height:1.3;color:#fff}
-.hero-meta span{font-size:12px;color:#b9c7b2}
+.hero-meta span{font-size:12px;color:rgba(255,255,255,.72)}
 
 section{padding:88px 0}
 .sec-label{font-size:11px;letter-spacing:.24em;color:var(--faint);margin-bottom:26px}
@@ -127,9 +128,9 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 .closing p{color:rgba(255,255,255,.8);max-width:30em;margin:0 auto 34px}
 .closing .ctas{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
 .site-footer{background:var(--green-dk);border-top:1px solid rgba(255,255,255,.14);padding:22px 0 30px;text-align:center}
-.site-footer .teacher-link{font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);padding-bottom:1px}
+.site-footer .teacher-link{font-size:12px;color:rgba(255,255,255,.72);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.28);padding-bottom:1px}
 .site-footer .teacher-link:hover{color:rgba(255,255,255,.85)}
-.site-footer .copy{font-size:11px;color:rgba(255,255,255,.35);margin-top:14px}
+.site-footer .copy{font-size:11px;color:rgba(255,255,255,.72);margin-top:14px}
 
 /* ---- PEOPLE：ここにいる人たち ＋ HAKU MEETの記録（画像は使わず、文章の余白と罫線だけで構成） ---- */
 .people{border-top:1px solid var(--line)}
@@ -212,7 +213,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 .agree input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .agree a{color:var(--green-dk)}
 .agree small{display:block;font-size:12px;margin-top:4px}
-.ap-err{min-height:22px;font-size:13px;color:#9a3b1f;margin:4px 0 12px}
+.ap-err{min-height:22px;font-size:13px;color:var(--haku-terra);margin:4px 0 12px}
 .ap-go{width:100%;padding:17px 30px;font-size:15px;letter-spacing:.14em}
 .ap-go[disabled]{opacity:.6;cursor:progress;transform:none}
 
@@ -271,7 +272,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
 #h-pillars .can > div:last-child{border-top-color:var(--gold)}
 #h-pillars .can h4{font-size:18px;margin-bottom:10px;color:var(--green-dk)}
 
-/* TANE：説明（左の金線）と、注記（点線の下）に分ける */
+/* HAKUポイント：説明（左の金線）と、注記（点線の下）に分ける */
 .tane .can{grid-template-columns:repeat(2,1fr);gap:18px;margin-top:6px}
 .tane .can > div{padding:22px 26px;border:1px solid var(--line);border-left:3px solid var(--gold);background:var(--cream)}
 .tane .can h4{color:var(--green-dk)}
@@ -367,21 +368,21 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
       <div><h4>学ぶ｜HAKU NOTE</h4><p>週1回、5〜10分の音声・短い文章・動画で「今週の問い」を届けます。過去分は静かにアーカイブされ、いずれ思想のライブラリになります。</p></div>
       <div><h4>整える｜HAKU MORNING</h4><p>週1回・30分。5分で問いを受け取り、10分で自分と向き合い、10分で対話し、5分で今週の一歩を決める。週に一度、自分に戻る時間です。</p></div>
       <div><h4>つながる｜HAKU MEET</h4><p>月1回のリアルな集まり。対話会・焚き火・自然体験など。普段会わない人と、普段しない経験と、普段しない話をします。</p></div>
-      <div><h4>循環する｜TANE</h4><p>人をつなぐ・助ける・貢献する——そうした行動が「TANE」として積み重なる仕組み。誰かのための行動が、次の誰かの挑戦につながります。</p></div>
+      <div><h4>循環する｜HAKUポイント</h4><p>人をつなぐ・助ける・貢献する——そうした行動が「HAKUポイント」として積み重なる仕組み。誰かのための行動が、次の誰かの挑戦につながります。</p></div>
     </div>
   </div>
 </section>
 
 <section class="tane" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <div class="sec-label">TANE</div>
-    <h2 class="lead">TANEは、ポイントではありません。</h2>
-    <p class="lede" style="margin-bottom:30px">貯めることより、何から生まれ、何に使ったかという物語を大事にしています。「稼げるコミュニティ」を目指しているわけではないので、増やすこと自体を競う設計にはしていません。</p>
+    <div class="sec-label">HAKUポイント</div>
+    <h2 class="lead">HAKUポイントは、ただのポイントではありません。</h2>
+    <p class="lede" style="margin-bottom:30px">HAKUポイントは、学びや行動を、次の誰かへの価値につなげていく仕組みです。貯めることより、何から生まれ、何に使ったかという物語を大事にしています。「稼げるコミュニティ」を目指しているわけではないので、増やすこと自体を競う設計にはしていません。</p>
     <div class="can">
       <div><h4>育てる</h4><p>人をつなぐ、ボランティアに参加する、イベントを手伝う、仲間をサポートする。</p></div>
-      <div><h4>つかう</h4><p>自分のために、挑戦のために（インド体験など）、誰かに贈る、社会に還す（富士登山プロジェクト等）。</p></div>
+      <div><h4>つかう</h4><p>① 自分の学びや挑戦への活用<br>② インドプロジェクトへの支援<br>（いずれも現段階では、活用構想の例です。）</p></div>
     </div>
-    <p class="note">※ TANEの換算価値・有効期限・譲渡可否は現在検討中です。資金決済法等の確認が済み次第、あらためてご案内します。</p>
+    <p class="note">※ HAKUポイントの換算価値・有効期限・譲渡可否は現在検討中です。資金決済法等の確認が済み次第、あらためてご案内します。</p>
   </div>
 </section>
 
@@ -393,7 +394,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
     <div class="flowline">
       <div><b>週はじめ</b><p>HAKU NOTEで今週の問いが届く。読む、聴く。それだけでもいい。</p></div>
       <div><b>週なかば</b><p>HAKU MORNINGで、その問いを持ち寄って対話する。</p></div>
-      <div><b>気づいたとき</b><p>誰かをつないだり、支えたりした行動が、TANEとして積み重なる。</p></div>
+      <div><b>気づいたとき</b><p>誰かをつないだり、支えたりした行動が、HAKUポイントとして積み重なる。</p></div>
       <div><b>月に一度</b><p>HAKU MEETで、画面の外の人たちと実際に会う。</p></div>
     </div>
   </div>
@@ -402,7 +403,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
 <!--
   PEOPLE / VOICES — 差し替えメモ
   ・掲載は、名前・言葉すべてご本人の同意を得たものだけ。架空の人物・声は載せない。
-  ・紹介制度（TANE）の関係がある方の声には、その旨を併記する（ステマ規制対応）。
+  ・紹介制度（HAKUポイント）の関係がある方の声には、その旨を併記する（ステマ規制対応）。
   ・.is-ph は「未確定のプレースホルダー」の印。実データに置き換えたらクラスごと外す。
   ・写真は現時点で使用しない方針（運営側で用意ができるまでは、文章のみで構成する）。
 -->
@@ -460,7 +461,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
         <figcaption class="voice-by is-ph">はじめての声は、もうすぐここに届きます</figcaption>
       </figure>
     </div>
-    <p class="note">※ 紹介制度（TANE）でつながりのある方の言葉には、その旨を併記します。</p>
+    <p class="note">※ 紹介制度（HAKUポイント）でつながりのある方の言葉には、その旨を併記します。</p>
   </div>
 </section>
 
@@ -510,13 +511,13 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
         <ul>
           <li>HAKU NOTE・HAKU MORNING</li>
           <li>HAKU MEET（月1・リアル）</li>
-          <li>TANE（貢献・つながりの記録）</li>
+          <li>HAKUポイント（貢献・つながりの記録）</li>
           <li>当面は直接紹介制</li>
         </ul>
         <a href="#h-apply" class="btn btn-solid" style="margin-top:22px;width:100%;text-align:center">HAKUに参加する</a>
       </div>
     </div>
-    <p class="note">※ 紹介制について：友人を紹介すると、その方が在籍している間、毎月わずかなTANEが育ちます。「紹介した瞬間に報酬」ではなく、「つないだ人が続けているぶんだけ、少しずつ育つ」という文化を大事にしたいためです。割合・期間は検討中です。二次紹介以降の報酬はありません。</p>
+    <p class="note">※ 紹介制について：友人を紹介すると、その方が在籍している間、毎月わずかなHAKUポイントが育ちます。「紹介した瞬間に報酬」ではなく、「つないだ人が続けているぶんだけ、少しずつ育つ」という文化を大事にしたいためです。割合・期間は検討中です。二次紹介以降の報酬はありません。</p>
   </div>
 </section>
 
@@ -571,7 +572,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
     <details><summary>拓（HAKU）コーチングとの違いは何ですか。</summary><p>コーチングは個人に深く入る個別サービスです。HAKU Communityは個別コンサルではなく、学び・振り返り・実践・つながりを日常の中で繰り返すための環境です。Community側で個別の診断や分析を提供することはありません。</p></details>
     <details><summary>既存の「拓」コミュニティアプリ（555チャレンジなど）とは違うのですか。</summary><p>別のものです。思想の根っこは近いですが、機能は独立しており、現時点では統合の予定はありません。</p></details>
     <details><summary>紹介コードがないと入会できませんか。</summary><p>当面は直接紹介を基本に、小さく文化を育てていきたいと考えています。一般募集に切り替えるかどうかは検討中です。</p></details>
-    <details><summary>TANEは現金化できますか。</summary><p>現時点では未定です。資金決済法・税務等の確認を経てから正式にご案内します。「1TANE＝1円」のような固定の換算は行っていません。</p></details>
+    <details><summary>HAKUポイントは現金化できますか。</summary><p>現時点では未定です。資金決済法・税務等の確認を経てから正式にご案内します。「1ポイント＝1円」のような固定の換算は行っていません。</p></details>
     <details><summary>合わないと感じたら、辞められますか。</summary><p>いつでも解約できます。引き止めることはしません。</p></details>
   </div>
 </section>
@@ -663,7 +664,7 @@ h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-
         { duration: 0.4, delay: stagger(0.08), easing: 'ease-out' });
     }, { amount: 0.3 });
 
-    // 4) 4 Pillars / TANE 育てる・つかう — items stagger in together
+    // 4) 4 Pillars / HAKUポイント 育てる・つかう — items stagger in together
     document.querySelectorAll('.can').forEach((el) => {
       inView(el, () => {
         animate(el.children, { opacity: [0, 1], y: [10, 0] },

@@ -27,7 +27,7 @@
   // ── 運営ロール ──
   function viewRoles() {
     call('salon-staff-list').then(function (d) {
-      var h = '<p class="note">灯の運営ロール（大久保さん・事務局）に登録された管理者だけが、灯の投稿・会員の管理を行えます。HAKU Communityの管理者というだけでは、灯の内容は見られません。</p>';
+      var h = '<p class="note">灯の運営ロール（大久保先生・事務局）に登録された管理者だけが、灯の投稿・会員の管理を行えます。HAKU Communityの管理者というだけでは、灯の内容は見られません。</p>';
       h += d.you ? '<p class="note">あなたのロール：<b>' + esc(d.you.title || d.you.role) + '</b></p>'
         : d.canEditStaff ? '<p class="note" style="color:#9A3B1F">あなた（最高管理者）は、まだ灯の運営ロールに登録されていません。下のフォームに、ご自身のメールアドレスが入っています。ロールを選んで「登録・更新する」を押すと、灯の申請・投稿などを操作できます。</p>'
         : '<p class="note" style="color:#9A3B1F">あなたは灯の運営ロールに登録されていません。最高管理者に登録を依頼してください。</p>';

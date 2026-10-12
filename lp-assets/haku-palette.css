@@ -1,0 +1,54 @@
+/*
+ * HAKU Community の配色（教育者のサロン「灯」の実際のカラーコードに統一）。
+ * 値は salon/index.html と api/_templates/salon-tomoshibi.html の :root と同じ。新しい色は作らない。
+ * HAKU Community の各ページは、community-tokens.css のあとにこのファイルを読み込み、色の変数だけを上書きする。
+ * 将来色を調整するときは、このファイルだけを直す（灯の側のCSSは変更しない）。
+ *
+ *   灯の変数      値        HAKUでの役割
+ *   --green       #1E3A2F   ヘッダー・ヒーロー・濃い背景 ／ HAKU: --color-green-dark, --haku-green-deep
+ *   --green-dk    #132620   さらに濃い緑（覆いの影など）
+ *   --green-lt    #3E5A4C   中間の緑（選択中・リンク・補助）  ／ HAKU: --color-green, --color-green-light, --haku-green
+ *   --cream       #F6F2E9   ページ背景
+ *   --paper       #FFFDF8   カード・面の背景
+ *   --ink         #2B2926   見出し・本文
+ *   --mid         #6E685F   補足の文字
+ *   --faint       #9A9388   小さな注記
+ *   --terra       #B4552F   アクセント・ボタン・エラー
+ *   --gold        #C0A05C   細い金線・印
+ *   --line        #DCD5C5   罫線
+ *   --line-soft   #EAE4D6   淡い罫線・淡い背景
+ *
+ * ステータス色：成功は中間の緑（#3E5A4C）、エラーはアクセント（#B4552F）。灯の画面と同じ。
+ * 濃い背景の上のエラーは #EDB9A6、成功は #cfe0c8（灯のログイン・登録画面と同じ）。
+ */
+:root{
+  /* 灯の色（変更しない） */
+  --haku-green-deep:#1E3A2F;
+  --haku-green-darker:#132620;
+  --haku-green:#3E5A4C;
+  --haku-cream:#F6F2E9;
+  --haku-paper:#FFFDF8;
+  --haku-ink:#2B2926;
+  --haku-mid:#6E685F;
+  --haku-faint:#9A9388;
+  --haku-terra:#B4552F;
+  --haku-gold:#C0A05C;
+  --haku-line:#DCD5C5;
+  --haku-line-soft:#EAE4D6;
+  --haku-err-on-dark:#EDB9A6;
+  --haku-ok-on-dark:#cfe0c8;
+
+  /* community-tokens.css の変数を、灯の色に合わせる */
+  --color-bg:var(--haku-cream);
+  --color-surface:var(--haku-paper);
+  --color-text:var(--haku-ink);
+  --color-text-muted:var(--haku-mid);
+  --color-text-faint:var(--haku-mid); /* 小さな補足の文字は、読みやすさのため --haku-faint ではなく --haku-mid（灯の --mid）を使う */
+  --color-green:var(--haku-green);
+  --color-green-dark:var(--haku-green-deep);
+  --color-green-light:var(--haku-green);
+  --color-gold:var(--haku-gold);
+  --color-gold-light:var(--haku-gold);
+  --color-border:var(--haku-line);
+  --color-border-soft:var(--haku-line-soft);
+}
