@@ -71,3 +71,23 @@ node scripts/salon-stripe-setup.mjs --verify   # 確認だけ（何も変えな�
 
 Stripeのテストキー（sk_test_… / rk_test_…）を、表示されない入力欄に貼る。ライブキーは拒否する。HAKUの商品・Price・Webhook・環境変数には触れない。
 テスト：`tests-unit/salon-stripe-setup.test.mjs`（偽のStripeサーバーと偽のvercelコマンドで確認。本物には接続しない）。
+
+## 朝の集まり：参加の記録（スタンプ）・出席管理（`attendance.e2e.mjs`）
+
+```bash
+node tests-e2e-local/attendance.e2e.mjs
+```
+
+- `/haku-community/home/#morning`：既存のカレンダーの下の「参加の記録」。本人が実際に参加した日だけにスタンプ・月の切替（既存のカレンダーは動かない）・取消でスタンプが消える・他の会員の記録が出ない・ポイント履歴と残高が台帳と一致・スマホ幅
+- 管理画面「朝の集まり・出席」：自動出席確認の設定状況、出席訂正（理由必須）・取消（台帳に相殺の履歴）、確認待ちの結び付け、Google照合（未設定の間は何も付与しない旨の表示）
+- 音声URL欄の再生確認（セッション／HAKUからのことば）
+- Googleとの通信は偽物。**実際のGoogle Meet APIでの出席確認は未確認**（ユニットテスト `tests-unit/morning-attendance.test.mjs` も偽のGoogle）
+
+## 紹介ページ（`lp.e2e.mjs`）と文言の維持（`tests-unit/lp-text.test.mjs`）
+
+```bash
+node tests-e2e-local/lp.e2e.mjs
+```
+
+- `/haku-community/` `/salon/`：FAQ初期状態（すべて閉じる）と開閉（クリック・Enter・Space）、見出し・リード・結びの文に孤立行がない（PC／タブレット／スマホ）、横はみ出しなし、サイト内リンク・ページ内リンク
+- `lp-text.test.mjs`：変更前のコミットと比べて、本文・見出し・FAQ・CTAのリンクが変わっていない（変えてよいのは、FAQの初期状態と、灯の運営団体の表記だけ）

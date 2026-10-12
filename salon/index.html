@@ -190,6 +190,15 @@ footer a:hover{color:#fff}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .hero{opacity:1!important;transform:none!important}
 }
+
+/* ---- 日本語の組版：一文字だけの孤立行を防ぐ（文字は変えず、改行の仕方だけを整える） ----
+   見出し・リード・結びの文は、行の長さを均等にし、文節の途中では折り返さない。長い本文は、最後の行が短くなりすぎないようにする。 */
+h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-phrase;line-break:strict}
+.faq p,.can p,.chain p,.flowline p,.note,.plan li,.for-card p,.people-list .value{text-wrap:pretty;word-break:auto-phrase;line-break:strict}
+.closing .narrow{max-width:880px}
+.closing p{max-width:42em}
+.closing h2{overflow-wrap:break-word}
+@media(max-width:600px){.closing h2{font-size:22px}}
 </style>
 </head>
 <body>
@@ -210,7 +219,7 @@ footer a:hover{color:#fff}
 
 <div class="hero" id="hero">
   <div class="wrap">
-    <div class="eyebrow">株式会社あんたがおらな ｜ ONLINE COMMUNITY</div>
+    <div class="eyebrow">教育支援団体あんたがおらな ｜ ONLINE COMMUNITY</div>
     <h1>居場所は、つくれた。<br>そのあとが、わからない。</h1>
     <div class="en">灯｜TOMOSHIBI</div>
     <p>理念は「子どもの人生に、味方を。」<br>子どもの居場所をつくる教育者のためのサロン「灯」。3万件の教育相談に立ち会ってきた大久保俊輝（教育学者）が毎日います。</p>
@@ -391,7 +400,7 @@ footer a:hover{color:#fff}
   <div class="narrow">
     <div class="sec-label">FAQ</div>
     <h2 class="lead" style="margin-bottom:30px">よくあるご質問</h2>
-    <details open><summary>同業の人に、教室の内情を見られたくありません。</summary><p>教室名・学校名は伏せて投稿できます。相談は匿名でも可能です。近隣で競合する可能性がある場合は、事務局にお申し出いただければ配慮します。</p></details>
+    <details><summary>同業の人に、教室の内情を見られたくありません。</summary><p>教室名・学校名は伏せて投稿できます。相談は匿名でも可能です。近隣で競合する可能性がある場合は、事務局にお申し出いただければ配慮します。</p></details>
     <details><summary>教育の専門家ではありません。ついていけますか。</summary><p>むしろその方を想定しています。資格や経歴は問いません。「この子にどう関わればいいか」という具体的な場面から始めます。</p></details>
     <details><summary>退会はすぐできますか。</summary><p>いつでも可能です。手続きはサロン内で完結し、理由をお聞きすることもありません。</p></details>
   </div>
@@ -412,7 +421,7 @@ footer a:hover{color:#fff}
   <a href="/privacy-policy.html" target="_blank" rel="noopener">プライバシーポリシー</a>
   <a href="/commercial-transactions.html" target="_blank" rel="noopener">特定商取引法に基づく表記</a>
   <a href="mailto:info@antagaorana.com">お問い合わせ</a>
-  <br>© 株式会社あんたがおらな
+  <br>© 教育支援団体あんたがおらな
 </footer>
 
 <script type="module">

@@ -124,7 +124,7 @@ console.log('■ 1. 紹介ページ /salon/');
   await page.evaluate(() => { document.querySelector('[data-cta="hero-join"]').addEventListener('click', (e) => e.preventDefault()); });
   await page.click('[data-cta="hero-join"]');
   eq('CTAクリックが dataLayer に積まれる', await page.evaluate(() => (window.dataLayer || []).map((x) => x.cta)), ['hero-join']);
-  check('FAQは折りたたみ（1問目のみ開いている）', await page.evaluate(() => { const d = [...document.querySelectorAll('#faq details')]; return d.length >= 3 && d[0].open && d.slice(1).every((x) => !x.open); }), null);
+  check('FAQは折りたたみ（初期状態はすべて閉じている）', await page.evaluate(() => { const d = [...document.querySelectorAll('#faq details')]; return d.length >= 3 && d.every((x) => !x.open); }), null);
   check('テスト・Preview表記が出ない／別サイトのHAKUのリンクが無い', !/テスト環境|Preview|プレビュー|haku-community/i.test(html), null);
   eq('旧URL /tomoshibi → /salon/', await page.goto(base + '/tomoshibi').then(() => new URL(page.url()).pathname), '/salon/');
   eq('旧URL /tomoshibi-login → ログイン', await page.goto(base + '/tomoshibi-login.html').then(() => new URL(page.url()).pathname), '/salon/tomoshibi/login/');

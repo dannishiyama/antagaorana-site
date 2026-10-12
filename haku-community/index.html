@@ -250,6 +250,60 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
     scroll-behavior:auto!important;
   }
 }
+
+/* ---- 紹介ページの見やすさ（文章は変えず、見出しの強弱・まとまり・背景の切り替え・余白だけを整える） ---- */
+.sec-label::before{content:"";display:block;width:28px;height:2px;background:var(--gold);margin-bottom:14px}
+.lede{max-width:34em}
+
+/* WHY HAKU：思想から習慣までの循環を、つながった5段階として見せる */
+.why .chain{margin-top:36px;border-top:0}
+.why .chain .step{position:relative;grid-template-columns:44px 1fr;gap:20px;padding:16px 0;border-bottom:0;align-items:start}
+.why .chain .step::before{content:"";position:absolute;left:21px;top:56px;bottom:-12px;width:1px;background:var(--line)}
+.why .chain .step:last-child::before{display:none}
+.why .chain .n{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:var(--paper);color:var(--accent-ink);font-size:13px;letter-spacing:.04em;position:relative;z-index:1}
+.why .chain .step.last .n{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+.why .chain b{font-size:17px;margin-top:2px}
+.why .verdict{margin-top:40px;padding:22px 22px 22px 26px;background:var(--paper);border-left:3px solid var(--gold);font-size:21px;line-height:1.9;letter-spacing:.02em}
+
+/* 4つの柱：4つを同じ重さで並べ、上辺の色で性格を分ける */
+#h-pillars .can{grid-template-columns:repeat(2,1fr);gap:18px;margin-top:34px}
+#h-pillars .can > div{padding:26px 28px 28px;border:1px solid var(--line);border-top:3px solid var(--green-dk);background:var(--paper)}
+#h-pillars .can > div:last-child{border-top-color:var(--gold)}
+#h-pillars .can h4{font-size:18px;margin-bottom:10px;color:var(--green-dk)}
+
+/* TANE：説明（左の金線）と、注記（点線の下）に分ける */
+.tane .can{grid-template-columns:repeat(2,1fr);gap:18px;margin-top:6px}
+.tane .can > div{padding:22px 26px;border:1px solid var(--line);border-left:3px solid var(--gold);background:var(--cream)}
+.tane .can h4{color:var(--green-dk)}
+.tane .note{margin-top:26px;padding-top:16px;border-top:1px dashed var(--line);max-width:44em}
+
+/* 一週間の流れ：週→月へ進む時間の線の上に、4つの場面を置く */
+.week .flowline{position:relative;grid-template-columns:repeat(4,1fr);border-top:0;margin-top:30px}
+.week .flowline::before{content:"";position:absolute;left:0;right:0;top:6px;height:1px;background:var(--gold)}
+.week .flowline div{position:relative;padding:34px 22px 8px 0;border-right:0}
+.week .flowline div::before{content:"";position:absolute;left:0;top:0;width:13px;height:13px;border-radius:50%;background:var(--cream);border:2px solid var(--gold)}
+.week .flowline div:last-child::before{background:var(--gold)}
+.week .flowline b{font-size:15px;color:var(--green-dk)}
+
+@media(max-width:900px){
+  #h-pillars .can{grid-template-columns:1fr;gap:14px;margin-top:26px}
+  #h-pillars .can > div{padding:22px 22px 24px}
+  .tane .can{grid-template-columns:1fr;gap:14px}
+  .why .verdict{font-size:19px;padding:20px 20px}
+  .week .flowline{grid-template-columns:1fr;margin-top:24px}
+  .week .flowline::before{left:6px;right:auto;top:6px;bottom:20px;width:1px;height:auto}
+  .week .flowline div{padding:0 0 26px 34px;border-bottom:0}
+  .week .flowline div::before{left:0;top:6px}
+}
+
+/* ---- 日本語の組版：一文字だけの孤立行を防ぐ（文字は変えず、改行の仕方だけを整える） ----
+   見出し・リード・結びの文は、行の長さを均等にし、文節の途中では折り返さない。長い本文は、最後の行が短くなりすぎないようにする。 */
+h1,h2,h3,h4,.lede,.verdict,.closing p,.hero p{text-wrap:balance;word-break:auto-phrase;line-break:strict}
+.faq p,.can p,.chain p,.flowline p,.note,.plan li,.for-card p,.people-list .value{text-wrap:pretty;word-break:auto-phrase;line-break:strict}
+.closing .narrow{max-width:880px}
+.closing p{max-width:42em}
+.closing h2{overflow-wrap:break-word}
+@media(max-width:600px){.closing h2{font-size:22px}}
 </style>
 </head>
 <body>
@@ -288,7 +342,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   </div>
 </div>
 
-<section>
+<section class="why">
   <div class="narrow">
     <div class="sec-label">WHY HAKU</div>
     <h2 class="lead">枝葉のノウハウより先に、<br>根っこを育てます。</h2>
@@ -318,7 +372,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   </div>
 </section>
 
-<section style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<section class="tane" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-label">TANE</div>
     <h2 class="lead">TANEは、ポイントではありません。</h2>
@@ -331,7 +385,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   </div>
 </section>
 
-<section>
+<section class="week">
   <div class="wrap">
     <div class="sec-label">A WEEK HERE</div>
     <h2 class="lead">一週間の流れ</h2>
@@ -514,7 +568,7 @@ h2.lead{font-size:28px;line-height:1.7;margin-bottom:22px}
   <div class="narrow">
     <div class="sec-label">FAQ</div>
     <h2 class="lead" style="margin-bottom:30px">よくあるご質問</h2>
-    <details open><summary>拓（HAKU）コーチングとの違いは何ですか。</summary><p>コーチングは個人に深く入る個別サービスです。HAKU Communityは個別コンサルではなく、学び・振り返り・実践・つながりを日常の中で繰り返すための環境です。Community側で個別の診断や分析を提供することはありません。</p></details>
+    <details><summary>拓（HAKU）コーチングとの違いは何ですか。</summary><p>コーチングは個人に深く入る個別サービスです。HAKU Communityは個別コンサルではなく、学び・振り返り・実践・つながりを日常の中で繰り返すための環境です。Community側で個別の診断や分析を提供することはありません。</p></details>
     <details><summary>既存の「拓」コミュニティアプリ（555チャレンジなど）とは違うのですか。</summary><p>別のものです。思想の根っこは近いですが、機能は独立しており、現時点では統合の予定はありません。</p></details>
     <details><summary>紹介コードがないと入会できませんか。</summary><p>当面は直接紹介を基本に、小さく文化を育てていきたいと考えています。一般募集に切り替えるかどうかは検討中です。</p></details>
     <details><summary>TANEは現金化できますか。</summary><p>現時点では未定です。資金決済法・税務等の確認を経てから正式にご案内します。「1TANE＝1円」のような固定の換算は行っていません。</p></details>
