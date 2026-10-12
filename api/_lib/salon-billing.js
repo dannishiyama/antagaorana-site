@@ -269,7 +269,9 @@ export async function processSalonEvent(event, { stripe, baseUrl, displayName })
     }
     case 'invoice.payment_failed':
     case 'invoice.paid': {
-      const subId = typeof obj.subscription === 'string' ? obj.subscription : obj.subscription?.id;
+      // 新しいStripe API版では、invoiceのSubscriptionは parent.subscription_details に入る。どちらの形でも読む
+      const rawSub = obj.subscription ?? obj.parent?.subscription_details?.subscription;
+      const subId = typeof rawSub === 'string' ? rawSub : rawSub?.id;
       if (!subId) return { status: 'skipped', reason: 'no_subscription' };
       const sub = await retrieveSub(stripe, subId);
       if (sub?.metadata?.product !== SALON_PRODUCT) return { status: 'skipped', reason: 'not_salon' };

@@ -61,3 +61,13 @@ SALON_MOCK_DIR=<モックアップ原本のHTMLを置いたフォルダ> OUT_DIR
 - 管理画面の「申請・決済」：申請内容の確認・承認／却下・お支払い待ちの表示・案内の再送
 - **Stripeは `tests-e2e-local/fake-stripe.mjs` の偽物。本物のStripe・実決済・実際のWebhook接続は確認していない**（Preview上の実接続は、Stripe側の設定のあと別途確認する）
 - メールは送らず（送信はスタブ）、本物のRedis・Stripe・Googleには接続しない
+
+## 灯のStripe設定スクリプト（`scripts/salon-stripe-setup.mjs`）
+
+```bash
+node scripts/salon-stripe-setup.mjs --deploy   # 灯専用の商品・Price・Webhookを作り、Previewの灯専用変数を設定して、再デプロイ
+node scripts/salon-stripe-setup.mjs --verify   # 確認だけ（何も変えない）
+```
+
+Stripeのテストキー（sk_test_… / rk_test_…）を、表示されない入力欄に貼る。ライブキーは拒否する。HAKUの商品・Price・Webhook・環境変数には触れない。
+テスト：`tests-unit/salon-stripe-setup.test.mjs`（偽のStripeサーバーと偽のvercelコマンドで確認。本物には接続しない）。

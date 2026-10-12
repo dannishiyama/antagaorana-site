@@ -299,6 +299,14 @@ test('支払い失敗：past_due（利用停止）＋メール1通。回復す�
   assert.equal(mails('usageStart', email).length, 1, '回復で利用開始メールは再送しない');
 });
 
+test('支払い失敗（新しいStripe API版の形）：invoiceのSubscriptionが parent.subscription_details にあっても処理できる', async () => {
+  freshStripe(); sent.length = 0;
+  const email = await applicant('しんapi'); await CHECKOUT(email); const s = [...fake.sessions.values()].at(-1); const sub = fake.pay(s);
+  await toSalon(completedEvent(s)); sub.status = 'past_due';
+  await toSalon(event('invoice.payment_failed', { id: 'in_new', customer: sub.customer, parent: { subscription_details: { subscription: sub.id } } }));
+  assert.equal((await store.getMembership('tomoshibi', email)).status, 'past_due');
+});
+
 test('退会（解約）：期間の終わりまで利用可。メールは1通。Webhookで終了すると入れなくなる。HAKUの会員資格には影響しない', async () => {
   freshStripe(); sent.length = 0;
   const email = await applicant('たいかい'); await CHECKOUT(email); const s = [...fake.sessions.values()].at(-1); const sub = fake.pay(s);
