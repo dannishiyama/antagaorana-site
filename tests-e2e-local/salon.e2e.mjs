@@ -501,32 +501,37 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   const NAVQ = (sel) => p.locator(sel).evaluateAll((els) => els.map((e) => e.textContent.trim()));
   const panels = () => p.evaluate(() => ['applicationsPanel', 'membersPanel', 'firebasePanel', 'eventsPanel', 'wordsPanel', 'notesPanel', 'postsPanel', 'sessionsPanel', 'tanePanel', 'attendancePanel', 'salonPanel', 'auditPanel'].filter((i) => getComputedStyle(document.getElementById(i)).display !== 'none'));
   const crumb = () => p.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbPage').textContent, document.getElementById('crumb').dataset.svc]);
-  eq('メニューのグループ：共通管理／HAKU Community運営／灯サロン運営／記録／旧Community（旧Communityは最後）', await p.locator('#adminNav .ng-h').evaluateAll((els) => els.map((e) => e.childNodes[0].textContent.trim())), ['共通管理', 'HAKU Community運営', '灯サロン運営', '記録', '旧Community']);
-  eq('共通管理の項目', await NAVQ('#adminNav .ng-common .ni'), ['会員申請', '会員一覧・検索']);
-  eq('HAKU Community運営の項目', await NAVQ('#adminNav .ng-haku .ni'), ['HAKUイベント管理', '朝の集まり・出席', 'HAKUからのことば', 'HAKU NOTE / 今週の問い', 'みんなのことば', 'セッション（Preview fixture）', 'HAKUポイント']);
-  eq('灯サロン運営の項目', await NAVQ('#adminNav .ng-salon .ni'), ['申請・決済', '運営ロール', '今月の一条', '投稿・コメント', '講義アーカイブ', 'お知らせ・イベント', '会員', '操作履歴（灯）']);
+  eq('メニューのグループ（親メニュー5つ・旧Communityは最後）', await p.locator('#adminNav .ng-h').evaluateAll((els) => els.map((e) => e.childNodes[0].textContent.trim())), ['会員管理', 'HAKU Community運営', '灯サロン運営', '操作履歴', '旧Community管理']);
+  eq('会員管理の項目（HAKU・灯とも同じ名前）', await NAVQ('#adminNav .ng-common .ni'), ['申請管理', '会員一覧・検索', '申請管理', '会員一覧・検索']);
+  eq('会員管理の小見出し', await NAVQ('#adminNav .ng-common .ng-sub'), ['HAKU Community', '灯サロン']);
+  eq('HAKU Community運営の項目（会員画面の並び順）', await NAVQ('#adminNav .ng-haku .ni'), ['HAKU NOTE・今週の問い 登録・編集', 'HAKUからのことば 登録・編集', 'みんなのことば 投稿管理', 'イベント登録・編集', '朝の集まり 出席確認・管理', 'HAKUポイント 付与・調整', 'HAKUポイント 履歴・取消', 'セッション登録・管理']);
+  eq('HAKU Community運営の区分', await NAVQ('#adminNav .ng-haku .ng-sub'), ['学ぶ', 'ことば', '集う', 'HAKUポイント', 'マイページ']);
+  eq('灯サロン運営の項目（申請・会員・履歴は含まない）', await NAVQ('#adminNav .ng-salon .ni'), ['投稿・コメント管理', '今月の一条 設定', '講義アーカイブ 登録・編集', 'お知らせ・イベント 登録・編集', '運営ロール']);
+  eq('操作履歴の項目', await NAVQ('#adminNav .ng-log .ni'), ['HAKU Community', '灯サロン']);
   eq('旧Communityは、メニューの一番後ろ', await p.evaluate(() => document.querySelector('#adminNav .ng:last-child').className.includes('ng-legacy') && document.querySelector('#adminNav .ng:last-child .ni').textContent), '旧Community（拓）管理');
-  eq('現在地：最初は「共通管理 › 会員申請」で、そのパネルだけが出る', [await crumb(), await panels(), await p.locator('#adminNav .ni.on').allInnerTexts()], [['共通管理', '会員申請', 'common'], ['applicationsPanel'], ['会員申請']]);
-  await p.click('#adminNav [data-mode="events"]'); await p.fill('#evTitle', '入力途中のタイトル');
-  const HK = [['events', 'eventsPanel', 'HAKUイベント管理'], ['attendance', 'attendancePanel', '朝の集まり・出席'], ['words', 'wordsPanel', 'HAKUからのことば'], ['notes', 'notesPanel', 'HAKU NOTE / 今週の問い'], ['posts', 'postsPanel', 'みんなのことば'], ['sessions', 'sessionsPanel', 'セッション（Preview fixture）'], ['tane', 'tanePanel', 'HAKUポイント'], ['events', 'eventsPanel', 'HAKUイベント管理']];
-  for (const [m, panel, label] of HK) {
-    await p.click(`#adminNav [data-mode="${m}"]`);
-    eq(`${label}：そのパネルだけが出て、現在地は「HAKU Community運営 › ${label}」`, [await panels(), await crumb(), await p.locator('#adminNav .ni.on').allInnerTexts()], [[panel], ['HAKU Community運営', label, 'haku'], [label]]);
+  const cr3 = () => p.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbSub').textContent, document.getElementById('crumbPage').textContent, document.getElementById('crumb').dataset.svc]);
+  eq('現在地：最初は「会員管理 › HAKU Community › 申請管理」で、そのパネルだけが出る', [await cr3(), await panels(), await p.locator('#adminNav .ni.on').allInnerTexts()], [['会員管理', 'HAKU Community', '申請管理', 'haku'], ['applicationsPanel'], ['申請管理']]);
+  await p.click('#adminNav [data-key="events"]'); await p.fill('#evTitle', '入力途中のタイトル');
+  const HK = [['events', 'eventsPanel', 'イベント登録・編集', '集う'], ['attendance', 'attendancePanel', '朝の集まり 出席確認・管理', '集う'], ['words', 'wordsPanel', 'HAKUからのことば 登録・編集', 'ことば'], ['notes', 'notesPanel', 'HAKU NOTE・今週の問い 登録・編集', '学ぶ'], ['posts', 'postsPanel', 'みんなのことば 投稿管理', 'ことば'], ['sessions', 'sessionsPanel', 'セッション登録・管理', 'マイページ'], ['tane', 'tanePanel', 'HAKUポイント 履歴・取消', 'HAKUポイント'], ['pts-grant', 'membersPanel', 'HAKUポイント 付与・調整', 'HAKUポイント'], ['events', 'eventsPanel', 'イベント登録・編集', '集う']];
+  for (const [k, panel, label, sec] of HK) {
+    await p.click(`#adminNav [data-key="${k}"]`);
+    eq(`${label}：そのパネルだけが出て、現在地は「HAKU Community運営 › ${sec} › ${label}」`, [await panels(), await cr3(), await p.locator('#adminNav .ni.on').allInnerTexts()], [[panel], ['HAKU Community運営', sec, label, 'haku'], [label]]);
   }
   eq('メニューを移動しても、入力途中の内容は消えない', await p.inputValue('#evTitle'), '入力途中のタイトル');
-  await p.click('#adminNav [data-mode="firebase"]');
+  await p.click('#adminNav [data-key="firebase"]');
   eq('旧Community（拓）管理：削除されておらず、現在地も別の色分け（旧Community）で出る', [await panels(), (await crumb())[2]], [['firebasePanel'], 'legacy']);
-  await p.click('#adminNav [data-mode="audit"]');
-  eq('操作履歴：記録グループ', [await panels(), (await crumb())[0]], [['auditPanel'], '記録']);
-  await p.click('#adminNav [data-mode="salon"][data-sub="applications"]');
-  check('灯サロン運営：HAKUのパネルは出ない。現在地は「灯サロン運営 › 申請・決済」', JSON.stringify([await panels(), await crumb()]) === JSON.stringify([['salonPanel'], ['灯サロン運営', '申請・決済', 'salon']]), await crumb());
+  await p.click('#adminNav [data-key="audit-haku"]');
+  eq('操作履歴 › HAKU Community', [await panels(), (await cr3()).slice(0, 3)], [['auditPanel'], ['操作履歴', '', 'HAKU Community']]);
+  check('HAKUの操作履歴に、灯の操作は出ない', await p.evaluate(async () => { const r = await fetch('/api/admin?action=audit-log&service=haku', { credentials: 'same-origin' }); const d = await r.json(); return r.status === 200 && !(d.entries || []).some((e) => String(e.action).startsWith('salon_')); }), null);
+  await p.click('#adminNav [data-key="app-salon"]');
+  check('会員管理 › 灯サロン › 申請管理：HAKUのパネルは出ない', JSON.stringify([await panels(), await cr3()]) === JSON.stringify([['salonPanel'], ['会員管理', '灯サロン', '申請管理', 'salon']]), await cr3());
   await p.waitForSelector('#salonBody .app, #salonBody .empty');
   // ── 申請・決済（先頭のサブタブ。申請→承認→お支払い待ち→案内の再送） ──
-  eq('灯サロン運営：「申請・決済」が先頭で、最初に開く（メニューでも選択表示）', await p.locator('#adminNav .ng-salon .ni.on').allInnerTexts(), ['申請・決済']);
+  eq('会員管理 › 灯サロン › 申請管理：メニューで選択表示', await p.locator('#adminNav .ni.on').allInnerTexts(), ['申請管理']);
   const UIAPP = `uiapp${Date.now()}@example.test`;
   await store.saveUser({ email: UIAPP, displayName: '画面申請', fullName: '画面 申請', fullNameKana: 'がめん しんせい', passwordHash: hash });
   await store.createApplication('tomoshibi', { email: UIAPP, fullName: '画面 申請', fullNameKana: 'がめん しんせい', displayName: '画面申請', reason: '画面から承認のテストです。', referrerName: '紹介のひと' });
-  await p.click('#adminNav [data-mode="salon"][data-sub="applications"]'); await p.waitForSelector(`#slApps [data-email="${UIAPP}"]`);
+  await p.click('#adminNav [data-key="app-salon"]'); await p.waitForSelector(`#slApps [data-email="${UIAPP}"]`);
   check('申請・決済：申請内容（理由・紹介者）が見え、承認／却下ボタンがある', /画面から承認のテスト/.test(await p.locator(`#slApps [data-email="${UIAPP}"]`).innerText()) && /紹介のひと/.test(await p.locator(`#slApps [data-email="${UIAPP}"]`).innerText()) && (await p.locator(`#slApps [data-email="${UIAPP}"] [data-ap]`).count()) === 2, null);
   await p.click(`#slApps [data-email="${UIAPP}"] [data-ap="approve"]`);
   await p.waitForFunction(() => /承認しました/.test(document.getElementById('salonMsg').textContent));
@@ -544,26 +549,26 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   await p.waitForFunction(() => /却下しました/.test(document.getElementById('salonMsg').textContent));
   eq('申請・決済：却下できる（却下メール・決済は不可）', [(await store.getApplication('tomoshibi', UIREJ)).status, mailsOf('rejected', UIREJ).length], ['rejected', 1]);
   // ── 運営ロール ──
-  await p.click('#adminNav [data-mode="salon"][data-sub="roles"]'); await p.waitForSelector('#stGo');
+  await p.click('#adminNav [data-key="salon-roles"]'); await p.waitForSelector('#stGo');
   check('運営ロール：登録済みの代表・事務局が一覧に出る', (await p.locator('#salonBody').innerText()).includes(OWNER) && (await p.locator('#salonBody').innerText()).includes(SECR), null);
   check('運営ロール：最高管理者には登録フォームが出る', await p.locator('#stGo').count() === 1, null);
   await p.fill('#stEmail', 'newstaff@example.test'); await p.selectOption('#stRole', 'secretariat'); await p.click('#stGo');
   await p.waitForFunction(() => document.getElementById('salonBody').innerText.includes('newstaff@example.test'));
   eq('運営ロール：UIから登録でき、サーバーに保存される', (await Salon.getStaff('newstaff@example.test'))?.role, 'secretariat');
 
-  await p.click('#adminNav [data-mode="salon"][data-sub="creed"]'); await p.waitForSelector('#crGo');
+  await p.click('#adminNav [data-key="salon-creed"]'); await p.waitForSelector('#crGo');
   await p.selectOption('#crN', '7'); await p.fill('#crR', '後継を自分以上に育てる読み方'); await p.click('#crGo');
   await p.waitForFunction(() => document.getElementById('salonBody').innerText.includes('第七条'));
   eq('今月の一条：UIから設定できる', (await Salon.getCreed())?.n, 7);
 
-  await p.click('#adminNav [data-mode="salon"][data-sub="events"]'); await p.waitForSelector('#nwGo');
+  await p.click('#adminNav [data-key="salon-events"]'); await p.waitForSelector('#nwGo');
   await p.fill('#nwB', '管理画面からのお知らせです。'); await p.click('#nwGo');
   await p.waitForFunction(() => document.getElementById('salonMsg').innerText.includes('投稿しました'));
   await p.fill('#evT2', '管理画面のテスト会'); await p.fill('#evS2', '2099-01-15T20:00'); await p.fill('#evC2', '5'); await p.click('#evGo2');
   await p.waitForFunction(() => document.getElementById('salonBody').innerText.includes('管理画面のテスト会'));
   eq('お知らせ・イベント：UIから作成できる', (await Salon.listEvents({ limit: 50 })).some((e) => e.title === '管理画面のテスト会'), true);
 
-  await p.click('#adminNav [data-mode="salon"][data-sub="lectures"]'); await p.waitForSelector('#lcGo');
+  await p.click('#adminNav [data-key="salon-lectures"]'); await p.waitForSelector('#lcGo');
   await p.fill('#lcT', '管理画面の講義'); await p.fill('#lcD', '2099-01-10'); await p.fill('#lcU', 'https://media.example.test/lec.mp4'); await p.click('#lcGo');
   await p.waitForFunction(() => document.getElementById('salonBody').innerText.includes('管理画面の講義'));
   check('講義：UIから登録でき、動画URLは管理一覧の画面に出ない', !(await p.locator('#salonBody').innerText()).includes('lec.mp4'), null);
@@ -571,7 +576,7 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   await p.waitForFunction(() => document.getElementById('salonMsg').innerText.includes('https://'));
   check('講義：https以外のURLはエラーで登録されない', !(await Salon.listLectures()).some((l) => l.title === 'ng'), null);
 
-  await p.click('#adminNav [data-mode="salon"][data-sub="posts"]'); await p.waitForSelector('#slPosts');
+  await p.click('#adminNav [data-key="salon-posts"]'); await p.waitForSelector('#slPosts');
   await p.click('#salonBody [data-ch="news"]'); await p.waitForSelector('#slPosts .post');
   const n0 = await p.locator('#slPosts .post').count();
   await p.locator('#slPosts .post [data-del]').first().click();
@@ -582,26 +587,27 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   const anon = (await p.locator('#slPosts').innerText());
   check('投稿管理でも、匿名投稿の投稿者名・メールは出ない', !anon.includes(NAKAMURA) && !anon.includes('中村'), anon.slice(0, 200));
 
-  await p.click('#adminNav [data-mode="salon"][data-sub="members"]'); await p.waitForSelector('#salonBody .app');
-  check('会員：申請状況の一覧が出る', (await p.locator('#salonBody').innerText()).includes(SASAKI), null);
-  await p.click('#adminNav [data-mode="salon"][data-sub="audit"]'); await p.waitForFunction(() => document.querySelectorAll('#salonBody .audit').length > 0);
+  await p.click('#adminNav [data-key="mem-salon"]'); await p.waitForFunction(() => document.getElementById("membersList") && document.getElementById("membersList").innerText.length > 20);
+  await p.fill('#memberSearch', SASAKI); await W(500);
+  check('会員管理 › 灯サロン › 会員一覧・検索：灯の会員の一覧が出て、検索できる', (await p.locator('#membersList').innerText()).includes(SASAKI), (await p.locator('#membersList').innerText()).slice(0, 200));
+  await p.click('#adminNav [data-key="audit-salon"]'); await p.waitForFunction(() => document.querySelectorAll('#salonBody .audit').length > 0);
   check('操作履歴：灯の操作が記録されている', (await p.locator('#salonBody .audit').count()) > 0, null);
   // ── 運営ロールが無い最高管理者：エラーではなく、ご自身を登録できる画面から始まる（付与は本人が行う。最高管理者は、灯の運営ロールが無くても付与できる） ──
   await Salon.setStaff(ADMIN.email, null);
-  await p.reload(); await p.waitForSelector('#adminPanel', { state: 'visible' }); await p.click('#adminNav [data-mode="salon"][data-sub="applications"]'); await p.waitForSelector('#stGo');
-  eq('運営ロールなし：最初に「運営ロール」画面が開き、ご自身のメールアドレスが入力済み', [await p.inputValue('#stEmail'), await p.locator('#adminNav .ng-salon .ni.on').allInnerTexts()], [ADMIN.email, ['運営ロール']]);
+  await p.reload(); await p.waitForSelector('#adminPanel', { state: 'visible' }); await p.click('#adminNav [data-key="app-salon"]'); await p.waitForSelector('#stGo');
+  eq('運営ロールなし：最初に「運営ロール」画面が開き、ご自身のメールアドレスが入力済み', [await p.inputValue('#stEmail'), await p.locator('#adminNav .ni.on').allInnerTexts()], [ADMIN.email, ['運営ロール']]);
   check('運営ロールなし：最高管理者には、ご自身を登録できるという案内が出る', /まだ灯の運営ロールに登録されていません/.test(await p.locator('#salonBody').innerText()), null);
   eq('運営ロールなしでは、申請の一覧などはAPIが拒否する（403）', (await aCall(await adminCookie(), 'salon-applications')).status, 403);
   await p.click('#stGo'); await p.waitForFunction(() => document.getElementById('salonBody').innerText.includes('あなたのロール'));
   eq('登録すると、灯の運営ロール（事務局）が付き、申請・決済を操作できる', [(await Salon.getStaff(ADMIN.email))?.role, (await aCall(await adminCookie(), 'salon-applications')).status], ['secretariat', 200]);
   await p.setViewportSize({ width: 390, height: 844 });
   const ovf = () => p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
-  const NAVS = [['applications'], ['members'], ['events'], ['attendance'], ['words'], ['notes'], ['posts'], ['sessions'], ['tane'], ['audit'], ['firebase'], ['salon', 'applications'], ['salon', 'roles'], ['salon', 'creed'], ['salon', 'posts'], ['salon', 'lectures'], ['salon', 'events'], ['salon', 'members'], ['salon', 'audit']];
+  const NAVS = ['app-haku', 'mem-haku', 'app-salon', 'mem-salon', 'events', 'attendance', 'words', 'notes', 'posts', 'pts-grant', 'sessions', 'tane', 'audit-haku', 'audit-salon', 'firebase', 'salon-roles', 'salon-creed', 'salon-posts', 'salon-lectures', 'salon-events'];
   eq('スマホ幅：メニューは折りたたまれていて、「管理メニュー」ボタンで開く', [await p.locator('#navToggle').isVisible(), await p.locator('#navList').isVisible()], [true, false]);
-  for (const [mode, sub] of NAVS) {
+  for (const key of NAVS) {
     if (!(await p.locator('#navList').isVisible())) await p.click('#navToggle');
-    await p.click(`#adminNav [data-mode="${mode}"]${sub ? `[data-sub="${sub}"]` : ''}`); await W(300);
-    eq(`スマホ幅390px：${mode}${sub ? '／' + sub : ''} で横はみ出しなし（メニューは閉じ、現在地が見える）`, [await ovf(), await p.locator('#navList').isVisible(), await p.locator('#crumbPage').isVisible()], [false, false, true]);
+    await p.click(`#adminNav [data-key="${key}"]`); await W(300);
+    eq(`スマホ幅390px：${key} で横はみ出しなし（メニューは閉じ、現在地が見える）`, [await ovf(), await p.locator('#navList').isVisible(), await p.locator('#crumbPage').isVisible()], [false, false, true]);
   }
   await p.click('#navToggle'); await W(200); await shot(p, 'salon-11-admin-mobile-menu.png', { fullPage: false }); await p.click('#navToggle');
   await shot(p, 'salon-11-admin-mobile.png', { fullPage: false });

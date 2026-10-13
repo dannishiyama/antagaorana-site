@@ -114,7 +114,7 @@
   function dateOnly(ms) { if (!ms) return ''; var d = new Date(ms + 9 * 3600 * 1000); return d.getUTCFullYear() + '/' + (d.getUTCMonth() + 1) + '/' + d.getUTCDate(); }
   function viewApplications() {
     var f = state.appStatus;
-    var h = '<p class="note">灯への参加申請です。承認すると、お支払いのご案内（月額2,980円・Stripe）を本人へ送ります。承認前はお支払いできません。お支払いが確認されると（Stripe Webhook）、自動で会員になります。</p><div class="statusfilter">' + [['pending', '審査中'], ['approved', '承認済み'], ['rejected', '却下'], ['all', 'すべて']].map(function (x) { return '<button data-af="' + x[0] + '"' + (f === x[0] ? ' class="on"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div><div id="slApps"><div class="empty">読み込み中…</div></div>';
+    var h = '<p class="note">灯サロンの申請管理です。承認すると、お支払いのご案内（月額2,980円・Stripe）を本人へ送ります。承認前はお支払いできません。お支払いが確認されると（Stripe Webhook）、自動で会員になります。会員資格・決済状況は、「会員一覧・検索」でも確認できます。</p><div class="statusfilter">' + [['pending', '審査中'], ['approved', '承認済み'], ['rejected', '却下'], ['all', 'すべて']].map(function (x) { return '<button data-af="' + x[0] + '"' + (f === x[0] ? ' class="on"' : '') + '>' + x[1] + '</button>'; }).join('') + '</div><div id="slApps"><div class="empty">読み込み中…</div></div>';
     body.innerHTML = h;
     on(body, '[data-af]', 'click', function (el) { state.appStatus = el.dataset.af; viewApplications(); });
     call('salon-applications', undefined, '&status=' + f).then(function (d) {
@@ -168,7 +168,8 @@
     }, function () {});
   }
 
-  var VIEWS = { applications: viewApplications, roles: viewRoles, creed: viewCreed, posts: viewPosts, lectures: viewLectures, events: viewEvents, members: viewMembers, audit: viewAudit };
+  // 「会員」は、管理メニューの「会員管理 › 灯サロン › 会員一覧・検索」に集約した（画面側の viewMembers は使わない）
+  var VIEWS = { applications: viewApplications, roles: viewRoles, creed: viewCreed, posts: viewPosts, lectures: viewLectures, events: viewEvents, audit: viewAudit };
   function show(name) {
     sub = name;
     window.dispatchEvent(new CustomEvent('salon-sub', { detail: name })); // 管理メニューの選択表示を合わせる

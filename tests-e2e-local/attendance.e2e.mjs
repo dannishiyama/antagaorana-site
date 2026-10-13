@@ -117,8 +117,8 @@ console.log('■ 管理画面：朝の集まり・出席（出席訂正・確認
   await page.goto(base + '/haku-community/admin/');
   await page.fill('#adminemail', ADMIN.email); await page.fill('#adminpw', ADMIN.password);
   await page.click('#loginbtn'); await page.waitForSelector('#adminPanel', { state: 'visible' });
-  await page.click('#adminNav [data-mode="attendance"]');
-  eq('現在地：HAKU Community運営 › 朝の集まり・出席', await page.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbPage').textContent]), ['HAKU Community運営', '朝の集まり・出席']);
+  await page.click('#adminNav [data-key="attendance"]');
+  eq('現在地：HAKU Community運営 › 集う › 朝の集まり 出席確認・管理', await page.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbPage').textContent]), ['HAKU Community運営', '朝の集まり 出席確認・管理']);
   await page.fill('#attDate', date); await page.click('#attLoad');
   await page.waitForSelector(`#attMembers [data-email="${M1}"]`);
   const st = await page.locator('#attStatus').innerText();
@@ -151,13 +151,13 @@ console.log('■ 管理画面：朝の集まり・出席（出席訂正・確認
   eq('確認待ちの結び付け：出席が確定し、Googleアカウントが会員に結び付く（以後は自動で照合される）', [(await pointsMod.getBalance(M1)) - before, await att.emailByGoogleIdentity('users/5555')], [10, M1]);
   // 音声の入力欄：登録前に再生して確認できる（音声はURLで登録する方式）
   await page.route('https://media.example.test/**', (r) => r.fulfill({ status: 200, contentType: 'audio/mpeg', body: Buffer.alloc(32) }));
-  await page.click('#adminNav [data-mode="sessions"]');
+  await page.click('#adminNav [data-key="sessions"]');
   check('セッションの音声欄に、再生確認と、対応形式・登録方式の説明がある', (await page.locator('#sessionsPanel .audpv').count()) === 1 && /mp3・m4a・wav・aac・ogg/.test(await page.locator('#sessionsPanel .audnote').first().innerText()) && /アップロード用の保存先は、まだ設定されていません/.test(await page.locator('#sessionsPanel .audnote').first().innerText()), null);
   await page.fill('#sessUrl', 'http://insecure.example.test/a.mp3'); await page.click('#sessionsPanel .audpv button');
   check('https以外のURLは、再生確認の前に弾かれる', /https:\/\/ から始まる/.test(await page.locator('#sessionsPanel .audbox').innerText()) && (await page.locator('#sessionsPanel audio').count()) === 0, null);
   await page.fill('#sessUrl', 'https://media.example.test/a.mp3'); await page.click('#sessionsPanel .audpv button');
   eq('httpsのURLなら、プレーヤーが出る（自動再生はしない）', [await page.locator('#sessionsPanel audio').count(), await page.locator('#sessionsPanel audio').evaluate((a) => [a.controls, a.autoplay])], [1, [true, false]]);
-  await page.click('#adminNav [data-mode="words"]');
+  await page.click('#adminNav [data-key="words"]');
   eq('HAKUからのことばの音声欄にも、再生確認がある', await page.locator('#wordsPanel .audpv').count(), 1);
   // スマホ幅
   await page.setViewportSize({ width: 390, height: 844 }); await W(300);

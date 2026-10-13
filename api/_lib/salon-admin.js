@@ -14,6 +14,7 @@ import * as S from './salon-store.js';
 import * as C from './salon-core.js';
 import { startCheckout, BillingError } from './salon-billing.js';
 import { mail } from './salon-mail.js';
+import { isSalonAudit } from './audit-scope.js';
 
 const bool = (v) => v === true || v === 'true';
 const toMs = (v) => { const n = typeof v === 'number' ? v : Date.parse(v); return Number.isFinite(n) ? n : null; };
@@ -287,7 +288,7 @@ export async function handleSalonAdmin(action, req, res, session) {
       }
       case 'salon-audit': { // 灯に関する監査履歴（直近）
         const { listAuditLog } = await import('./store.js');
-        const entries = (await listAuditLog(300)).filter((e) => String(e.action || '').startsWith('salon_'));
+        const entries = (await listAuditLog(300)).filter(isSalonAudit);
         return res.status(200).json({ ok: true, entries: entries.slice(0, 100) });
       }
       default: return res.status(404).json({ error: 'Not found' });

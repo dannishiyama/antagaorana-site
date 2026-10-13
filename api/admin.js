@@ -67,6 +67,7 @@ import { createHakuCheckoutSession } from './_lib/stripe-checkout.js';
 import { grantPoints, adjustPoints, reversePoints, getBalance, getAdminMemberView, listRecent, PointError } from './_lib/points.js';
 import { handleSalonAdmin } from './_lib/salon-admin.js';
 import { handleAttendanceAdmin } from './_lib/attendance-admin.js';
+import { filterAuditByService } from './_lib/audit-scope.js';
 import { setCookie, clearCookie, parseCookies } from './_lib/cookies.js';
 import { sendPasswordSetupEmail, sendRejectionEmail, sendApprovalEmail, sendAdminSetupEmail } from './_lib/notify.js';
 
@@ -190,7 +191,8 @@ export default async function handler(req, res) {
     if (action === 'audit-log') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await requireAdminHere(req, res); if (!session) return;
-      const entries = await listAuditLog(200);
+      // service=haku で、灯の操作を除いたHAKU Communityの履歴だけを返す（指定なしは、従来どおり全件）
+      const entries = filterAuditByService(await listAuditLog(200), req.query?.service === 'haku' ? 'haku' : null);
       return res.status(200).json({ ok: true, entries });
     }
     // 朝の集まりの出席（スタンプ＋ポイント）の管理。cronだけは管理者ではなく CRON_SECRET で認証する。
