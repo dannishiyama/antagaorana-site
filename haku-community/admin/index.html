@@ -651,6 +651,7 @@ function payLabelFor(status, mem){
   if (status === 'pending') return '審査後に、お支払いのご案内';
   if (status === 'rejected') return '—';
   var ms = mem && mem.membershipStatus;
+  if (ms === 'active' && mem.billingExempt) return '会費免除（運営の特別資格）';
   if (ms === 'active') return '決済済み（有効）';
   if (ms === 'canceling') return '決済済み（解約予約中・期間の終わりまで利用可）';
   if (ms === 'past_due') return 'お支払い遅れ（利用停止中）';
@@ -769,7 +770,7 @@ function memberCardHtml(m){
   var appClass = APP_ST_CLASS[m.applicationStatus] || '';
   var memLabel = m.membershipStatus ? (MEM_ST_LABEL[m.membershipStatus] || m.membershipStatus) : '未作成';
   var memClass = m.membershipStatus ? (MEM_ST_CLASS[m.membershipStatus] || '') : '';
-  var stripeLabel = m.stripeSubscriptionId ? 'Stripe連携あり' : '未決済';
+  var stripeLabel = m.billingExempt ? '会費免除（運営）' : m.stripeSubscriptionId ? 'Stripe連携あり' : '未決済';
   var pointArea = '';
   if (m.community === 'haku') {
     pointArea = m.canOperatePoints

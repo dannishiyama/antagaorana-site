@@ -20,6 +20,7 @@ import { resolveBaseUrl } from './_lib/http.js';
 import { getUser } from './_lib/store.js';
 import * as S from './_lib/salon-store.js';
 import { getStripe, processSalonEvent, billingConfig } from './_lib/salon-billing.js';
+import { salonEnabled, salonKeyAllowed, salonEventModeOk } from './_lib/salon-mode.js';
 
 // Stripeの署名検証にraw bodyが必要
 export const config = { api: { bodyParser: false } };
@@ -36,11 +37,12 @@ async function getRawBody(req) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return res.status(405).json({ error: 'Method Not Allowed' }); }
-  if (process.env.VERCEL_ENV === 'production') return res.status(200).json({ received: true, skipped: 'production' });
+  // Productionは、灯の本番設定（ライブキー・灯専用Price・署名Secret・有効化スイッチ）が揃うまで、何もしない
+  if (!salonEnabled()) return res.status(200).json({ received: true, skipped: 'production' });
 
   const { secretKey, webhookSecret } = billingConfig();
-  if (!/^(sk|rk)_test_/.test(secretKey) || !webhookSecret) {
-    console.error('[salon-webhook] Stripe test key or SALON_STRIPE_WEBHOOK_SECRET is missing');
+  if (!salonKeyAllowed(secretKey) || !webhookSecret) {
+    console.error('[salon-webhook] Stripe key (mode mismatch) or SALON_STRIPE_WEBHOOK_SECRET is missing');
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
@@ -55,8 +57,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Webhook signature error' });
   }
 
-  // Previewはテストモードだけ。ライブのイベントは処理しない
-  if (event.livemode !== false) return res.status(200).json({ received: true, skipped: 'livemode' });
+  // 環境とモードが違うイベント（Previewにライブ／Productionにテスト）は処理しない
+  if (!salonEventModeOk(event.livemode)) return res.status(200).json({ received: true, skipped: 'livemode' });
 
   const claim = await S.claimStripeEvent(event.id);
   if (claim.status === 'done') return res.status(200).json({ received: true, skipped: 'duplicate_event' });

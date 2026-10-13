@@ -28,7 +28,7 @@ function parseForm(body) {
   const fix = (o) => { if (o && typeof o === 'object') { Object.keys(o).forEach((k) => { o[k] = fix(o[k]); }); if (Object.keys(o).length && Object.keys(o).every((k) => /^\d+$/.test(k))) return Object.values(o); } return o; };
   return fix(out);
 }
-async function startFakeStripe() {
+async function startFakeStripe(live = false) {
   const st = { calls: [], products: [{ id: 'prod_haku', active: true, name: 'HAKU Community', metadata: { product: 'haku_community' } }], prices: [{ id: 'price_haku', active: true, product: 'prod_haku', unit_amount: 2980, currency: 'jpy', type: 'recurring', recurring: { interval: 'month', interval_count: 1 } }], hooks: [{ id: 'we_haku', url: 'https://antagaorana-haku-tomoshibi-preview.vercel.app/api/haku-stripe-webhook', enabled_events: ['checkout.session.completed'], status: 'enabled', livemode: false, api_version: null }], seq: 0 };
   const server = http.createServer((req, res) => {
     let raw = ''; req.on('data', (c) => { raw += c; });
@@ -41,7 +41,7 @@ async function startFakeStripe() {
       if (u.pathname === '/v1/prices' && req.method === 'GET') return list(st.prices.filter((p) => p.product === u.searchParams.get('product')));
       if (u.pathname === '/v1/prices' && req.method === 'POST') { const p = { id: `price_${++st.seq}`, active: true, type: 'recurring', unit_amount: Number(body.unit_amount), currency: body.currency, product: body.product, recurring: { interval: body.recurring.interval, interval_count: 1 }, metadata: body.metadata }; st.prices.push(p); return json(p); }
       if (u.pathname === '/v1/webhook_endpoints' && req.method === 'GET') return list(st.hooks);
-      if (u.pathname === '/v1/webhook_endpoints' && req.method === 'POST') { const h = { id: `we_${++st.seq}`, url: body.url, enabled_events: body.enabled_events, api_version: body.api_version, status: 'enabled', livemode: false, secret: `whsec_FAKE${st.seq}secretvalue` }; st.hooks.push({ ...h, secret: undefined }); return json(h); }
+      if (u.pathname === '/v1/webhook_endpoints' && req.method === 'POST') { const h = { id: `we_${++st.seq}`, url: body.url, enabled_events: body.enabled_events, api_version: body.api_version, status: 'enabled', livemode: live, secret: `whsec_FAKE${st.seq}secretvalue` }; st.hooks.push({ ...h, secret: undefined }); return json(h); }
       const m = /^\/v1\/webhook_endpoints\/(we_\w+)$/.exec(u.pathname);
       if (m && req.method === 'DELETE') { st.hooks = st.hooks.filter((h) => h.id !== m[1]); return json({ id: m[1], deleted: true }); }
       if (m && req.method === 'POST') { const h = st.hooks.find((x) => x.id === m[1]); Object.assign(h, body); return json(h); }
@@ -140,5 +140,45 @@ test('設定スクリプト：ライブキーは拒否する（何も作らな�
     assert.notEqual(r.code, 0); assert.match(r.out, /テストモードのキーではありません/);
     assert.equal(st.calls.length, 0, 'Stripeには一切アクセスしない');
     assert.equal(JSON.parse(fs.readFileSync(statePath, 'utf8')).calls.length, 0);
+  } finally { server.close(); fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+const PROD_URL = 'https://www.antagaorana.com/api/salon-stripe-webhook';
+test('本番用スクリプト：ライブキーだけ受け付け、Productionスコープの灯専用2変数だけ設定する。HAKUには触れず、Previewは変更せず、SALON_PRODUCTION_ENABLEDは設定しない', async () => {
+  const { st, server, port } = await startFakeStripe(true);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'salon-setup-')); const statePath = path.join(dir, 'vercel-state.json');
+  fs.writeFileSync(statePath, JSON.stringify({ calls: [], names: ['STRIPE_SECRET_KEY', 'STRIPE_PRICE_ID', 'HAKU_STRIPE_WEBHOOK_SECRET'] })); makeFakeVercel(dir, statePath);
+  try {
+    const hakuBefore = JSON.stringify([st.products[0], st.prices[0], st.hooks[0]]);
+    // テストキーは拒否（Stripeにもアクセスしない）
+    const bad = await runScript({ port, dir, key: 'sk_test_FAKEKEYFORTESTS', flags: ['--production'] });
+    assert.notEqual(bad.code, 0); assert.match(bad.out, /ライブモードのキーではありません/); assert.equal(st.calls.length, 0);
+    // --deploy との併用は不可
+    const dep = await runScript({ port, dir, key: 'sk_live_FAKEKEYFORTESTS', flags: ['--production', '--deploy'] });
+    assert.notEqual(dep.code, 0); assert.equal(st.calls.length, 0);
+    // ライブキーで実行
+    const r1 = await runScript({ port, dir, key: 'sk_live_FAKEKEYFORTESTS', flags: ['--production'] });
+    assert.equal(r1.code, 0, r1.out);
+    const salonProduct = st.products.find((p) => p.metadata?.product === 'tomoshibi_salon');
+    const salonPrice = st.prices.find((p) => p.product === salonProduct.id);
+    assert.deepEqual([salonPrice.unit_amount, salonPrice.currency, salonPrice.recurring.interval], [2980, 'jpy', 'month']);
+    const hook = st.hooks.find((h) => h.url === PROD_URL);
+    assert.ok(hook, '本番URLのWebhookを登録');
+    assert.deepEqual([...hook.enabled_events].sort(), ['checkout.session.completed', 'customer.subscription.deleted', 'customer.subscription.updated', 'invoice.paid', 'invoice.payment_failed']);
+    assert.equal(JSON.stringify([st.products[0], st.prices[0], st.hooks[0]]), hakuBefore, 'HAKUの既存は不変');
+    const vs = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+    assert.ok(vs.calls.filter((c) => c.argv[0] === 'env' && c.argv[1] === 'ls').every((c) => c.argv[2] === 'production'));
+    const adds = vs.calls.filter((c) => c.argv[0] === 'env' && c.argv[1] === 'add');
+    assert.deepEqual(adds.map((c) => c.argv[2]).sort(), ['SALON_STRIPE_PRICE_ID', 'SALON_STRIPE_WEBHOOK_SECRET'], 'SALON_PRODUCTION_ENABLED や HAKUの変数は触らない');
+    assert.ok(adds.every((c) => c.argv[3] === 'production'), 'Productionスコープだけ（Previewは変更しない）');
+    assert.ok(adds.find((c) => c.argv[2] === 'SALON_STRIPE_WEBHOOK_SECRET').argv.includes('--sensitive'));
+    assert.ok(!vs.calls.some((c) => c.argv[0] === '--yes' || c.argv[0] === 'alias'), '本番デプロイはしない');
+    assert.ok(!r1.out.includes('whsec_') && !r1.out.includes('sk_live_FAKEKEY'), '出力にSecretが出ている');
+    // 2回目：重複なし・作成も削除もしない
+    const before = [st.products.length, st.prices.length, st.hooks.length]; const c0 = st.calls.length;
+    const r2 = await runScript({ port, dir, key: 'sk_live_FAKEKEYFORTESTS', flags: ['--production'] });
+    assert.equal(r2.code, 0, r2.out);
+    assert.deepEqual([st.products.length, st.prices.length, st.hooks.length], before);
+    assert.ok(!st.calls.slice(c0).some((c) => c.startsWith('POST /v1/products') || c.startsWith('POST /v1/prices') || c.startsWith('DELETE')));
   } finally { server.close(); fs.rmSync(dir, { recursive: true, force: true }); }
 });

@@ -7,8 +7,11 @@
 // 本番環境ではこの一連の新規認証APIを一切動かさない（Preview専用インフラのため）。
 // 灯（tomoshibi）専用ページ（api/tomoshibi-post-page.js）はHAKU Community本番化後も
 // 引き続きこれで本番ブロックする。
+import { salonEnabled } from './salon-mode.js';
+
+// （灯の専用API用）Productionでは、灯の本番設定が揃うまで動かさない（salon-mode.js）。
 export function blockProduction(res) {
-  if (process.env.VERCEL_ENV === 'production') {
+  if (process.env.VERCEL_ENV === 'production' && !salonEnabled()) {
     res.status(403).json({ error: 'このAPIは現在テスト環境（Preview）でのみ利用できます。' });
     return true;
   }
@@ -21,7 +24,7 @@ export function blockProduction(res) {
 // 'haku' 以外（'tomoshibi'を含む）は、community が指定されていない場合も安全側に倒して
 // ブロックする（意図しない新規community解放を防ぐ）。
 export function blockProductionForCommunity(res, community) {
-  if (process.env.VERCEL_ENV === 'production' && community !== 'haku') {
+  if (process.env.VERCEL_ENV === 'production' && community !== 'haku' && !(community === 'tomoshibi' && salonEnabled())) {
     res.status(403).json({ error: 'このAPIは現在テスト環境（Preview）でのみ利用できます。' });
     return true;
   }

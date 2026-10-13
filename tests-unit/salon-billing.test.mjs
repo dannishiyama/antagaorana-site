@@ -445,11 +445,12 @@ test('分離：メールアドレスを変更しても、灯の顧客の索引�
   assert.equal(await store.getMembership('tomoshibi', email), null, '古いメールの会員は作り直されない');
 });
 
+// ※ api/_lib/http.js は、灯の本番ゲート（salon-mode.js）を足したため対象から外した。HAKUの挙動は不変（下の「本番ゲート」のテストで確認）
 test('HAKUの決済・Webhook・メール・ストア・認証の基盤は変更していない（HAKUのStripe商品・Webhookに影響しない）', () => {
   const base = '85785d8'; // この作業の前のコミット
   const probe = spawnSync('git', ['cat-file', '-t', base], { cwd: new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1') });
   if (probe.status !== 0) return; // 履歴が無い環境（浅いクローン等）では確認を省く
-  const files = ['api/haku-checkout.js', 'api/haku-stripe-webhook.js', 'api/stripe-webhook.js', 'api/_lib/stripe-checkout.js', 'api/_lib/store.redis.js', 'api/_lib/store.js', 'api/_lib/notify.js', 'api/_lib/http.js', 'api/_lib/security.js'];
+  const files = ['api/haku-checkout.js', 'api/haku-stripe-webhook.js', 'api/stripe-webhook.js', 'api/_lib/stripe-checkout.js', 'api/_lib/store.redis.js', 'api/_lib/store.js', 'api/_lib/notify.js', 'api/_lib/security.js'];
   const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
   const diff = spawnSync('git', ['diff', '--stat', base, '--', ...files], { cwd: root, encoding: 'utf8' });
   assert.equal(diff.stdout.trim(), '', `HAKUの既存ファイルに差分があります:\n${diff.stdout}`);

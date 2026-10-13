@@ -32,7 +32,7 @@ export class BillingError extends Error {
   constructor(status, message, code, extra) { super(message); this.status = status; this.code = code; this.extra = extra || {}; }
 }
 
-const isTestKey = (k) => /^(sk|rk)_test_/.test(k || '');
+import { salonKeyAllowed } from './salon-mode.js';
 
 export function billingConfig() {
   const secretKey = process.env.STRIPE_SECRET_KEY || '';
@@ -44,8 +44,8 @@ export function billingConfig() {
 export async function getStripe() {
   if (deps.stripeFactory) return deps.stripeFactory();
   const { secretKey } = billingConfig();
-  // Previewはテストモードのキーだけ。実決済は発生させない
-  if (!isTestKey(secretKey)) throw new BillingError(500, '決済設定が完了していません（決済用キー未設定）。', 'config_key');
+  // Previewはテストモードのキーだけ（実決済なし）。Productionはライブキーだけ（salon-mode.js）
+  if (!salonKeyAllowed(secretKey)) throw new BillingError(500, '決済設定が完了していません（決済用キー未設定）。', 'config_key');
   const { default: Stripe } = await import('stripe');
   return new Stripe(secretKey, { apiVersion: '2024-06-20' });
 }

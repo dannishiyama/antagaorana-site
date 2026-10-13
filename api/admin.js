@@ -427,6 +427,7 @@ async function handleMembersList(req, res) {
       community,
       applicationStatus: app.status,
       membershipStatus: membership?.status || null,
+      billingExempt: Boolean(membership?.billingExempt),
       stripeCustomerId: membership?.stripeCustomerId || null,
       stripeSubscriptionId: membership?.stripeSubscriptionId || null,
       submittedAt: app.submittedAt,

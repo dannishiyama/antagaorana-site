@@ -5,6 +5,7 @@
  *   node scripts/salon-stripe-setup.mjs --deploy      設定して、Previewへ再デプロイまで行う
  *   node scripts/salon-stripe-setup.mjs --verify      確認だけ（何も作らない・変えない）
  *   node scripts/salon-stripe-setup.mjs --dry-run     何を作るか表示するだけ
+ *   node scripts/salon-stripe-setup.mjs --production  本番（ライブ）用。ライブキーだけ受け付け、Productionスコープに設定する（--verify / --dry-run と併用可）
  *
  * やること（すべて、灯専用。HAKU Communityの商品・Price・Webhook・環境変数には触れない）
  *   1. 商品「教育者のサロン 灯」（metadata.product = tomoshibi_salon）を探す。なければ作る
@@ -16,12 +17,13 @@
  *        SALON_STRIPE_PRICE_ID（Price ID）／ SALON_STRIPE_WEBHOOK_SECRET（署名Secret。Secretとして保存）
  *
  * 安全のための決まり
- *   - Stripeのテストキー（sk_test_… / rk_test_…）だけを受け付ける。ライブキーは拒否する
+ *   - 既定はStripeのテストキー（sk_test_… / rk_test_…）だけを受け付け、ライブキーは拒否する。--production のときは逆に、ライブキー（sk_live_… / rk_live_…）だけを受け付ける
  *   - キーは、画面に表示されない入力欄で受け取る。ファイル・ログ・Gitには残さない。署名Secretも表示しない
  *   - 既存の商品・Price・Webhookは、変更・削除しない（灯専用の目印がついたものを再利用するだけ。重複は作らない）。
  *     例外：署名Secretは作成時にしか取得できないため、灯のURLのWebhookが「あるのに、VercelにSecretが無い」場合に限り、
  *     そのWebhookだけを作り直す
- *   - Production環境変数・HAKUの変数は変更しない
+ *   - 既定ではProduction環境変数に触れない。--production のときは、灯専用の2変数だけをProductionに設定する（Previewは変更しない）。どちらでもHAKUの変数・商品・Price・Webhookは変更しない
+ *   - 本番では SALON_PRODUCTION_ENABLED（灯を本番で動かすスイッチ）は、このスクリプトでは設定しない（設定の確認後に、別途入れる）
  *
  * 必要なもの：Stripeダッシュボード（テストモード）の「開発者 → APIキー」のシークレットキー、または制限付きキー
  *   （制限付きキーの場合の権限：Products 書き込み／Prices 書き込み／Webhook Endpoints 書き込み）。Vercel CLIにログイン済みであること。
@@ -38,7 +40,11 @@ const args = new Set(process.argv.slice(2));
 const VERIFY = args.has('--verify');
 const DRY = args.has('--dry-run');
 const DEPLOY = args.has('--deploy');
-const BASE = (process.argv.find((a) => a.startsWith('--base=')) || '--base=https://antagaorana-haku-tomoshibi-preview.vercel.app').slice(7).replace(/\/$/, '');
+const PROD = args.has('--production');
+const SCOPE = PROD ? 'production' : 'preview';
+const DEFAULT_BASE = PROD ? 'https://www.antagaorana.com' : 'https://antagaorana-haku-tomoshibi-preview.vercel.app';
+const BASE = (process.argv.find((a) => a.startsWith('--base=')) || `--base=${DEFAULT_BASE}`).slice(7).replace(/\/$/, '');
+if (PROD && DEPLOY) { console.error('--production では --deploy は使えません（本番のデプロイは、確認のあとに別途行います）。'); process.exit(1); }
 const WEBHOOK_URL = `${BASE}/api/salon-stripe-webhook`;
 const ALIAS_HOST = BASE.replace(/^https:\/\//, '');
 const API_VERSION = '2024-06-20';
@@ -74,26 +80,27 @@ function askHidden(question) {
 function vercel(argv, input) {
   return spawnSync('vercel', argv, { cwd: REPO, input, encoding: 'utf8', shell: process.platform === 'win32' });
 }
-function vercelPreviewEnvNames() {
-  const r = vercel(['env', 'ls', 'preview']);
+function vercelEnvNames() {
+  const r = vercel(['env', 'ls', SCOPE]);
   if (r.status !== 0) return null;
   return new Set((r.stdout || '').split('\n').map((l) => l.trim().split(/\s+/)[0]).filter((n) => /^[A-Z][A-Z0-9_]+$/.test(n)));
 }
-function vercelSetPreview(name, value, secret) {
-  const r = vercel(['env', 'add', name, 'preview', '--force', '--yes', secret ? '--sensitive' : '--no-sensitive'], value + '\n');
+function vercelSetEnv(name, value, secret) {
+  const r = vercel(['env', 'add', name, SCOPE, '--force', '--yes', secret ? '--sensitive' : '--no-sensitive'], value + '\n');
   return r.status === 0;
 }
 
 async function main() {
-  say('教育者のサロン「灯」Stripe設定（テストモード・Preview）' + (VERIFY ? '：確認のみ' : DRY ? '：ドライラン' : ''));
+  say(`教育者のサロン「灯」Stripe設定（${PROD ? '本番・ライブモード・Production' : 'テストモード・Preview'}）` + (VERIFY ? '：確認のみ' : DRY ? '：ドライラン' : ''));
   // テスト用の差し替え口：偽のStripeサーバー（tests-unit/salon-stripe-setup.test.mjs）を指すときだけ、キーを環境変数から受け取る
   const fakePort = process.env.SALON_SETUP_TEST_STRIPE_PORT;
-  const key = fakePort ? (process.env.SALON_SETUP_TEST_KEY || '') : await askHidden('Stripeのテストキー（sk_test_… または rk_test_…。入力は表示されません）: ');
-  if (!/^(sk|rk)_test_[A-Za-z0-9]+$/.test(key)) { ng('テストモードのキーではありません（ライブキーは使えません）。'); process.exit(1); }
+  const key = fakePort ? (process.env.SALON_SETUP_TEST_KEY || '') : await askHidden(PROD ? 'Stripeのライブキー（sk_live_… または rk_live_…。入力は表示されません）: ' : 'Stripeのテストキー（sk_test_… または rk_test_…。入力は表示されません）: ');
+  const keyOk = PROD ? /^(sk|rk)_live_[A-Za-z0-9_]+$/.test(key) : /^(sk|rk)_test_[A-Za-z0-9]+$/.test(key);
+  if (!keyOk) { ng(PROD ? 'ライブモードのキーではありません（テストキーは本番には使えません）。' : 'テストモードのキーではありません（ライブキーは使えません）。'); process.exit(1); }
   const stripe = new Stripe(key, { apiVersion: API_VERSION, ...(fakePort ? { host: 'localhost', port: Number(fakePort), protocol: 'http' } : {}) });
 
-  const envNames = vercelPreviewEnvNames();
-  if (!envNames) { ng('Vercel CLIで、Previewの環境変数を確認できませんでした（vercel login 済みか確認してください）。'); process.exit(1); }
+  const envNames = vercelEnvNames();
+  if (!envNames) { ng(`Vercel CLIで、${PROD ? 'Production' : 'Preview'}の環境変数を確認できませんでした（vercel login 済みか確認してください）。`); process.exit(1); }
 
   // 1) 商品
   say('\n[1] 商品');
@@ -125,7 +132,7 @@ async function main() {
     ok(`灯のWebhook送信先は登録済み（${endpoint.id}）`);
     const missing = EVENTS.filter((e) => !endpoint.enabled_events.includes(e) && !endpoint.enabled_events.includes('*'));
     if (endpoint.api_version && endpoint.api_version !== API_VERSION) say(`  ※ このWebhookのAPIバージョンは ${endpoint.api_version} です（アプリの想定は ${API_VERSION}）。アプリは両方の形式に対応しています`);
-    if (endpoint.livemode) { ng('このWebhookはライブモードです。テストモードのものではありません。'); process.exit(1); }
+    if (Boolean(endpoint.livemode) !== PROD) { ng(PROD ? 'このWebhookはテストモードです。ライブモードのものではありません。' : 'このWebhookはライブモードです。テストモードのものではありません。'); process.exit(1); }
     if (missing.length) {
       if (VERIFY || DRY) ng(`購読が足りません：${missing.join(', ')}`);
       else { await stripe.webhookEndpoints.update(endpoint.id, { enabled_events: [...new Set([...endpoint.enabled_events, ...EVENTS])] }); ok(`不足していた購読を追加しました：${missing.join(', ')}`); }
@@ -134,25 +141,25 @@ async function main() {
     if (!secretInVercel && !VERIFY && !DRY) {
       // 署名Secretは作成時にしか取得できない。灯のURLのWebhookだけを作り直す
       await stripe.webhookEndpoints.del(endpoint.id);
-      const created = await stripe.webhookEndpoints.create({ url: WEBHOOK_URL, enabled_events: EVENTS, api_version: API_VERSION, description: '教育者のサロン 灯（Preview）', metadata: { product: PRODUCT_MARK } });
+      const created = await stripe.webhookEndpoints.create({ url: WEBHOOK_URL, enabled_events: EVENTS, api_version: API_VERSION, description: PROD ? '教育者のサロン 灯' : '教育者のサロン 灯（Preview）', metadata: { product: PRODUCT_MARK } });
       endpoint = created; webhookSecret = created.secret;
       ok('VercelにSecretが無かったため、灯のWebhookだけを作り直しました');
     } else if (!secretInVercel) ng('Vercelに SALON_STRIPE_WEBHOOK_SECRET がありません');
   } else if (VERIFY || DRY) ng('灯のWebhook送信先はまだありません' + (DRY ? '（実行すると登録します）' : ''));
   else {
-    const created = await stripe.webhookEndpoints.create({ url: WEBHOOK_URL, enabled_events: EVENTS, api_version: API_VERSION, description: '教育者のサロン 灯（Preview）', metadata: { product: PRODUCT_MARK } });
+    const created = await stripe.webhookEndpoints.create({ url: WEBHOOK_URL, enabled_events: EVENTS, api_version: API_VERSION, description: PROD ? '教育者のサロン 灯' : '教育者のサロン 灯（Preview）', metadata: { product: PRODUCT_MARK } });
     endpoint = created; webhookSecret = created.secret;
     ok(`灯のWebhook送信先を登録しました（${created.id}）`);
   }
 
   // 4) Vercel Preview環境変数
-  say('\n[4] Vercel（Previewスコープ・灯専用の変数のみ）');
+  say(`\n[4] Vercel（${PROD ? 'Production' : 'Preview'}スコープ・灯専用の変数のみ）`);
   if (VERIFY || DRY) {
     for (const n of ['SALON_STRIPE_PRICE_ID', 'SALON_STRIPE_WEBHOOK_SECRET']) (envNames.has(n) ? ok : ng)(`${n}：${envNames.has(n) ? '設定済み' : '未設定'}`);
-    ok(`STRIPE_SECRET_KEY（HAKUと共通のテストキー）：${envNames.has('STRIPE_SECRET_KEY') ? '設定済み' : '未設定'}`);
+    ok(`STRIPE_SECRET_KEY（HAKUと共通の${PROD ? 'ライブ' : 'テスト'}キー）：${envNames.has('STRIPE_SECRET_KEY') ? '設定済み' : '未設定'}`);
   } else {
-    if (price) (vercelSetPreview('SALON_STRIPE_PRICE_ID', price.id, false) ? ok : ng)('SALON_STRIPE_PRICE_ID を設定しました');
-    if (webhookSecret) (vercelSetPreview('SALON_STRIPE_WEBHOOK_SECRET', webhookSecret, true) ? ok : ng)('SALON_STRIPE_WEBHOOK_SECRET を設定しました（Secret・値は表示しません）');
+    if (price) (vercelSetEnv('SALON_STRIPE_PRICE_ID', price.id, false) ? ok : ng)('SALON_STRIPE_PRICE_ID を設定しました');
+    if (webhookSecret) (vercelSetEnv('SALON_STRIPE_WEBHOOK_SECRET', webhookSecret, true) ? ok : ng)('SALON_STRIPE_WEBHOOK_SECRET を設定しました（Secret・値は表示しません）');
     else if (secretInVercel) ok('SALON_STRIPE_WEBHOOK_SECRET は設定済み（そのまま使います）');
   }
 
@@ -165,7 +172,7 @@ async function main() {
     ok('デプロイしました');
     const a = vercel(['alias', 'set', m[1].replace(/^https:\/\//, ''), ALIAS_HOST]);
     (a.status === 0 ? ok : ng)(`固定のPreview（${ALIAS_HOST}）を更新${a.status === 0 ? 'しました' : 'できませんでした'}`);
-  } else if (!VERIFY && !DRY) say('\n環境変数を反映するため、Previewの再デプロイが必要です（--deploy を付けて再実行するか、Claudeに「設定完了」と伝えてください）。');
+  } else if (!VERIFY && !DRY) say(PROD ? '\n本番の環境変数を設定しました。反映には本番の再デプロイが必要です。Claudeに「本番Stripe設定完了」と伝えてください（確認のあとに、Claudeが進めます）。' : '\n環境変数を反映するため、Previewの再デプロイが必要です（--deploy を付けて再実行するか、Claudeに「設定完了」と伝えてください）。');
 
   say('\n完了。Stripeのキーは、どこにも保存していません。');
 }
