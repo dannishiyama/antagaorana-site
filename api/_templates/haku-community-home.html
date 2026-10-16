@@ -464,6 +464,21 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .dn-acts{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:10px}
 .dn-done-t{margin-top:14px;font-family:var(--serif);font-size:18px;color:var(--green-deep)}
 .dn-done-b{margin-top:6px;font-size:14px;line-height:1.9;color:var(--ink2)}
+.dn-desc{display:block;margin-top:2px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.dn-radio{align-items:flex-start;padding-top:12px;padding-bottom:12px}
+.dn-radio input{margin-top:2px}
+.dn-other{margin:8px 0 0;padding:14px 14px 12px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.dn-other[hidden]{display:none}
+.dn-fl{display:flex;align-items:center;gap:8px;margin:12px 0 4px;font-size:13px;color:var(--ink)}
+.dn-fl:first-child{margin-top:0}
+.dn-fl em{font-style:normal;font-size:11px;color:var(--terra-ink);border:1px solid rgba(180,85,47,.4);border-radius:999px;padding:0 8px}
+.dn-fl em.opt{color:var(--ink2);border-color:var(--line)}
+.dn-other input,.dn-other textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font-size:16px;font-family:inherit}
+.dn-other input{min-height:46px}
+.dn-other textarea{resize:vertical;line-height:1.7}
+.dn-other input:focus,.dn-other textarea:focus{outline:2px solid var(--green);outline-offset:1px}
+.dn-onote{margin-top:10px;font-size:12.5px;line-height:1.8;color:var(--ink2)}
+.dn-wrap{overflow-wrap:anywhere;white-space:pre-wrap}
 @media (max-width:560px){.dn-ov{align-items:flex-end;padding:0}.dn-modal{max-width:none;border-radius:16px 16px 0 0;padding-bottom:calc(22px + env(safe-area-inset-bottom))}}
 @media (max-width:560px){.gl-main{flex-direction:column;align-items:flex-start;gap:12px}.gl-stats{width:100%}.gl-plant{width:96px;height:96px}</style>
 </head>
@@ -1291,7 +1306,7 @@ function refreshEventViews(){
 
 /* ═════════ HAKUポイント ═════════ */
 /* ── 社会貢献への活用（ポイント利用申請）。本番では、運営が有効にするまで出さない ── */
-const DNT = { title: UI.point.donation.title, lead: UI.point.donation.lead, now: UI.point.donation.now, chooseTitle: UI.point.donation.chooseTitle, noCause: UI.point.donation.noCause, useTitle: UI.point.donation.useTitle, perRequest: UI.point.donation.perRequest, need: UI.point.donation.need, avail: UI.point.donation.avail, after: UI.point.donation.after, short: UI.point.donation.short, confirmBtn: UI.point.donation.confirmBtn, modalTitle: UI.point.donation.modalTitle, fCause: UI.point.donation.fCause, fPoints: UI.point.donation.fPoints, fOrg: UI.point.donation.fOrg, org: UI.point.donation.org, note1: UI.point.donation.note1, note2: UI.point.donation.note2, note3: UI.point.donation.note3, note4: UI.point.donation.note4, submit: UI.point.donation.submit, back: UI.point.donation.back, sending: UI.point.donation.sending, doneTitle: UI.point.donation.doneTitle, doneBody: UI.point.donation.doneBody, close: UI.point.donation.close, error: UI.point.donation.error, histTitle: UI.point.donation.histTitle, histEmpty: UI.point.donation.histEmpty, requestedOn: UI.point.donation.requestedOn };
+const DNT = { otherLabel: UI.point.donation.otherLabel, wishLabel: UI.point.donation.wishLabel, urlLabel: UI.point.donation.urlLabel, reasonLabel: UI.point.donation.reasonLabel, required: UI.point.donation.required, optional: UI.point.donation.optional, otherNote: UI.point.donation.otherNote, fWish: UI.point.donation.fWish, fUrl: UI.point.donation.fUrl, fReason: UI.point.donation.fReason, fCondition: UI.point.donation.fCondition, errName: UI.point.donation.errName, errReason: UI.point.donation.errReason, errUrl: UI.point.donation.errUrl, reviewing: UI.point.donation.reviewing, reviewOk: UI.point.donation.reviewOk, title: UI.point.donation.title, lead: UI.point.donation.lead, now: UI.point.donation.now, chooseTitle: UI.point.donation.chooseTitle, noCause: UI.point.donation.noCause, useTitle: UI.point.donation.useTitle, perRequest: UI.point.donation.perRequest, need: UI.point.donation.need, avail: UI.point.donation.avail, after: UI.point.donation.after, short: UI.point.donation.short, confirmBtn: UI.point.donation.confirmBtn, modalTitle: UI.point.donation.modalTitle, fCause: UI.point.donation.fCause, fPoints: UI.point.donation.fPoints, fOrg: UI.point.donation.fOrg, org: UI.point.donation.org, note1: UI.point.donation.note1, note2: UI.point.donation.note2, note3: UI.point.donation.note3, note4: UI.point.donation.note4, submit: UI.point.donation.submit, back: UI.point.donation.back, sending: UI.point.donation.sending, doneTitle: UI.point.donation.doneTitle, doneBody: UI.point.donation.doneBody, close: UI.point.donation.close, error: UI.point.donation.error, histTitle: UI.point.donation.histTitle, histEmpty: UI.point.donation.histEmpty, requestedOn: UI.point.donation.requestedOn };
 const DN_STATUS = { pending: UI.point.donation.sPending, approved: UI.point.donation.sApproved, completed: UI.point.donation.sCompleted, rejected: UI.point.donation.sRejected, cancelled: UI.point.donation.sCancelled };
 let DN = null, dnSending = false, dnRid = null, dnLast = null;
 async function renderDonation(){
@@ -1303,9 +1318,15 @@ async function renderDonation(){
 function dnStatusChip(st){ return '<span class="dn-chip s-' + esc(st) + '">' + esc(DN_STATUS[st] || st) + '</span>'; }
 function drawDonation(){
   const box = $('donationBox'); if (!box || !DN) return;
-  const T = DNT, need = DN.points, bal = Number(DN.balance || 0), enough = bal >= need, hasCause = DN.causes.length > 0;
-  const causes = hasCause ? DN.causes.map((c, i) => '<label class="dn-radio"><input type="radio" name="dnCause" value="' + esc(c.id) + '"' + (DN.causes.length === 1 && i === 0 ? ' checked' : '') + '><span>' + esc(c.name) + '</span></label>').join('') : '<p class="dn-muted">' + esc(T.noCause) + '</p>';
-  const hist = DN.requests.length ? '<ul class="dn-list">' + DN.requests.map((q) => '<li><div class="dn-li-top"><span class="dn-li-name">' + esc(q.causeName) + '</span>' + dnStatusChip(q.status) + '</div><div class="dn-li-meta">' + esc(T.requestedOn) + ' ' + esc(fmtDate(q.createdAt)) + '・' + Number(q.points).toLocaleString('ja-JP') + ' pt</div></li>').join('') + '</ul>' : '<p class="dn-muted">' + esc(T.histEmpty) + '</p>';
+  const T = DNT, need = DN.points, bal = Number(DN.balance || 0), enough = bal >= need, hasCause = true;
+  const only = DN.causes.length === 1 ? DN.causes[0].id : null;
+  const causes = DN.causes.map((c) => '<label class="dn-radio"><input type="radio" name="dnCause" value="' + esc(c.id) + '"' + (c.id === only ? ' checked' : '') + '><span>' + esc(c.name) + (c.description ? '<small class="dn-desc">' + esc(c.description) + '</small>' : '') + '</span></label>').join('') +
+    '<label class="dn-radio"><input type="radio" name="dnCause" value="__other"><span>' + esc(T.otherLabel) + '</span></label>' +
+    '<div class="dn-other" id="dnOther" hidden><label class="dn-fl" for="dnOName">' + esc(T.wishLabel) + '<em>' + esc(T.required) + '</em></label><input id="dnOName" type="text" maxlength="60" autocomplete="off">' +
+    '<label class="dn-fl" for="dnOUrl">' + esc(T.urlLabel) + '<em class="opt">' + esc(T.optional) + '</em></label><input id="dnOUrl" type="url" inputmode="url" maxlength="200" autocomplete="off" placeholder="https://">' +
+    '<label class="dn-fl" for="dnOReason">' + esc(T.reasonLabel) + '<em>' + esc(T.required) + '</em></label><textarea id="dnOReason" rows="3" maxlength="300"></textarea>' +
+    '<p class="dn-onote">' + esc(T.otherNote) + '</p><p class="dn-err" id="dnOErr" role="alert"></p></div>';
+  const hist = DN.requests.length ? '<ul class="dn-list">' + DN.requests.map((q) => '<li><div class="dn-li-top"><span class="dn-li-name">' + esc(q.causeName) + '</span>' + dnStatusChip(q.status) + '</div><div class="dn-li-meta">' + esc(T.requestedOn) + ' ' + esc(fmtDate(q.createdAt)) + '・' + Number(q.points).toLocaleString('ja-JP') + ' pt' + (q.causeKind === 'other' && q.status === 'pending' ? '・' + esc(q.causeReview === 'approved' ? T.reviewOk : T.reviewing) : '') + '</div></li>').join('') + '</ul>' : '<p class="dn-muted">' + esc(T.histEmpty) + '</p>';
   box.innerHTML = '<section class="dn" aria-labelledby="dnTitle"><h2 class="dn-title" id="dnTitle">' + esc(T.title) + '</h2><p class="dn-lead">' + esc(T.lead) + '</p>' +
     '<div class="dn-card"><div class="dn-now"><span>' + esc(T.now) + '</span><b>' + bal.toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</b></div>' +
     '<fieldset class="dn-causes"><legend class="dn-h">' + esc(T.chooseTitle) + '</legend>' + causes + '</fieldset>' +
@@ -1318,9 +1339,18 @@ function drawDonation(){
   if (btn) btn.addEventListener('click', () => {
     const sel = box.querySelector('input[name=dnCause]:checked');
     if (!sel) { const l = box.querySelector('.dn-causes'); if (l) { l.classList.add('dn-need'); const f = l.querySelector('input'); if (f) f.focus(); } return; }
+    if (sel.value === '__other') {
+      const name = $('dnOName').value.trim(), reason = $('dnOReason').value.trim(), url = $('dnOUrl').value.trim(), err = $('dnOErr');
+      err.textContent = '';
+      if (!name) { err.textContent = T.errName; $('dnOName').focus(); return; }
+      if (!reason) { err.textContent = T.errReason; $('dnOReason').focus(); return; }
+      if (url && !/^https?:[/][/][^ /]+[.][^ /]+/i.test(url)) { err.textContent = T.errUrl; $('dnOUrl').focus(); return; }
+      openDonationModal({ id: 'other', name: name, url: url, reason: reason }, btn);
+      return;
+    }
     const cause = DN.causes.find((c) => c.id === sel.value); if (cause) openDonationModal(cause, btn);
   });
-  box.querySelectorAll('input[name=dnCause]').forEach((i) => i.addEventListener('change', () => { const l = box.querySelector('.dn-causes'); if (l) l.classList.remove('dn-need'); }));
+  box.querySelectorAll('input[name=dnCause]').forEach((i) => i.addEventListener('change', () => { const l = box.querySelector('.dn-causes'); if (l) l.classList.remove('dn-need'); const o = $('dnOther'); if (o) o.hidden = box.querySelector('input[name=dnCause]:checked').value !== '__other'; }));
 }
 function closeDonationModal(opener, reload){
   const ov = $('dnOv'); if (ov) ov.remove();
@@ -1330,10 +1360,10 @@ function closeDonationModal(opener, reload){
 function dnKey(ev){ if (ev.key === 'Escape' && !dnSending) { const ov = $('dnOv'); if (ov) closeDonationModal(ov._opener, Boolean(ov._done)); } }
 function openDonationModal(cause, opener){
   dnRid = newRequestId(); dnSending = false;
-  const T = DNT, need = DN.points, bal = Number(DN.balance || 0);
+  const T = DNT, need = DN.points, bal = Number(DN.balance || 0), isOther = cause.id === 'other';
   const ov = document.createElement('div'); ov.className = 'dn-ov'; ov.id = 'dnOv'; ov._opener = opener;
   ov.innerHTML = '<div class="dn-modal" role="dialog" aria-modal="true" aria-labelledby="dnMt"><h2 class="dn-mt" id="dnMt">' + esc(T.modalTitle) + '</h2><div id="dnMBody">' +
-    '<dl class="dn-mdl"><div><dt>' + esc(T.fCause) + '</dt><dd>' + esc(cause.name) + '</dd></div><div><dt>' + esc(T.fPoints) + '</dt><dd>' + need.toLocaleString('ja-JP') + ' pt<small>（' + esc(T.after) + ' ' + (bal - need).toLocaleString('ja-JP') + ' pt）</small></dd></div><div><dt>' + esc(T.fOrg) + '</dt><dd>' + esc(T.org) + '</dd></div></dl>' +
+    '<dl class="dn-mdl"><div><dt>' + esc(isOther ? T.fWish : T.fCause) + '</dt><dd>' + esc(cause.name) + '</dd></div>' + (isOther && cause.url ? '<div><dt>' + esc(T.fUrl) + '</dt><dd class="dn-wrap">' + esc(cause.url) + '</dd></div>' : '') + (isOther ? '<div><dt>' + esc(T.fReason) + '</dt><dd class="dn-wrap">' + esc(cause.reason) + '</dd></div>' : '') + '<div><dt>' + esc(T.fPoints) + '</dt><dd>' + need.toLocaleString('ja-JP') + ' pt<small>（' + esc(T.after) + ' ' + (bal - need).toLocaleString('ja-JP') + ' pt）</small></dd></div>' + (isOther ? '<div><dt>' + esc(T.fCondition) + '</dt><dd>' + esc(T.otherNote) + '</dd></div>' : '') + '<div><dt>' + esc(T.fOrg) + '</dt><dd>' + esc(T.org) + '</dd></div></dl>' +
     '<ul class="dn-notes"><li>' + esc(T.note1) + '</li><li>' + esc(T.note2) + '</li><li>' + esc(T.note3) + '</li><li>' + esc(T.note4) + '</li></ul>' +
     '<p class="dn-err" id="dnErr" role="alert"></p><div class="dn-acts"><button class="btn btn-primary" type="button" id="dnSubmit">' + esc(T.submit) + '</button><button class="btn-text" type="button" id="dnBack">' + esc(T.back) + '</button></div></div></div>';
   document.body.appendChild(ov);
@@ -1344,7 +1374,7 @@ function openDonationModal(cause, opener){
   sub.addEventListener('click', async () => {
     if (dnSending) return;
     dnSending = true; sub.disabled = true; sub.textContent = T.sending; $('dnErr').textContent = '';
-    const r = await api('/api/community-auth?action=donation-create', { method: 'POST', body: JSON.stringify({ causeId: cause.id, requestId: dnRid }) });
+    const r = await api('/api/community-auth?action=donation-create', { method: 'POST', body: JSON.stringify(isOther ? { causeId: 'other', requestId: dnRid, other: { name: cause.name, url: cause.url, reason: cause.reason } } : { causeId: cause.id, requestId: dnRid }) });
     dnSending = false;
     if (!r.ok) { sub.disabled = false; sub.textContent = T.submit; $('dnErr').textContent = (r.data && r.data.error) || T.error; return; }
     invalidate('points');

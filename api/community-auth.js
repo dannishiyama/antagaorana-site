@@ -262,7 +262,7 @@ export default async function handler(req, res) {
       if (!Donation.donationEnabled()) return res.status(403).json({ error: 'この機能は、現在ご利用いただけません。', code: 'disabled' });
       try {
         const user = await getUser(session.email);
-        const out = await Donation.createRequest({ email: session.email, causeId: body.causeId, requestId: body.requestId, memberName: user?.displayName || user?.fullName || '' });
+        const out = await Donation.createRequest({ email: session.email, causeId: body.causeId, requestId: body.requestId, other: body.other, memberName: user?.displayName || user?.fullName || '' });
         if (!out.duplicate) {
           const b = resolveBaseUrl(req);
           await donationMail.received(out.request, { baseUrl: b });

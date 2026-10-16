@@ -34,6 +34,7 @@ async function deliver({ emailType, to, subject, lines, cta }) {
   }
 }
 
+const causeLine = (req) => (req.causeKind === 'other' ? `支援先（希望）：${req.causeName}（運営が内容を確認し、承認された場合のみ、支援の対象となります）` : `支援先：${req.causeName}`);
 const hi = async (email) => `${(await getUser(email).catch(() => null))?.displayName || 'ご参加者'} 様`;
 const baseUrl = (b) => (b ? `${b}/haku-community/home/#point` : null);
 
@@ -50,17 +51,17 @@ async function once(req, type, build) {
 export const donationMail = {
   received: (req, { baseUrl: b } = {}) => once(req, 'received', async () => ({
     emailType: 'donation_received', to: req.email, subject: `【${LABEL}】ポイント利用の申請を受け付けました`,
-    lines: [await hi(req.email), '', 'HAKUポイントの利用（社会貢献）の申請を受け付けました。', `申請ID：${req.id}`, `支援先：${req.causeName}`, `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', '運営が内容を確認します。結果は、あらためてメールでお知らせします。申請したポイントは、確認が終わるまで確保されます。'],
+    lines: [await hi(req.email), '', 'HAKUポイントの利用（社会貢献）の申請を受け付けました。', `申請ID：${req.id}`, causeLine(req), `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', '運営が内容を確認します。結果は、あらためてメールでお知らせします。申請したポイントは、確認が終わるまで確保されます。'],
     cta: baseUrl(b) ? { label: '申請の状況を見る', url: baseUrl(b) } : null,
   })),
   adminNew: (req, { baseUrl: b } = {}) => once(req, 'admin_new', async () => ({
     emailType: 'donation_admin_new', to: adminRecipients(), subject: `【${LABEL}】ポイント利用の新しい申請があります`,
-    lines: ['HAKUポイントの利用（社会貢献）の新しい申請がありました。', '', `申請ID：${req.id}`, `会員：${req.memberName || ''}（${req.email}）`, `支援先：${req.causeName}`, `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', '管理画面の「HAKU Community運営 › ポイント｜利用申請管理」から、内容をご確認ください。'],
+    lines: ['HAKUポイントの利用（社会貢献）の新しい申請がありました。', '', `申請ID：${req.id}`, `会員：${req.memberName || ''}（${req.email}）`, causeLine(req), ...(req.causeKind === 'other' ? [`希望先のURL：${req.otherCause?.url || '（なし）'}`, `支援したい理由：${req.otherCause?.reason || ''}`, '※その他の支援先のため、希望先の確認（承認・保留・却下）が必要です。'] : []), `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', '管理画面の「HAKU Community運営 › ポイント｜利用申請管理」から、内容をご確認ください。'],
     cta: b ? { label: '管理画面を開く', url: `${b}/haku-community/admin/` } : null,
   })),
   approved: (req) => once(req, 'approved', async () => ({
     emailType: 'donation_approved', to: req.email, subject: `【${LABEL}】ポイント利用の申請が承認されました`,
-    lines: [await hi(req.email), '', 'ポイント利用の申請が承認されました。', `申請ID：${req.id}`, `支援先：${req.causeName}`, `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', `実際の寄付は、${ORG_NAME}が団体名義で行います。実施まで、お時間をいただくことがあります。完了しましたら、あらためてお知らせします。`],
+    lines: [await hi(req.email), '', 'ポイント利用の申請が承認されました。', `申請ID：${req.id}`, causeLine(req), `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', `実際の寄付は、${ORG_NAME}が団体名義で行います。実施まで、お時間をいただくことがあります。完了しましたら、あらためてお知らせします。`],
   })),
   rejected: (req) => once(req, 'rejected', async () => ({
     emailType: 'donation_rejected', to: req.email, subject: `【${LABEL}】ポイント利用の申請について`,
@@ -68,7 +69,7 @@ export const donationMail = {
   })),
   completed: (req) => once(req, 'completed', async () => ({
     emailType: 'donation_completed', to: req.email, subject: `【${LABEL}】寄付が完了しました`,
-    lines: [await hi(req.email), '', 'ポイント利用の申請にもとづく寄付が完了しました。', `申請ID：${req.id}`, `支援先：${req.causeName}`, `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', `${ORG_NAME}が、団体名義で寄付を行いました。あなたの積み重ねに、心から感謝いたします。`],
+    lines: [await hi(req.email), '', 'ポイント利用の申請にもとづく寄付が完了しました。', `申請ID：${req.id}`, causeLine(req), `利用ポイント：${req.points.toLocaleString('ja-JP')} pt`, '', `${ORG_NAME}が、団体名義で寄付を行いました。あなたの積み重ねに、心から感謝いたします。`],
   })),
 };
 export { STATUS_LABEL };

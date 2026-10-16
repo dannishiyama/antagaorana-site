@@ -157,6 +157,17 @@ h1{font-size:18px;margin-bottom:4px}
 .post-ops{align-items:center}
 .post-ops-gap{flex:1;min-width:24px}
 .post .row.post-ops .danger{margin-left:auto}
+.dn-causes summary{cursor:pointer;font-size:13px;font-weight:700;color:#1E3A2F}
+.dn-cause{border-top:1px solid #ece6d9;padding:10px 0}
+.dn-cause .row2{display:flex;gap:10px;flex-wrap:wrap}
+.dn-cause .row2>div{flex:1;min-width:150px}
+.dn-cause label{display:block;font-size:11.5px;color:#8a8574;margin:8px 0 3px}
+.dn-cause .dn-ord{font-size:11.5px;color:#8a8574}
+.dn-chip.k-other{border-color:#C0A05C;color:#8a5a1f;background:#fffaf0}
+.dn-chip.r-approved{border-color:#3E5A4C;color:#1E3A2F;background:#f0f5f1}
+.dn-chip.r-hold{border-color:#C0A05C;color:#8a5a1f}
+.dn-chip.r-rejected{border-color:#d9a58f;color:#9A3B1F}
+.dn-other-box{margin:8px 0;padding:10px 12px;background:#fffaf0;border-left:3px solid #C0A05C;font-size:12.5px;color:#4a473f}
 .dn-btn{display:inline-block;padding:7px 16px;border:1px solid #33472f;background:#fff;color:#33472f;font-size:12.5px;cursor:pointer;text-decoration:none;font-family:inherit}
 .dn-btn.primary{background:#33472f;color:#fff}
 .dn-btn.danger{border-color:#9A3B1F;color:#9A3B1F}
@@ -578,9 +589,15 @@ h1{font-size:18px;margin-bottom:4px}
 
     <div id="donationsPanel" style="display:none">
       <p class="note">会員がHAKUポイントを使って申請した「社会貢献」を、確認・承認し、実際の寄付（銀行振込・手動）を記録します。承認だけでは「寄付完了」になりません。振込日・実際の金額・振込先を登録して、「振込完了」にします。会員の方から金銭は集めません。ポイントと円の換算は行いません。</p>
+      <details class="evform dn-causes" id="dnCauses"><summary>支援先の管理（会員画面の「支援先を選ぶ」に、公開中のものが表示されます）</summary>
+        <p class="note" style="margin-top:8px">支援先を登録・編集・公開／非公開／受付停止・並び替えできます（最高管理者のみ）。過去の申請が参照している支援先は削除できません。非公開・受付停止にすると、会員は新しく申請できなくなりますが、過去の申請の記録は変わりません。</p>
+        <div id="dnCauseList"></div>
+        <div class="dn-cause new"><b>新しい支援先を登録する</b><div class="row2"><div><label for="dncName">名称（必須）</label><input type="text" id="dncName" maxlength="40"></div><div><label for="dncUrl">公式URL（任意）</label><input type="url" id="dncUrl" maxlength="200" placeholder="https://"></div></div><label for="dncDesc">説明（任意・会員画面に表示）</label><input type="text" id="dncDesc" maxlength="200"><div class="row2"><div><label for="dncStatus">状態</label><select id="dncStatus"><option value="published">公開中</option><option value="unpublished">非公開</option><option value="stopped">受付停止</option></select></div></div><div class="dn-acts"><button type="button" class="dn-btn primary" id="dncAdd">この内容で登録する</button></div><div class="dn-msg" id="dncMsg" role="status" aria-live="polite"></div></div>
+      </details>
       <div class="evform dn-filters">
         <div class="row2"><div><label for="dnStatus">ステータス</label><select id="dnStatus"><option value="">すべて</option><option value="pending">申請中</option><option value="approved">承認済み・振込待ち</option><option value="completed">振込完了</option><option value="rejected">却下</option><option value="cancelled">取消</option></select></div>
-        <div><label for="dnCause">支援先</label><select id="dnCause"><option value="">すべて</option></select></div></div>
+        <div><label for="dnCause">支援先</label><select id="dnCause"><option value="">すべて</option></select></div>
+        <div><label for="dnKind">支援先の種類</label><select id="dnKind"><option value="">すべて</option><option value="review">その他：希望先の確認が必要</option><option value="other">その他の支援先（会員の希望）</option><option value="registered">運営が登録した支援先</option></select></div></div>
         <div class="row2"><div><label for="dnQ">検索（申請ID・会員名・メール・メモ・参照番号）</label><input type="search" id="dnQ" autocomplete="off"></div>
         <div><label for="dnSort">並び替え</label><select id="dnSort"><option value="new">申請が新しい順</option><option value="old">申請が古い順</option><option value="points">ポイントの多い順</option></select></div></div>
         <div class="row2"><div><label for="dnField">対象期間の基準</label><select id="dnField"><option value="created">申請日</option><option value="approved">承認日</option><option value="completed">振込完了日</option></select></div>
@@ -1315,7 +1332,7 @@ var dnData = [], dnBusy = false;
 function dnFmt(ms){ return ms ? new Date(ms).toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : ''; }
 function dnQuery(){
   var p = new URLSearchParams();
-  [['status', 'dnStatus'], ['cause', 'dnCause'], ['q', 'dnQ'], ['sort', 'dnSort'], ['field', 'dnField'], ['from', 'dnFrom'], ['to', 'dnTo']].forEach(function(x){ var v = document.getElementById(x[1]).value; if (v) p.set(x[0], v); });
+  [['status', 'dnStatus'], ['cause', 'dnCause'], ['kind', 'dnKind'], ['q', 'dnQ'], ['sort', 'dnSort'], ['field', 'dnField'], ['from', 'dnFrom'], ['to', 'dnTo']].forEach(function(x){ var v = document.getElementById(x[1]).value; if (v) p.set(x[0], v); });
   return p.toString();
 }
 function dnSummaryHtml(list){
@@ -1327,7 +1344,12 @@ function dnSummaryHtml(list){
 }
 function dnCardHtml(r){
   var t = r.transfer || {};
-  var rows = [['会員', escapeHtml(r.memberName || '') + '（' + escapeHtml(r.email) + '）'], ['申請日時', dnFmt(r.createdAt)], ['利用ポイント', Number(r.points).toLocaleString('ja-JP') + ' pt（' + (r.holdState === 'held' ? '確保中' : r.holdState === 'consumed' ? '利用確定' : r.holdState === 'released' ? '確保を解除' : '') + '）'], ['支援先', escapeHtml(r.causeName)]];
+  var rows = [['会員', escapeHtml(r.memberName || '') + '（' + escapeHtml(r.email) + '）'], ['申請日時', dnFmt(r.createdAt)], ['利用ポイント', Number(r.points).toLocaleString('ja-JP') + ' pt（' + (r.holdState === 'held' ? '確保中' : r.holdState === 'consumed' ? '利用確定' : r.holdState === 'released' ? '確保を解除' : '') + '）'], ['支援先', escapeHtml(r.causeName) + (r.causeKind === 'other' ? ' <span class="dn-chip k-other">その他（会員の希望）</span>' : '')]];
+  var oc = r.otherCause || null;
+  if (oc) {
+    if (oc.url) rows.push(['公式URL', /^https?:[/][/]/i.test(oc.url) ? '<a href="' + escapeHtml(oc.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(oc.url) + '</a>' : escapeHtml(oc.url)]);
+    rows.push(['支援したい理由', escapeHtml(oc.reason)], ['希望先の確認', '<span class="dn-chip r-' + escapeHtml(r.causeReview) + '">' + escapeHtml({ pending: '確認前', hold: '確認中（保留）', approved: '承認', rejected: '却下' }[r.causeReview] || '') + '</span>' + (r.causeReviewNote ? '　' + escapeHtml(r.causeReviewNote) : '')]);
+  } else if (r.causeUrl) rows.push(['支援先のURL', escapeHtml(r.causeUrl)]);
   if (r.approvedAt) rows.push(['承認日時', dnFmt(r.approvedAt)]);
   if (r.rejectedAt) rows.push(['却下日時', dnFmt(r.rejectedAt) + '　理由：' + escapeHtml(r.rejectReason || '')]);
   if (r.cancelledAt) rows.push(['取消日時', dnFmt(r.cancelledAt) + '　理由：' + escapeHtml(r.cancelReason || '') + (r.cancelledAfterApproval ? '（承認後の例外取消）' : '')]);
@@ -1335,7 +1357,9 @@ function dnCardHtml(r){
   if (r.completedAt) rows.push(['振込完了日時', dnFmt(r.completedAt)]);
   if (r.handledBy) rows.push(['処理した管理者', escapeHtml(r.handledBy)]);
   var acts = '';
-  if (r.status === 'pending') acts = '<button class="dn-btn primary" data-dn="approve">承認する</button><button class="dn-btn danger" data-dn="reject">理由をつけて却下する</button><span class="dn-gap"></span><button class="dn-btn" data-dn="cancel">取消（未処理）</button>';
+  var otherPending = r.causeKind === 'other' && r.causeReview !== 'approved';
+  if (r.status === 'pending') acts = (otherPending ? '<div class="dn-other-box">会員が希望した「その他の支援先」です。希望先の承認と、寄付申請の承認は別の手順です。希望先を承認すると、そのあと寄付申請を承認できます（希望先は、支援先の一覧には自動で公開されません）。</div><button class="dn-btn primary" data-dn="cause-approve">希望先を承認する</button><button class="dn-btn" data-dn="cause-hold">内容を確認中として保留する</button>' : '') +
+    '<button class="dn-btn primary" data-dn="approve"' + (otherPending ? ' disabled title="先に希望先を承認してください"' : '') + '>' + (r.causeKind === 'other' ? '寄付申請を承認する' : '承認する') + '</button><button class="dn-btn danger" data-dn="reject">理由をつけて却下する</button><span class="dn-gap"></span><button class="dn-btn" data-dn="cancel">取消（未処理）</button>';
   if (r.status === 'approved') acts = '<div class="dn-tf"><div class="row2"><div><label>寄付金額（円）</label><input type="number" min="1" step="1" inputmode="numeric" data-f="amountYen" value="' + escapeHtml(t.amountYen || '') + '"></div><div><label>振込日</label><input type="date" data-f="date" value="' + escapeHtml(t.date || '') + '"></div></div>' +
     '<div class="row2"><div><label>振込先</label><input type="text" maxlength="80" data-f="destination" value="' + escapeHtml(t.destination || '') + '"></div><div><label>振込控えの参照番号（任意）</label><input type="text" maxlength="60" data-f="reference" value="' + escapeHtml(t.reference || '') + '"></div></div>' +
     '<div class="dn-acts"><button class="dn-btn" data-dn="transfer">振込情報を登録する</button><button class="dn-btn primary" data-dn="complete"' + (t.amountYen ? '' : ' disabled') + '>振込完了にする</button><span class="dn-gap"></span><button class="dn-btn danger" data-dn="exception">承認後の取消（例外処理）</button></div></div>';
@@ -1366,6 +1390,11 @@ function dnAct(r, el, kind){
   if (dnBusy) return;
   var body = { id: r.id }, action = 'donation-' + kind;
   var f = function(n){ var i = el.querySelector('[data-f="' + n + '"]'); return i ? i.value : ''; };
+  if (kind === 'cause-approve' || kind === 'cause-hold') {
+    var note = prompt((kind === 'cause-approve' ? '希望先を承認します（支援先の一覧には自動で公開されません）。' : '内容を確認中として保留します（ポイントは確保されたままです）。') + 'メモ（任意）を入力してください。', '');
+    if (note === null) return;
+    action = 'donation-cause-review'; body.decision = kind === 'cause-approve' ? 'approve' : 'hold'; body.note = note;
+  }
   if (kind === 'approve' && !confirm(r.id + ' を承認します。確保したポイントが「利用確定」になります。よろしいですか？')) return;
   if (kind === 'reject' || kind === 'cancel') { var why = prompt((kind === 'reject' ? '却下' : '取消') + 'の理由を入力してください（記録に残ります。確保したポイントは元に戻ります）。', ''); if (!why) return; body.reason = why; }
   if (kind === 'exception') {
@@ -1390,6 +1419,43 @@ function dnRebind(r, el){
   el.querySelectorAll('[data-dn]').forEach(function(b){ b.addEventListener('click', function(){ dnAct(r, el, b.dataset.dn); }); });
   el.querySelector('[data-dn-log]').addEventListener('toggle', function(ev){ if (ev.target.open) { var out = el.querySelector('.dn-log'); api('/api/admin?action=donation-detail&id=' + encodeURIComponent(r.id), { method: 'GET' }).then(function(res){ out.innerHTML = (res.data.log || []).map(function(l){ return '<div>' + dnFmt(l.at) + '　' + escapeHtml(l.actor) + '　' + escapeHtml(l.type) + '</div>'; }).join(''); }); } });
 }
+// ── 支援先の管理（登録・編集・公開／非公開／受付停止・表示順）。会員画面の「支援先を選ぶ」に動的に表示される
+var DNC_STATUS = [['published', '公開中'], ['unpublished', '非公開'], ['stopped', '受付停止']];
+function dncMsg(el, text, kind){ var m = el.querySelector('.dn-msg'); if (m) { m.textContent = text; m.className = 'dn-msg ' + (kind || ''); } }
+function dncSave(body, el, done){
+  api('/api/admin?action=donation-cause-save', { method: 'POST', body: JSON.stringify(body) }).then(function(res){
+    if (res.status !== 200) { dncMsg(el, res.data.error || '保存できませんでした。', 'err'); return; }
+    dncMsg(el, '保存しました。', 'ok'); if (done) done(res.data);
+  });
+}
+function renderDonationCauses(list){
+  var box = document.getElementById('dnCauseList'); box.innerHTML = '';
+  (list || []).forEach(function(c, i){
+    var el = document.createElement('div'); el.className = 'dn-cause'; el.dataset.id = c.id;
+    el.innerHTML = '<div class="row2"><div><label>名称</label><input type="text" maxlength="40" data-c="name" value="' + escapeHtml(c.name) + '"></div><div><label>公式URL（任意）</label><input type="url" maxlength="200" data-c="url" value="' + escapeHtml(c.url || '') + '"></div></div>' +
+      '<label>説明（任意・会員画面に表示）</label><input type="text" maxlength="200" data-c="description" value="' + escapeHtml(c.description || '') + '">' +
+      '<div class="row2"><div><label>状態</label><select data-c="status">' + DNC_STATUS.map(function(s2){ return '<option value="' + s2[0] + '"' + (s2[0] === c.status ? ' selected' : '') + '>' + s2[1] + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="dn-acts"><button type="button" class="dn-btn primary" data-cs="save">保存する</button><button type="button" class="dn-btn" data-cs="up"' + (i === 0 ? ' disabled' : '') + '>↑ 上へ</button><button type="button" class="dn-btn" data-cs="down"' + (i === list.length - 1 ? ' disabled' : '') + '>↓ 下へ</button><span class="dn-ord">表示順 ' + (i + 1) + '</span></div><div class="dn-msg" role="status" aria-live="polite"></div>';
+    box.appendChild(el);
+    var v = function(n){ return el.querySelector('[data-c="' + n + '"]').value; };
+    el.querySelector('[data-cs=save]').addEventListener('click', function(){ dncSave({ id: c.id, name: v('name'), description: v('description'), url: v('url'), status: v('status') }, el, function(d){ renderDonationCauses(d.causes); }); });
+    ['up', 'down'].forEach(function(dir){
+      el.querySelector('[data-cs=' + dir + ']').addEventListener('click', function(){
+        api('/api/admin?action=donation-cause-move', { method: 'POST', body: JSON.stringify({ id: c.id, dir: dir }) }).then(function(res){
+          if (res.status !== 200) { dncMsg(el, res.data.error || '変更できませんでした。', 'err'); return; }
+          renderDonationCauses(res.data.causes);
+        });
+      });
+    });
+  });
+}
+document.getElementById('dncAdd').addEventListener('click', function(){
+  var wrap = document.querySelector('.dn-cause.new');
+  dncSave({ name: document.getElementById('dncName').value, description: document.getElementById('dncDesc').value, url: document.getElementById('dncUrl').value, status: document.getElementById('dncStatus').value }, wrap, function(d){
+    document.getElementById('dncName').value = ''; document.getElementById('dncDesc').value = ''; document.getElementById('dncUrl').value = '';
+    renderDonationCauses(d.causes); loadDonations();
+  });
+});
 function loadDonations(){
   var box = document.getElementById('dnList'); box.innerHTML = '<div class="empty">読み込み中…</div>';
   var qs = dnQuery();
@@ -1399,6 +1465,7 @@ function loadDonations(){
     if (res.status === 403 && res.data.code === 'disabled') { box.innerHTML = '<div class="empty">この環境では、ポイント利用申請はまだ有効になっていません。</div>'; document.getElementById('dnCount').textContent = ''; return; }
     if (res.status !== 200) { box.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
     window.DN_POINTS = res.data.points;
+    renderDonationCauses(res.data.causes || []);
     var sel = document.getElementById('dnCause'), cur = sel.value;
     sel.innerHTML = '<option value="">すべて</option>' + (res.data.causes || []).map(function(c){ return '<option value="' + escapeHtml(c.id) + '">' + escapeHtml(c.name) + (c.status === 'published' ? '' : '（停止中）') + '</option>'; }).join('');
     sel.value = cur;
@@ -1406,7 +1473,7 @@ function loadDonations(){
     dnData = res.data.requests || []; renderDonations();
   });
 }
-['dnStatus', 'dnCause', 'dnSort', 'dnField', 'dnFrom', 'dnTo'].forEach(function(id){ document.getElementById(id).addEventListener('change', loadDonations); });
+['dnStatus', 'dnCause', 'dnKind', 'dnSort', 'dnField', 'dnFrom', 'dnTo'].forEach(function(id){ document.getElementById(id).addEventListener('change', loadDonations); });
 document.getElementById('dnReload').addEventListener('click', loadDonations);
 (function(){ var t = null; document.getElementById('dnQ').addEventListener('input', function(){ clearTimeout(t); t = setTimeout(loadDonations, 300); }); })();
 

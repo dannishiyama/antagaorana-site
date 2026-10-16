@@ -17,7 +17,7 @@ function asAdminView(r) {
 export async function handleDonationAdmin(action, req, res, session) {
   if (!D.donationEnabled()) return res.status(403).json({ error: 'この機能は、この環境ではまだ利用できません。', code: 'disabled' });
   const isPost = req.method === 'POST';
-  const POSTS = new Set(['donation-approve', 'donation-reject', 'donation-cancel', 'donation-transfer', 'donation-complete', 'donation-exception-cancel', 'donation-note', 'donation-cause-save']);
+  const POSTS = new Set(['donation-approve', 'donation-reject', 'donation-cancel', 'donation-transfer', 'donation-complete', 'donation-exception-cancel', 'donation-note', 'donation-cause-save', 'donation-cause-move', 'donation-cause-review']);
   if (POSTS.has(action) !== isPost) return res.status(405).json({ error: 'Method not allowed' });
   try {
     const actor = session.actorId;
@@ -30,7 +30,7 @@ export async function handleDonationAdmin(action, req, res, session) {
     const reply = (r, extra = {}) => res.status(200).json({ ok: true, request: asAdminView(r.request), duplicate: Boolean(r.duplicate), ...extra });
 
     if (action === 'donation-list') {
-      const filters = { status: q(req, 'status'), q: q(req, 'q'), cause: q(req, 'cause'), from: q(req, 'from'), to: q(req, 'to'), sort: q(req, 'sort'), field: q(req, 'field') };
+      const filters = { status: q(req, 'status'), q: q(req, 'q'), cause: q(req, 'cause'), kind: q(req, 'kind'), from: q(req, 'from'), to: q(req, 'to'), sort: q(req, 'sort'), field: q(req, 'field') };
       const recs = await D.listAll(filters);
       return res.status(200).json({ ok: true, requests: recs.map(asAdminView), summary: D.summarize(recs), causes: await D.listCauses(), points: D.DONATION_POINTS, statusLabels: D.STATUS_LABEL });
     }
@@ -40,18 +40,23 @@ export async function handleDonationAdmin(action, req, res, session) {
       return res.status(200).json({ ok: true, request: asAdminView(r), log: await D.getLog(r.id) });
     }
     if (action === 'donation-csv') {
-      const recs = await D.listAll({ status: q(req, 'status'), q: q(req, 'q'), cause: q(req, 'cause'), from: q(req, 'from'), to: q(req, 'to'), sort: 'old', field: q(req, 'field') });
+      const recs = await D.listAll({ status: q(req, 'status'), q: q(req, 'q'), cause: q(req, 'cause'), kind: q(req, 'kind'), from: q(req, 'from'), to: q(req, 'to'), sort: 'old', field: q(req, 'field') });
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', 'attachment; filename="haku-point-donations.csv"');
       return res.status(200).send(D.toCsv(recs));
     }
     if (action === 'donation-cause-save') {
       if (session.role !== 'super_admin') return res.status(403).json({ error: '支援先の追加・公開・停止は、最高管理者のみ行えます。' });
-      return res.status(200).json({ ok: true, cause: await D.saveCause({ id: body.id, name: body.name, status: body.status, actorId: actor }), causes: await D.listCauses() });
+      return res.status(200).json({ ok: true, cause: await D.saveCause({ id: body.id, name: body.name, description: body.description, url: body.url, status: body.status, actorId: actor }), causes: await D.listCauses() });
+    }
+    if (action === 'donation-cause-move') {
+      if (session.role !== 'super_admin') return res.status(403).json({ error: '支援先の並び替えは、最高管理者のみ行えます。' });
+      return res.status(200).json({ ok: true, causes: await D.moveCause({ id: body.id, dir: body.dir, actorId: actor }) });
     }
     const id = String(body.id || '');
     if (action === 'donation-approve') { const r = await D.approve(id, actor); if (!r.duplicate) await donationMail.approved(r.request); return reply(r); }
     if (action === 'donation-reject') { const r = await D.reject(id, actor, body.reason); if (!r.duplicate) await donationMail.rejected(r.request); return reply(r); }
+    if (action === 'donation-cause-review') { const r = await D.reviewCause(id, actor, String(body.decision || ''), body.note ?? body.reason); if (body.decision === 'reject' && !r.duplicate) await donationMail.rejected(r.request); return reply(r); }
     if (action === 'donation-cancel') return reply(await D.cancel(id, actor, body.reason));
     if (action === 'donation-exception-cancel') return reply(await D.exceptionCancel(id, actor, body.reason, String(body.confirm || '')));
     if (action === 'donation-transfer') return reply(await D.registerTransfer(id, actor, body));
