@@ -60,6 +60,9 @@ import { getStampDates } from './_lib/morning-attendance.js';
 import { mail as salonMail } from './_lib/salon-mail.js';
 import { getMemberView } from './_lib/points.js';
 import { getGoal, setGoal, GoalError } from './_lib/point-goal.js';
+import * as Donation from './_lib/donation.js';
+import { donationMail } from './_lib/donation-mail.js';
+import { getBalance as getPointBalance } from './_lib/points.js';
 import {
   MORNING_CONFIG, MORNING_BLOCK_MESSAGES, jstToday, isValidMonth, addDays, monthDates, viewableMonthRange,
   joinBlock, leaveBlock, buildMorningDays, joinOpenFrom,
@@ -125,6 +128,14 @@ export default async function handler(req, res) {
       const session = await requireHakuMembership(req, res); if (!session) return;
       // 目標は台帳とは別に保存された、会員本人だけの値（残高・履歴とは独立）
       return res.status(200).json({ ok: true, ...(await getMemberView(session.email, { limit: 50 })), goal: await getGoal(session.email) });
+    }
+    // ポイント利用申請（社会貢献）。会員は自分の申請だけ。申請の可否はサーバー側で再確認する（画面の値は信用しない）。
+    if (action === 'donation-config' || action === 'donation-mine') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      if (!Donation.donationEnabled()) return res.status(200).json({ ok: true, enabled: false });
+      if (action === 'donation-mine') return res.status(200).json({ ok: true, enabled: true, requests: await Donation.listMine(session.email) });
+      return res.status(200).json({ ok: true, enabled: true, points: Donation.DONATION_POINTS, balance: await getPointBalance(session.email), causes: await Donation.listCauses({ publishedOnly: true }), requests: await Donation.listMine(session.email) });
     }
     if (action === 'events-list') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -244,6 +255,24 @@ export default async function handler(req, res) {
       const session = await requireHakuMembership(req, res); if (!session) return;
       try { return res.status(200).json({ ok: true, goal: await setGoal(session.email, body.goal) }); }
       catch (err) { if (err instanceof GoalError) return res.status(400).json({ error: err.message, code: err.code }); throw err; }
+    }
+    if (action === 'donation-create') {
+      if (!(await rateLimitGuard(req, res, { key: 'donation-create', limit: 10, windowSeconds: 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      if (!Donation.donationEnabled()) return res.status(403).json({ error: 'この機能は、現在ご利用いただけません。', code: 'disabled' });
+      try {
+        const user = await getUser(session.email);
+        const out = await Donation.createRequest({ email: session.email, causeId: body.causeId, requestId: body.requestId, memberName: user?.displayName || user?.fullName || '' });
+        if (!out.duplicate) {
+          const b = resolveBaseUrl(req);
+          await donationMail.received(out.request, { baseUrl: b });
+          await donationMail.adminNew(out.request, { baseUrl: b });
+        }
+        return res.status(200).json({ ok: true, duplicate: out.duplicate, request: Donation.toMemberView(out.request), balance: await getPointBalance(session.email) });
+      } catch (err) {
+        if (err instanceof Donation.DonationError) return res.status(err.status).json({ error: err.message, code: err.code });
+        throw err;
+      }
     }
     if (action === 'morning-join') {
       if (!(await rateLimitGuard(req, res, { key: 'morning-join', limit: 30, windowSeconds: 60 }))) return;

@@ -64,6 +64,7 @@ import {
 } from './_lib/store.js';
 import { randomToken, hashPassword, verifyPassword, stripSecrets } from './_lib/security.js';
 import { createHakuCheckoutSession } from './_lib/stripe-checkout.js';
+import { handleDonationAdmin } from './_lib/donation-admin.js';
 import { grantPoints, adjustPoints, reversePoints, getBalance, getAdminMemberView, listRecent, PointError } from './_lib/points.js';
 import { handleSalonAdmin } from './_lib/salon-admin.js';
 import { handleAttendanceAdmin } from './_lib/attendance-admin.js';
@@ -194,6 +195,11 @@ export default async function handler(req, res) {
       // service=haku で、灯の操作を除いたHAKU Communityの履歴だけを返す（指定なしは、従来どおり全件）
       const entries = filterAuditByService(await listAuditLog(200), req.query?.service === 'haku' ? 'haku' : null);
       return res.status(200).json({ ok: true, entries });
+    }
+    // ポイント利用申請（社会貢献）の管理。ログイン済みの管理者だけ。権限は api/_lib/donation-admin.js でも確認する。
+    if (typeof action === 'string' && action.startsWith('donation-')) {
+      const session = await requireAdminHere(req, res); if (!session) return;
+      return await handleDonationAdmin(action, req, res, session);
     }
     // 朝の集まりの出席（スタンプ＋ポイント）の管理。cronだけは管理者ではなく CRON_SECRET で認証する。
     if (action === 'attendance-cron') return await handleAttendanceAdmin(action, req, res, null);

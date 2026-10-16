@@ -415,6 +415,56 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .set-col #cancelArea .menu{margin-top:0}
 .set-col .cancel-note{margin-top:8px;padding:10px 0;font-size:13px;color:var(--ink2)}
 @media (min-width:900px){.set-wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:0 36px;padding:2px 24px 8px}.set-col+.set-col{padding-left:36px;border-left:1px solid var(--line)}.set-wrap{gap:0}}
+/* ── 社会貢献への活用（HAKUの深緑・クリーム・金色。控えめなカード） ── */
+.dn{margin-top:46px;padding-top:30px;border-top:1px solid var(--line)}
+.dn-title{font-family:var(--serif);font-size:21px;line-height:1.7;font-weight:700;color:var(--green-deep);letter-spacing:.03em}
+.dn-lead{margin-top:4px;font-size:14px;line-height:1.9;color:var(--ink2)}
+.dn-card{margin-top:18px;padding:18px 20px 22px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.dn-now{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2)}
+.dn-now b{font-family:var(--serif);font-size:20px;color:var(--green-deep);font-variant-numeric:tabular-nums}
+.dn-h{margin:18px 0 8px;font-size:13px;font-weight:700;color:var(--gold-ink);letter-spacing:.05em}
+.dn-causes{border:0;padding:0;margin:0;min-width:0}
+.dn-causes legend{padding:0}
+.dn-causes.dn-need{outline:2px solid var(--gold-ink);outline-offset:4px;border-radius:6px}
+.dn-radio{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 12px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;font-size:15px;color:var(--ink)}
+.dn-radio + .dn-radio{margin-top:8px}
+.dn-radio input{flex:none;width:20px;height:20px;accent-color:var(--green)}
+.dn-radio:has(input:checked){border-color:var(--green);background:var(--green-pale)}
+.dn-radio:focus-within{outline:2px solid var(--green);outline-offset:2px}
+.dn-per{font-size:14px;color:var(--ink2)}
+.dn-per b{font-family:var(--serif);font-size:20px;color:var(--green-deep)}
+.dn-dl{margin-top:8px}
+.dn-dl>div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.dn-dl dd{color:var(--ink);font-variant-numeric:tabular-nums}
+.dn-short{margin-top:8px;font-size:13px;color:var(--terra-ink)}
+.dn-muted{font-size:13.5px;color:var(--ink2)}
+.dn-go{margin-top:18px;width:100%}
+.dn-go[disabled]{opacity:.45;cursor:not-allowed}
+.dn-hist{margin-top:26px}
+.dn-list{list-style:none}
+.dn-list li{padding:12px 0;border-top:1px solid var(--line)}
+.dn-list li:last-child{border-bottom:1px solid var(--line)}
+.dn-li-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dn-li-name{font-size:14.5px;color:var(--ink)}
+.dn-li-meta{margin-top:2px;font-size:12.5px;color:var(--ink2)}
+.dn-chip{display:inline-block;padding:2px 12px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--ink2)}
+.dn-chip.s-approved{border-color:rgba(62,90,76,.5);background:var(--green-pale);color:var(--green-deep)}
+.dn-chip.s-completed{background:var(--green);border-color:var(--green);color:var(--paper)}
+.dn-chip.s-rejected,.dn-chip.s-cancelled{color:var(--terra-ink);border-color:rgba(180,85,47,.4)}
+.dn-ov{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(30,58,47,.5)}
+.dn-modal{width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:24px 22px 22px;background:var(--paper);border-radius:16px;box-shadow:0 24px 60px -20px rgba(0,0,0,.45)}
+.dn-mt{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--green-deep)}
+.dn-mdl{margin-top:14px}
+.dn-mdl>div{padding:9px 0;border-top:1px solid var(--line)}
+.dn-mdl dt{font-size:12px;color:var(--ink2)}
+.dn-mdl dd{margin-top:1px;font-size:15px;color:var(--ink)}
+.dn-mdl small{margin-left:6px;font-size:12.5px;color:var(--ink2)}
+.dn-notes{margin:12px 0 0 1.1em;font-size:13px;line-height:1.9;color:var(--ink2)}
+.dn-err{min-height:1.4em;margin-top:8px;font-size:13px;color:var(--terra-ink)}
+.dn-acts{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:10px}
+.dn-done-t{margin-top:14px;font-family:var(--serif);font-size:18px;color:var(--green-deep)}
+.dn-done-b{margin-top:6px;font-size:14px;line-height:1.9;color:var(--ink2)}
+@media (max-width:560px){.dn-ov{align-items:flex-end;padding:0}.dn-modal{max-width:none;border-radius:16px 16px 0 0;padding-bottom:calc(22px + env(safe-area-inset-bottom))}}
 @media (max-width:560px){.gl-main{flex-direction:column;align-items:flex-start;gap:12px}.gl-stats{width:100%}.gl-plant{width:96px;height:96px}</style>
 </head>
 <body>
@@ -1240,6 +1290,71 @@ function refreshEventViews(){
 }
 
 /* ═════════ HAKUポイント ═════════ */
+/* ── 社会貢献への活用（ポイント利用申請）。本番では、運営が有効にするまで出さない ── */
+const DNT = { title: UI.point.donation.title, lead: UI.point.donation.lead, now: UI.point.donation.now, chooseTitle: UI.point.donation.chooseTitle, noCause: UI.point.donation.noCause, useTitle: UI.point.donation.useTitle, perRequest: UI.point.donation.perRequest, need: UI.point.donation.need, avail: UI.point.donation.avail, after: UI.point.donation.after, short: UI.point.donation.short, confirmBtn: UI.point.donation.confirmBtn, modalTitle: UI.point.donation.modalTitle, fCause: UI.point.donation.fCause, fPoints: UI.point.donation.fPoints, fOrg: UI.point.donation.fOrg, org: UI.point.donation.org, note1: UI.point.donation.note1, note2: UI.point.donation.note2, note3: UI.point.donation.note3, note4: UI.point.donation.note4, submit: UI.point.donation.submit, back: UI.point.donation.back, sending: UI.point.donation.sending, doneTitle: UI.point.donation.doneTitle, doneBody: UI.point.donation.doneBody, close: UI.point.donation.close, error: UI.point.donation.error, histTitle: UI.point.donation.histTitle, histEmpty: UI.point.donation.histEmpty, requestedOn: UI.point.donation.requestedOn };
+const DN_STATUS = { pending: UI.point.donation.sPending, approved: UI.point.donation.sApproved, completed: UI.point.donation.sCompleted, rejected: UI.point.donation.sRejected, cancelled: UI.point.donation.sCancelled };
+let DN = null, dnSending = false, dnRid = null, dnLast = null;
+async function renderDonation(){
+  const box = $('donationBox'); if (!box) return;
+  const r = await api('/api/community-auth?action=donation-config', { method: 'GET' });
+  if (!r.ok || !r.data.enabled) { box.innerHTML = ''; return; }
+  DN = r.data; drawDonation();
+}
+function dnStatusChip(st){ return '<span class="dn-chip s-' + esc(st) + '">' + esc(DN_STATUS[st] || st) + '</span>'; }
+function drawDonation(){
+  const box = $('donationBox'); if (!box || !DN) return;
+  const T = DNT, need = DN.points, bal = Number(DN.balance || 0), enough = bal >= need, hasCause = DN.causes.length > 0;
+  const causes = hasCause ? DN.causes.map((c, i) => '<label class="dn-radio"><input type="radio" name="dnCause" value="' + esc(c.id) + '"' + (DN.causes.length === 1 && i === 0 ? ' checked' : '') + '><span>' + esc(c.name) + '</span></label>').join('') : '<p class="dn-muted">' + esc(T.noCause) + '</p>';
+  const hist = DN.requests.length ? '<ul class="dn-list">' + DN.requests.map((q) => '<li><div class="dn-li-top"><span class="dn-li-name">' + esc(q.causeName) + '</span>' + dnStatusChip(q.status) + '</div><div class="dn-li-meta">' + esc(T.requestedOn) + ' ' + esc(fmtDate(q.createdAt)) + '・' + Number(q.points).toLocaleString('ja-JP') + ' pt</div></li>').join('') + '</ul>' : '<p class="dn-muted">' + esc(T.histEmpty) + '</p>';
+  box.innerHTML = '<section class="dn" aria-labelledby="dnTitle"><h2 class="dn-title" id="dnTitle">' + esc(T.title) + '</h2><p class="dn-lead">' + esc(T.lead) + '</p>' +
+    '<div class="dn-card"><div class="dn-now"><span>' + esc(T.now) + '</span><b>' + bal.toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</b></div>' +
+    '<fieldset class="dn-causes"><legend class="dn-h">' + esc(T.chooseTitle) + '</legend>' + causes + '</fieldset>' +
+    '<div class="dn-use"><h3 class="dn-h">' + esc(T.useTitle) + '</h3><p class="dn-per">' + esc(T.perRequest) + '：<b>' + need.toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</b></p>' +
+    '<dl class="dn-dl"><div><dt>' + esc(T.need) + '</dt><dd>' + need.toLocaleString('ja-JP') + ' pt</dd></div><div><dt>' + esc(T.avail) + '</dt><dd>' + bal.toLocaleString('ja-JP') + ' pt</dd></div>' + (enough ? '<div><dt>' + esc(T.after) + '</dt><dd>' + (bal - need).toLocaleString('ja-JP') + ' pt</dd></div>' : '') + '</dl>' +
+    (enough ? '' : '<p class="dn-short" role="status">' + esc(fmt(T.short, { n: (need - bal).toLocaleString('ja-JP') })) + '</p>') + '</div>' +
+    '<button class="btn btn-primary dn-go" type="button" id="dnConfirmBtn"' + (enough && hasCause ? '' : ' disabled') + '>' + esc(T.confirmBtn) + '</button></div>' +
+    '<div class="dn-hist"><h3 class="dn-h">' + esc(T.histTitle) + '</h3>' + hist + '</div></section>';
+  const btn = $('dnConfirmBtn');
+  if (btn) btn.addEventListener('click', () => {
+    const sel = box.querySelector('input[name=dnCause]:checked');
+    if (!sel) { const l = box.querySelector('.dn-causes'); if (l) { l.classList.add('dn-need'); const f = l.querySelector('input'); if (f) f.focus(); } return; }
+    const cause = DN.causes.find((c) => c.id === sel.value); if (cause) openDonationModal(cause, btn);
+  });
+  box.querySelectorAll('input[name=dnCause]').forEach((i) => i.addEventListener('change', () => { const l = box.querySelector('.dn-causes'); if (l) l.classList.remove('dn-need'); }));
+}
+function closeDonationModal(opener, reload){
+  const ov = $('dnOv'); if (ov) ov.remove();
+  document.removeEventListener('keydown', dnKey);
+  if (reload) { dnLast = null; loadPoint(); } else if (opener && opener.focus) opener.focus();
+}
+function dnKey(ev){ if (ev.key === 'Escape' && !dnSending) { const ov = $('dnOv'); if (ov) closeDonationModal(ov._opener, Boolean(ov._done)); } }
+function openDonationModal(cause, opener){
+  dnRid = newRequestId(); dnSending = false;
+  const T = DNT, need = DN.points, bal = Number(DN.balance || 0);
+  const ov = document.createElement('div'); ov.className = 'dn-ov'; ov.id = 'dnOv'; ov._opener = opener;
+  ov.innerHTML = '<div class="dn-modal" role="dialog" aria-modal="true" aria-labelledby="dnMt"><h2 class="dn-mt" id="dnMt">' + esc(T.modalTitle) + '</h2><div id="dnMBody">' +
+    '<dl class="dn-mdl"><div><dt>' + esc(T.fCause) + '</dt><dd>' + esc(cause.name) + '</dd></div><div><dt>' + esc(T.fPoints) + '</dt><dd>' + need.toLocaleString('ja-JP') + ' pt<small>（' + esc(T.after) + ' ' + (bal - need).toLocaleString('ja-JP') + ' pt）</small></dd></div><div><dt>' + esc(T.fOrg) + '</dt><dd>' + esc(T.org) + '</dd></div></dl>' +
+    '<ul class="dn-notes"><li>' + esc(T.note1) + '</li><li>' + esc(T.note2) + '</li><li>' + esc(T.note3) + '</li><li>' + esc(T.note4) + '</li></ul>' +
+    '<p class="dn-err" id="dnErr" role="alert"></p><div class="dn-acts"><button class="btn btn-primary" type="button" id="dnSubmit">' + esc(T.submit) + '</button><button class="btn-text" type="button" id="dnBack">' + esc(T.back) + '</button></div></div></div>';
+  document.body.appendChild(ov);
+  document.addEventListener('keydown', dnKey);
+  const sub = $('dnSubmit'); sub.focus();
+  $('dnBack').addEventListener('click', () => { if (!dnSending) closeDonationModal(opener, false); });
+  ov.addEventListener('click', (ev) => { if (ev.target === ov && !dnSending) closeDonationModal(opener, false); });
+  sub.addEventListener('click', async () => {
+    if (dnSending) return;
+    dnSending = true; sub.disabled = true; sub.textContent = T.sending; $('dnErr').textContent = '';
+    const r = await api('/api/community-auth?action=donation-create', { method: 'POST', body: JSON.stringify({ causeId: cause.id, requestId: dnRid }) });
+    dnSending = false;
+    if (!r.ok) { sub.disabled = false; sub.textContent = T.submit; $('dnErr').textContent = (r.data && r.data.error) || T.error; return; }
+    invalidate('points');
+    ov._done = true;
+    $('dnMBody').innerHTML = '<p class="dn-done-t">' + esc(T.doneTitle) + '</p><p class="dn-done-b">' + esc(T.doneBody) + '</p><div class="dn-acts"><button class="btn btn-primary" type="button" id="dnClose">' + esc(T.close) + '</button></div>';
+    $('dnMt').textContent = T.doneTitle;
+    $('dnClose').focus();
+    $('dnClose').addEventListener('click', () => closeDonationModal(opener, true));
+  });
+}
 /* ── HAKUポイントの目標と、植物の成長表現（残高・履歴は台帳のまま。目標は本人の目安だけ） ── */
 let PT = { balance: 0, goal: null };
 const GOALT = { title: UI.point.goal.title, lead: UI.point.goal.lead, empty: UI.point.goal.empty, label: UI.point.goal.label, placeholder: UI.point.goal.placeholder, set: UI.point.goal.set, change: UI.point.goal.change, save: UI.point.goal.save, cancel: UI.point.goal.cancel, clear: UI.point.goal.clear, current: UI.point.goal.current, target: UI.point.goal.target, rate: UI.point.goal.rate, remain: UI.point.goal.remain, reached: UI.point.goal.reached, saving: UI.point.goal.saving, error: UI.point.goal.error, invalid: UI.point.goal.invalid, note: UI.point.goal.note };
@@ -1335,13 +1450,13 @@ function loadPoint(){
     PT = { balance: Number(d.balance || 0), goal: d.goal ? Number(d.goal) : null };
     const entries = d.entries || [];
     const philosophy = '<p class="philo">' + esc(UI.point.philosophy1) + '</p><p class="philo-sub">' + esc(UI.point.philosophy2) + '</p>';
-    if (!entries.length) return { html: philosophy + '<span class="prep">' + esc(UI.point.preparing) + '</span><div class="gl-box" id="goalBox"></div>' + pointUsageHtml(), after: renderGoalBox };
+    if (!entries.length) return { html: philosophy + '<span class="prep">' + esc(UI.point.preparing) + '</span><div class="gl-box" id="goalBox"></div>' + pointUsageHtml() + '<div id="donationBox"></div>', after: () => { renderGoalBox(); renderDonation(); } };
     const rows = entries.map((e) =>
       '<div class="pt-row"><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '<span class="d">' + esc(fmtDate(e.createdAt)) + '</span></div>' +
       '<div class="n">' + (e.delta > 0 ? '+' : '') + Number(e.delta).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</div></div>').join('');
     return { html: philosophy + '<div class="gl-box" id="goalBox"></div>' +
       pointUsageHtml() + '<section class="block" style="margin-top:28px"><h2 class="block-title">' + esc(UI.point.history) + '</h2><div class="block-body">' + rows +
-      (d.hasMore ? '<p class="state empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</div></section>', after: renderGoalBox };
+      (d.hasMore ? '<p class="state empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</div></section><div id="donationBox"></div>', after: () => { renderGoalBox(); renderDonation(); } };
   });
 }
 

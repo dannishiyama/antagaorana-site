@@ -18,6 +18,8 @@ export const POINT_KINDS = {
   ADMIN_ADJUST: 'admin_adjust',
   ADMIN_REVERSAL: 'admin_reversal',
   MORNING_ATTENDANCE: 'morning_attendance', // 朝の集まりに実際に参加したとき（自動／出席訂正）
+  DONATION_HOLD: 'donation_hold', // 社会貢献の申請でポイントを確保（残高から除く）
+  DONATION_RELEASE: 'donation_release', // 申請の却下・取消で、確保したポイントを元に戻す
 };
 
 // 会員本人に見せる名称（運営の個人名・メールアドレスは見せない）。
@@ -26,7 +28,10 @@ export const POINT_KIND_LABELS = {
   admin_adjust: 'ポイントの調整',
   admin_reversal: 'ポイントの取り消し',
   morning_attendance: '朝の集まりへの参加',
+  donation_hold: '社会貢献の申請（ポイントを確保）',
+  donation_release: '社会貢献の申請（確保を解除）',
 };
+const DONATION_KINDS = ['donation_hold', 'donation_release'];
 
 export const MAX_POINTS_PER_OPERATION = 1_000_000;
 export const MAX_REASON_LENGTH = 200;
@@ -140,6 +145,34 @@ export function createPointService({ store = redisPointStore, logAudit = default
     return { ...out, balance: await store.getBalance(target) };
   }
 
+  // 社会貢献の申請：ポイントを確保する（残高から除く）。台帳が正本。残高が足りなければ記録されない（マイナスにならない）。
+  // 同じ idempotencyKey の再送では、1回しか確保されない。
+  async function holdForDonation({ email, amount, idempotencyKey, reason, refId, actorId }) {
+    const target = normalizeEmail(email);
+    const n = parseAmount(amount, { allowNegative: false });
+    if (!/^[A-Za-z0-9_:.@+-]{8,200}$/.test(String(idempotencyKey || ''))) throw new PointError('invalid_request_id', '操作キーが不正です。');
+    const result = await store.appendEntry({
+      email: target, delta: -n, kind: POINT_KINDS.DONATION_HOLD, reason: parseReason(reason, { required: false }), actorId: actorId || target,
+      idempotencyKey: `donation:${idempotencyKey}`, refType: 'donation', refId: refId || null, allowNegative: false,
+    });
+    const out = resolveAppend(result, { email: target, delta: -n, kind: POINT_KINDS.DONATION_HOLD });
+    return { ...out, balance: await store.getBalance(target) };
+  }
+  // 確保したポイントを元に戻す（却下・取消）。確保した履歴1行につき、1回しか解除できない（reversalOf）。
+  async function releaseDonationHold({ holdEntryId, idempotencyKey, reason, actorId }) {
+    const hold = await store.getEntry(String(holdEntryId || ''));
+    if (!hold || hold.kind !== POINT_KINDS.DONATION_HOLD) throw new PointError('not_found', '確保した履歴が見つかりません。', 404);
+    const delta = -hold.delta;
+    const result = await store.appendEntry({
+      email: hold.email, delta, kind: POINT_KINDS.DONATION_RELEASE, reason: parseReason(reason, { required: false }), actorId: actorId || 'system',
+      idempotencyKey: `donation:${idempotencyKey}`, reversalOf: hold.id, refType: 'donation', refId: hold.refId, allowNegative: true,
+    });
+    let out;
+    try { out = resolveAppend(result, { email: hold.email, delta, kind: POINT_KINDS.DONATION_RELEASE, reversalOf: hold.id }); }
+    catch (err) { if (err.code === 'already_reversed') return { entry: null, duplicate: true, balance: await store.getBalance(hold.email) }; throw err; }
+    return { ...out, balance: await store.getBalance(hold.email) };
+  }
+
   const isEntryReversed = (id) => store.isReversed(String(id || ''));
   const getEntryById = (id) => store.getEntry(String(id || ''));
 
@@ -164,6 +197,7 @@ export function createPointService({ store = redisPointStore, logAudit = default
     const original = await store.getEntry(String(entryId || ''));
     if (!original) throw new PointError('not_found', '取り消す履歴が見つかりません。', 404);
     if (original.kind === POINT_KINDS.ADMIN_REVERSAL) throw new PointError('not_reversible', '取消の履歴を取り消すことはできません。', 409);
+    if (DONATION_KINDS.includes(original.kind)) throw new PointError('not_reversible', '社会貢献の申請に関する履歴は、「ポイント利用｜申請管理」から操作してください。', 409);
     const reasonText = parseReason(reason, { required: true });
     const rid = parseRequestId(requestId);
     const delta = -original.delta;
@@ -193,9 +227,9 @@ export function createPointService({ store = redisPointStore, logAudit = default
 
   const listRecent = (limit = 100) => store.listRecentEntries(limit);
 
-  return { grantPoints, adjustPoints, reversePoints, awardPoints, isEntryReversed, getEntryById, getBalance, getMemberView, getAdminMemberView, listRecent };
+  return { grantPoints, adjustPoints, reversePoints, awardPoints, holdForDonation, releaseDonationHold, isEntryReversed, getEntryById, getBalance, getMemberView, getAdminMemberView, listRecent };
 }
 
 export const {
-  grantPoints, adjustPoints, reversePoints, awardPoints, isEntryReversed, getEntryById, getBalance, getMemberView, getAdminMemberView, listRecent,
+  grantPoints, adjustPoints, reversePoints, awardPoints, holdForDonation, releaseDonationHold, isEntryReversed, getEntryById, getBalance, getMemberView, getAdminMemberView, listRecent,
 } = createPointService();

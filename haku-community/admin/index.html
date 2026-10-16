@@ -157,6 +157,35 @@ h1{font-size:18px;margin-bottom:4px}
 .post-ops{align-items:center}
 .post-ops-gap{flex:1;min-width:24px}
 .post .row.post-ops .danger{margin-left:auto}
+.dn-btn{display:inline-block;padding:7px 16px;border:1px solid #33472f;background:#fff;color:#33472f;font-size:12.5px;cursor:pointer;text-decoration:none;font-family:inherit}
+.dn-btn.primary{background:#33472f;color:#fff}
+.dn-btn.danger{border-color:#9A3B1F;color:#9A3B1F}
+.dn-btn[disabled]{opacity:.5;cursor:not-allowed}
+.dn-summary{background:#fff;border:1px solid #ddd8cf;padding:12px 16px;margin-bottom:12px;font-size:12.5px;color:#4a473f;line-height:1.9}
+.dn-summary b{color:#1E3A2F}
+.dn-card{background:#fff;border:1px solid #ddd8cf;padding:14px 18px;margin-bottom:12px}
+.dn-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.dn-id{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#4a473f}
+.dn-chip{display:inline-block;font-size:11.5px;border:1px solid #ddd8cf;border-radius:20px;padding:2px 10px;color:#6f6a5b}
+.dn-chip.s-pending{border-color:#C0A05C;color:#8a5a1f;background:#fffaf0}
+.dn-chip.s-approved{border-color:#3E5A4C;color:#1E3A2F;background:#f0f5f1}
+.dn-chip.s-completed{background:#1E3A2F;border-color:#1E3A2F;color:#fff}
+.dn-chip.s-rejected,.dn-chip.s-cancelled{border-color:#d9a58f;color:#9A3B1F}
+.dn-dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 14px;font-size:12.5px;margin:6px 0 10px}
+.dn-dl dt{color:#8a8574}
+.dn-dl dd{margin:0;overflow-wrap:anywhere;color:#2b2926}
+.dn-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.dn-gap{flex:1;min-width:16px}
+.dn-tf{border-top:1px dashed #ddd8cf;margin-top:10px;padding-top:8px}
+.dn-tf .row2{display:flex;gap:10px;flex-wrap:wrap}
+.dn-tf .row2>div{flex:1;min-width:140px}
+.dn-tf label{display:block;font-size:11.5px;color:#8a8574;margin:8px 0 3px}
+.dn-tf input,.dn-card textarea{width:100%;padding:7px 9px;border:1px solid #ccc;font-size:13px;font-family:inherit}
+.dn-msg{min-height:1.3em;font-size:12.5px;margin-top:6px}
+.dn-msg.err{color:#9A3B1F}
+.dn-msg.ok{color:#2f5a3a}
+.dn-card details{margin-top:8px;font-size:12.5px;color:#6f6a5b}
+.dn-card details summary{cursor:pointer}
 .new-badge{display:inline-block;font-size:10.5px;color:#2f5a3a;border:1px solid #2f5a3a;border-radius:20px;padding:1px 8px;margin-left:6px}
 .pay-line b{display:inline}
 #salonSub{display:none}
@@ -232,7 +261,7 @@ h1{font-size:18px;margin-bottom:4px}
             <div class="ng-row" role="group" aria-label="学ぶ"><div class="ng-cat" aria-hidden="true">学ぶ</div><div class="ng-items"><button type="button" class="ni" data-key="notes" data-mode="notes" data-svc="haku">HAKU NOTE・今週の問い｜<wbr>登録・編集</button></div></div>
             <div class="ng-row" role="group" aria-label="ことば"><div class="ng-cat" aria-hidden="true">ことば</div><div class="ng-items"><button type="button" class="ni" data-key="words" data-mode="words" data-svc="haku">HAKUからのことば｜<wbr>登録・編集</button><button type="button" class="ni" data-key="posts" data-mode="posts" data-svc="haku">みんなのことば｜<wbr>投稿管理</button></div></div>
             <div class="ng-row" role="group" aria-label="集う"><div class="ng-cat" aria-hidden="true">集う</div><div class="ng-items"><button type="button" class="ni" data-key="events" data-mode="events" data-svc="haku">イベント｜<wbr>登録・編集</button><button type="button" class="ni" data-key="attendance" data-mode="attendance" data-svc="haku">朝の集まり｜<wbr>出席管理</button></div></div>
-            <div class="ng-row" role="group" aria-label="HAKUポイント"><div class="ng-cat" aria-hidden="true">HAKUポイント</div><div class="ng-items"><button type="button" class="ni" data-key="pts-grant" data-mode="members" data-svc="haku" data-focus="points">ポイント｜<wbr>付与・調整</button><button type="button" class="ni" data-key="tane" data-mode="tane" data-svc="haku">ポイント｜<wbr>履歴・取消</button></div></div>
+            <div class="ng-row" role="group" aria-label="HAKUポイント"><div class="ng-cat" aria-hidden="true">HAKUポイント</div><div class="ng-items"><button type="button" class="ni" data-key="pts-grant" data-mode="members" data-svc="haku" data-focus="points">ポイント｜<wbr>付与・調整</button><button type="button" class="ni" data-key="tane" data-mode="tane" data-svc="haku">ポイント｜<wbr>履歴・取消</button><button type="button" class="ni" data-key="donations" data-mode="donations" data-svc="haku">ポイント｜<wbr>利用申請管理</button></div></div>
             <div class="ng-row" role="group" aria-label="マイページ"><div class="ng-cat" aria-hidden="true">マイページ</div><div class="ng-items"><button type="button" class="ni" data-key="sessions" data-mode="sessions" data-svc="haku">セッション｜<wbr>登録・管理</button></div></div>
           </div>
           <div class="ng ng-salon"><div class="ng-h">灯サロン運営<small>教育者のサロン 灯</small></div>
@@ -545,6 +574,22 @@ h1{font-size:18px;margin-bottom:4px}
       </div>
       <div class="err" id="salonMsg" role="status" aria-live="polite"></div>
       <div id="salonBody"></div>
+    </div>
+
+    <div id="donationsPanel" style="display:none">
+      <p class="note">会員がHAKUポイントを使って申請した「社会貢献」を、確認・承認し、実際の寄付（銀行振込・手動）を記録します。承認だけでは「寄付完了」になりません。振込日・実際の金額・振込先を登録して、「振込完了」にします。会員の方から金銭は集めません。ポイントと円の換算は行いません。</p>
+      <div class="evform dn-filters">
+        <div class="row2"><div><label for="dnStatus">ステータス</label><select id="dnStatus"><option value="">すべて</option><option value="pending">申請中</option><option value="approved">承認済み・振込待ち</option><option value="completed">振込完了</option><option value="rejected">却下</option><option value="cancelled">取消</option></select></div>
+        <div><label for="dnCause">支援先</label><select id="dnCause"><option value="">すべて</option></select></div></div>
+        <div class="row2"><div><label for="dnQ">検索（申請ID・会員名・メール・メモ・参照番号）</label><input type="search" id="dnQ" autocomplete="off"></div>
+        <div><label for="dnSort">並び替え</label><select id="dnSort"><option value="new">申請が新しい順</option><option value="old">申請が古い順</option><option value="points">ポイントの多い順</option></select></div></div>
+        <div class="row2"><div><label for="dnField">対象期間の基準</label><select id="dnField"><option value="created">申請日</option><option value="approved">承認日</option><option value="completed">振込完了日</option></select></div>
+        <div><label for="dnFrom">開始日</label><input type="date" id="dnFrom"></div><div><label for="dnTo">終了日</label><input type="date" id="dnTo"></div></div>
+        <div class="row" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap"><button type="button" id="dnReload" class="dn-btn">この条件で表示する</button><a id="dnCsv" class="dn-btn dn-link" href="#" download>この条件でCSVを出力する</a></div>
+      </div>
+      <div id="dnSummary" class="dn-summary" aria-live="polite"></div>
+      <p class="note" id="dnCount" role="status" aria-live="polite"></p>
+      <div id="dnList"><div class="empty">読み込み中…</div></div>
     </div>
 
     <div id="attendancePanel" style="display:none">
@@ -893,7 +938,7 @@ function fmtPt(n){ return Number(n || 0).toLocaleString('ja-JP'); }
 function newRequestId(){
   return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : ('r' + Date.now() + Math.random().toString(36).slice(2, 10));
 }
-var PT_KIND_LABEL = { admin_grant: '付与', admin_adjust: '調整', admin_reversal: '取消' };
+var PT_KIND_LABEL = { admin_grant: '付与', admin_adjust: '調整', admin_reversal: '取消', morning_attendance: '朝の集まりの参加', donation_hold: '社会貢献の申請（確保）', donation_release: '社会貢献の申請（確保を解除）' };
 var PT_MAX = 1000000;
 function signed(n){ return (n > 0 ? '+' : '') + fmtPt(n) + 'pt'; }
 function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
@@ -1183,7 +1228,7 @@ function escapeHtml(s) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 左の管理メニュー（#adminNav）。会員管理／HAKU Community運営（会員画面の並び順）／灯サロン運営／操作履歴／旧Community管理。
 // パネルのID・中のDOM・API呼び出しは従来のまま。メニューは「どのパネルを、どのサービスで出すか」と「現在地の表示」だけを担当する。
-var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'attendance', 'salon', 'audit'];
+var MODE_PANELS = ['applications', 'members', 'firebase', 'events', 'words', 'notes', 'posts', 'sessions', 'tane', 'donations', 'attendance', 'salon', 'audit'];
 // キー → [親メニュー, 小見出し（サービス・会員画面の区分）, 画面名, サービス, 会員画面での反映先]
 var NAV = {
   'app-haku': ['会員管理', 'HAKU Community', '申請管理', 'haku', 'HAKU Community会員画面：承認 → お支払い → ログイン・利用開始'],
@@ -1196,6 +1241,7 @@ var NAV = {
   events: ['HAKU Community運営', '集う', 'イベント｜登録・編集', 'haku', '会員画面：集う（イベント）・ホーム'],
   attendance: ['HAKU Community運営', '集う', '朝の集まり｜出席管理', 'haku', '会員画面：集う › 朝の集まり（参加の記録）・HAKUポイント'],
   'pts-grant': ['HAKU Community運営', 'HAKUポイント', 'ポイント｜付与・調整', 'haku', '会員画面：HAKUポイント（残高・履歴）。会員を検索して、「HAKUポイントを操作する」から付与・調整します'],
+  donations: ['HAKU Community運営', 'HAKUポイント', 'ポイント｜利用申請管理', 'haku', '会員画面：HAKUポイント › 受け取ったものを、次の誰かへ（社会貢献の申請）'],
   tane: ['HAKU Community運営', 'HAKUポイント', 'ポイント｜履歴・取消', 'haku', '会員画面：HAKUポイント（履歴）。履歴は消さず、取消は相殺の記録になります'],
   sessions: ['HAKU Community運営', 'マイページ', 'セッション｜登録・管理', 'haku', '会員画面：マイページ（セッションの記録）'],
   'salon-posts': ['灯サロン運営', '', '投稿・コメント管理', 'salon', '灯サロン画面：ホーム・各チャンネルの投稿'],
@@ -1220,6 +1266,7 @@ function showPanel(mode, sub){
   if (mode === 'audit') loadAuditLog();
   if (mode === 'salon' && window.SalonAdmin) window.SalonAdmin.open(sub);
   if (mode === 'tane') loadPointsRecent();
+  if (mode === 'donations') loadDonations();
   if (mode === 'attendance') loadAttendance();
   if (mode === 'members') { applyAdminRoleUi(); loadMembers(); }
 }
@@ -1261,6 +1308,107 @@ document.getElementById('navToggle').addEventListener('click', function(){
 });
 // 灯サロン運営の中で、画面側が自動で別の機能を開いた（例：運営ロールが無いとき「運営ロール」から始める）ときも、メニューの表示を合わせる
 window.addEventListener('salon-sub', function(ev){ setNavState(SALON_KEY[ev.detail] || 'salon-posts'); });
+
+// ━━ ポイント利用申請の管理（社会貢献）。API：/api/admin?action=donation-*（サーバー側で、管理者かどうかを確認する）
+var DN_LABEL = { pending: '申請中', approved: '承認済み・振込待ち', completed: '振込完了', rejected: '却下', cancelled: '取消' };
+var dnData = [], dnBusy = false;
+function dnFmt(ms){ return ms ? new Date(ms).toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : ''; }
+function dnQuery(){
+  var p = new URLSearchParams();
+  [['status', 'dnStatus'], ['cause', 'dnCause'], ['q', 'dnQ'], ['sort', 'dnSort'], ['field', 'dnField'], ['from', 'dnFrom'], ['to', 'dnTo']].forEach(function(x){ var v = document.getElementById(x[1]).value; if (v) p.set(x[0], v); });
+  return p.toString();
+}
+function dnSummaryHtml(list){
+  if (!list.length) return '';
+  return list.map(function(c){
+    var st = ['pending', 'approved', 'completed', 'rejected', 'cancelled'].filter(function(k){ return c.statuses[k]; }).map(function(k){ return DN_LABEL[k] + ' <b>' + c.statuses[k].count + '</b>件（' + c.statuses[k].points.toLocaleString('ja-JP') + 'pt）'; }).join('　');
+    return '<div><b>' + escapeHtml(c.causeName) + '</b>：' + st + '　／　寄付金額（振込完了の合計） <b>' + Number(c.completedYen).toLocaleString('ja-JP') + '</b>円</div>';
+  }).join('');
+}
+function dnCardHtml(r){
+  var t = r.transfer || {};
+  var rows = [['会員', escapeHtml(r.memberName || '') + '（' + escapeHtml(r.email) + '）'], ['申請日時', dnFmt(r.createdAt)], ['利用ポイント', Number(r.points).toLocaleString('ja-JP') + ' pt（' + (r.holdState === 'held' ? '確保中' : r.holdState === 'consumed' ? '利用確定' : r.holdState === 'released' ? '確保を解除' : '') + '）'], ['支援先', escapeHtml(r.causeName)]];
+  if (r.approvedAt) rows.push(['承認日時', dnFmt(r.approvedAt)]);
+  if (r.rejectedAt) rows.push(['却下日時', dnFmt(r.rejectedAt) + '　理由：' + escapeHtml(r.rejectReason || '')]);
+  if (r.cancelledAt) rows.push(['取消日時', dnFmt(r.cancelledAt) + '　理由：' + escapeHtml(r.cancelReason || '') + (r.cancelledAfterApproval ? '（承認後の例外取消）' : '')]);
+  if (t.amountYen) rows.push(['寄付金額（円）', Number(t.amountYen).toLocaleString('ja-JP') + ' 円'], ['振込日', escapeHtml(t.date)], ['振込先', escapeHtml(t.destination)], ['振込控えの参照番号', escapeHtml(t.reference || '—')]);
+  if (r.completedAt) rows.push(['振込完了日時', dnFmt(r.completedAt)]);
+  if (r.handledBy) rows.push(['処理した管理者', escapeHtml(r.handledBy)]);
+  var acts = '';
+  if (r.status === 'pending') acts = '<button class="dn-btn primary" data-dn="approve">承認する</button><button class="dn-btn danger" data-dn="reject">理由をつけて却下する</button><span class="dn-gap"></span><button class="dn-btn" data-dn="cancel">取消（未処理）</button>';
+  if (r.status === 'approved') acts = '<div class="dn-tf"><div class="row2"><div><label>寄付金額（円）</label><input type="number" min="1" step="1" inputmode="numeric" data-f="amountYen" value="' + escapeHtml(t.amountYen || '') + '"></div><div><label>振込日</label><input type="date" data-f="date" value="' + escapeHtml(t.date || '') + '"></div></div>' +
+    '<div class="row2"><div><label>振込先</label><input type="text" maxlength="80" data-f="destination" value="' + escapeHtml(t.destination || '') + '"></div><div><label>振込控えの参照番号（任意）</label><input type="text" maxlength="60" data-f="reference" value="' + escapeHtml(t.reference || '') + '"></div></div>' +
+    '<div class="dn-acts"><button class="dn-btn" data-dn="transfer">振込情報を登録する</button><button class="dn-btn primary" data-dn="complete"' + (t.amountYen ? '' : ' disabled') + '>振込完了にする</button><span class="dn-gap"></span><button class="dn-btn danger" data-dn="exception">承認後の取消（例外処理）</button></div></div>';
+  return '<div class="dn-top"><span class="dn-id">' + escapeHtml(r.id) + '</span><span class="dn-chip s-' + escapeHtml(r.status) + '">' + escapeHtml(r.statusLabel || DN_LABEL[r.status]) + '</span></div>' +
+    '<dl class="dn-dl">' + rows.map(function(x){ return '<dt>' + x[0] + '</dt><dd>' + x[1] + '</dd>'; }).join('') + '</dl>' + (acts ? '<div class="dn-acts">' + (r.status === 'approved' ? '' : acts) + '</div>' + (r.status === 'approved' ? acts : '') : '') +
+    '<div class="dn-tf"><label>管理者メモ</label><textarea rows="2" maxlength="500" data-f="memo">' + escapeHtml(r.memo || '') + '</textarea><div class="dn-acts"><button class="dn-btn" data-dn="note">メモを保存する</button></div></div>' +
+    '<div class="dn-msg" role="status" aria-live="polite"></div><details data-dn-log><summary>操作履歴を見る</summary><div class="dn-log"></div></details>';
+}
+function renderDonations(){
+  var box = document.getElementById('dnList');
+  document.getElementById('dnCount').textContent = '該当 ' + dnData.length + '件（1件＝' + (window.DN_POINTS || 1000).toLocaleString('ja-JP') + 'pt。対象期間は、上の基準日で絞り込みます）';
+  if (!dnData.length) { box.innerHTML = '<div class="empty">該当する申請はありません。</div>'; return; }
+  box.innerHTML = '';
+  dnData.forEach(function(r){
+    var el = document.createElement('div'); el.className = 'dn-card'; el.dataset.id = r.id; el.innerHTML = dnCardHtml(r); box.appendChild(el);
+    el.querySelectorAll('[data-dn]').forEach(function(b){ b.addEventListener('click', function(){ dnAct(r, el, b.dataset.dn); }); });
+    el.querySelector('[data-dn-log]').addEventListener('toggle', function(ev){
+      if (!ev.target.open) return; var out = el.querySelector('.dn-log'); out.textContent = '読み込み中…';
+      api('/api/admin?action=donation-detail&id=' + encodeURIComponent(r.id), { method: 'GET' }).then(function(res){
+        if (res.status !== 200) { out.textContent = res.data.error || '読み込めませんでした。'; return; }
+        out.innerHTML = (res.data.log || []).map(function(l){ return '<div>' + dnFmt(l.at) + '　' + escapeHtml(l.actor) + '　' + escapeHtml(l.type) + (l.detail ? '　' + escapeHtml(JSON.stringify(l.detail)) : '') + '</div>'; }).join('') || '履歴はありません。';
+      });
+    });
+  });
+}
+function dnMsg(el, text, kind){ var m = el.querySelector('.dn-msg'); m.textContent = text; m.className = 'dn-msg ' + (kind || ''); }
+function dnAct(r, el, kind){
+  if (dnBusy) return;
+  var body = { id: r.id }, action = 'donation-' + kind;
+  var f = function(n){ var i = el.querySelector('[data-f="' + n + '"]'); return i ? i.value : ''; };
+  if (kind === 'approve' && !confirm(r.id + ' を承認します。確保したポイントが「利用確定」になります。よろしいですか？')) return;
+  if (kind === 'reject' || kind === 'cancel') { var why = prompt((kind === 'reject' ? '却下' : '取消') + 'の理由を入力してください（記録に残ります。確保したポイントは元に戻ります）。', ''); if (!why) return; body.reason = why; }
+  if (kind === 'exception') {
+    var why2 = prompt('【例外処理】承認済みの申請を取り消します。理由を入力してください（確保したポイントは元に戻ります）。', ''); if (!why2) return;
+    var conf = prompt('確認のため、申請IDを入力してください：' + r.id, ''); if (conf !== r.id) { dnMsg(el, '申請IDが一致しないため、取り消しませんでした。', 'err'); return; }
+    action = 'donation-exception-cancel'; body.reason = why2; body.confirm = conf;
+  }
+  if (kind === 'transfer') { body.amountYen = f('amountYen'); body.date = f('date'); body.destination = f('destination'); body.reference = f('reference'); }
+  if (kind === 'complete' && !confirm(r.id + ' を「振込完了」にします。登録した振込情報（金額・振込日・振込先）に間違いはありませんか？')) return;
+  if (kind === 'note') body.memo = f('memo');
+  dnBusy = true; el.querySelectorAll('button').forEach(function(b){ b.disabled = true; });
+  api('/api/admin?action=' + action, { method: 'POST', body: JSON.stringify(body) }).then(function(res){
+    dnBusy = false;
+    if (res.status !== 200) { el.querySelectorAll('button').forEach(function(b){ b.disabled = false; }); if (kind === 'complete' && !(r.transfer && r.transfer.amountYen)) { var cb = el.querySelector('[data-dn=complete]'); if (cb) cb.disabled = true; } dnMsg(el, res.data.error || '処理できませんでした。', 'err'); return; }
+    var i = dnData.findIndex(function(x){ return x.id === r.id; }); if (i >= 0) dnData[i] = res.data.request;
+    var keep = kind === 'transfer' || kind === 'note';
+    if (keep) { el.innerHTML = dnCardHtml(res.data.request); dnRebind(res.data.request, el); dnMsg(el, kind === 'note' ? 'メモを保存しました。' : '振込情報を登録しました。内容を確認して「振込完了にする」を押してください。', 'ok'); }
+    else loadDonations();
+  });
+}
+function dnRebind(r, el){
+  el.querySelectorAll('[data-dn]').forEach(function(b){ b.addEventListener('click', function(){ dnAct(r, el, b.dataset.dn); }); });
+  el.querySelector('[data-dn-log]').addEventListener('toggle', function(ev){ if (ev.target.open) { var out = el.querySelector('.dn-log'); api('/api/admin?action=donation-detail&id=' + encodeURIComponent(r.id), { method: 'GET' }).then(function(res){ out.innerHTML = (res.data.log || []).map(function(l){ return '<div>' + dnFmt(l.at) + '　' + escapeHtml(l.actor) + '　' + escapeHtml(l.type) + '</div>'; }).join(''); }); } });
+}
+function loadDonations(){
+  var box = document.getElementById('dnList'); box.innerHTML = '<div class="empty">読み込み中…</div>';
+  var qs = dnQuery();
+  document.getElementById('dnCsv').href = '/api/admin?action=donation-csv' + (qs ? '&' + qs : '');
+  api('/api/admin?action=donation-list' + (qs ? '&' + qs : ''), { method: 'GET' }).then(function(res){
+    if (res.status === 401) { document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginbox').style.display = 'block'; return; }
+    if (res.status === 403 && res.data.code === 'disabled') { box.innerHTML = '<div class="empty">この環境では、ポイント利用申請はまだ有効になっていません。</div>'; document.getElementById('dnCount').textContent = ''; return; }
+    if (res.status !== 200) { box.innerHTML = '<div class="empty">読み込みに失敗しました。</div>'; return; }
+    window.DN_POINTS = res.data.points;
+    var sel = document.getElementById('dnCause'), cur = sel.value;
+    sel.innerHTML = '<option value="">すべて</option>' + (res.data.causes || []).map(function(c){ return '<option value="' + escapeHtml(c.id) + '">' + escapeHtml(c.name) + (c.status === 'published' ? '' : '（停止中）') + '</option>'; }).join('');
+    sel.value = cur;
+    document.getElementById('dnSummary').innerHTML = dnSummaryHtml(res.data.summary || []);
+    dnData = res.data.requests || []; renderDonations();
+  });
+}
+['dnStatus', 'dnCause', 'dnSort', 'dnField', 'dnFrom', 'dnTo'].forEach(function(id){ document.getElementById(id).addEventListener('change', loadDonations); });
+document.getElementById('dnReload').addEventListener('click', loadDonations);
+(function(){ var t = null; document.getElementById('dnQ').addEventListener('input', function(){ clearTimeout(t); t = setTimeout(loadDonations, 300); }); })();
 
 // 出席の管理（朝の集まり・出席）。通常運用は、Google Meetの参加履歴との自動の照合。ここは確認状況と、例外対応（出席訂正）。
 var ATT_KIND = { signedin: 'Googleアカウント（未確認）', anonymous: '匿名の参加', phone: '電話での参加', unknown: '不明' };
