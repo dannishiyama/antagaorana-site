@@ -59,6 +59,7 @@ import { cancelSalonMembership, BillingError } from './_lib/salon-billing.js';
 import { getStampDates } from './_lib/morning-attendance.js';
 import { mail as salonMail } from './_lib/salon-mail.js';
 import { getMemberView } from './_lib/points.js';
+import { getGoal, setGoal, GoalError } from './_lib/point-goal.js';
 import {
   MORNING_CONFIG, MORNING_BLOCK_MESSAGES, jstToday, isValidMonth, addDays, monthDates, viewableMonthRange,
   joinBlock, leaveBlock, buildMorningDays, joinOpenFrom,
@@ -122,7 +123,8 @@ export default async function handler(req, res) {
     if (action === 'points-me') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       const session = await requireHakuMembership(req, res); if (!session) return;
-      return res.status(200).json({ ok: true, ...(await getMemberView(session.email, { limit: 50 })) });
+      // 目標は台帳とは別に保存された、会員本人だけの値（残高・履歴とは独立）
+      return res.status(200).json({ ok: true, ...(await getMemberView(session.email, { limit: 50 })), goal: await getGoal(session.email) });
     }
     if (action === 'events-list') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -235,6 +237,13 @@ export default async function handler(req, res) {
     if (action === 'events-leave') {
       const session = await requireHakuMembership(req, res); if (!session) return;
       return await handleEventsLeave(req, res, body, session);
+    }
+    // HAKUポイントの個人目標（本人のセッションのメールアドレスだけが対象。残高・履歴は変更しない。goal:null で解除）
+    if (action === 'points-goal-set') {
+      if (!(await rateLimitGuard(req, res, { key: 'points-goal-set', limit: 20, windowSeconds: 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      try { return res.status(200).json({ ok: true, goal: await setGoal(session.email, body.goal) }); }
+      catch (err) { if (err instanceof GoalError) return res.status(400).json({ error: err.message, code: err.code }); throw err; }
     }
     if (action === 'morning-join') {
       if (!(await rateLimitGuard(req, res, { key: 'morning-join', limit: 30, windowSeconds: 60 }))) return;

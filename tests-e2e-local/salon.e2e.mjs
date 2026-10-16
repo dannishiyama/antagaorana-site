@@ -504,15 +504,15 @@ console.log('■ 11. 管理画面（灯 サロン運営）');
   eq('メニューのグループ（親メニュー5つ・旧Communityは最後）', await p.locator('#adminNav .ng-h').evaluateAll((els) => els.map((e) => e.childNodes[0].textContent.trim())), ['会員管理', 'HAKU Community運営', '灯サロン運営', '操作履歴', '旧Community管理']);
   eq('会員管理の項目（HAKU・灯とも同じ名前）', await NAVQ('#adminNav .ng-common .ni'), ['申請管理', '会員一覧・検索', '申請管理', '会員一覧・検索']);
   eq('会員管理の小見出し', await NAVQ('#adminNav .ng-common .ng-sub'), ['HAKU Community', '灯サロン']);
-  eq('HAKU Community運営の項目（会員画面の並び順）', await NAVQ('#adminNav .ng-haku .ni'), ['HAKU NOTE・今週の問い 登録・編集', 'HAKUからのことば 登録・編集', 'みんなのことば 投稿管理', 'イベント登録・編集', '朝の集まり 出席確認・管理', 'HAKUポイント 付与・調整', 'HAKUポイント 履歴・取消', 'セッション登録・管理']);
-  eq('HAKU Community運営の区分', await NAVQ('#adminNav .ng-haku .ng-sub'), ['学ぶ', 'ことば', '集う', 'HAKUポイント', 'マイページ']);
+  eq('HAKU Community運営の項目（会員画面の並び順）', await NAVQ('#adminNav .ng-haku .ni'), ['HAKU NOTE・今週の問い｜登録・編集', 'HAKUからのことば｜登録・編集', 'みんなのことば｜投稿管理', 'イベント｜登録・編集', '朝の集まり｜出席管理', 'ポイント｜付与・調整', 'ポイント｜履歴・取消', 'セッション｜登録・管理']);
+  eq('HAKU Community運営の区分', await NAVQ('#adminNav .ng-haku .ng-cat'), ['学ぶ', 'ことば', '集う', 'HAKUポイント', 'マイページ']);
   eq('灯サロン運営の項目（申請・会員・履歴は含まない）', await NAVQ('#adminNav .ng-salon .ni'), ['投稿・コメント管理', '今月の一条 設定', '講義アーカイブ 登録・編集', 'お知らせ・イベント 登録・編集', '運営ロール']);
   eq('操作履歴の項目', await NAVQ('#adminNav .ng-log .ni'), ['HAKU Community', '灯サロン']);
   eq('旧Communityは、メニューの一番後ろ', await p.evaluate(() => document.querySelector('#adminNav .ng:last-child').className.includes('ng-legacy') && document.querySelector('#adminNav .ng:last-child .ni').textContent), '旧Community（拓）管理');
   const cr3 = () => p.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbSub').textContent, document.getElementById('crumbPage').textContent, document.getElementById('crumb').dataset.svc]);
   eq('現在地：最初は「会員管理 › HAKU Community › 申請管理」で、そのパネルだけが出る', [await cr3(), await panels(), await p.locator('#adminNav .ni.on').allInnerTexts()], [['会員管理', 'HAKU Community', '申請管理', 'haku'], ['applicationsPanel'], ['申請管理']]);
   await p.click('#adminNav [data-key="events"]'); await p.fill('#evTitle', '入力途中のタイトル');
-  const HK = [['events', 'eventsPanel', 'イベント登録・編集', '集う'], ['attendance', 'attendancePanel', '朝の集まり 出席確認・管理', '集う'], ['words', 'wordsPanel', 'HAKUからのことば 登録・編集', 'ことば'], ['notes', 'notesPanel', 'HAKU NOTE・今週の問い 登録・編集', '学ぶ'], ['posts', 'postsPanel', 'みんなのことば 投稿管理', 'ことば'], ['sessions', 'sessionsPanel', 'セッション登録・管理', 'マイページ'], ['tane', 'tanePanel', 'HAKUポイント 履歴・取消', 'HAKUポイント'], ['pts-grant', 'membersPanel', 'HAKUポイント 付与・調整', 'HAKUポイント'], ['events', 'eventsPanel', 'イベント登録・編集', '集う']];
+  const HK = [['events', 'eventsPanel', 'イベント｜登録・編集', '集う'], ['attendance', 'attendancePanel', '朝の集まり｜出席管理', '集う'], ['words', 'wordsPanel', 'HAKUからのことば｜登録・編集', 'ことば'], ['notes', 'notesPanel', 'HAKU NOTE・今週の問い｜登録・編集', '学ぶ'], ['posts', 'postsPanel', 'みんなのことば｜投稿管理', 'ことば'], ['sessions', 'sessionsPanel', 'セッション｜登録・管理', 'マイページ'], ['tane', 'tanePanel', 'ポイント｜履歴・取消', 'HAKUポイント'], ['pts-grant', 'membersPanel', 'ポイント｜付与・調整', 'HAKUポイント'], ['events', 'eventsPanel', 'イベント｜登録・編集', '集う']];
   for (const [k, panel, label, sec] of HK) {
     await p.click(`#adminNav [data-key="${k}"]`);
     eq(`${label}：そのパネルだけが出て、現在地は「HAKU Community運営 › ${sec} › ${label}」`, [await panels(), await cr3(), await p.locator('#adminNav .ni.on').allInnerTexts()], [[panel], ['HAKU Community運営', sec, label, 'haku'], [label]]);

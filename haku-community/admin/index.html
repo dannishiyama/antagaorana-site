@@ -126,6 +126,13 @@ h1{font-size:18px;margin-bottom:4px}
 #adminNav .ni:hover{background:#f3efe6}
 #adminNav .ni:focus-visible{outline:2px solid #8c692c;outline-offset:-2px}
 #adminNav .ni.on{background:var(--c);color:#fff;font-weight:700}
+.ng-haku .ng-row{display:grid;grid-template-columns:34px minmax(0,1fr);margin:0 8px 0 10px;border-top:1px solid #e7e1d4}
+.ng-haku .ng-h + .ng-row{border-top:0}
+.ng-haku .ng-cat{display:flex;align-items:center;justify-content:center;padding:8px 0;border-right:2px solid #C0A05C;font-size:11.5px;font-weight:700;letter-spacing:.12em;color:#1E3A2F;writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;user-select:none}
+.ng-haku .ng-items{display:flex;flex-direction:column;min-width:0}
+.ng-haku .ng-items .ni{padding:9px 10px 9px 12px;min-height:40px;font-size:12.5px;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
+@media (max-width:760px){.ng-haku .ng-items .ni{min-height:44px}}
+
 .ng-legacy .ni{font-size:12px;color:#6f6a5b}
 .ng-legacy .ni.on{color:#fff}
 .content{flex:1;min-width:0}
@@ -146,6 +153,10 @@ h1{font-size:18px;margin-bottom:4px}
 .ptools{padding:12px 16px;margin-bottom:12px}
 .ptools .attrow>div{min-width:0}
 .ptools input,.ptools select{min-width:0}
+.pub-badge{display:inline-block;font-size:10.5px;color:#6f6a5b;border:1px solid #d6cfbf;border-radius:20px;padding:1px 8px;margin-left:6px}
+.post-ops{align-items:center}
+.post-ops-gap{flex:1;min-width:24px}
+.post .row.post-ops .danger{margin-left:auto}
 .new-badge{display:inline-block;font-size:10.5px;color:#2f5a3a;border:1px solid #2f5a3a;border-radius:20px;padding:1px 8px;margin-left:6px}
 .pay-line b{display:inline}
 #salonSub{display:none}
@@ -217,20 +228,12 @@ h1{font-size:18px;margin-bottom:4px}
             <button type="button" class="ni" data-key="app-salon" data-mode="salon" data-sub="applications" data-svc="salon">申請管理</button>
             <button type="button" class="ni" data-key="mem-salon" data-mode="members" data-svc="salon">会員一覧・検索</button>
           </div>
-          <div class="ng ng-haku"><div class="ng-h">HAKU Community運営<small>会員画面の並び順</small></div>
-            <div class="ng-sub">学ぶ</div>
-            <button type="button" class="ni" data-key="notes" data-mode="notes" data-svc="haku">HAKU NOTE・今週の問い 登録・編集</button>
-            <div class="ng-sub">ことば</div>
-            <button type="button" class="ni" data-key="words" data-mode="words" data-svc="haku">HAKUからのことば 登録・編集</button>
-            <button type="button" class="ni" data-key="posts" data-mode="posts" data-svc="haku">みんなのことば 投稿管理</button>
-            <div class="ng-sub">集う</div>
-            <button type="button" class="ni" data-key="events" data-mode="events" data-svc="haku">イベント登録・編集</button>
-            <button type="button" class="ni" data-key="attendance" data-mode="attendance" data-svc="haku">朝の集まり 出席確認・管理</button>
-            <div class="ng-sub">HAKUポイント</div>
-            <button type="button" class="ni" data-key="pts-grant" data-mode="members" data-svc="haku" data-focus="points">HAKUポイント 付与・調整</button>
-            <button type="button" class="ni" data-key="tane" data-mode="tane" data-svc="haku">HAKUポイント 履歴・取消</button>
-            <div class="ng-sub">マイページ</div>
-            <button type="button" class="ni" data-key="sessions" data-mode="sessions" data-svc="haku">セッション登録・管理</button>
+          <div class="ng ng-haku"><div class="ng-h">HAKU Community運営</div>
+            <div class="ng-row" role="group" aria-label="学ぶ"><div class="ng-cat" aria-hidden="true">学ぶ</div><div class="ng-items"><button type="button" class="ni" data-key="notes" data-mode="notes" data-svc="haku">HAKU NOTE・今週の問い｜<wbr>登録・編集</button></div></div>
+            <div class="ng-row" role="group" aria-label="ことば"><div class="ng-cat" aria-hidden="true">ことば</div><div class="ng-items"><button type="button" class="ni" data-key="words" data-mode="words" data-svc="haku">HAKUからのことば｜<wbr>登録・編集</button><button type="button" class="ni" data-key="posts" data-mode="posts" data-svc="haku">みんなのことば｜<wbr>投稿管理</button></div></div>
+            <div class="ng-row" role="group" aria-label="集う"><div class="ng-cat" aria-hidden="true">集う</div><div class="ng-items"><button type="button" class="ni" data-key="events" data-mode="events" data-svc="haku">イベント｜<wbr>登録・編集</button><button type="button" class="ni" data-key="attendance" data-mode="attendance" data-svc="haku">朝の集まり｜<wbr>出席管理</button></div></div>
+            <div class="ng-row" role="group" aria-label="HAKUポイント"><div class="ng-cat" aria-hidden="true">HAKUポイント</div><div class="ng-items"><button type="button" class="ni" data-key="pts-grant" data-mode="members" data-svc="haku" data-focus="points">ポイント｜<wbr>付与・調整</button><button type="button" class="ni" data-key="tane" data-mode="tane" data-svc="haku">ポイント｜<wbr>履歴・取消</button></div></div>
+            <div class="ng-row" role="group" aria-label="マイページ"><div class="ng-cat" aria-hidden="true">マイページ</div><div class="ng-items"><button type="button" class="ni" data-key="sessions" data-mode="sessions" data-svc="haku">セッション｜<wbr>登録・管理</button></div></div>
           </div>
           <div class="ng ng-salon"><div class="ng-h">灯サロン運営<small>教育者のサロン 灯</small></div>
             <button type="button" class="ni" data-key="salon-posts" data-mode="salon" data-sub="posts" data-svc="salon">投稿・コメント管理</button>
@@ -1187,14 +1190,14 @@ var NAV = {
   'mem-haku': ['会員管理', 'HAKU Community', '会員一覧・検索', 'haku', 'HAKU Community会員画面：ログイン・利用資格・HAKUポイント'],
   'app-salon': ['会員管理', '灯サロン', '申請管理', 'salon', '灯サロン画面：承認 → お支払い → ログイン・利用開始'],
   'mem-salon': ['会員管理', '灯サロン', '会員一覧・検索', 'salon', '灯サロン画面：ログイン・利用資格'],
-  notes: ['HAKU Community運営', '学ぶ', 'HAKU NOTE・今週の問い 登録・編集', 'haku', '会員画面：学ぶ（HAKU NOTE）・ホームの「今週の問い」'],
-  words: ['HAKU Community運営', 'ことば', 'HAKUからのことば 登録・編集', 'haku', '会員画面：ことば（HAKUからのことば）・ホーム'],
-  posts: ['HAKU Community運営', 'ことば', 'みんなのことば 投稿管理', 'haku', '会員画面：ことば（会員のことば）・ホーム'],
-  events: ['HAKU Community運営', '集う', 'イベント登録・編集', 'haku', '会員画面：集う（イベント）・ホーム'],
-  attendance: ['HAKU Community運営', '集う', '朝の集まり 出席確認・管理', 'haku', '会員画面：集う › 朝の集まり（参加の記録）・HAKUポイント'],
-  'pts-grant': ['HAKU Community運営', 'HAKUポイント', 'HAKUポイント 付与・調整', 'haku', '会員画面：HAKUポイント（残高・履歴）。会員を検索して、「HAKUポイントを操作する」から付与・調整します'],
-  tane: ['HAKU Community運営', 'HAKUポイント', 'HAKUポイント 履歴・取消', 'haku', '会員画面：HAKUポイント（履歴）。履歴は消さず、取消は相殺の記録になります'],
-  sessions: ['HAKU Community運営', 'マイページ', 'セッション登録・管理', 'haku', '会員画面：マイページ（セッションの記録）'],
+  notes: ['HAKU Community運営', '学ぶ', 'HAKU NOTE・今週の問い｜登録・編集', 'haku', '会員画面：学ぶ（HAKU NOTE）・ホームの「今週の問い」'],
+  words: ['HAKU Community運営', 'ことば', 'HAKUからのことば｜登録・編集', 'haku', '会員画面：ことば（HAKUからのことば）・ホーム'],
+  posts: ['HAKU Community運営', 'ことば', 'みんなのことば｜投稿管理', 'haku', '会員画面：ことば（会員のことば）・ホーム'],
+  events: ['HAKU Community運営', '集う', 'イベント｜登録・編集', 'haku', '会員画面：集う（イベント）・ホーム'],
+  attendance: ['HAKU Community運営', '集う', '朝の集まり｜出席管理', 'haku', '会員画面：集う › 朝の集まり（参加の記録）・HAKUポイント'],
+  'pts-grant': ['HAKU Community運営', 'HAKUポイント', 'ポイント｜付与・調整', 'haku', '会員画面：HAKUポイント（残高・履歴）。会員を検索して、「HAKUポイントを操作する」から付与・調整します'],
+  tane: ['HAKU Community運営', 'HAKUポイント', 'ポイント｜履歴・取消', 'haku', '会員画面：HAKUポイント（履歴）。履歴は消さず、取消は相殺の記録になります'],
+  sessions: ['HAKU Community運営', 'マイページ', 'セッション｜登録・管理', 'haku', '会員画面：マイページ（セッションの記録）'],
   'salon-posts': ['灯サロン運営', '', '投稿・コメント管理', 'salon', '灯サロン画面：ホーム・各チャンネルの投稿'],
   'salon-creed': ['灯サロン運営', '', '今月の一条 設定', 'salon', '灯サロン画面：今月の一条・紹介ページの印'],
   'salon-lectures': ['灯サロン運営', '', '講義アーカイブ 登録・編集', 'salon', '灯サロン画面：実践講義アーカイブ'],
@@ -1612,16 +1615,16 @@ function renderPosts(){
     el.className = 'post';
     el.innerHTML =
       '<span class="cat">' + escapeHtml(POST_CATEGORY_LABEL_MAP[p.category] || p.category) + '</span>' +
-      (p.status === 'hidden' ? '<span class="hidden-badge">非表示中</span>' : '') +
+      (p.status === 'hidden' ? '<span class="hidden-badge">非表示中</span>' : '<span class="pub-badge">公開中</span>') +
       (p.createdAt > seenAt ? '<span class="new-badge">新着</span>' : '') +
       '<div class="meta">' + escapeHtml(p.displayName) + '（' + escapeHtml(p.authorEmail) + '） ・ ' + new Date(p.createdAt).toLocaleString('ja-JP') + '</div>' +
       (p.title ? '<b style="display:block;margin-bottom:6px">' + escapeHtml(p.title) + '</b>' : '') +
       '<div class="body">' + escapeHtml(p.body) + '</div>' +
-      '<div class="row">' +
+      '<div class="row post-ops">' +
         (p.status === 'hidden'
           ? '<button class="restore">再表示する</button>'
           : '<button class="hide">非表示にする</button>') +
-        '<button class="danger delete">削除する</button>' +
+        '<span class="post-ops-gap" aria-hidden="true"></span><button class="danger delete">削除する</button>' +
       '</div>';
     var hideBtn = el.querySelector('.hide');
     var restoreBtn = el.querySelector('.restore');

@@ -118,7 +118,7 @@ console.log('■ 管理画面：朝の集まり・出席（出席訂正・確認
   await page.fill('#adminemail', ADMIN.email); await page.fill('#adminpw', ADMIN.password);
   await page.click('#loginbtn'); await page.waitForSelector('#adminPanel', { state: 'visible' });
   await page.click('#adminNav [data-key="attendance"]');
-  eq('現在地：HAKU Community運営 › 集う › 朝の集まり 出席確認・管理', await page.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbPage').textContent]), ['HAKU Community運営', '朝の集まり 出席確認・管理']);
+  eq('現在地：HAKU Community運営 › 集う › 朝の集まり｜出席管理', await page.evaluate(() => [document.getElementById('crumbSvc').textContent, document.getElementById('crumbPage').textContent]), ['HAKU Community運営', '朝の集まり｜出席管理']);
   await page.fill('#attDate', date); await page.click('#attLoad');
   await page.waitForSelector(`#attMembers [data-email="${M1}"]`);
   const st = await page.locator('#attStatus').innerText();
