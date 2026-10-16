@@ -349,17 +349,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .step{padding:24px 22px;box-shadow:0 1px 0 rgba(30,58,47,.05),0 10px 24px -18px rgba(30,58,47,.35)}
 .step-kicker{text-transform:none}
 .step-lead{font-size:19px}
-.home-pt{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px 18px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
-.home-pt:empty{display:none}
-.home-pt .hp-plant{flex:none;width:52px;height:52px}
-.home-pt .hp-main{flex:1;min-width:0}
-.home-pt .hp-ttl{font-size:12.5px;font-weight:700;color:var(--gold-ink);letter-spacing:.06em}
-.home-pt .hp-now{margin-top:1px;font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--green-deep);font-weight:700;font-variant-numeric:tabular-nums}
-.home-pt .hp-now small{display:block;font-family:var(--sans,inherit);font-size:12.5px;font-weight:400;line-height:1.6;color:var(--ink2)}
-.home-pt .gl-bar{margin-top:6px}
-.home-pt .hp-sub{margin-top:4px;font-size:12.5px;color:var(--ink2)}
-.home-pt .btn-text{flex:none}
-.gl-box{margin-top:34px;padding:20px 20px 22px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.gl-box{margin-top:30px;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.gl-cur{padding:20px 22px 16px;background:var(--green-pale);border-bottom:1px solid var(--line)}
+.gl-cur-l{font-size:13px;color:var(--ink2)}
+.gl-cur-n{margin-top:2px;font-family:var(--serif);font-size:34px;line-height:1.3;font-weight:700;color:var(--green-deep);font-variant-numeric:tabular-nums}
+.gl-cur-n span{font-size:16px;font-weight:400;color:var(--ink2)}
+.gl-goal{padding:20px 22px 22px}
 .gl-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--green-deep);letter-spacing:.03em}
 .gl-lead{margin-top:2px;font-size:13px;color:var(--ink2)}
 .gl-main{display:flex;align-items:center;gap:20px;margin-top:14px}
@@ -367,7 +362,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .gl-stats{flex:1;min-width:0}
 .gl-row{display:flex;flex-wrap:wrap;gap:2px 18px;font-size:13.5px;color:var(--ink2)}
 .gl-row b{font-family:var(--serif);font-size:20px;color:var(--green-deep);font-variant-numeric:tabular-nums}
-.gl-stage{display:inline-block;margin-top:8px;padding:2px 12px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--ink2)}
+.gl-stage{display:inline-block;padding:2px 12px;border:1px solid var(--line);border-radius:999px;font-size:12.5px;color:var(--ink2)}
 .gl-bar{height:8px;border-radius:999px;background:var(--green-pale);overflow:hidden}
 .gl-bar span{display:block;height:100%;border-radius:999px;background:var(--green);transition:width .5s ease}
 .gl-form{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
@@ -377,11 +372,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .gl-note{margin-top:10px;font-size:12.5px;line-height:1.9;color:var(--ink2)}
 .gl-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:12px}
 .plant .p-ground{fill:var(--line);opacity:.7}
-.plant .p-mound{fill:var(--green-pale);stroke:var(--line);stroke-width:1.5}
+.plant .p-mound{fill:var(--line);stroke:var(--ink2);stroke-width:1.2;stroke-opacity:.35}
 .plant .p-stem,.plant .p-trunk{stroke:var(--green-deep);fill:none;stroke-linecap:round}
 .plant .p-leaf{fill:var(--green)}
 .plant .p-leaf2{fill:var(--green-deep);opacity:.9}
-.plant .p-seed{fill:var(--gold-ink)}
+.plant .p-seed{fill:var(--gold-ink);stroke:var(--green-deep);stroke-width:1.4;stroke-linejoin:round}
+.plant .p-seed-line{fill:none;stroke:var(--green-deep);stroke-width:1.4;stroke-linecap:round;opacity:.55}
+.plant .p-seed-hi{fill:none;stroke:var(--paper);stroke-width:2.2;stroke-linecap:round;opacity:.6}
+.plant .p-pebble{fill:var(--ink2);opacity:.45}
 .plant .p-fl{fill:var(--gold-ink)}
 .plant .p-fl2{fill:var(--gold)}
 @media (prefers-reduced-motion:no-preference){.plant .p-grow{transform-origin:60px 100px;animation:pgrow .7s ease-out both}@keyframes pgrow{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}}
@@ -407,11 +405,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 #p-profile #h-settings{font-size:14px;color:var(--ink2)}
 #p-profile #h-settings::before{width:12px}
 #p-profile .block[aria-labelledby="h-settings"]{margin-top:34px}
-#p-profile .block[aria-labelledby="h-settings"] .sub-title{margin:12px 0 0;font-size:12px;font-weight:700;color:var(--ink2)}
-#p-profile .block[aria-labelledby="h-settings"] .row-link{min-height:44px;font-size:14px}
-@media (min-width:900px){#p-profile .block[aria-labelledby="h-settings"]{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 28px}#p-profile .block[aria-labelledby="h-settings"] #h-settings{grid-column:1/-1}}
-@media (max-width:560px){.gl-main{flex-direction:column;align-items:flex-start;gap:12px}.gl-plant{width:96px;height:96px}.home-pt{padding:12px 14px}}
-</style>
+.set-wrap{margin-top:10px;padding:2px 18px 6px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.set-col{min-width:0;padding-bottom:6px}
+.set-col .sub-title{margin:14px 0 2px;font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.06em}
+.set-col .menu{margin-top:0}
+.set-col .row-link{min-height:46px;font-size:14.5px}
+.set-col .menu li:last-child .row-link{border-bottom:0}
+.set-col .menu:last-child li:last-child .row-link{border-bottom:0}
+.set-col #cancelArea .menu{margin-top:0}
+.set-col .cancel-note{margin-top:8px;padding:10px 0;font-size:13px;color:var(--ink2)}
+@media (min-width:900px){.set-wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:0 36px;padding:2px 24px 8px}.set-col+.set-col{padding-left:36px;border-left:1px solid var(--line)}.set-wrap{gap:0}}
+@media (max-width:560px){.gl-main{flex-direction:column;align-items:flex-start;gap:12px}.gl-stats{width:100%}.gl-plant{width:96px;height:96px}</style>
 </head>
 <body>
 <a class="skip" href="#main">{{t.a11y.skip}}</a>
@@ -453,7 +457,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
         <p class="page-lead">{{t.greet.lead}}</p>
       </div>
       <div class="step" id="homeStep" aria-live="polite"></div>
-      <div class="home-pt" id="homePoint"></div>
 
       <div class="home-group" id="homeWordsGroup">
       <section class="block" aria-labelledby="h-words">
@@ -583,6 +586,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 
       <section class="block" aria-labelledby="h-settings">
         <h2 class="block-title" id="h-settings">{{t.me.settingsTitle}}</h2>
+        <div class="set-wrap"><div class="set-col">
         <div class="sub-title">{{t.me.groupProfile}}</div>
         <ul class="menu" style="margin-top:0">
           <li><button class="row-link" type="button" data-go="profile-settings"><span>{{t.me.profileSettings}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
@@ -594,11 +598,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
           <li><button class="row-link" type="button" data-act="logout"><span>{{t.me.logout}}</span><span class="row-arrow" aria-hidden="true">›</span></button></li>
         </ul>
         <div id="cancelArea"></div>
+        </div><div class="set-col">
         <div class="sub-title">{{t.me.groupSupport}}</div>
         <ul class="menu" style="margin-top:0">
           <li><a class="row-link" href="{{t.contact.mailto}}"><span>{{t.me.contact}}</span><span class="row-arrow" aria-hidden="true">›</span></a></li>
           {{ADMIN_LINK}}
         </ul>
+      </div></div>
       </section>
     </section>
 
@@ -969,7 +975,6 @@ async function renderHomeStep(){
 function loadHome(){
   $('greetTxt').textContent = greeting();
   renderHomeStep();
-  renderHomePoint();
   renderHomeEvents();
   renderHomeNote();
   renderHomeWords();
@@ -1238,7 +1243,6 @@ function refreshEventViews(){
 /* ── HAKUポイントの目標と、植物の成長表現（残高・履歴は台帳のまま。目標は本人の目安だけ） ── */
 let PT = { balance: 0, goal: null };
 const GOALT = { title: UI.point.goal.title, lead: UI.point.goal.lead, empty: UI.point.goal.empty, label: UI.point.goal.label, placeholder: UI.point.goal.placeholder, set: UI.point.goal.set, change: UI.point.goal.change, save: UI.point.goal.save, cancel: UI.point.goal.cancel, clear: UI.point.goal.clear, current: UI.point.goal.current, target: UI.point.goal.target, rate: UI.point.goal.rate, remain: UI.point.goal.remain, reached: UI.point.goal.reached, saving: UI.point.goal.saving, error: UI.point.goal.error, invalid: UI.point.goal.invalid, note: UI.point.goal.note };
-const HOMEC = { title: UI.point.homeCard.title, now: UI.point.homeCard.now, goalOf: UI.point.homeCard.goalOf, noGoal: UI.point.homeCard.noGoal, more: UI.point.homeCard.more };
 const G_STAGES = [UI.point.goal.stage0, UI.point.goal.stage1, UI.point.goal.stage2, UI.point.goal.stage3, UI.point.goal.stage4];
 function ptStage(balance, goal){
   if (!goal || balance <= 0) return 0;
@@ -1248,7 +1252,7 @@ function ptStage(balance, goal){
 function ptRate(balance, goal){ return goal ? Math.min(100, Math.floor(Math.max(0, balance) * 100 / goal)) : 0; }
 function plantSvg(stage, size, label){
   const g = [
-    '<path class="p-mound" d="M36 104c5-13 16-18 24-18s19 5 24 18z"/><ellipse class="p-seed" cx="60" cy="82" rx="9" ry="6" transform="rotate(-20 60 82)"/>',
+    '<g transform="rotate(-12 60 80)"><path class="p-seed" d="M60 52c11 8 17 20 12 32-4 9-20 9-24 0-5-12 1-24 12-32z"/><path class="p-seed-line" d="M60 58c4 8 5 17 1 26"/><path class="p-seed-hi" d="M54 66c-2 5-2 10 0 14"/></g><path class="p-mound" d="M30 106c5-14 17-20 30-20s25 6 30 20z"/><circle class="p-pebble" cx="44" cy="100" r="1.8"/><circle class="p-pebble" cx="73" cy="97" r="1.5"/><circle class="p-pebble" cx="84" cy="102" r="1.6"/>',
     '<path class="p-stem" stroke-width="3" d="M60 100V78"/><path class="p-leaf" d="M60 80c-10-1-16-7-17-15 9 0 16 5 17 15z"/><path class="p-leaf2" d="M60 76c9-1 15-6 16-14-9 0-15 5-16 14z"/>',
     '<path class="p-stem" stroke-width="3" d="M60 100V52"/><path class="p-leaf" d="M60 88c-12-1-19-8-20-17 11 0 19 6 20 17z"/><path class="p-leaf2" d="M60 80c12-1 19-8 20-17-11 0-19 6-20 17z"/><path class="p-leaf" d="M60 66c-10-1-16-7-17-15 9 0 16 5 17 15z"/><path class="p-leaf2" d="M60 58c9-1 15-6 16-14-9 0-15 5-16 14z"/>',
     '<path class="p-trunk" stroke-width="5" d="M60 100V60"/><path class="p-trunk" stroke-width="3" d="M60 78l-12-12M60 72l11-11"/><circle class="p-leaf2" cx="60" cy="44" r="22"/><circle class="p-leaf" cx="43" cy="56" r="15"/><circle class="p-leaf" cx="77" cy="56" r="15"/>',
@@ -1275,20 +1279,21 @@ function renderGoalBox(){
   const box = $('goalBox'); if (!box) return;
   const G = GOALT, unit = UI.point.unit;
   const st = ptStage(PT.balance, PT.goal);
-  let h = '<h2 class="gl-title">' + esc(G.title) + '</h2>';
+  // 現在のポイント（台帳の実残高）は、このカードの先頭に1回だけ出す
+  let h = '<div class="gl-cur"><p class="gl-cur-l">' + esc(UI.point.now) + '</p><p class="gl-cur-n">' + PT.balance.toLocaleString('ja-JP') + '<span> ' + esc(unit) + '</span></p></div>' +
+    '<div class="gl-goal"><h2 class="gl-title">' + esc(G.title) + '</h2>';
   if (!PT.goal) {
     h += '<p class="gl-lead">' + esc(G.lead) + '</p><div class="gl-main"><div class="gl-plant">' + plantSvg(0, 112, G_STAGES[0]) + '</div><div class="gl-stats"><p class="gl-lead" style="margin:0 0 10px">' + esc(G.empty) + '</p>' +
       '<button class="btn btn-quiet" type="button" id="goalOpenBtn">' + esc(G.set) + '</button></div></div><div id="goalFormWrap"></div>';
   } else {
     const remain = Math.max(0, PT.goal - PT.balance), pct = ptRate(PT.balance, PT.goal);
     h += '<div class="gl-main"><div class="gl-plant">' + plantSvg(st, 112, plantLabel()) + '</div><div class="gl-stats">' +
-      '<div class="gl-row"><span>' + esc(G.current) + ' <b>' + PT.balance.toLocaleString('ja-JP') + '</b> ' + esc(unit) + '</span><span>' + esc(G.target) + ' <b>' + PT.goal.toLocaleString('ja-JP') + '</b> ' + esc(unit) + '</span></div>' +
+      '<div class="gl-row"><span>' + esc(G.target) + ' <b>' + PT.goal.toLocaleString('ja-JP') + '</b> ' + esc(unit) + '</span><span>' + (remain > 0 ? esc(G.remain) + ' <b>' + remain.toLocaleString('ja-JP') + '</b> ' + esc(unit) : esc(G.reached)) + '</span></div>' +
       '<div style="margin-top:8px">' + goalBarHtml() + '</div>' +
-      '<div class="gl-row" style="margin-top:6px"><span>' + esc(G.rate) + ' <b>' + pct + '</b>%</span><span>' + (remain > 0 ? esc(G.remain) + ' <b>' + remain.toLocaleString('ja-JP') + '</b> ' + esc(unit) : esc(G.reached)) + '</span></div>' +
-      '<span class="gl-stage">' + esc(G_STAGES[st]) + '</span></div></div>' +
+      '<div class="gl-row" style="margin-top:6px"><span>' + esc(G.rate) + ' <b>' + pct + '</b>%</span><span class="gl-stage">' + esc(G_STAGES[st]) + '</span></div></div></div>' +
       '<div class="gl-actions"><button class="btn btn-quiet" type="button" id="goalOpenBtn">' + esc(G.change) + '</button><button class="btn-text danger" type="button" id="goalClearBtn">' + esc(G.clear) + '</button></div><div id="goalFormWrap"></div>';
   }
-  h += '<p class="gl-note">' + esc(G.note) + '</p>';
+  h += '<p class="gl-note">' + esc(G.note) + '</p></div>';
   box.innerHTML = h;
   const open = $('goalOpenBtn');
   if (open) open.addEventListener('click', () => {
@@ -1316,17 +1321,6 @@ async function saveGoal(value){
   invalidate('points');
   renderGoalBox();
 }
-function renderHomePoint(){
-  const el = $('homePoint'); if (!el) return;
-  data.points().then((d) => {
-    PT = { balance: Number(d.balance || 0), goal: d.goal ? Number(d.goal) : null };
-    const C = HOMEC, G = GOALT, st = ptStage(PT.balance, PT.goal);
-    el.innerHTML = '<div class="hp-plant">' + plantSvg(st, 52, plantLabel()) + '</div><div class="hp-main"><div class="hp-ttl">' + esc(C.title) + '</div>' +
-      '<div class="hp-now">' + PT.balance.toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + (PT.goal ? '<small>' + esc(fmt(C.goalOf, { goal: PT.goal.toLocaleString('ja-JP') })) + '・' + esc(G.rate) + ' ' + ptRate(PT.balance, PT.goal) + '%</small>' : '') + '</div>' +
-      (PT.goal ? goalBarHtml() : '<div class="hp-sub">' + esc(C.noGoal) + '</div>') + '</div>' +
-      '<button class="btn-text" type="button" data-go="point">' + esc(C.more) + '</button>';
-  }).catch(() => { el.innerHTML = ''; }); // 取得できないときは、偽の数字を出さず、何も表示しない
-}
 function pointUsageHtml(){
   return '<section class="block" style="margin-top:34px" aria-labelledby="h-usage"><h2 class="block-title" id="h-usage">' + esc(UI.point.usage.title) + '</h2><div class="block-body"><ul class="use-list">' +
     '<li><b>' + esc(UI.point.usage.item1Title) + '</b><span>' + esc(UI.point.usage.item1Body) + '</span></li>' +
@@ -1345,7 +1339,7 @@ function loadPoint(){
     const rows = entries.map((e) =>
       '<div class="pt-row"><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '<span class="d">' + esc(fmtDate(e.createdAt)) + '</span></div>' +
       '<div class="n">' + (e.delta > 0 ? '+' : '') + Number(e.delta).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</div></div>').join('');
-    return { html: philosophy + '<p class="pt-now">' + esc(UI.point.now) + '<b>' + Number(d.balance || 0).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</b></p><div class="gl-box" id="goalBox"></div>' +
+    return { html: philosophy + '<div class="gl-box" id="goalBox"></div>' +
       pointUsageHtml() + '<section class="block" style="margin-top:28px"><h2 class="block-title">' + esc(UI.point.history) + '</h2><div class="block-body">' + rows +
       (d.hasMore ? '<p class="state empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</div></section>', after: renderGoalBox };
   });

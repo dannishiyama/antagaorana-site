@@ -21,7 +21,7 @@ function check(name, ok, detail) { if (ok) { pass++; console.log('  ✔', name);
 const eq = (name, a, b) => check(name, JSON.stringify(a) === JSON.stringify(b), { actual: a, expected: b });
 const errors = []; let n = 0;
 async function login(email, { width = 1280, height = 900 } = {}) {
-  const ctx = await browser.newContext({ viewport: { width, height }, locale: 'ja-JP', extraHTTPHeaders: { 'x-forwarded-for': `10.40.0.${++n}` } });
+  const ctx = await browser.newContext({ viewport: { width, height }, locale: 'ja-JP', reducedMotion: 'reduce', extraHTTPHeaders: { 'x-forwarded-for': `10.40.0.${++n}` } });
   const page = await ctx.newPage();
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource|ERR_FAILED/.test(m.text())) errors.push(`[${email}] ${m.text()}`); });
   page.on('pageerror', (e) => errors.push(`[${email}] pageerror ${e.message}`));
@@ -38,18 +38,23 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
 console.log('■ HOME：現在のポイント（台帳の実残高）');
 {
   const { ctx, page } = await login(C);
-  await page.waitForSelector('#homePoint .hp-now');
-  check('残高0でも、台帳の実際の値（0 pt）を出す。目標未設定の案内が出る', /^0\s*pt/.test(await page.locator('#homePoint .hp-now').innerText()) && /目標を決めると/.test(await page.locator('#homePoint').innerText()), await page.locator('#homePoint').innerText());
+  await page.waitForSelector('#homeStep .step-lead');
+  check('HOMEには、HAKUポイントの欄（現在ポイント・目標）は出ない', (await page.locator('#homePoint, .home-pt').count()) === 0 && !/現在のポイント|わたしの目標/.test(await page.locator('#p-home').innerText()), await page.locator('#p-home').innerText());
+  await page.goto(base + '/haku-community/home/#point'); await page.waitForSelector('#goalBox .gl-cur-n');
+  check('残高0でも、台帳の実際の値（0 pt）を、目標のカードの先頭に出す', /^0\s*pt/.test(await page.locator('#goalBox .gl-cur-n').innerText()), await page.locator('#goalBox').innerText());
   await ctx.close();
 }
 await pointsMod.grantPoints({ email: A, amount: 30, reason: 'E2E', actorId: 'e2e', requestId: `ux-${Date.now()}` });
 await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2e', requestId: `ux2-${Date.now()}` });
 {
   const { ctx, page } = await login(A);
-  await page.waitForSelector('#homePoint .hp-now');
-  check('HOME：台帳の残高（30 pt）が出る', /^30\s*pt/.test(await page.locator('#homePoint .hp-now').innerText()), await page.locator('#homePoint .hp-now').innerText());
-  eq('HOMEの既存ブロックの順番は変わらない（今日の一歩 → 現在ポイント → ことば → 予定）', await page.evaluate(() => ['homeStep', 'homePoint', 'homeWordsGroup', 'homePlanGroup'].map((i) => document.getElementById(i).getBoundingClientRect().top).every((t, k, a) => k === 0 || t > a[k - 1])), true);
-  await page.click('#homePoint [data-go="point"]'); await page.waitForSelector('#goalBox');
+  await page.waitForSelector('#homeStep .step-lead');
+  check('HOMEには、ポイント欄が出ない', (await page.locator('#homePoint, .home-pt').count()) === 0, null);
+  eq('HOMEの既存ブロックの順番は変わらない（今日の一歩 → ことば → 予定）', await page.evaluate(() => ['homeStep', 'homeWordsGroup', 'homePlanGroup'].map((i) => document.getElementById(i).getBoundingClientRect().top).every((t, k, a) => k === 0 || t > a[k - 1])), true);
+  await page.locator('[data-tab="point"]:visible').first().click(); await page.waitForSelector('#goalBox .gl-cur-n');
+  check('ポイント画面：現在のポイント（台帳の実残高 30 pt）が目標のカードの先頭に出る', /^30\s*pt/.test(await page.locator('#goalBox .gl-cur-n').innerText()), await page.locator('#goalBox .gl-cur-n').innerText());
+  eq('「現在のポイント」表示は1つだけ（重複なし）', await page.locator('#p-point .gl-cur-n, #p-point .pt-now').count(), 1);
+  eq('植物の画像は1つだけ（重複なし）', await page.locator('#p-point svg.plant').count(), 1);
   check('「詳しく見る」でHAKUポイント詳細へ遷移し、目標の空状態が出る', /まだ目標は決めていません/.test(await page.locator('#goalBox').innerText()), await page.locator('#goalBox').innerText());
   eq('空状態の植物は「たね」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), 'たね');
 
@@ -64,7 +69,7 @@ await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2
   await page.fill('#goalInputPt', '100'); await page.click('#goalSaveBtn');
   await page.waitForFunction(() => document.querySelector('#goalBox .gl-row b'));
   const txt = await page.locator('#goalBox').innerText();
-  check('目標100：現在30・目標100・達成率30%・あと70 が出る', /現在\s*30\s*pt/.test(txt) && /目標\s*100\s*pt/.test(txt) && /達成率\s*30%/.test(txt) && /あと\s*70\s*pt/.test(txt), txt);
+  check('目標100：現在30（先頭）・目標100・達成率30%・あと70 が出る', /^30\s*pt/.test(await page.locator('#goalBox .gl-cur-n').innerText()) && /目標\s*100\s*pt/.test(txt) && /達成率\s*30%/.test(txt) && /あと\s*70\s*pt/.test(txt), txt);
   eq('達成率30% → 「芽」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：芽（達成率 30%）');
   eq('プログレスバーの値', await page.locator('#goalBox [role=progressbar]').getAttribute('aria-valuenow'), '30');
   eq('目標を設定しても残高は変わらない', await pointsMod.getBalance(A), bal0);
@@ -78,10 +83,10 @@ await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2
   await page.click('#goalOpenBtn'); await page.fill('#goalInputPt', '10'); await page.click('#goalSaveBtn');
   await page.waitForFunction(() => /達成率\s*100%/.test(document.getElementById('goalBox').innerText));
   check('目標が残高を下回っても、達成率は100%で止まる（超過表示にしない）', /達成率\s*100%/.test(await page.locator('#goalBox').innerText()), null);
-  await page.goto(base + '/haku-community/home/#home'); await page.waitForSelector('#homePoint .hp-now');
-  check('HOMEの現在ポイントにも目標と達成率が反映される', /目標 10 pt/.test(await page.locator('#homePoint').innerText()) && (await page.locator('#homePoint [role=progressbar]').count()) === 1, await page.locator('#homePoint').innerText());
+  await page.goto(base + '/haku-community/home/#home'); await page.waitForSelector('#homeStep .step-lead');
+  check('HOMEには出ない（目標・達成率はHAKUポイント画面だけ）', (await page.locator('#p-home [role=progressbar]').count()) === 0, null);
   eq('目標を何度変えても、ポイント残高・履歴は不変', [await pointsMod.getBalance(A), (await pointsMod.getAdminMemberView(A)).entries.length], [30, 1]);
-  await page.click('#homePoint [data-go="point"]'); await page.waitForSelector('#goalClearBtn');
+  await page.locator('[data-tab="point"]:visible').first().click(); await page.waitForSelector('#goalClearBtn');
   await page.click('#goalClearBtn');
   await page.waitForFunction(() => /まだ目標は決めていません/.test(document.getElementById('goalBox').innerText));
   eq('目標を解除しても、残高は変わらない', await pointsMod.getBalance(A), 30);
@@ -95,14 +100,14 @@ await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2
 console.log('■ 他の会員の目標は見えない／影響しない');
 {
   const { ctx, page } = await login(B);
-  await page.click('[data-go="point"]'); await page.waitForSelector('#goalBox');
+  await page.locator('[data-tab="point"]:visible').first().click(); await page.waitForSelector('#goalBox');
   check('別の会員には、他人の目標は出ない（空状態）', /まだ目標は決めていません/.test(await page.locator('#goalBox').innerText()), null);
   const r = await page.evaluate(async () => { const x = await fetch('/api/community-auth?action=points-goal-set', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ goal: 700, email: 'nishiyama.taro@example.com' }) }); return x.status; });
   eq('メールアドレスを指定しても、本人の目標だけが変わる', r, 200);
   const mine = await page.evaluate(async () => (await (await fetch('/api/community-auth?action=points-me')).json()).goal);
   eq('本人（B）の目標が700', mine, 700);
   await ctx.close();
-  const a = await login(A); await a.page.click('[data-go="point"]'); await a.page.waitForFunction(() => /目標\s*300\s*pt/.test(document.getElementById('goalBox').innerText));
+  const a = await login(A); await a.page.locator('[data-tab="point"]:visible').first().click(); await a.page.waitForFunction(() => /目標\s*300\s*pt/.test(document.getElementById('goalBox').innerText));
   check('Aの目標は300のまま（Bの操作の影響なし）', true, null);
   await a.ctx.close();
 }
@@ -110,10 +115,10 @@ console.log('■ 他の会員の目標は見えない／影響しない');
 console.log('■ スマホ幅390px');
 {
   const { ctx, page } = await login(A, { width: 390, height: 844 });
-  await page.waitForSelector('#homePoint .hp-now');
+  await page.waitForSelector('#homeStep .step-lead');
   check('HOME：横はみ出しなし', !(await overflow(page)), null);
   await page.screenshot({ path: path.join(OUT, 'ux-home-mobile.png'), fullPage: true }).catch(() => {});
-  await page.click('#homePoint [data-go="point"]'); await page.waitForSelector('#goalBox svg.plant');
+  await page.goto(base + '/haku-community/home/#point'); await page.waitForSelector('#goalBox svg.plant');
   check('ポイント詳細：横はみ出しなし', !(await overflow(page)), null);
   await page.screenshot({ path: path.join(OUT, 'ux-point-mobile.png'), fullPage: true }).catch(() => {});
   const sz = await page.evaluate(() => { const b = document.getElementById('goalOpenBtn').getBoundingClientRect(); return b.height >= 44; });
@@ -151,11 +156,18 @@ console.log('■ マイページ：既存の導線をすべて維持');
   eq('表示順（約束 → 記録 → 設定）は維持', order, true);
   const small = await page.evaluate(() => parseFloat(getComputedStyle(document.getElementById('h-settings')).fontSize) < parseFloat(getComputedStyle(document.getElementById('h-recent')).fontSize));
   check('設定とサポートは、わたしの記録より小さく表示される', small, null);
+  const lay = await page.evaluate(() => { const cols = [...document.querySelectorAll('.set-col')]; const r = cols.map((c) => c.getBoundingClientRect()); return { n: cols.length, sameTop: Math.abs(r[0].top - r[1].top) < 2, apart: r[0].right <= r[1].left + 1, rows: [...document.querySelectorAll('.set-col .row-link')].every((e) => e.getBoundingClientRect().height >= 44) }; });
+  eq('PC：設定とサポートは、2つのまとまりが同じ高さから横に並び、各行は44px以上', lay, { n: 2, sameTop: true, apart: true, rows: true });
+  await page.locator('.block[aria-labelledby="h-settings"]').screenshot({ path: path.join(OUT, 'ux-settings-pc.png') }).catch(() => {});
   await page.screenshot({ path: path.join(OUT, 'ux-profile-pc.png'), fullPage: true }).catch(() => {});
   await ctx.close();
   const m = await login(A, { width: 390, height: 844 });
   await m.page.goto(base + '/haku-community/home/#profile'); await m.page.waitForSelector('#h-settings');
   check('マイページ（スマホ）：横はみ出しなし', !(await overflow(m.page)), null);
+  const lay2 = await m.page.evaluate(() => { const cols = [...document.querySelectorAll('.set-col')]; const r = cols.map((c) => c.getBoundingClientRect()); return { stacked: r[1].top >= r[0].bottom - 1, inView: r.every((x) => x.left >= 0 && x.right <= window.innerWidth + 1), rows: [...document.querySelectorAll('.set-col .row-link')].every((e) => e.getBoundingClientRect().height >= 44) }; });
+  eq('スマホ：設定とサポートは縦に積まれ、画面内に収まり、各行は44px以上', lay2, { stacked: true, inView: true, rows: true });
+  await m.page.locator('.block[aria-labelledby="h-settings"]').screenshot({ path: path.join(OUT, 'ux-settings-mobile.png') }).catch(() => {});
+  await m.page.screenshot({ path: path.join(OUT, 'ux-profile-mobile.png'), fullPage: true }).catch(() => {});
   await m.ctx.close();
 }
 

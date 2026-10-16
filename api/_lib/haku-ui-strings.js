@@ -206,7 +206,6 @@ export const UI = {
       stage0: 'たね', stage1: '芽', stage2: '葉', stage3: '木', stage4: '花',
       plantAria: '成長の様子：{stage}（達成率 {rate}%）',
     },
-    homeCard: { title: 'HAKUポイント', now: '現在', goalOf: '目標 {goal} pt', noGoal: '目標を決めると、積み重ねが見えてきます。', more: '詳しく見る' },
     emptyHistory: 'まだ記録はありません。',
     more: '直近{n}件を表示しています。',
     usage: {

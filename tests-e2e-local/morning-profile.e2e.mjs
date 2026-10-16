@@ -183,7 +183,7 @@ console.log('■ E. マイページ → 設定とサポート → プロフィ�
   eq('マイページの見出しは「わたしの記録」（世界観を残す）', await p.locator('#p-profile h1').innerText(), 'わたしの記録');
   const groups = await p.locator('#p-profile .sub-title').allInnerTexts();
   eq('設定とサポートのグループ', groups, ['プロフィール', 'アカウント', 'サポート']);
-  const rows = await p.locator('#p-profile #h-settings ~ ul .row-link span:first-child, #p-profile #cancelArea .row-link span:first-child').allInnerTexts();
+  const rows = await p.locator('#p-profile .set-col .row-link span:first-child').allInnerTexts();
   check('既存の項目が残っている（メール・パスワード・ログアウト・解約・お問い合わせ）', ['メールアドレスを変更', 'パスワードを変更', 'ログアウト', 'HAKU Communityを解約する', '運営へのお問い合わせ'].every((t) => rows.includes(t)), rows);
   await shot(p, { path: path.join(OUT, 'profile-01-mypage.png'), fullPage: true });
   await p.click('[data-go="profile-settings"]'); await p.waitForSelector('#p-profile-settings.active');
