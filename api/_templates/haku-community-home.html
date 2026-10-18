@@ -480,6 +480,51 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
 .dn-onote{margin-top:10px;font-size:12.5px;line-height:1.8;color:var(--ink2)}
 .dn-wrap{overflow-wrap:anywhere;white-space:pre-wrap}
 @media (max-width:560px){.dn-ov{align-items:flex-end;padding:0}.dn-modal{max-width:none;border-radius:16px 16px 0 0;padding-bottom:calc(22px + env(safe-area-inset-bottom))}}
+/* ── 11月に向けた仕上げ：今週の問い・ことば・学び・集う・ポイント・振り返り（配色は灯と共通のまま） ── */
+#homeNote .q-text,#learnCurrent .q-text{padding:4px 0 4px 18px;border-left:3px solid var(--gold);color:var(--green-deep);font-size:20px;line-height:2.05}
+#learnCurrent .q-text{font-size:22px}
+#homeNote .q-meta,#learnCurrent .q-meta,#homeNote .q-supp,#learnCurrent .q-supp{margin-left:21px}
+.arc-kind{display:inline-block;margin-right:8px;padding:0 9px;border:1px solid var(--line);border-radius:999px;font-size:11.5px;color:var(--ink2)}
+.arc-kind.k-audio,.arc-kind.k-video{border-color:rgba(62,90,76,.5);color:var(--green-deep);background:var(--green-pale)}
+#p-words .word{padding:16px 18px;margin-bottom:18px;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:4px 14px 14px 4px}
+#p-words .word-title{font-size:17.5px;color:var(--green-deep)}
+#p-words .word-body{margin-top:8px;font-family:var(--serif);font-size:16.5px;line-height:2.1;color:var(--ink)}
+#p-words .item{padding:22px 0}
+#p-words .post-body{margin-top:8px;font-size:15.5px;line-height:2.05}
+#p-words .post-title{font-size:16.5px}
+.pt-flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:22px}
+.pt-flow .pf-step{padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-size:13px;color:var(--ink2)}
+.pt-flow .pf-main{border-color:var(--green);background:var(--green);color:var(--paper);font-weight:700}
+.pt-flow i{font-style:normal;color:var(--gold-ink)}
+.pt-flow-note{margin-top:10px;font-size:12.5px;line-height:1.9;color:var(--ink2)}
+.mo-cell.went{background:var(--green-pale);border-style:dashed;border-color:rgba(62,90,76,.45)}
+.mo-cell.att{background:var(--green-pale);border-color:var(--green)}
+.mo-cell.att::before{content:'';position:absolute;left:6px;top:5px;width:9px;height:5px;border-left:2px solid var(--green-deep);border-bottom:2px solid var(--green-deep);transform:rotate(-45deg)}
+.mo-legend i.k-went{border-style:dashed;border-color:rgba(62,90,76,.55);background:var(--green-pale)}
+.mo-legend i.k-att{border-color:var(--green);background:var(--green-pale);position:relative}
+.mo-legend i.k-att::after{content:'';position:absolute;left:2px;top:2px;width:7px;height:3px;border-left:2px solid var(--green-deep);border-bottom:2px solid var(--green-deep);transform:rotate(-45deg)}
+.rf-card,.echo-card{padding:18px 20px 16px;background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.echo-card{border-left:3px solid var(--gold)}
+.rf-h{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--green-deep)}
+.rf-dl{margin-top:8px}
+.rf-dl>div{padding:9px 0;border-top:1px solid var(--line)}
+.rf-dl dt{font-size:12.5px;font-weight:700;color:var(--gold-ink)}
+.rf-dl dd{margin-top:2px;font-size:15px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere}
+.rf-empty{margin-top:6px;font-size:14px;color:var(--ink2)}
+.rf-acts{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:12px}
+.rf-gap{flex:1;min-width:16px}
+.rf-l{display:block;margin:14px 0 4px;font-size:13px;font-weight:700;color:var(--green-deep)}
+.rf-form textarea,.echo-card textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.8;font-family:inherit;resize:vertical}
+.rf-form textarea:focus,.echo-card textarea:focus{outline:2px solid var(--green);outline-offset:1px}
+.rf-err{min-height:1.4em;margin-top:6px;font-size:13px;color:var(--terra-ink)}
+.rf-sub{margin:22px 0 6px;font-size:13px;font-weight:700;color:var(--gold-ink);letter-spacing:.05em}
+.rf-past{border-top:1px solid var(--line);padding:2px 0}
+.rf-past:last-of-type{border-bottom:1px solid var(--line)}
+.rf-past summary{padding:12px 2px;min-height:44px;cursor:pointer;font-size:14.5px;color:var(--ink)}
+.rf-note{margin-top:12px;font-size:12.5px;line-height:1.9;color:var(--ink2)}
+.echo-meta{font-size:12.5px;color:var(--ink2)}
+.echo-title{margin-top:6px;font-family:var(--serif);font-size:16px;font-weight:700;color:var(--green-deep)}
+.echo-text{margin-top:6px;font-family:var(--serif);font-size:16.5px;line-height:2.05;white-space:pre-wrap;overflow-wrap:anywhere}
 @media (max-width:560px){.gl-main{flex-direction:column;align-items:flex-start;gap:12px}.gl-stats{width:100%}.gl-plant{width:96px;height:96px}</style>
 </head>
 <body>
@@ -629,6 +674,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--green-deep);outline:2
         <h2 class="block-title" id="h-goals">{{t.me.goalsTitle}}</h2>
         <p class="block-supp" id="goalsLead"></p>
         <div class="block-body"><div id="goalsBody"></div></div>
+      </section>
+
+      <section class="block" id="echoBlock" aria-labelledby="h-echo" hidden>
+        <h2 class="block-title" id="h-echo">{{t.me.reflect.echoTitle}}</h2>
+        <div class="block-body"><div id="echoBody"></div></div>
+      </section>
+
+      <section class="block" aria-labelledby="h-reflect">
+        <h2 class="block-title" id="h-reflect">{{t.me.reflect.title}}</h2>
+        <p class="block-supp">{{t.me.reflect.lead}}</p>
+        <div class="block-body"><div id="reflectBody"></div></div>
       </section>
 
       <div class="rec-group">
@@ -993,7 +1049,7 @@ function renderHomeNote(){
     const n = await data.note();
     if (!n) return stateEmpty(UI.home.noteEmpty);
     return '<p class="q-text">' + esc(n.body) + '</p>' + (n.title ? '<p class="q-meta">' + esc(n.title) + '</p>' : '') +
-      '<div class="actions"><button class="btn-text" type="button" data-go="learn">' + esc(UI.home.noteMore) + '</button></div>';
+      '<div class="actions"><button class="btn-text" type="button" data-go="learn">' + esc(UI.home.noteMore) + '</button><button class="btn-text" type="button" data-act="to-reflect">' + esc(UI.learn.toReflect) + '</button></div>';
   });
 }
 function wordCard(w, compact){
@@ -1053,14 +1109,16 @@ async function loadLearn(){
     if (!n) return stateEmpty(UI.learn.emptyCurrent);
     return '<p class="q-text">' + esc(n.body) + '</p>' +
       '<p class="q-meta">' + esc([n.category, n.title].filter(Boolean).join('・')) + '</p>' +
-      (n.supplement ? '<p class="q-supp">' + esc(n.supplement) + '</p>' : '');
+      (n.supplement ? '<p class="q-supp">' + esc(n.supplement) + '</p>' : '') +
+      '<div class="actions"><button class="btn btn-quiet" type="button" data-act="to-reflect">' + esc(UI.learn.toReflect) + '</button></div>';
   });
   learnOffset = 0;
   loadLearnArchive(true);
 }
 function archiveItem(n){
   const title = n.title || String(n.body || '').slice(0, 40);
-  return '<details class="arc"><summary><span class="arc-title">' + esc(title) + '</span><span class="arc-meta">' + esc([n.category, fmtDate(n.publishFrom)].filter(Boolean).join('・')) + '</span></summary>' +
+  const kind = { note: '文章', audio: '音声', video: '動画', weekly_question: '今週の問い' }[n.type] || '';
+  return '<details class="arc"><summary><span class="arc-title">' + esc(title) + '</span><span class="arc-meta">' + (kind ? '<span class="arc-kind k-' + esc(n.type) + '">' + esc(kind) + '</span>' : '') + esc([n.category, fmtDate(n.publishFrom)].filter(Boolean).join('・')) + '</span></summary>' +
     '<div class="arc-body"><p class="q-supp" style="margin-top:0">' + esc(n.body) + '</p>' + (n.supplement ? '<p class="q-supp">' + esc(n.supplement) + '</p>' : '') + '</div></details>';
 }
 async function loadLearnArchive(reset){
@@ -1305,6 +1363,9 @@ function refreshEventViews(){
 }
 
 /* ═════════ HAKUポイント ═════════ */
+function pointFlowHtml(){
+  return '<div class="pt-flow" role="group" aria-label="' + esc(UI.point.flow2) + '"><span class="pf-step">' + esc(UI.point.flow1) + '</span><i aria-hidden="true">→</i><span class="pf-step pf-main">' + esc(UI.point.flow2) + '</span><i aria-hidden="true">→</i><span class="pf-step">' + esc(UI.point.flow3) + '</span></div><p class="pt-flow-note">' + esc(UI.point.flowNote) + '</p>';
+}
 /* ── 社会貢献への活用（ポイント利用申請）。本番では、運営が有効にするまで出さない ── */
 const DNT = { otherLabel: UI.point.donation.otherLabel, wishLabel: UI.point.donation.wishLabel, urlLabel: UI.point.donation.urlLabel, reasonLabel: UI.point.donation.reasonLabel, required: UI.point.donation.required, optional: UI.point.donation.optional, otherNote: UI.point.donation.otherNote, fWish: UI.point.donation.fWish, fUrl: UI.point.donation.fUrl, fReason: UI.point.donation.fReason, fCondition: UI.point.donation.fCondition, errName: UI.point.donation.errName, errReason: UI.point.donation.errReason, errUrl: UI.point.donation.errUrl, reviewing: UI.point.donation.reviewing, reviewOk: UI.point.donation.reviewOk, title: UI.point.donation.title, lead: UI.point.donation.lead, now: UI.point.donation.now, chooseTitle: UI.point.donation.chooseTitle, noCause: UI.point.donation.noCause, useTitle: UI.point.donation.useTitle, perRequest: UI.point.donation.perRequest, need: UI.point.donation.need, avail: UI.point.donation.avail, after: UI.point.donation.after, short: UI.point.donation.short, confirmBtn: UI.point.donation.confirmBtn, modalTitle: UI.point.donation.modalTitle, fCause: UI.point.donation.fCause, fPoints: UI.point.donation.fPoints, fOrg: UI.point.donation.fOrg, org: UI.point.donation.org, note1: UI.point.donation.note1, note2: UI.point.donation.note2, note3: UI.point.donation.note3, note4: UI.point.donation.note4, submit: UI.point.donation.submit, back: UI.point.donation.back, sending: UI.point.donation.sending, doneTitle: UI.point.donation.doneTitle, doneBody: UI.point.donation.doneBody, close: UI.point.donation.close, error: UI.point.donation.error, histTitle: UI.point.donation.histTitle, histEmpty: UI.point.donation.histEmpty, requestedOn: UI.point.donation.requestedOn };
 const DN_STATUS = { pending: UI.point.donation.sPending, approved: UI.point.donation.sApproved, completed: UI.point.donation.sCompleted, rejected: UI.point.donation.sRejected, cancelled: UI.point.donation.sCancelled };
@@ -1480,16 +1541,107 @@ function loadPoint(){
     PT = { balance: Number(d.balance || 0), goal: d.goal ? Number(d.goal) : null };
     const entries = d.entries || [];
     const philosophy = '<p class="philo">' + esc(UI.point.philosophy1) + '</p><p class="philo-sub">' + esc(UI.point.philosophy2) + '</p>';
-    if (!entries.length) return { html: philosophy + '<span class="prep">' + esc(UI.point.preparing) + '</span><div class="gl-box" id="goalBox"></div>' + pointUsageHtml() + '<div id="donationBox"></div>', after: () => { renderGoalBox(); renderDonation(); } };
+    if (!entries.length) return { html: philosophy + pointFlowHtml() + '<span class="prep">' + esc(UI.point.preparing) + '</span><div class="gl-box" id="goalBox"></div>' + pointUsageHtml() + '<div id="donationBox"></div>', after: () => { renderGoalBox(); renderDonation(); } };
     const rows = entries.map((e) =>
       '<div class="pt-row"><div>' + esc(e.kindLabel) + (e.reason ? '・' + esc(e.reason) : '') + '<span class="d">' + esc(fmtDate(e.createdAt)) + '</span></div>' +
       '<div class="n">' + (e.delta > 0 ? '+' : '') + Number(e.delta).toLocaleString('ja-JP') + ' ' + esc(UI.point.unit) + '</div></div>').join('');
-    return { html: philosophy + '<div class="gl-box" id="goalBox"></div>' +
+    return { html: philosophy + pointFlowHtml() + '<div class="gl-box" id="goalBox"></div>' +
       pointUsageHtml() + '<section class="block" style="margin-top:28px"><h2 class="block-title">' + esc(UI.point.history) + '</h2><div class="block-body">' + rows +
       (d.hasMore ? '<p class="state empty">' + esc(fmt(UI.point.more, { n: entries.length })) + '</p>' : '') + '</div></section><div id="donationBox"></div>', after: () => { renderGoalBox(); renderDonation(); } };
   });
 }
 
+const RFT = { title: UI.me.reflect.title, lead: UI.me.reflect.lead, private: UI.me.reflect.private, emptyThis: UI.me.reflect.emptyThis, write: UI.me.reflect.write, edit: UI.me.reflect.edit, save: UI.me.reflect.save, cancel: UI.me.reflect.cancel, del: UI.me.reflect.del, delConfirm: UI.me.reflect.delConfirm, noticed: UI.me.reflect.noticed, practiced: UI.me.reflect.practiced, changed: UI.me.reflect.changed, nextMonth: UI.me.reflect.nextMonth, past: UI.me.reflect.past, pastEmpty: UI.me.reflect.pastEmpty, monthFmt: UI.me.reflect.monthFmt, saved: UI.me.reflect.saved, saving: UI.me.reflect.saving, error: UI.me.reflect.error, empty: UI.me.reflect.empty, conflict: UI.me.reflect.conflict, echoTitle: UI.me.reflect.echoTitle, echoFrom: UI.me.reflect.echoFrom, echoAsk: UI.me.reflect.echoAsk, echoSave: UI.me.reflect.echoSave, echoOwn: UI.me.reflect.echoOwn, echoSaved: UI.me.reflect.echoSaved };
+let RF = { list: [], current: '' }, rfEditing = null, rfSaving = false, rfMsg = '';
+const RF_FIELDS = ['noticed', 'practiced', 'changed', 'nextMonth'];
+function rfMonthName(m){ const p = String(m).split('-'); return fmt(RFT.monthFmt, { y: p[0], m: Number(p[1]) }); }
+function rfRead(r){ return '<dl class="rf-dl">' + RF_FIELDS.filter((f) => r[f]).map((f) => '<div><dt>' + esc(RFT[f]) + '</dt><dd>' + esc(r[f]) + '</dd></div>').join('') + '</dl>'; }
+function rfForm(month, rec){
+  return '<form class="rf-form" data-month="' + esc(month) + '" novalidate>' + RF_FIELDS.map((f) => '<label class="rf-l" for="rf-' + f + '">' + esc(RFT[f]) + '</label><textarea id="rf-' + f + '" data-f="' + f + '" rows="3" maxlength="500">' + esc(rec ? rec[f] : '') + '</textarea>').join('') +
+    '<p class="rf-err" id="rfErr" role="alert">' + esc(rfMsg) + '</p><div class="rf-acts"><button class="btn btn-primary" type="submit" id="rfSave">' + esc(RFT.save) + '</button><button class="btn-text" type="button" data-rf="cancel">' + esc(RFT.cancel) + '</button>' + (rec ? '<span class="rf-gap"></span><button class="btn-text danger" type="button" data-rf="delete" data-month="' + esc(month) + '">' + esc(RFT.del) + '</button>' : '') + '</div></form>';
+}
+function reflectHtml(){
+  const cur = RF.list.find((r) => r.month === RF.current), past = RF.list.filter((r) => r.month !== RF.current);
+  let h = '<article class="rf-card"><h3 class="rf-h">' + esc(rfMonthName(RF.current)) + '</h3>';
+  if (rfEditing === RF.current) h += rfForm(RF.current, cur);
+  else if (cur) h += rfRead(cur) + '<div class="rf-acts"><button class="btn btn-quiet" type="button" data-rf="edit" data-month="' + esc(RF.current) + '">' + esc(RFT.edit) + '</button></div>';
+  else h += '<p class="rf-empty">' + esc(RFT.emptyThis) + '</p><div class="rf-acts"><button class="btn btn-quiet" type="button" data-rf="edit" data-month="' + esc(RF.current) + '">' + esc(RFT.write) + '</button></div>';
+  h += '</article>';
+  h += '<h3 class="rf-sub">' + esc(RFT.past) + '</h3>' + (past.length ? past.map((r) => '<details class="rf-past"' + (rfEditing === r.month ? ' open' : '') + '><summary>' + esc(rfMonthName(r.month)) + '</summary>' + (rfEditing === r.month ? rfForm(r.month, r) : rfRead(r) + '<div class="rf-acts"><button class="btn-text" type="button" data-rf="edit" data-month="' + esc(r.month) + '">' + esc(RFT.edit) + '</button></div>') + '</details>').join('') : '<p class="rf-empty">' + esc(RFT.pastEmpty) + '</p>');
+  return h + '<p class="rf-note">' + esc(RFT.private) + '</p>';
+}
+function bindReflect(){
+  const box = $('reflectBody');
+  box.querySelectorAll('[data-rf=edit]').forEach((b) => b.addEventListener('click', () => { rfEditing = b.dataset.month; rfMsg = ''; box.innerHTML = reflectHtml(); bindReflect(); const f = box.querySelector('textarea'); if (f) f.focus(); }));
+  box.querySelectorAll('[data-rf=cancel]').forEach((b) => b.addEventListener('click', () => { rfEditing = null; rfMsg = ''; box.innerHTML = reflectHtml(); bindReflect(); }));
+  box.querySelectorAll('[data-rf=delete]').forEach((b) => b.addEventListener('click', async () => {
+    if (rfSaving || !confirm(RFT.delConfirm)) return;
+    rfSaving = true;
+    const r = await api('/api/community-auth?action=reflect-delete', { method: 'POST', body: JSON.stringify({ month: b.dataset.month }) });
+    rfSaving = false;
+    if (!r.ok) { rfMsg = errMessage(r); box.innerHTML = reflectHtml(); bindReflect(); return; }
+    RF.list = RF.list.filter((x) => x.month !== b.dataset.month); rfEditing = null; rfMsg = ''; box.innerHTML = reflectHtml(); bindReflect(); renderEcho();
+  }));
+  const form = box.querySelector('.rf-form');
+  if (form) form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (rfSaving) return;
+    const month = form.dataset.month, body = { month: month }, cur = RF.list.find((x) => x.month === month);
+    RF_FIELDS.forEach((f) => { body[f] = form.querySelector('[data-f=' + f + ']').value; });
+    if (!RF_FIELDS.some((f) => body[f].trim())) { $('rfErr').textContent = RFT.empty; return; }
+    if (cur) body.baseUpdatedAt = cur.updatedAt;
+    rfSaving = true; $('rfSave').disabled = true; $('rfSave').textContent = RFT.saving; $('rfErr').textContent = '';
+    const r = await api('/api/community-auth?action=reflect-save', { method: 'POST', body: JSON.stringify(body) });
+    rfSaving = false;
+    if (!r.ok) {
+      $('rfSave').disabled = false; $('rfSave').textContent = RFT.save;
+      $('rfErr').textContent = r.data && r.data.code === 'conflict' ? RFT.conflict : (r.data && r.data.error) || RFT.error;
+      return;
+    }
+    const rec = r.data.reflection;
+    RF.list = RF.list.filter((x) => x.month !== month).concat([rec]).sort((a, b) => (a.month < b.month ? 1 : -1));
+    rfEditing = null; rfMsg = ''; box.innerHTML = reflectHtml(); bindReflect(); toast(RFT.saved); renderEcho();
+  });
+}
+function renderReflect(){
+  rfEditing = null; rfMsg = '';
+  loadInto('reflect', $('reflectBody'), async () => {
+    const r = await api('/api/community-auth?action=reflect-list', { method: 'GET' });
+    if (!r.ok) throw failure(r);
+    RF = { list: r.data.reflections || [], current: r.data.currentMonth };
+    return { html: reflectHtml(), after: bindReflect };
+  });
+}
+let echoSaving = false;
+async function renderEcho(){
+  const box = $('echoBlock'), body = $('echoBody'); if (!box) return;
+  const r = await api('/api/community-auth?action=reflect-echo', { method: 'GET' });
+  if (!r.ok || !r.data.item) { box.hidden = true; body.innerHTML = ''; return; }
+  const it = r.data.item, resp = r.data.response;
+  box.hidden = false;
+  body.innerHTML = '<article class="echo-card"><p class="echo-meta">' + esc(fmt(RFT.echoFrom, { date: fmtDate(it.at) })) + '・' + esc(it.label) + '</p>' + (it.title ? '<p class="echo-title">' + esc(it.title) + '</p>' : '') + '<p class="echo-text">' + esc(it.text) + '</p>' +
+    '<label class="rf-l" for="echoInput">' + esc(RFT.echoAsk) + '</label><textarea id="echoInput" rows="3" maxlength="500">' + esc(resp ? resp.text : '') + '</textarea><p class="rf-err" id="echoErr" role="alert"></p>' +
+    '<div class="rf-acts"><button class="btn btn-quiet" type="button" id="echoSave">' + esc(RFT.echoSave) + '</button></div><p class="rf-note">' + esc(RFT.echoOwn) + '</p></article>';
+  $('echoSave').addEventListener('click', async () => {
+    if (echoSaving) return;
+    echoSaving = true; $('echoSave').disabled = true; $('echoErr').textContent = '';
+    const s = await api('/api/community-auth?action=reflect-echo-save', { method: 'POST', body: JSON.stringify({ kind: it.kind, id: it.id, text: $('echoInput').value }) });
+    echoSaving = false; $('echoSave').disabled = false;
+    if (!s.ok) { $('echoErr').textContent = (s.data && s.data.error) || RFT.error; return; }
+    toast(RFT.echoSaved);
+  });
+}
+actions['to-reflect'] = () => {
+  showPage('profile');
+  const t = setInterval(() => {
+    const box = $('reflectBody');
+    if (!box || !RF.current || box.getAttribute('aria-busy')) return;
+    clearInterval(t);
+    rfEditing = RF.current; box.innerHTML = reflectHtml(); bindReflect();
+    const f = box.querySelector('textarea'); if (f) { f.focus(); f.scrollIntoView({ block: 'center' }); }
+  }, 150);
+  setTimeout(() => clearInterval(t), 6000);
+};
 /* ═════════ わたし ═════════ */
 function monthLabel(){ const n = new Date(); return (n.getMonth() + 1) + '月'; }
 function daysInMonth(){ const n = new Date(); return new Date(n.getFullYear(), n.getMonth() + 1, 0).getDate(); }
@@ -1504,6 +1656,8 @@ function loadProfile(){
   invalidate('me');
   renderMeHead();
   renderGoals();
+  renderEcho();
+  renderReflect();
   renderRecent();
   renderGathered();
   renderSessions();
@@ -1710,11 +1864,13 @@ function moAvatars(list){
 function moCellHtml(date){
   const day = moDay(date), p = dateParts(date);
   const past = MO.today && date < MO.today;
+  const att = Boolean(MO.cal && MO.cal.month === date.slice(0, 7) && MO.cal.set.has(date));
+  const went = past && day.joined && !att;
   const state = day.status === 'cancelled' ? UI.morning.cancelled : day.status === 'scheduled' ? UI.morning.scheduled : UI.morning.none;
-  const aria = fmt(UI.morning.cellAria, { m: p.m, d: p.d, state: state, people: fmt(UI.morning.people, { n: day.count }) }) + (day.joined ? UI.morning.cellAriaMine : '');
+  const aria = fmt(UI.morning.cellAria, { m: p.m, d: p.d, state: state, people: fmt(UI.morning.people, { n: day.count }) }) + (day.joined ? UI.morning.cellAriaMine : '') + (att ? '。' + UI.morning.stateAtt : went ? '。' + UI.morning.stateWent : '');
   const closedDay = !past && Boolean(MO.joinOpenFrom) && date < MO.joinOpenFrom && !day.joined;
   const openDay = !past && !closedDay && day.status !== 'cancelled' && !day.joined;
-  const cls = 'mo-cell' + (past ? ' past' : '') + (date === MO.today ? ' today' : '') + (day.status === 'scheduled' ? ' live' : '') + (day.status === 'cancelled' ? ' cancelled' : '') + (day.joined ? ' mine' : '') + (openDay ? ' open' : '') + (closedDay ? ' closed' : '');
+  const cls = 'mo-cell' + (att ? ' att' : '') + (went ? ' went' : '') + (past ? ' past' : '') + (date === MO.today ? ' today' : '') + (day.status === 'scheduled' ? ' live' : '') + (day.status === 'cancelled' ? ' cancelled' : '') + (day.joined ? ' mine' : '') + (openDay ? ' open' : '') + (closedDay ? ' closed' : '');
   return '<button class="' + cls + '" type="button" data-act="mo-select" data-date="' + date + '" aria-pressed="' + (MO.selected === date) + '" aria-label="' + esc(aria) + '">' +
     '<span class="mo-d">' + p.d + '</span>' +
     (day.count > 0 ? '<span class="mo-avs">' + moAvatars(day.participants) + '</span>' : '') + '</button>';
@@ -1753,11 +1909,22 @@ function drawMorning(){
     '<div class="mo-month" aria-live="polite">' + esc(fmt(UI.morning.month, { y: mp.y, m: mp.m })) + '</div>' +
     '<button class="mo-nav" type="button" data-act="mo-next" aria-label="' + esc(UI.morning.next) + '"' + (month >= MO.data.max ? ' disabled' : '') + '>›</button></div>' +
     '<div class="mo-grid" role="group" aria-label="' + esc(UI.morning.gridAria) + '">' + String(UI.morning.weekdays).split(',').map((w) => '<span class="mo-wd" aria-hidden="true">' + esc(w) + '</span>').join('') + cells + '</div>' +
-    '<div class="mo-legend" aria-label="' + esc(UI.morning.legend.label) + '"><span><i class="k-mine"></i>' + esc(UI.morning.legend.mine) + '</span><span><i></i>' + esc(UI.morning.legend.open) + '</span><span><i class="k-closed"></i>' + esc(UI.morning.legend.closed) + '</span></div>' +
+    '<div class="mo-legend" aria-label="' + esc(UI.morning.legend.label) + '"><span><i class="k-mine"></i>' + esc(UI.morning.legend.mine) + '</span><span><i></i>' + esc(UI.morning.legend.open) + '</span><span><i class="k-closed"></i>' + esc(UI.morning.legend.closed) + '</span><span><i class="k-went"></i>' + esc(UI.morning.legend.went) + '</span><span><i class="k-att"></i>' + esc(UI.morning.legend.att) + '</span></div>' +
     '<div id="moDetail" aria-live="polite">' + moDetailHtml(MO.selected) + '</div>' +
     '<section class="st-box" id="moStamps" aria-labelledby="moStampTitle"></section>';
   drawStamps();
   if (!MO.stamp) loadStamps();
+  if (!MO.cal || MO.cal.month !== month) ensureCalStamps(month);
+}
+// カレンダーの月の「出席確認済み」の日（サーバーが確定した出席だけ）。取得できなければ、何も付けない
+async function ensureCalStamps(month){
+  if (MO.calBusy === month) return;
+  MO.calBusy = month;
+  const r = await api('/api/community-auth?action=morning-stamps&month=' + encodeURIComponent(month), { method: 'GET' });
+  MO.calBusy = null;
+  if (!r.ok) { MO.cal = { month: month, set: new Set() }; return; }
+  MO.cal = { month: r.data.month || month, set: new Set(r.data.stamps || []) };
+  if (MO.data && MO.data.month === month && document.querySelector('.mo-grid')) drawMorning();
 }
 /* 参加の記録（スタンプ）：本人が実際に参加した日だけ（サーバーが確定した出席）。参加表明・Meetのボタンでは付かない。 */
 async function fetchStamps(month){

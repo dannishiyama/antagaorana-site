@@ -61,6 +61,7 @@ import { mail as salonMail } from './_lib/salon-mail.js';
 import { getMemberView } from './_lib/points.js';
 import { getGoal, setGoal, GoalError } from './_lib/point-goal.js';
 import * as Donation from './_lib/donation.js';
+import * as Reflect from './_lib/reflection.js';
 import { donationMail } from './_lib/donation-mail.js';
 import { getBalance as getPointBalance } from './_lib/points.js';
 import {
@@ -128,6 +129,13 @@ export default async function handler(req, res) {
       const session = await requireHakuMembership(req, res); if (!session) return;
       // 目標は台帳とは別に保存された、会員本人だけの値（残高・履歴とは独立）
       return res.status(200).json({ ok: true, ...(await getMemberView(session.email, { limit: 50 })), goal: await getGoal(session.email) });
+    }
+    // 月ごとの振り返り・1か月前のあなたから：本人のセッションのメールアドレスだけが対象（他人の記録は読めない・変えられない。管理画面からも読めない）
+    if (action === 'reflect-list' || action === 'reflect-echo') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      if (action === 'reflect-list') return res.status(200).json({ ok: true, currentMonth: Reflect.currentMonth(), reflections: await Reflect.listReflections(session.email) });
+      return res.status(200).json({ ok: true, ...(await Reflect.oneMonthAgo(session.email)) });
     }
     // ポイント利用申請（社会貢献）。会員は自分の申請だけ。申請の可否はサーバー側で再確認する（画面の値は信用しない）。
     if (action === 'donation-config' || action === 'donation-mine') {
@@ -255,6 +263,18 @@ export default async function handler(req, res) {
       const session = await requireHakuMembership(req, res); if (!session) return;
       try { return res.status(200).json({ ok: true, goal: await setGoal(session.email, body.goal) }); }
       catch (err) { if (err instanceof GoalError) return res.status(400).json({ error: err.message, code: err.code }); throw err; }
+    }
+    if (action === 'reflect-save' || action === 'reflect-delete' || action === 'reflect-echo-save') {
+      if (!(await rateLimitGuard(req, res, { key: 'reflect-write', limit: 40, windowSeconds: 60 }))) return;
+      const session = await requireHakuMembership(req, res); if (!session) return;
+      try {
+        if (action === 'reflect-save') return res.status(200).json({ ok: true, ...(await Reflect.saveReflection(session.email, body)) });
+        if (action === 'reflect-delete') return res.status(200).json(await Reflect.deleteReflection(session.email, body.month));
+        return res.status(200).json({ ok: true, ...(await Reflect.saveEcho(session.email, body)) });
+      } catch (err) {
+        if (err instanceof Reflect.ReflectError) return res.status(err.status).json({ error: err.message, code: err.code });
+        throw err;
+      }
     }
     if (action === 'donation-create') {
       if (!(await rateLimitGuard(req, res, { key: 'donation-create', limit: 10, windowSeconds: 60 }))) return;
