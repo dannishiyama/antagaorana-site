@@ -56,7 +56,7 @@ import { hashPassword, verifyPassword, randomToken } from './_lib/security.js';
 import * as Salon from './_lib/salon-store.js';
 import { PREFECTURES } from './_lib/salon-core.js';
 import { cancelSalonMembership, BillingError } from './_lib/salon-billing.js';
-import { getStampDates } from './_lib/morning-attendance.js';
+import { getStampDates, getStampTotal } from './_lib/morning-attendance.js';
 import { mail as salonMail } from './_lib/salon-mail.js';
 import { getMemberView } from './_lib/points.js';
 import { getGoal, setGoal, GoalError } from './_lib/point-goal.js';
@@ -810,7 +810,7 @@ async function handleMorningStamps(req, res, session) {
   const range = viewableMonthRange();
   if (month < range.min || month > range.max) return res.status(400).json({ error: 'この月は表示できません。', code: 'out_of_range' });
   const dates = await getStampDates(session.email, month);
-  return res.status(200).json({ ok: true, month, today: jstToday(), minMonth: range.min, maxMonth: range.max, stamps: dates, count: dates.length });
+  return res.status(200).json({ ok: true, month, today: jstToday(), minMonth: range.min, maxMonth: range.max, stamps: dates, count: dates.length, total: await getStampTotal(session.email) });
 }
 
 // ホーム用：自分が参加予定の直近、なければ開催予定の直近（なければ null）。

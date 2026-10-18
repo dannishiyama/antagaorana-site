@@ -85,16 +85,16 @@ const a = await login(A, { name: 'タロウ' });
 {
   const p = a.page;
   await p.waitForFunction(() => !document.querySelector('#p-home .pulse'));
-  const order = await p.evaluate(() => ['#greetTxt', '#homeStep', '#homeWordsGroup', '#h-words', '#h-question', '#homePlanGroup', '#h-next'].map((s) => document.querySelector(s).getBoundingClientRect().top));
-  check('表示の順：挨拶 → 今日の一歩 → ことば → 今週の問い → 予定', order.every((v, i) => i === 0 || v >= order[i - 1]), order);
+  const order = await p.evaluate(() => ['#greetTxt', '#h-question', '#homeStep', '#homePlanGroup', '#h-next', '#homeWordsGroup', '#h-words'].map((s) => document.querySelector(s).getBoundingClientRect().top));
+  check('表示の順：挨拶 → 今週の問い（主役）→ 今日の一歩 → 直近の予定 → ことば', order.every((v, i) => i === 0 || v >= order[i - 1]), order);
   eq('冒頭の挨拶・今日の一歩は維持', [await p.locator('#homeStep .step-kicker').innerText(), /さん/.test(await p.locator('#greetTxt').innerText())], ['今日の一歩', true]);
   eq('「ことば」ブロックの中身（HAKUからのことば・会員のことば・もっと読む）が維持', await p.locator('#homeWordsGroup .sub-title').allInnerTexts(), ['HAKUからのことば', '会員のことば']);
-  check('「ことば」のグループに「今週の問い」も含まれる（既存の見出しのまま）', /今週の問い/.test(await p.locator('#homeWordsGroup').innerText()), null);
+  check('「今週の問い」は、ホームの冒頭の主役のブロック（既存の見出しのまま）。ことばのグループには含まれない', /今週の問い/.test(await p.locator('.home-q').innerText()) && !/今週の問い/.test(await p.locator('#homeWordsGroup').innerText()), null);
   eq('予定のまとまり：朝の集まり → 次回の集まり が同じ1つのグループに隣接', await p.locator('#homePlanGroup .sub-title').allInnerTexts(), ['朝の集まり', '次回の集まり']);
   eq('予定のグループの見出し「直近の予定」', await p.locator('#homePlanGroup .block-title').innerText(), '直近の予定');
   check('2つのグループは背景・枠のあるカード（淡白にしていない）', await p.evaluate(() => ['#homeWordsGroup', '#homePlanGroup'].every((s) => { const st = getComputedStyle(document.querySelector(s)); return st.borderTopWidth === '1px' && st.backgroundColor !== 'rgba(0, 0, 0, 0)' && parseFloat(st.borderTopLeftRadius) >= 10; })), null);
   const w = await box(p, '#homeWordsGroup'), pl = await box(p, '#homePlanGroup');
-  check('ことばのグループが、予定のグループより上（PC）', w.y + w.height <= pl.y + 1, { w, pl });
+  check('予定のグループが、ことばのグループより上（PC）', pl.y + pl.height <= w.y + 1, { w, pl });
   await shot(p, { path: path.join(OUT, 'r3-01-home-pc.png'), fullPage: true });
 }
 
@@ -260,7 +260,7 @@ console.log('■ H. スマホ幅（390px）：HOME／カレンダー（アイコ
   const overflow = () => p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 || document.querySelector('.content').scrollWidth > document.querySelector('.content').clientWidth + 1);
   await p.waitForFunction(() => !document.querySelector('#p-home .pulse'));
   const w = await box(p, '#homeWordsGroup'), pl = await box(p, '#homePlanGroup');
-  check('スマホでも、ことばが予定より上（縦に ことば → 予定）', w.y + w.height <= pl.y + 1, { w, pl });
+  check('スマホでも、予定がことばより上（縦に 予定 → ことば）', pl.y + pl.height <= w.y + 1, { w, pl });
   eq('HOME：横スクロールなし', await overflow(), false);
   await shot(p, { path: path.join(OUT, 'r3-06-home-m.png'), fullPage: true });
   await store.ensureMorningEvent(D1, 'x');

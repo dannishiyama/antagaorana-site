@@ -47,7 +47,7 @@ console.log('■ HOME・学ぶ：今週の問いが主役／振り返りへの�
 const a = await login(A);
 await a.page.waitForSelector('#homeNote .q-text');
 check('HOME：今週の問いが、大きな文字と金の線で表示される', parseFloat(await a.page.locator('#homeNote .q-text').evaluate((e) => getComputedStyle(e).fontSize)) >= 20 && /誰かに感謝を伝えるなら/.test(await a.page.locator('#homeNote').innerText()), null);
-eq('HOMEの既存ブロックの順番は変わらない（今日の一歩 → ことば → 今週の問い → 予定）', await a.page.evaluate(() => ['homeStep', 'h-words', 'h-question', 'h-next'].map((i) => document.getElementById(i).getBoundingClientRect().top).every((t, k, x) => k === 0 || t > x[k - 1])), true);
+eq('HOME：今週の問い（主役）→ 今日の一歩 → 次の集まり → ことば の順', await a.page.evaluate(() => ['h-question', 'homeStep', 'h-next', 'h-words'].map((i) => document.getElementById(i).getBoundingClientRect().top).every((t, k, x) => k === 0 || t > x[k - 1])), true);
 await a.page.locator('#homeNote [data-act="to-reflect"]').click();
 await a.page.waitForSelector('#reflectBody .rf-form');
 check('「この問いを、振り返りに書く」で、マイページの振り返りの入力欄が開く', (await a.page.evaluate(() => document.activeElement && document.activeElement.id)) === 'rf-noticed', await a.page.evaluate(() => document.activeElement && document.activeElement.id));

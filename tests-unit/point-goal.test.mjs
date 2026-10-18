@@ -102,3 +102,14 @@ test('ポイントの付与・取消は、目標に影響されない（目標�
   const v = (await call(m.cookie, 'points-me')).body;
   assert.deepEqual([v.balance, v.goal], [50, 10], '目標を超えても、残高はそのまま（達成の表示は画面側）');
 });
+
+test('これまでの積み重ね（grown）：社会貢献に使っても減らない。残高（balance）とは別。調整・取消は反映される', async () => {
+  const m = await member();
+  await grantPoints({ email: m.email, amount: 1350, reason: '付与', actorId: 'admin@example.com', requestId: `gr-${Date.now()}` });
+  const P = await import('../api/_lib/points.js');
+  await P.holdForDonation({ email: m.email, amount: 1000, idempotencyKey: `hold:grown-${Date.now()}`, refId: 'DN-TEST', actorId: m.email });
+  const v = (await call(m.cookie, 'points-me')).body;
+  assert.deepEqual([v.balance, v.grown], [350, 1350], '使うと残高は減るが、積み重ねは減らない');
+  await P.adjustPoints({ email: m.email, amount: -50, reason: '調整', requestId: `adj-${Date.now()}`, actorId: 'admin@example.com' });
+  assert.deepEqual([(await call(m.cookie, 'points-me')).body.grown], [1300], '調整は反映される');
+});

@@ -50,13 +50,13 @@ await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2
   const { ctx, page } = await login(A);
   await page.waitForSelector('#homeStep .step-lead');
   check('HOMEには、ポイント欄が出ない', (await page.locator('#homePoint, .home-pt').count()) === 0, null);
-  eq('HOMEの既存ブロックの順番は変わらない（今日の一歩 → ことば → 予定）', await page.evaluate(() => ['homeStep', 'homeWordsGroup', 'homePlanGroup'].map((i) => document.getElementById(i).getBoundingClientRect().top).every((t, k, a) => k === 0 || t > a[k - 1])), true);
+  eq('HOMEの順番（今日の一歩 → 次の集まり → ことば）', await page.evaluate(() => ['homeStep', 'homePlanGroup', 'homeWordsGroup'].map((i) => document.getElementById(i).getBoundingClientRect().top).every((t, k, a) => k === 0 || t > a[k - 1])), true);
   await page.locator('[data-tab="point"]:visible').first().click(); await page.waitForSelector('#goalBox .gl-cur-n');
   check('ポイント画面：現在のポイント（台帳の実残高 30 pt）が目標のカードの先頭に出る', /^30\s*pt/.test(await page.locator('#goalBox .gl-cur-n').innerText()), await page.locator('#goalBox .gl-cur-n').innerText());
   eq('「現在のポイント」表示は1つだけ（重複なし）', await page.locator('#p-point .gl-cur-n, #p-point .pt-now').count(), 1);
   eq('植物の画像は1つだけ（重複なし）', await page.locator('#p-point svg.plant').count(), 1);
   check('「詳しく見る」でHAKUポイント詳細へ遷移し、目標の空状態が出る', /まだ目標は決めていません/.test(await page.locator('#goalBox').innerText()), await page.locator('#goalBox').innerText());
-  eq('空状態の植物は「たね」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), 'たね');
+  eq('空状態の植物は「芽ばえ」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '芽ばえ');
 
   console.log('■ 目標の設定・検証・変更・解除');
   await page.click('#goalOpenBtn');
@@ -70,13 +70,13 @@ await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2
   await page.waitForFunction(() => document.querySelector('#goalBox .gl-row b'));
   const txt = await page.locator('#goalBox').innerText();
   check('目標100：現在30（先頭）・目標100・達成率30%・あと70 が出る', /^30\s*pt/.test(await page.locator('#goalBox .gl-cur-n').innerText()) && /目標\s*100\s*pt/.test(txt) && /達成率\s*30%/.test(txt) && /あと\s*70\s*pt/.test(txt), txt);
-  eq('達成率30% → 「芽」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：芽（達成率 30%）');
+  eq('達成率30% → 「芽」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：葉（達成率 30%）');
   eq('プログレスバーの値', await page.locator('#goalBox [role=progressbar]').getAttribute('aria-valuenow'), '30');
   eq('目標を設定しても残高は変わらない', await pointsMod.getBalance(A), bal0);
   check('目標は、実際の活用が決まったことを意味しないという注記がある', /実際の活用が決まったことを意味しません/.test(txt) && /残高や付与の記録は変わりません/.test(txt), null);
   await page.click('#goalOpenBtn'); await page.fill('#goalInputPt', '40'); await page.click('#goalSaveBtn');
   await page.waitForFunction(() => /達成率\s*75%/.test(document.getElementById('goalBox').innerText));
-  eq('目標40 → 75% → 「木」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：木（達成率 75%）');
+  eq('目標40 → 75% → 「つぼみ」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：つぼみ（達成率 75%）');
   await page.click('#goalOpenBtn'); await page.fill('#goalInputPt', '30'); await page.click('#goalSaveBtn');
   await page.waitForFunction(() => /目標に届きました/.test(document.getElementById('goalBox').innerText));
   eq('目標30 → 100% → 「花」・残りなし', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：花（達成率 100%）');
@@ -92,7 +92,7 @@ await pointsMod.grantPoints({ email: B, amount: 500, reason: 'E2E', actorId: 'e2
   eq('目標を解除しても、残高は変わらない', await pointsMod.getBalance(A), 30);
   await page.click('#goalOpenBtn'); await page.fill('#goalInputPt', '300'); await page.click('#goalSaveBtn');
   await page.waitForFunction(() => /達成率\s*10%/.test(document.getElementById('goalBox').innerText));
-  eq('最終：目標300・10%・「たね」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：たね（達成率 10%）');
+  eq('最終：目標300・10%・「芽ばえ」', await page.locator('#goalBox svg.plant').getAttribute('aria-label'), '成長の様子：芽ばえ（達成率 10%）');
   await page.screenshot({ path: path.join(OUT, 'ux-point-pc.png'), fullPage: true }).catch(() => {});
   await ctx.close();
 }

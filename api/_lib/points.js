@@ -215,8 +215,11 @@ export function createPointService({ store = redisPointStore, logAudit = default
 
   // 会員本人向け：自分の現在ポイントと履歴（運営の個人情報は含めない）。
   async function getMemberView(email, { limit = 50 } = {}) {
-    const { entries, total, balance } = await store.listEntries(normalizeEmail(email), { limit });
-    return { balance, total, hasMore: total > entries.length, entries: entries.map(toPublicEntry) };
+    const { entries: all, total, balance } = await store.listEntries(normalizeEmail(email), { limit: 100000 });
+    // 「これまでの積み重ね」：社会貢献への利用（確保・解除）を除いた合計。誰かのために使っても、成長の目安は減らない（残高とは別のもの）
+    const grown = all.filter((e) => !DONATION_KINDS.includes(e.kind)).reduce((s, e) => s + e.delta, 0);
+    const entries = all.slice(0, limit);
+    return { balance, grown, total, hasMore: total > entries.length, entries: entries.map(toPublicEntry) };
   }
 
   // 管理者向け：会員1人の全履歴（操作した管理者・取消済みフラグ・関連IDつき）。

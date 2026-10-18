@@ -105,6 +105,8 @@ export const UI = {
   words: {
     title: 'ことば',
     lead: '運営のことばと、会員のことば。自分のことばも、ここに残せます。',
+    officialIntro: '運営から、日々のなかで受け取ってほしいことばを届けます。',
+    membersIntro: 'メンバーが、自分のことばを静かに残す場所です。評価や順位はありません。読むだけでも、書くだけでも大丈夫です。',
     official: 'HAKUからのことば',
     officialPast: 'これまでのことば',
     officialEmpty: 'これから、HAKUからのことばがここに届きます。',
@@ -208,7 +210,10 @@ export const UI = {
       error: '保存できませんでした。もう一度お試しください。',
       invalid: '1〜100,000の整数で入力してください。',
       note: '目標は、あなた自身のための目安です。ポイントの残高や付与の記録は変わりません。目標に届くことは、ポイントの実際の活用が決まったことを意味しません。',
-      stage0: 'たね', stage1: '芽', stage2: '葉', stage3: '木', stage4: '花',
+      stage0: '芽ばえ', stage1: '葉', stage2: '葉が茂る', stage3: 'つぼみ', stage4: '花',
+      grown: 'これまでの積み重ね',
+      curNote: 'いま使えるポイントです。社会貢献の申請に使うと、その分は減ります。',
+      keepNote: '誰かのために使っても、積み重ねの記録は減りません。',
       plantAria: '成長の様子：{stage}（達成率 {rate}%）',
     },
     donation: {
@@ -278,6 +283,15 @@ export const UI = {
   },
 
   me: {
+    lead: 'あなたがHAKUで過ごした時間を、少しずつ残していく記録帳です。',
+    walkTitle: 'これまでの歩み',
+    walkMorning: '朝の集まり（出席を確認）',
+    walkGather: '参加した集まり',
+    walkWords: '書いたことば',
+    walkReflect: '月ごとの振り返り',
+    walkUnitTimes: '{n}回',
+    walkUnitItems: '{n}件',
+    walkNote: '数を競うものではなく、積み重ねを振り返るための記録です。',
     reflect: {
       title: '月ごとの振り返り',
       lead: '書きたいときに、ひとつだけでも。毎日書く必要はありません。入力は任意です。',
@@ -302,6 +316,7 @@ export const UI = {
       empty: 'どれか1つ、書いてから保存してください。',
       conflict: '別の画面で内容が更新されています。開き直してから、もう一度お試しください。',
       echoTitle: '1か月前のあなたから',
+      echoLead: 'この1か月で、あなたの中で変わったことはありますか。',
       echoFrom: '{date}に書いたもの',
       echoAsk: 'いまの自分は、どう感じますか？（任意）',
       echoSave: 'いまの気持ちを残す',
@@ -390,6 +405,11 @@ export const UI = {
   // 朝の集まり（カレンダー）。HAKU MORNING は説明文の補足にだけ使う。
   morning: {
     legend: { mine: '参加予定', open: '参加できる日', closed: '申込締切済み', went: '参加した日（出席は確認待ち）', att: '出席確認済み', label: '日付の見かた' },
+    nextJoined: '次の参加予定：{when}',
+    nextOpen: '次の開催予定：{when}。参加するには、その日を選んで参加を表明してください。',
+    nextNone: '参加したい日を、カレンダーから選んでください。参加を表明した日が、開催予定になります。',
+    stampEmpty: '出席が確認されると、ここに印が押されます。参加の表明だけでは、印は付きません。',
+    stampLast: '直近の出席確認：{date}',
     stateWent: '参加した日。出席は確認待ちです', stateAtt: '出席確認済み',
     stateOpen: '参加できます', stateClosed: '申込は締め切りました',
     title: '朝の集まり',

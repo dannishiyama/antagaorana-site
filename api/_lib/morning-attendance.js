@@ -116,6 +116,18 @@ export async function cancelAttendance({ date, email, actorId, reason, now = Dat
   }
 }
 
+/** 会員本人の、これまでの出席確認の回数（確定した出席だけ。取り消された出席は含めない）。 */
+export async function getStampTotal(email) {
+  const e = normEmail(email);
+  const found = await getRedis().zrange(k.idx(e), 0, -1);
+  let n = 0;
+  for (const d of found) {
+    const rec = await readRec(d, e);
+    if (rec?.status === 'attended' && rec.entryId && !(await isEntryReversed(rec.entryId))) n += 1;
+  }
+  return n;
+}
+
 /** 会員本人のスタンプ（その月の、実際に参加した日だけ）。取り消された出席は含めない。他の会員の記録は返さない。 */
 export async function getStampDates(email, month) {
   if (!isValidMonth(month)) throw new AttendanceError('invalid_month', '月を正しく指定してください。');

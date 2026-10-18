@@ -257,24 +257,25 @@ test('プロフィール設定：画像（選ぶ・プレビュー・保存・�
   assert.ok((html.match(/avatarHtml\(p(?:, \d+)?\)|avatarHtml\(q, \d+\)|avatarHtml\(p, \d+\)/g) || []).length >= 3, '参加者アイコンも同じ関数');
 });
 
-test('ホーム：朝の集まりは月間カレンダーではなく、直近1件のカード＋「朝の集まりを見る」。ことば→予定の順', () => {
+test('ホーム：朝の集まりは月間カレンダーではなく、直近1件のカード＋「朝の集まりを見る」。今週の問い→今日の一歩→予定→ことばの順', () => {
   const html = render();
   const body = html.split('<script>')[0];
-  const order = ['id="homeStep"', 'id="h-words"', 'id="h-question"', 'id="h-next"'].map((k) => body.indexOf(k));
-  assert.ok(order.every((n) => n > 0) && order.every((n, i) => i === 0 || n > order[i - 1]), '冒頭（挨拶・今日の一歩）→ことば→今週の問い→予定（朝の集まり・直近の予定） の順');
+  const order = ['id="h-question"', 'id="homeStep"', 'id="h-next"', 'id="h-words"'].map((k) => body.indexOf(k));
+  assert.ok(order.every((n) => n > 0) && order.every((n, i) => i === 0 || n > order[i - 1]), '今週の問い（主役）→今日の一歩→次の集まり（朝の集まり・直近の予定）→ことば の順');
   const homeSection = body.match(/<section class="page active" id="p-home"[\s\S]*?<!-- 学ぶ -->/)[0];
   assert.ok(!homeSection.includes('mo-grid') && !homeSection.includes('morningBody'), 'ホームにカレンダーを置かない');
   assert.ok(html.includes('data-go="morning"'));
   assert.ok(html.includes('function renderMorningHome()'));
 });
 
-test('HOME：ことば → 予定（朝の集まり・直近の予定）の順に、それぞれ1つのまとまりとして並ぶ。既存の見出し文言は変えない', () => {
+test('HOME：予定（朝の集まり・直近の予定）→ ことば の順に、それぞれ1つのまとまりとして並ぶ。既存の見出し文言は変えない', () => {
   const html = render();
   const body = html.split('<script>')[0];
   const words = body.indexOf('id="homeWordsGroup"'), plan = body.indexOf('id="homePlanGroup"');
-  assert.ok(words > 0 && plan > words, 'ことばのまとまり → 予定のまとまり');
-  const g1 = body.slice(words, plan), g2 = body.slice(plan, body.indexOf('<!-- 学ぶ -->'));
-  assert.ok(g1.includes('id="h-words"') && g1.includes('id="h-question"') && !g1.includes('id="h-next"'));
+  assert.ok(plan > 0 && words > plan, '予定のまとまり → ことばのまとまり');
+  const g1 = body.slice(words, body.indexOf('<!-- 学ぶ -->')), g2 = body.slice(plan, words);
+  assert.ok(g1.includes('id="h-words"') && !g1.includes('id="h-question"') && !g1.includes('id="h-next"'), 'ことばのまとまり');
+  assert.ok(body.indexOf('id="h-question"') > 0 && body.indexOf('id="h-question"') < body.indexOf('id="homeStep"'), '今週の問いは、今日の一歩の前（主役）');
   assert.ok(g2.includes('id="h-next"') && g2.includes('id="homeNextMorning"') && g2.includes('id="homeNextMeet"'), '朝の集まりと直近の予定は同じグループ');
   assert.deepEqual([UI.home.wordsTitle, UI.home.noteTitle, UI.home.nextTitle, UI.home.nextMorning, UI.home.nextMeet, UI.home.wordLatest, UI.home.membersWords], ['ことば', '今週の問い', '直近の予定', '朝の集まり', '次回の集まり', 'HAKUからのことば', '会員のことば']);
 });
