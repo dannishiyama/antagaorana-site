@@ -229,6 +229,11 @@
       "permanent": true
     },
     {
+      "source": "/salon/en",
+      "destination": "/salon/en/",
+      "permanent": true
+    },
+    {
       "source": "/salon/tomoshibi",
       "destination": "/salon/tomoshibi/",
       "permanent": true

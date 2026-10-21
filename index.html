@@ -1399,6 +1399,25 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   ]
 }
 </script>
+<style data-community-added>
+/* コミュニティへの案内（追加）。既存のメニューの見た目は変えない */
+.nav-community{position:relative}
+.nav-community-btn{font:inherit;font-size:13px;font-weight:500;color:var(--tm);background:none;border:0;padding:0;line-height:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color .2s}
+.nav-community-btn:hover,.nav-community-btn[aria-expanded="true"]{color:var(--g)}
+.nav-community-btn:focus-visible,.nav-drawer-parent:focus-visible,.nav-community-menu a:focus-visible,.nav-drawer-sub a:focus-visible{outline:2px solid var(--g);outline-offset:3px;border-radius:6px}
+.nav-caret{width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s;flex:none}
+[aria-expanded="true"]>.nav-caret{transform:rotate(-135deg) translateY(-2px)}
+.nav-community-menu{position:absolute;right:0;top:calc(100% + 16px);min-width:300px;background:rgba(244,241,234,.99);border:1px solid var(--line-soft);border-radius:14px;box-shadow:0 14px 36px rgba(0,0,0,.12);padding:8px;z-index:210}
+.nav-community-menu[hidden]{display:none}
+.nav-community-menu a{display:block;padding:12px 14px;border-radius:10px;font-size:14px}
+.nav-community-menu a:hover{background:rgba(70,98,70,.08);color:inherit}
+.nav-community-menu b,.nav-drawer-sub b{display:block;font-size:14px;font-weight:700;color:var(--gd)}
+.nav-community-menu small,.nav-drawer-sub small{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--tm)}
+.nav-drawer-parent{width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px 6px;font:inherit;font-size:14px;font-weight:700;color:var(--gd);text-align:left;background:none;border:0;border-bottom:1px solid rgba(0,0,0,.06);cursor:pointer}
+.nav-drawer-sub{padding:2px 0 6px 12px;border-bottom:1px solid rgba(0,0,0,.06)}
+.nav-drawer-sub[hidden]{display:none}
+.nav-drawer .nav-drawer-sub a{padding:10px 6px;border-bottom:none}
+</style>
 </head>
 <body>
 
@@ -1411,6 +1430,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
     <a href="#voice">実際の声</a>
     <a href="./news.html">お知らせ</a>
     <a href="#faq">よくあるご質問</a>
+    <div class="nav-community" data-community-added>
+      <button type="button" class="nav-community-btn" id="navCommunityBtn" aria-expanded="false" aria-controls="navCommunityMenu" aria-haspopup="true">コミュニティ<span class="nav-caret" aria-hidden="true"></span></button>
+      <div class="nav-community-menu" id="navCommunityMenu" hidden>
+        <a href="/haku-community/"><b>HAKU Community</b><small>社会人向けコミュニティ</small></a>
+        <a href="/salon/en/"><b>親のサロン 縁（えん）</b><small>保護者向けコミュニティ</small></a>
+        <a href="/salon/"><b>教育者のサロン 灯（TOMOSHIBI）</b><small>教育者向けコミュニティ</small></a>
+      </div>
+    </div>
   </div>
   <button class="nav-burger" type="button" aria-label="メニューを開く" aria-expanded="false"><span></span></button>
   <a href="https://calendar.app.google/ZvDyFhuG5TE3zzCw9" target="_blank" rel="noopener" class="nav-cta">まず、相談してみる</a>
@@ -1423,6 +1450,14 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
   <a href="#voice">実際の声</a>
   <a href="./news.html">お知らせ</a>
   <a href="#faq">よくあるご質問</a>
+  <div class="nav-drawer-group" data-community-added>
+    <button type="button" class="nav-drawer-parent" aria-expanded="false" aria-controls="navDrawerCommunity">コミュニティ<span class="nav-caret" aria-hidden="true"></span></button>
+    <div class="nav-drawer-sub" id="navDrawerCommunity" hidden>
+      <a href="/haku-community/"><b>HAKU Community</b><small>社会人向けコミュニティ</small></a>
+      <a href="/salon/en/"><b>親のサロン 縁（えん）</b><small>保護者向けコミュニティ</small></a>
+      <a href="/salon/"><b>教育者のサロン 灯（TOMOSHIBI）</b><small>教育者向けコミュニティ</small></a>
+    </div>
+  </div>
   <div class="nav-drawer-divider"></div>
   <a href="https://calendar.app.google/ZvDyFhuG5TE3zzCw9" target="_blank" rel="noopener">まず、相談してみる</a>
 </div>
@@ -2201,5 +2236,23 @@ footer{background:#111;color:rgba(255,255,255,.5);padding:56px 5% 32px}
 </script>
 
 
+<script data-community-added>
+(function(){
+  var btn=document.getElementById('navCommunityBtn'), menu=document.getElementById('navCommunityMenu');
+  function closeMenu(refocus){ if(!menu||menu.hidden) return; menu.hidden=true; btn.setAttribute('aria-expanded','false'); if(refocus) btn.focus(); }
+  if(btn&&menu){
+    btn.addEventListener('click',function(){ var open=menu.hidden; menu.hidden=!open; btn.setAttribute('aria-expanded',String(open)); });
+    document.addEventListener('click',function(e){ if(!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) closeMenu(false); });
+    window.addEventListener('resize',function(){ closeMenu(false); });
+  }
+  var pbtn=document.querySelector('.nav-drawer-parent'), sub=document.getElementById('navDrawerCommunity');
+  if(pbtn&&sub){ pbtn.addEventListener('click',function(){ var open=sub.hidden; sub.hidden=!open; pbtn.setAttribute('aria-expanded',String(open)); }); }
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape') return;
+    if(menu&&!menu.hidden){ closeMenu(true); }
+    else if(pbtn&&sub&&!sub.hidden){ sub.hidden=true; pbtn.setAttribute('aria-expanded','false'); pbtn.focus(); }
+  });
+})();
+</script>
 </body>
 </html>
